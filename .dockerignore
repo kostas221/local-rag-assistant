@@ -1,0 +1,13 @@
+# Python & Εικονικά Περιβάλλοντα
+venv/
+env/
+__pycache__/
+*.pyc
+
+# Δεδομένα που ΔΕΝ πρέπει να μπουν στο image (θα τα χειριστούν τα volumes)
+vector_db/
+uploaded_docs/
+postgres_data/
+
+# Ασφάλεια
+.env

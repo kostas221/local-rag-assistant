@@ -1,0 +1,4 @@
+# Το frontend (Streamlit) μιλάει με το backend ΜΟΝΟ μέσω HTTP.
+# Δεν χρειάζεται ML/DB βιβλιοθήκες — τις είχε άσκοπα και φούσκωνε το image ~2GB.
+streamlit==1.58.0
+requests==2.34.2

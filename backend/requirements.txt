@@ -1,0 +1,29 @@
+# Pinned στις εκδόσεις του working Docker container (reproducibility για τη διπλωματική).
+# Stack: Pydantic V1 / FastAPI 0.99.1.
+fastapi==0.99.1
+starlette==0.27.0
+uvicorn==0.49.0
+pydantic==1.10.26
+
+# Database & Auth
+sqlalchemy==2.0.50
+psycopg2-binary==2.9.12
+passlib==1.7.4
+bcrypt==3.2.2
+python-jose[cryptography]==3.5.0
+python-multipart==0.0.32
+
+# AI / RAG
+google-generativeai==0.8.6
+chromadb==0.4.6
+sentence-transformers==5.5.1
+rank-bm25==0.2.2
+pypdf==6.13.0
+langchain-text-splitters==0.2.4
+
+# Utils
+loguru==0.7.3
+requests==2.34.2
+
+# Dev / Test (σε production image κανονικά μπαίνουν σε ξεχωριστό requirements-dev.txt)
+pytest==8.3.4

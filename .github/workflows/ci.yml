@@ -1,0 +1,27 @@
+name: tests
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  fast-tests:
+    # Τρέχει τα model-free tests (validators + security) σε κάθε push.
+    # ΣΗΜ: το tests/test_rag_core.py εισάγει το ai_core -> φορτώνει bge-m3 +
+    # reranker (~4.5GB), οπότε ΔΕΝ τρέχει εδώ· τρέχει τοπικά/στο container.
+    runs-on: ubuntu-latest
+    env:
+      SECRET_KEY: ci-dummy-secret-key-not-used-in-production
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+      - name: Install lightweight test deps
+        run: |
+          pip install pydantic==1.10.26 "python-jose[cryptography]==3.5.0" \
+                      passlib==1.7.4 bcrypt==3.2.2 python-dotenv pytest==8.3.4
+      - name: Run validator + security tests
+        working-directory: backend
+        run: pytest tests/test_schemas.py tests/test_security.py -v

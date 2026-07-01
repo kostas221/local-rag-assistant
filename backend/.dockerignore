@@ -1,0 +1,10 @@
+# Μη βάζεις στο image: τοπική κατάσταση/δεδομένα που δεν χρειάζονται στο build.
+# ΣΗΜΑΝΤΙΚΟ: το vector_db/ έμπαινε στο image και «έσπερνε» το chromadb_data volume
+# με παλιά e5 embeddings (384-dim) -> conflict με το bge-m3 (1024-dim).
+vector_db/
+uploaded_docs/
+__pycache__/
+*.pyc
+.pytest_cache/
+.env
+*.db

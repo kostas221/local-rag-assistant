@@ -1,0 +1,12 @@
+venv/
+__pycache__/
+.pytest_cache/
+uploaded_docs/
+chromadb_data/
+*.db
+.env
+backups/
+
+# committed Chroma collections caused stale data to seed the Docker volume
+vector_db/
+ragas_env/

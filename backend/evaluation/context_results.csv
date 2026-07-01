@@ -1,0 +1,19 @@
+﻿question,context_precision,context_recall
+What is the definition of cloud computing given in the paper?,0.5,1.0
+What are the three new aspects of cloud computing from a hardware provisioning point of view?,1.0,1.0
+What is the data transfer bottleneck obstacle and a suggested workaround?,1.0,0.75
+Why can cloud computing datacenters achieve economies of scale?,1.0,1.0
+What are the obstacles related to data confidentiality and auditability?,0.679,1.0
+What new application opportunities does cloud computing enable according to the 2009 paper?,0.325,0.75
+What is the difference between BaaS and FaaS?,0.2,0.75
+What are the main limitations of current serverless platforms discussed in the paper?,0.533,0.8
+How does serverless billing differ from traditional serverful cloud billing?,0.7,1.0
+When did serverless computing attract widespread attention and with which service?,1.0,1.0
+Which applications stretch the limits of today's serverless platforms according to the paper?,0.75,0.0
+Τι είναι το utility computing;,0.478,1.0
+Ποια είναι τα κύρια εμπόδια στην υιοθέτηση του cloud computing;,0.887,0.9
+Πώς βοηθά η ελαστικότητα στη μεταφορά του ρίσκου πρόβλεψης ζήτησης;,1.0,0.75
+Τι είναι το cold start στο serverless computing;,0.0,0.0
+Γιατί το serverless απλοποιεί τον προγραμματισμό στο cloud;,1.0,0.889
+Τι αναφέρει το paper για το reputation fate sharing;,1.0,1.0
+Τι προβλέπει το paper για το μέλλον του serverless computing;,1.0,1.0
