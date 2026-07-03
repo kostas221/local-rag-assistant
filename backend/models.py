@@ -53,3 +53,6 @@ class Feedback(Base):
     message_id = Column(Integer, ForeignKey("messages.id"))
     is_positive = Column(Boolean)  # True για 👍, False για 👎
     user_id = Column(Integer, ForeignKey("users.id"))
+    # Προαιρετικό σχόλιο (κυρίως στα 👎): το «γιατί» δεν άρεσε η απάντηση —
+    # τροφοδοτεί τον βρόχο βελτίωσης (failure case -> νέο golden-set case).
+    comment = Column(String, nullable=True)

@@ -460,10 +460,23 @@ async def chat_with_ai(query: schemas.ChatMessage, current_user: models.User = D
 
 @app.post("/feedback")
 def submit_feedback(fb: schemas.FeedbackCreate, current_user: models.User = Depends(get_current_user), db: Session = Depends(get_db)):
+    # UPSERT: ένα feedback ανά (χρήστη, μήνυμα). Δεύτερο POST (αλλαγή ψήφου ή
+    # προσθήκη σχολίου στο 👎) ενημερώνει την υπάρχουσα εγγραφή — όχι διπλότυπα.
+    existing = db.query(models.Feedback).filter(
+        models.Feedback.message_id == fb.message_id,
+        models.Feedback.user_id == current_user.id).first()
+    if existing:
+        existing.is_positive = fb.is_positive
+        if fb.comment is not None:
+            existing.comment = fb.comment
+        db.commit()
+        return {"status": "success", "message": "Feedback updated"}
+
     new_fb = models.Feedback(
         message_id=fb.message_id,
         is_positive=fb.is_positive,
-        user_id=current_user.id
+        user_id=current_user.id,
+        comment=fb.comment,
     )
     db.add(new_fb)
     db.commit()

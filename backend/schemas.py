@@ -58,3 +58,13 @@ class ChatMessage(BaseModel):
 class FeedbackCreate(BaseModel):
     message_id: int
     is_positive: bool
+    comment: Optional[str] = None
+
+    @validator("comment")
+    def _trim_comment(cls, v):
+        # Κόβουμε κενά + βάζουμε καπάκι μεγέθους: το πεδίο είναι ελεύθερο κείμενο
+        # από χρήστες -> χωρίς όριο, ένα copy-paste βιβλίο γίνεται γραμμή στη βάση.
+        if v is None:
+            return None
+        v = v.strip()
+        return v[:1000] if v else None

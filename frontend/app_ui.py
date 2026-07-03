@@ -344,6 +344,31 @@ def app_main(token):
                         st.session_state[sent_key] = feedback
                         st.toast("Thanks for your feedback!", icon="📈")
 
+                    # Στο 👎 ζητάμε προαιρετικά και το «γιατί» — το πιο χρήσιμο σήμα
+                    # βελτίωσης (failure case -> νέο golden-set case). Το backend
+                    # κάνει upsert, οπότε το σχόλιο ενημερώνει το ίδιο feedback row.
+                    if feedback == 0:
+                        comment_done = f"fb_comment_sent_{msg_id}"
+                        if st.session_state.get(comment_done):
+                            st.caption("🙏 Thanks — your comment helps us improve!")
+                        else:
+                            with st.popover("💬 Tell us what went wrong (optional)"):
+                                comment = st.text_area(
+                                    "What was wrong with this answer?",
+                                    key=f"fb_comment_{msg_id}", max_chars=1000,
+                                    placeholder="e.g. incomplete answer, wrong source page, wrong language…",
+                                    label_visibility="collapsed")
+                                if st.button("Send", key=f"fb_send_{msg_id}",
+                                             type="primary", disabled=generating):
+                                    if comment and comment.strip():
+                                        requests.post(
+                                            f"{API_URL}/feedback", headers=headers,
+                                            json={"message_id": msg_id,
+                                                  "is_positive": False,
+                                                  "comment": comment.strip()})
+                                        st.session_state[comment_done] = True
+                                        st.rerun()
+
     # Input: ΖΩΓΡΑΦΙΖΕΤΑΙ ΠΡΙΝ το streaming block ώστε το disabled=generating να
     # ισχύει ΚΑΤΑ τη διάρκεια του streaming. (Αν ζωγραφιστεί μετά, όσο το
     # write_stream μπλοκάρει, στην οθόνη μένει η παλιά ΞΕΚΛΕΙΔΩΤΗ έκδοση του input
@@ -399,13 +424,20 @@ def app_main(token):
 
         with st.chat_message("assistant", avatar="🔬"):
             message_placeholder = st.empty()
-            message_placeholder.markdown("""
-                <div style='display:flex; align-items:center; gap:8px; margin-top:-8px;'>
-                    <div style='animation: spin 1.4s linear infinite; font-size: 1.1em;'>⏳</div>
-                    <div style='color: #888; font-style: italic;'>Thinking…</div>
-                </div>
-                <style>@keyframes spin { 0%{transform:rotate(0)} 100%{transform:rotate(360deg)} }</style>
-            """, unsafe_allow_html=True)
+
+            def show_status(label):
+                # Phased status: στα ~10-15s του retrieval (CPU reranker) ο χρήστης
+                # βλέπει ΤΙ γίνεται αντί για γενικό "Thinking…" -> μικρότερη
+                # ΑΙΣΘΗΣΗ αναμονής χωρίς καμία αλλαγή στο backend.
+                message_placeholder.markdown(f"""
+                    <div style='display:flex; align-items:center; gap:8px; margin-top:-8px;'>
+                        <div style='animation: spin 1.4s linear infinite; font-size: 1.1em;'>⏳</div>
+                        <div style='color: #888; font-style: italic;'>{label}</div>
+                    </div>
+                    <style>@keyframes spin {{ 0%{{transform:rotate(0)}} 100%{{transform:rotate(360deg)}} }}</style>
+                """, unsafe_allow_html=True)
+
+            show_status("🔍 Searching your documents…")
 
             sources_data = []
 
@@ -422,6 +454,9 @@ def app_main(token):
                                 data = json.loads(line.decode("utf-8"))
                                 if data["type"] == "sources":
                                     sources_data = data["data"]
+                                    # Το retrieval τελείωσε (τα sources έρχονται
+                                    # ΠΡΙΝ το κείμενο) -> επόμενη φάση: γέννηση.
+                                    show_status("✍️ Composing answer…")
                                 elif data["type"] == "text":
                                     if first_chunk:
                                         message_placeholder.empty()
