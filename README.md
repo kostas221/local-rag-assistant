@@ -4,6 +4,8 @@ A local-first **RAG (Retrieval-Augmented Generation) platform** for scientific d
 
 Built as a diploma thesis project focusing on **cross-lingual retrieval quality** and **measurable, reproducible evaluation**.
 
+> 📊 **Headline results:** LLM-judge **5.00/5** on accuracy, completeness, relevance & faithfulness (20-question bilingual golden set) · official **RAGAS** cross-validation: faithfulness **0.99**, context recall **0.94** · retrieval MRR **0.846** · **zero hallucinations** on out-of-corpus probes — [details below](#evaluation-results)
+
 ## Demo
 
 ![Z-AI Platform — anti-hallucination gate + bilingual Q&A](docs/demo.gif)
@@ -18,6 +20,8 @@ Built as a diploma thesis project focusing on **cross-lingual retrieval quality*
 - **Cross-lingual QA** — Greek questions are translated for retrieval over English papers (translate-then-retrieve); answers come back in the user's language
 - **Greek-aware BM25** — accent-stripping tokenizer so unaccented queries still match
 - **Built-in evaluation framework** — retrieval metrics (MRR, nDCG, keyword coverage) plus LLM-as-judge answer scoring (accuracy, completeness, relevance, faithfulness)
+- **Feedback capture** — 👍/👎 on every answer with an optional comment, upserted per message in Postgres — ground truth for error analysis
+- **Phased status** — the UI reports pipeline progress live (🔍 searching → ✍️ composing) while the answer streams
 - **Multi-user** — JWT auth, per-user document ownership, public/private sharing, login rate limiting
 - **Observability** — request IDs, per-phase latency (retrieval vs generation), token usage logging
 
@@ -48,6 +52,8 @@ Built as a diploma thesis project focusing on **cross-lingual retrieval quality*
 6. **Relevance gate** — best score < 0.15 → "no relevant documents" (no hallucination)
 7. **Generation** — top-5 chunks with source/page metadata sent to Gemini 2.5 Flash, streamed back
 
+Design decisions and trade-offs behind each step (why hybrid, why these models, known constraints): [`ARCHITECTURE.md`](ARCHITECTURE.md)
+
 ## Evaluation results
 
 Measured on **`golden_set_20`** — 20 bilingual (EN+EL) questions over two Berkeley cloud-computing papers, including 2 deliberate out-of-corpus questions that probe the anti-hallucination gate. Config: `bge-m3 + BM25 + RRF + bge-reranker-v2-m3` (rerank-15), `chunk=1500`, page-level (parent-document) expansion, relevance gate `0.15`.
@@ -64,6 +70,8 @@ Measured on **`golden_set_20`** — 20 bilingual (EN+EL) questions over two Berk
 ![Evaluation dashboard](docs/dashboard.png)
 
 The 2 out-of-corpus questions correctly return *"not found in the documents"* — the relevance gate fires (best reranker score ≈ 0.00 < 0.15), so the model does not hallucinate.
+
+The same frozen pipeline is also **cross-validated with the official [RAGAS](https://github.com/explodinggradients/ragas) framework** (v0.2.15, independent metric prompts): faithfulness **0.988** · context recall **0.944** · context precision 0.800 · answer relevancy 0.787 (in-corpus) — two independent evaluation frameworks converging on the same picture.
 
 Chunk-size experiment (retrieval metrics):
 
