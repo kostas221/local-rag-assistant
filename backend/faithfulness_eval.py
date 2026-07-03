@@ -7,11 +7,12 @@ import csv
 import json
 import statistics
 
-from evaluation.eval_engine import evaluate_retrieval, evaluate_answer, TestQuestion
+from evaluation.eval_engine import evaluate_retrieval, evaluate_answer, TestQuestion, GOLDEN_CORPUS
 from ai_core import search_documents
 
 TESTS = "evaluation/golden_set_20.jsonl"
-DELAY = 20  # sec παύση μεταξύ ερωτήσεων (για το per-minute rate limit του Gemini)
+DELAY = 5  # sec παύση μεταξύ ερωτήσεων. Με paid tier (1000 RPM) αρκεί ελάχιστο
+            # buffer· το παλιό 20 ήταν για το free tier (10 RPM) και τριπλασίαζε τον χρόνο.
 
 
 async def main():
@@ -36,9 +37,11 @@ async def main():
                 # όρους αντί να μετρήσει 0 και να τους παραμορφώσει.
                 print("    ⚠️ judge failed -> εξαιρείται από τους μέσους όρους", flush=True)
                 continue
-                        # Κρατάμε ΚΑΙ τα contexts (τι "είδε" το μοντέλο) για το RAGAS dataset.
+            # Κρατάμε ΚΑΙ τα contexts (τι "είδε" το μοντέλο) για το RAGAS dataset.
+            # ΙΔΙΟ pinning με το eval_engine (GOLDEN_CORPUS) — αλλιώς τα contexts
+            # δεν αντιστοιχούν στην απάντηση και το RAGAS faithfulness μετράει λάθος.
             # Η μετάφραση είναι ήδη cached από το evaluate_retrieval -> 0 επιπλέον API calls.
-            retrieved = await search_documents(t.question)
+            retrieved = await search_documents(t.question, target_filenames=GOLDEN_CORPUS)
             ragas_rows.append({
                 "question": t.question,
                 "answer": generated,

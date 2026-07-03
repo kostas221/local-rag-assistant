@@ -114,6 +114,7 @@
 ## 📊 Μετρήσεις (τοπικά, CPU — Ryzen 7 5700X)
 - Reranker = το bottleneck· embedding αμελητέο. BM25 index caching ήδη ενεργό.
 - 1 χρήστης (retrieval latency): rerank-15 ~13s · rerank-10 ~8s. Answer quality ίδια.
-- **Eval (golden_set_20, pinned corpus = 2 Berkeley papers, rerank-15):** in-corpus MRR
-  **0.846** / coverage **97.2%** · answers **5.0/5.0/5.0/5.0**. Authoritative:
+- **Eval (golden_set_20, pinned corpus = 2 Berkeley papers, rerank-15, temp 0.1):** in-corpus
+  MRR **0.846** (benchmark· run-to-run 0.81–0.86) / coverage **97.2%** · answers
+  **5.0/5.0/5.0/5.0** (τελικό run 2026-07-02· error-analysis loop τεκμηριωμένο). Authoritative:
   [`backend/evaluation/RESULTS.md`](backend/evaluation/RESULTS.md).
