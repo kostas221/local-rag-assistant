@@ -379,6 +379,15 @@ def app_main(token):
         st.session_state.pending_question = user_question
         st.rerun()
 
+    # ⏹ Stop: το ΜΟΝΟ ενεργό widget όσο τρέχει απάντηση. Ένα κλικ = rerun ->
+    # το write_stream διακόπτεται, και ο υπάρχων pending_inflight guard
+    # καθαρίζει & ξαναφορτώνει το ιστορικό (με όση απάντηση προλάβαμε).
+    if generating:
+        _, _mid, _ = st.columns([5, 2, 5])
+        with _mid:
+            st.button("⏹ Stop", key="stop_generation", use_container_width=True,
+                      help="Διακόπτει την τρέχουσα απάντηση για να ρωτήσεις κάτι άλλο")
+
     # --- PENDING QUESTION: επεξεργάζεται ΕΔΩ, με το UI «κλειδωμένο» (όλα τα
     # widgets disabled), ώστε ένα κλικ να ΜΗΝ ακυρώνει την απάντηση που τρέχει. ---
     if st.session_state.get("pending_question"):

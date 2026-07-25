@@ -452,9 +452,11 @@ async def ask_ai(question, target_filenames, history=None, user_id=None, persona
 
     if not top_3_data:
         yield {"type": "sources", "data": []}
-        yield {"type": "text", "data": "No relevant documents found. Make sure you have selected the right PDFs in the left sidebar."}
+        msg = ("Δεν βρέθηκε απάντηση στα επιλεγμένα έγγραφα."
+               if _has_greek(question)
+               else "The selected documents do not contain an answer to this question.")
+        yield {"type": "text", "data": msg}
         return
-
     context_text = ""
     sources_list = []
 
