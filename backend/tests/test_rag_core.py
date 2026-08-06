@@ -4,8 +4,7 @@
 import asyncio
 
 import ai_core
-from ai_core import el_tokenize, _has_greek, _build_where
-
+from ai_core import _build_where, _has_greek, el_tokenize
 
 # --- el_tokenize: Greek-aware tokenization για το BM25 ---
 
@@ -125,8 +124,15 @@ class _StubCollection:
         self._ids, self._texts, self._metas = ids, texts, metas
 
     def get(self, where=None, include=None):
-        return {"ids": self._ids, "documents": self._texts,
-                "metadatas": self._metas}
+        out = {"ids": self._ids, "documents": self._texts,
+               "metadatas": self._metas}
+        # Το exact dense σκέλος (_get_dense_matrix) ζητά embeddings. Δίνουμε
+        # ορθοκανονική βάση — κάθε chunk "δείχνει" σε άλλη διάσταση, άρα η
+        # κατάταξη είναι προβλέψιμη χωρίς πραγματικό μοντέλο.
+        if include and "embeddings" in include:
+            out["embeddings"] = [[1.0 if j == i else 0.0 for j in range(8)]
+                                 for i in range(len(self._ids))]
+        return out
 
     def query(self, query_texts=None, n_results=10, where=None):
         return {"ids": [self._ids[:n_results]]}
@@ -139,7 +145,7 @@ class _StubReranker:
     def __init__(self, score):
         self.score = score
 
-    def predict(self, pairs):
+    def predict(self, pairs, batch_size=None):
         return [self.score] * len(pairs)
 
 
@@ -150,13 +156,31 @@ def _patch_search(monkeypatch, rerank_score):
     metas = [{"file_name": "a.pdf", "page": i + 1} for i in range(3)]
     monkeypatch.setattr(ai_core, "collection", _StubCollection(ids, texts, metas))
     monkeypatch.setattr(ai_core, "reranker", _StubReranker(rerank_score))
-    # Μηδένισε το cache ώστε το BM25 index να ξαναχτιστεί από το stub corpus
-    # (αλλιώς ένα stale index από προηγούμενο test/run θα χρησιμοποιούνταν).
+    # Μηδένισε ΟΛΑ τα caches ώστε να ξαναχτιστούν από το stub corpus (αλλιώς
+    # ένα stale index από προηγούμενο test/run θα χρησιμοποιούνταν).
     monkeypatch.setattr(ai_core, "_bm25_cache", {"version": None})
+    monkeypatch.setattr(ai_core, "_dense_cache", {"version": None})
+        # ΑΠΟΜΟΝΩΣΗ ΑΠΟ ΤΟ ΠΑΡΑΓΩΓΙΚΟ CACHE: χωρίς αυτό το _embed_query αποθηκεύει τα
+    # stubbed 8-διάστατα διανύσματα στο πραγματικό .npz του volume, και μια
+    # παραγωγική ερώτηση με το ίδιο κείμενο σκάει στο matmul. Συνέβη.
+    monkeypatch.setattr(ai_core, "_query_emb_cache", {})
+    monkeypatch.setattr(ai_core, "_save_query_emb_cache", lambda: None)
+    # Το exact dense σκέλος κάνει embed την ΕΡΩΤΗΣΗ. Χωρίς πραγματικό μοντέλο:
+    # διάνυσμα που δείχνει στο chunk 0, ίδιας διάστασης με το stub corpus.
+    monkeypatch.setattr(ai_core, "sentence_transformer_ef",
+                        lambda texts: [[1.0] + [0.0] * 7 for _ in texts])
+    # BGE-M3 sparse εκτός: θα φόρτωνε το sparse head και θα έκανε forward pass
+    # — άσχετο με το gate που δοκιμάζεται εδώ, και αργό.
+    monkeypatch.setattr(ai_core, "USE_BGE_SPARSE", False)
 
     async def _no_translate(q):  # καμία κλήση Gemini μέσα στα tests
         return q
     monkeypatch.setattr(ai_core, "optimize_query", _no_translate)
+    # Corrective retry ΕΚΤΟΣ: αυτά τα tests μετρούν ΤΟ GATE. Με τον agent
+    # αναμμένο, η κοπή θα καλούσε το Gemini — τα tests περνούσαν μόνο επειδή η
+    # κλήση αποτυγχάνει και πιάνεται από το except, δηλαδή ΕΚΑΝΑΝ ΔΙΚΤΥΟ σε κάθε
+    # run του CI. Ο agent δοκιμάζεται ξεχωριστά στο test_corrective_retrieval.py.
+    monkeypatch.setattr(ai_core, "ENABLE_CORRECTIVE", False)
 
 
 def test_relevance_gate_blocks_below_threshold(monkeypatch):

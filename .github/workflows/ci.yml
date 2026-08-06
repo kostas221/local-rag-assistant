@@ -5,10 +5,26 @@ on:
   pull_request:
 
 jobs:
+  lint:
+    # Ο φθηνότερος έλεγχος (~10s): πιάνει αχρησιμοποίητα imports, blocking IO σε
+    # async, implicit Optional, ασφαλείς απλοποιήσεις. Η config (backend/ruff.toml)
+    # τεκμηριώνει ποιοι κανόνες είναι απενεργοποιημένοι και γιατί — κυρίως false
+    # positives για FastAPI Depends() και για τα ελληνικά σχόλια.
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - run: pip install ruff
+      - name: ruff check
+        working-directory: backend
+        run: ruff check .
+
   fast-tests:
-    # Τρέχει τα model-free tests (validators + security) σε κάθε push.
-    # ΣΗΜ: το tests/test_rag_core.py εισάγει το ai_core -> φορτώνει bge-m3 +
-    # reranker (~4.5GB), οπότε ΔΕΝ τρέχει εδώ· τρέχει τοπικά/στο container.
+    # Model-free tests (validators + security). ~40s, γρήγορο σήμα σε κάθε push
+    # χωρίς να περιμένει κατέβασμα μοντέλων. Τα tests του RAG πυρήνα τρέχουν
+    # στο ξεχωριστό core-tests job παρακάτω.
     runs-on: ubuntu-latest
     env:
       SECRET_KEY: ci-dummy-secret-key-not-used-in-production
@@ -21,7 +37,71 @@ jobs:
       - name: Install lightweight test deps
         run: |
           pip install pydantic==1.10.26 "python-jose[cryptography]==3.5.0" \
-                      passlib==1.7.4 bcrypt==3.2.2 python-dotenv pytest==8.3.4
-      - name: Run validator + security tests
+                      passlib==1.7.4 bcrypt==3.2.2 python-dotenv pytest==8.3.4 \
+                      httpx==0.28.1 loguru fastapi==0.99.1 sqlalchemy \
+                      python-multipart
+      # ΤΙ ΤΡΕΧΕΙ ΕΔΩ ΚΑΙ ΓΙΑΤΙ ΟΧΙ ΣΤΟ core-tests: και τα τέσσερα αρχεία
+      # αποφεύγουν εντελώς το `import ai_core` (2.4GB μοντέλα, ~1 λεπτό):
+      #   test_gemini_rest    — ψεύτικος httpx client, χωρίς δίκτυο/API key
+      #   test_api_endpoints  — ai_core σε stub + SQLite in-memory αντί Postgres·
+      #                         καλύπτει το AUTHORIZATION (απομόνωση χρηστών),
+      #                         που καμία μετρική RAG δεν μπορεί να ελέγξει
+      - name: Run validator + security + REST + API endpoint + metrics tests
         working-directory: backend
-        run: pytest tests/test_schemas.py tests/test_security.py -v
+        # Το test_metrics.py ανήκει εδώ: το metrics.py δεν έχει ΚΑΜΙΑ εξάρτηση
+        # (ούτε ai_core) — μόνο threading + time από τη stdlib.
+        run: |
+          pytest tests/test_schemas.py tests/test_security.py \
+                 tests/test_gemini_rest.py tests/test_api_endpoints.py \
+                 tests/test_metrics.py -v
+
+  core-tests:
+    # Τα tests του RAG πυρήνα: el_tokenize, _has_greek, _build_where, _rrf_fuse
+    # (καθαρή λογική σύντηξης), ο relevance gate με stubbed collection/reranker,
+    # και η υπογραφή corpus που κάνει τα caches ασφαλή σε πολλούς workers.
+    #
+    # ΓΙΑΤΙ ΞΕΧΩΡΙΣΤΟ JOB: το tests/test_rag_core.py κάνει `import ai_core`, που
+    # φορτώνει bge-m3 + cross-encoder σε module level (~2.4GB). Με cache στο
+    # HF_HOME το πρώτο run είναι ~8 λεπτά και τα επόμενα ~2 — αποδεκτό ως δεύτερη
+    # γραμμή άμυνας, αλλά όχι ως blocker του γρήγορου σήματος.
+    runs-on: ubuntu-latest
+    env:
+      SECRET_KEY: ci-dummy-secret-key-not-used-in-production
+      # Το ai_core διαβάζει το key στο import· τα tests δεν κάνουν καμία κλήση
+      # δικτύου (η optimize_query είναι monkeypatched).
+      GEMINI_API_KEY: ci-dummy-no-api-calls-in-tests
+      HF_HOME: ${{ github.workspace }}/.hf-cache
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+
+      - name: Cache HuggingFace models
+        uses: actions/cache@v4
+        with:
+          path: ${{ github.workspace }}/.hf-cache
+          key: hf-${{ runner.os }}-${{ hashFiles('backend/requirements.txt') }}
+
+      - name: Install CPU-only torch first
+        # Χωρίς αυτό το pip τραβάει το CUDA build (~2.5GB), άχρηστο σε runner.
+        run: pip install torch --index-url https://download.pytorch.org/whl/cpu
+
+      - name: Install backend deps
+        run: pip install -r backend/requirements.txt
+
+      - name: Run RAG core tests
+        working-directory: backend
+        # Το test_corpus_signature.py ανήκει εδώ για τον ΙΔΙΟ λόγο: δοκιμάζει
+        # την ΠΡΑΓΜΑΤΙΚΗ _corpus_signature του ai_core, όχι αντίγραφό της. Μια
+        # γρήγορη εκδοχή που αντέγραφε τη λογική θα περνούσε και με σπασμένο
+        # ai_core — ψεύτικη ασφάλεια ακριβώς εκεί που πονάει (multi-worker).
+        #
+        # Το test_corrective_retrieval.py επίσης: καλεί το ΠΡΑΓΜΑΤΙΚΟ
+        # search_documents ώστε να πιάσει λάθη ΣΥΝΔΕΣΗΣ gate <-> retry, που
+        # κανένα unit test της _corrective_retry μόνης της δεν βλέπει.
+        # Το rewrite είναι stubbed -> μηδέν κλήσεις δικτύου/API.
+        run: |
+          pytest tests/test_rag_core.py tests/test_corpus_signature.py \
+                 tests/test_corrective_retrieval.py -v

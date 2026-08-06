@@ -49,4 +49,18 @@ USER appuser
 
 EXPOSE 8000
 
-CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]
+# --workers 1: ΕΠΙΛΟΓΗ ΧΩΡΗΤΙΚΟΤΗΤΑΣ, ΟΧΙ ΠΛΕΟΝ ΟΡΘΟΤΗΤΑΣ.
+# Παλιότερα ήταν υποχρεωτικό: τα caches ακυρώνονταν από in-process μετρητή, άρα
+# ένα ingest σε έναν worker άφηνε τους άλλους με stale index, σιωπηλά. Αυτό
+# διορθώθηκε — η υπογραφή corpus περιλαμβάνει το mtime του store, ορατό σε κάθε
+# διεργασία (βλ. ARCHITECTURE.md + tests/test_corpus_signature.py).
+# ΓΙΑΤΙ ΠΑΡΑΜΕΝΕΙ 1, με νούμερα:
+#   • ΜΝΗΜΗ: κάθε worker φορτώνει bge-m3 + cross-encoder = ~2.4GB. Δύο workers
+#     διπλασιάζουν τη μνήμη για μηδέν επιπλέον throughput.
+#   • CPU: μετρημένο (evaluation/concurrency_benchmark.py) ότι το throughput
+#     κορεννύεται στους ~4 ταυτόχρονους χρήστες (~2.7 req/s) και ΠΕΦΤΕΙ στους 8.
+#     Το φράγμα είναι οι 8 πυρήνες, όχι το πλήθος των workers· περισσότεροι
+#     workers μοιράζονται την ίδια CPU και προσθέτουν context switching.
+# Δηλαδή: το --workers 2 δεν είναι πια ΛΑΘΟΣ, απλώς δεν ωφελεί σε αυτό το
+# μηχάνημα. Σε μεγαλύτερη CPU αξίζει επαναμέτρηση.
+CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000", "--workers", "1"]

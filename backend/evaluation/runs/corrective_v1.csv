@@ -1,0 +1,16 @@
+id,category,q1,q2,best1,best2,kw1,kw2,outcome
+h001,enumeration,How fast is each of the different kinds of storage they compared?,"Storage performance comparison: latency, throughput, IOPS, object storage, block storage, file storage, ephemeral storage, persistent storage",-2.004324197769165,2.333432197570801,3,1,ΣΩΘΗΚΕ
+h003,direct_fact,One of the obstacles they list is about moving big amounts of data around. What do they suggest doing about it?,Data transfer bottlenecks mitigation strategies,-2.722794532775879,1.6515377759933472,3,1,ΣΩΘΗΚΕ
+h005,direct_fact,What is the difference between the two types of services they describe?,Distinction between service models,-3.286621570587158,1.2196913957595825,2,1,ΣΩΘΗΚΕ
+h006,enumeration,Which kinds of programs have a hard time on these platforms today?,Challenges for applications on cloud platforms today,-2.723301649093628,5.917708396911621,9,1,ΣΩΘΗΚΕ
+h008,direct_fact,Why does the same thing end up costing different amounts in different places?,Cloud resource pricing variability across regions,-5.175212860107422,-2.813948154449463,,9,ακόμα κομμ.
+h009,direct_fact,What do the authors of that system paper themselves say they contributed?,Author contributions system paper,-2.992046356201172,-5.18942928314209,,1,ακόμα κομμ.
+h012,multi_hop,Specific implementation versus general description,Concrete implementation versus abstract description,-6.179714202880859,-5.099905014038086,,,ακόμα κομμ.
+h013,multi_hop,The two papers disagree about whether remote storage is fast enough to work with. What measurement settles the argument?,"Remote storage performance evaluation: latency, throughput, IOPS.",-3.0940089225769043,-0.004452008754014969,1,4,ΣΩΘΗΚΕ
+h015,multi_hop,Is it still worth keeping the data right next to the machines doing the work?,Data locality optimization distributed systems cloud computing serverless architectures performance implications data proximity compute nodes storage tiering latency bandwidth trade-offs,-3.8718411922454834,0.9510677456855774,9,,ΣΩΘΗΚΕ
+h016,multi_hop,Why do they bring up that older system as a warning?,Cloud computing historical failures cautionary tales,-9.957977294921875,-1.7580008506774902,11,,ΣΩΘΗΚΕ
+q019,out_of_corpus,What do the documents say about quantum computing performance?,Quantum computing performance analysis,-3.98898983001709,-4.3632917404174805,,,κομμένο
+q020,out_of_corpus,Bitcoin price,Bitcoin price,-6.547511100769043,-6.547511100769043,,,κομμένο
+q048,out_of_corpus,What do the documents say about GDPR compliance requirements for cloud providers?,GDPR compliance obligations cloud service providers,-2.685126781463623,-4.798888683319092,,,κομμένο
+q049,out_of_corpus,clinical trial results,clinical trial results,-10.665491104125977,-10.665491104125977,,,κομμένο
+q050,out_of_corpus,What benchmark results for GPU tensor cores are reported in these papers?,GPU tensor core benchmarks,-3.27569580078125,-3.8330047130584717,,,κομμένο

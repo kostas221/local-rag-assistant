@@ -139,6 +139,27 @@ def render_sources(sources):
                         unsafe_allow_html=True)
             else:
                 st.caption(f"**[{i+1}]** {src}")
+def render_metrics(m, total_s=None):
+    """Per-phase latency + token usage κάτω από την απάντηση.
+
+    Γιατί στο UI και όχι μόνο στα logs: ο χρήστης βλέπει ΠΟΥ πάει ο χρόνος
+    (ανάκτηση vs παραγωγή) και πόσο context στάλθηκε. Είναι το ίδιο δεδομένο
+    που οδήγησε στη μείωση του reranking από 15s σε 0.7s.
+    """
+    if not m:
+        return
+    # Το total μετριέται στο FRONTEND, άρα περιλαμβάνει και δίκτυο + streaming —
+    # είναι ο χρόνος που ΟΝΤΩΣ περίμενε ο χρήστης, όχι μόνο ο server-side.
+    parts = ([f"⏱️ σύνολο {total_s:.1f}s"] if total_s else [])
+    parts += [f"🔍 ανάκτηση {m['retrieval_s']:.2f}s",
+             f"✍️ παραγωγή {m['generation_s']:.2f}s",
+             f"📄 {m['pages']} σελίδες"]
+    if m.get("prompt_tokens"):
+        parts.append(
+            f"🎫 {m['prompt_tokens']}→{m.get('completion_tokens') or '?'} tokens")
+    st.caption(" · ".join(parts))
+
+
 
 
 def _library_body(headers, token, disabled=False):
@@ -433,15 +454,20 @@ def app_main(token):
 
         with st.chat_message("assistant", avatar="🔬"):
             message_placeholder = st.empty()
+            t_start = time.perf_counter()
 
             def show_status(label):
-                # Phased status: στα ~10-15s του retrieval (CPU reranker) ο χρήστης
-                # βλέπει ΤΙ γίνεται αντί για γενικό "Thinking…" -> μικρότερη
-                # ΑΙΣΘΗΣΗ αναμονής χωρίς καμία αλλαγή στο backend.
+                # Phased status + ΧΡΟΝΟΣ: ο χρήστης βλέπει ΤΙ γίνεται και ΠΟΣΟ έχει
+                # πάρει μέχρι εδώ, αντί για γενικό "Thinking…". Το δεύτερο κάλεσμα
+                # ("Composing") εμφανίζεται μόλις τελειώσει η ανάκτηση, άρα ο
+                # αριθμός που δείχνει ΕΙΝΑΙ ο χρόνος του retrieval — ορατός ζωντανά.
+                elapsed = time.perf_counter() - t_start
                 message_placeholder.markdown(f"""
                     <div style='display:flex; align-items:center; gap:8px; margin-top:-8px;'>
                         <div style='animation: spin 1.4s linear infinite; font-size: 1.1em;'>⏳</div>
                         <div style='color: #888; font-style: italic;'>{label}</div>
+                        <div style='color: #555; font-size: 0.85em;
+                                    font-variant-numeric: tabular-nums;'>{elapsed:.1f}s</div>
                     </div>
                     <style>@keyframes spin {{ 0%{{transform:rotate(0)}} 100%{{transform:rotate(360deg)}} }}</style>
                 """, unsafe_allow_html=True)
@@ -449,9 +475,10 @@ def app_main(token):
             show_status("🔍 Searching your documents…")
 
             sources_data = []
+            metrics_data = None
 
             def stream_backend_response():
-                nonlocal sources_data
+                nonlocal sources_data, metrics_data
                 first_chunk = True
                 try:
                     with requests.post(f"{API_URL}/chat", json=payload, headers=headers,
@@ -466,6 +493,10 @@ def app_main(token):
                                     # Το retrieval τελείωσε (τα sources έρχονται
                                     # ΠΡΙΝ το κείμενο) -> επόμενη φάση: γέννηση.
                                     show_status("✍️ Composing answer…")
+                                elif data["type"] == "metrics":
+                                    # Έρχονται ΤΕΛΕΥΤΑΙΑ (μετά το κείμενο) -> τα
+                                    # κρατάμε και τα δείχνουμε μετά το stream.
+                                    metrics_data = data["data"]
                                 elif data["type"] == "text":
                                     if first_chunk:
                                         message_placeholder.empty()
@@ -488,6 +519,7 @@ def app_main(token):
                     yield f"⚠️ Ο server δεν αποκρίνεται: {e}"
 
             st.write_stream(stream_backend_response())
+            render_metrics(metrics_data, time.perf_counter() - t_start)
             render_sources(sources_data)
 
         # Τελείωσε κανονικά -> ξεκλείδωσε & ξαναφόρτωσε καθαρά από το backend

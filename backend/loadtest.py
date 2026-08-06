@@ -30,7 +30,7 @@ def _pct(values, p):
     if not values:
         return float("nan")
     s = sorted(values)
-    k = max(0, min(len(s) - 1, int(round((p / 100) * (len(s) - 1)))))
+    k = max(0, min(len(s) - 1, round((p / 100) * (len(s) - 1))))
     return s[k]
 
 

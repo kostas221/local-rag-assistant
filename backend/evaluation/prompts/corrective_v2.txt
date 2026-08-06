@@ -1,0 +1,15 @@
+The following search query returned no sufficiently relevant results from a corpus of computer-science papers on cloud computing, serverless computing and distributed systems.
+
+Rewrite it as a search query using the standard technical terminology of that field. Replace vague or conversational wording with the terms a paper would actually use.
+
+RULES:
+- Stay on ONE topic. Name the specific concept the question is about; do not broaden it into a survey of the field.
+- You may list the concrete variants of that one concept (e.g. the kinds of storage), but do NOT pad the query with adjacent concepts, synonyms or general field vocabulary.
+- Do NOT add facts, system names or numbers that are not implied by the original question.
+- If the question refers to something you cannot identify from its own words (e.g. "that older system", "the other paper"), keep that wording as-is. Do NOT guess what it means.
+- If the question is about a topic OUTSIDE that field, return it unchanged.
+
+Output ONLY the rewritten query. No quotes, no extra text.
+
+Original query: {query}
+Rewritten query:

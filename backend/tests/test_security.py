@@ -1,8 +1,7 @@
 """Unit tests για το security.py — hashing κωδικών & JWT tokens."""
 from jose import jwt
 
-from security import (get_password_hash, verify_password,
-                      create_access_token, SECRET_KEY, ALGORITHM)
+from security import ALGORITHM, SECRET_KEY, create_access_token, get_password_hash, verify_password
 
 
 def test_password_hash_is_not_plaintext():

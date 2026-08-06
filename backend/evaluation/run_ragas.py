@@ -20,6 +20,7 @@ Setup (μία φορά, από το root του repo):
 """
 import json
 import os
+import sys
 from pathlib import Path
 
 from dotenv import load_dotenv
@@ -35,14 +36,42 @@ if not os.environ.get("GOOGLE_API_KEY"):
     os.environ["GOOGLE_API_KEY"] = os.environ.get("GEMINI_API_KEY", "")
 
 # Imports μετά το env setup (κάποια libs διαβάζουν το key στο import)
-from datasets import Dataset                                                    # noqa: E402
-from langchain_google_genai import ChatGoogleGenerativeAI, GoogleGenerativeAIEmbeddings  # noqa: E402
-from ragas import evaluate                                                      # noqa: E402
-from ragas.embeddings import LangchainEmbeddingsWrapper                         # noqa: E402
-from ragas.llms import LangchainLLMWrapper                                      # noqa: E402
-from ragas.metrics import (answer_relevancy, context_precision,                 # noqa: E402
-                           context_recall, faithfulness)
-from ragas.run_config import RunConfig                                          # noqa: E402
+# --- SHIM για το ragas >=0.2 πάνω σε langchain-community >=0.4 ---------------
+# Το ragas κάνει top-level import του `langchain_community.chat_models.vertexai.
+# ChatVertexAI`, που ΑΦΑΙΡΕΘΗΚΕ στο langchain-community 0.4. Δεν το χρησιμοποιούμε
+# πουθενά (ο judge είναι Gemini μέσω langchain-google-genai), αλλά το import σκάει
+# στο module load και μπλοκάρει ολόκληρο το ragas.
+#
+# ΓΙΑΤΙ SHIM ΚΑΙ ΟΧΙ DOWNGRADE: το ragas 0.2.15 δηλώνει `langchain-community`
+# ΧΩΡΙΣ version pin, οπότε το pip φέρνει πάντα το τελευταίο. Καρφώνοντας παλιό
+# langchain-community σέρνει downgrade και σε core/langchain/google-genai — τέσσερα
+# πακέτα σε εκδόσεις του 2024, με το gemini-embedding-001 να μην υποστηρίζεται.
+# Το stub είναι 5 γραμμές και σπάει ΜΟΝΟ ό,τι δεν χρησιμοποιούμε.
+import types  # noqa: E402
+
+import langchain_community.chat_models as _cm  # noqa: E402
+from datasets import Dataset  # noqa: E402
+from langchain_google_genai import (  # noqa: E402
+    ChatGoogleGenerativeAI,
+    GoogleGenerativeAIEmbeddings,
+)
+
+if not hasattr(_cm, "vertexai"):
+    _stub = types.ModuleType("langchain_community.chat_models.vertexai")
+    _stub.ChatVertexAI = type("ChatVertexAI", (), {})   # ποτέ δεν instantiate-άρεται
+    sys.modules["langchain_community.chat_models.vertexai"] = _stub
+    _cm.vertexai = _stub
+
+from ragas import evaluate  # noqa: E402
+from ragas.embeddings import LangchainEmbeddingsWrapper  # noqa: E402
+from ragas.llms import LangchainLLMWrapper  # noqa: E402
+from ragas.metrics import (  # noqa: E402
+    answer_relevancy,
+    context_precision,
+    context_recall,
+    faithfulness,
+)
+from ragas.run_config import RunConfig  # noqa: E402
 
 
 def main():

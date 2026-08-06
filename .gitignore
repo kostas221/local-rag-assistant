@@ -10,3 +10,8 @@ backups/
 # committed Chroma collections caused stale data to seed the Docker volume
 vector_db/
 ragas_env/
+
+# Σκουπίδι από Git Bash path conversion: ένα `pip download` με Linux path
+# κατέληξε σε κυριολεκτικό φάκελο "C:" μέσα στο backend/ (βλ. ΠΑΓΙΔΕΣ
+# ΠΕΡΙΒΑΛΛΟΝΤΟΣ στο CLAUDE.md). Περιέχει μόνο ένα .whl.
+backend/C*/

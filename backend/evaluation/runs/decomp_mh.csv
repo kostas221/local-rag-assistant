@@ -1,0 +1,16 @@
+id,category,n_sub,split,is_multihop,cov_base,cov_dec,n_kw,docs_base,docs_dec,pages_base,pages_dec,ms,subqueries
+q051,multi_hop,2,True,True,3,3,3,2,2,7,8,2293,PyWren S3 performance || FaaS network bandwidth measurements
+q052,multi_hop,2,True,True,1,1,3,2,2,8,8,2009,ExCamera mu framework worker failure || PyWren stateless model worker failure
+q053,multi_hop,2,True,True,3,3,3,3,3,5,8,1848,CIDR critique Lambda network addressing || ExCamera worker direct communication performance
+q054,multi_hop,2,True,True,2,2,3,2,2,8,8,1588,Cloud elasticity statistical multiplexing cost associativity || Serverless ephemeral storage
+q055,multi_hop,2,True,True,3,3,3,2,2,8,8,1470,MapReduce straggler mitigation || PyWren stragglers
+q056,multi_hop,2,True,True,3,3,3,2,2,8,7,1767,ExCamera floating point benchmark || PyWren floating point benchmark
+q057,multi_hop,2,True,True,3,3,3,2,2,7,7,2045,ExCamera compression efficiency || ExCamera distributed encoding
+q059,multi_hop,2,True,True,2,2,2,5,3,8,4,2286,BaaS vendor lock-in || Baldini et al. BaaS
+q060,multi_hop,3,True,True,2,2,3,2,3,7,6,2306,MapReduce parallelism granularity || ExCamera parallelism granularity || Video encoder MapReduce suitability
+q061,multi_hop,2,True,True,1,0,3,3,1,8,4,1600,PyWren empirical justification disaggregation viability || Berkeley serverless view disaggregation compute storage
+q062,multi_hop,2,True,True,2,2,3,2,1,8,6,1491,MapReduce limitations || MapReduce central contribution
+q044,multi_hop,2,True,True,2,3,3,3,2,8,7,1637,ExCamera serverless computing || ExCamera performance speedup
+q045,multi_hop,2,True,True,2,1,3,2,2,8,8,1597,Berkeley View serverless storage || CIDR criticism
+q046,multi_hop,2,True,True,3,0,3,3,1,8,4,1650,MapReduce fault tolerance || PyWren fault tolerance
+q047,multi_hop,2,True,True,3,2,3,2,4,8,8,1834,OpenWhisk architecture || Berkeley view serverless layer

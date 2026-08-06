@@ -14,7 +14,7 @@ import json
 import os
 import statistics
 
-import google.generativeai as genai
+from genai_compat import genai  # deprecated SDK, τεκμηριωμένο: βλ. genai_compat.py
 
 genai.configure(api_key=os.getenv("GEMINI_API_KEY"))
 judge = genai.GenerativeModel(os.getenv("GEMINI_MODEL", "gemini-2.5-flash"))
@@ -68,7 +68,8 @@ async def context_recall(contexts, reference):
 
 
 async def main():
-    rows = [json.loads(l) for l in open(DATA, encoding="utf-8") if l.strip()]
+    with open(DATA, encoding="utf-8") as f:
+        rows = [json.loads(line) for line in f if line.strip()]
     samples = [r for r in rows if r.get("contexts")]
     print(f"{len(samples)} / {len(rows)} samples με μη-κενό context\n")
 

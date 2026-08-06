@@ -1,0 +1,51 @@
+﻿id,category,question,mrr,ndcg,keyword_coverage
+q001,direct_fact,What is the definition of cloud computing given in the paper?,1.0,0.92,100.0
+q002,enumeration,What are the three new aspects of cloud computing from a hardware provisioning point of view?,1.0,1.0,100.0
+q003,direct_fact,What is the data transfer bottleneck obstacle and a suggested workaround?,1.0,0.973,100.0
+q004,reasoning,Why can cloud computing datacenters achieve economies of scale?,1.0,1.0,100.0
+q005,direct_fact,What are the obstacles related to data confidentiality and auditability?,1.0,1.0,100.0
+q006,enumeration,What new application opportunities does cloud computing enable according to the 2009 paper?,0.333,0.5,100.0
+q007,direct_fact,What is the difference between BaaS and FaaS?,1.0,1.0,100.0
+q008,enumeration,What are the main limitations of current serverless platforms discussed in the paper?,0.567,0.544,100.0
+q009,reasoning,How does serverless billing differ from traditional serverful cloud billing?,0.778,0.833,100.0
+q010,direct_fact,When did serverless computing attract widespread attention and with which service?,1.0,1.0,100.0
+q011,enumeration,Which applications stretch the limits of today's serverless platforms according to the paper?,0.5,0.631,100.0
+q012,direct_fact,Τι είναι το utility computing;,0.556,0.667,100.0
+q013,enumeration,Ποια είναι τα 10 κύρια εμπόδια του cloud computing που αναφέρει το paper;,1.0,1.0,100.0
+q014,reasoning,Πώς βοηθά η ελαστικότητα στη μεταφορά του ρίσκου πρόβλεψης ζήτησης;,1.0,1.0,100.0
+q015,direct_fact,Τι είναι το cold start στο serverless computing;,0.429,0.333,100.0
+q016,reasoning,Γιατί το serverless απλοποιεί τον προγραμματισμό στο cloud;,0.611,0.731,100.0
+q017,direct_fact,Τι αναφέρει το paper για το reputation fate sharing;,1.0,1.0,100.0
+q018,reasoning,Τι προβλέπει το paper για το μέλλον του serverless computing;,0.75,0.815,100.0
+q019,out_of_corpus,What do the documents say about quantum computing performance?,0.0,0.0,0.0
+q020,out_of_corpus,Ποια είναι η τιμή του Bitcoin σύμφωνα με τα έγγραφα;,0.0,0.0,0.0
+q021,enumeration,Which specific AWS and Google Cloud services does the paper give as examples of serverless offerings?,0.5,0.693,100.0
+q022,enumeration,Which five applications does the paper analyze in depth as stretching today's serverless computing?,1.0,1.0,100.0
+q023,enumeration,Ποια είναι τα κύρια αρχιτεκτονικά στοιχεία της πλατφόρμας IBM OpenWhisk;,1.0,1.0,100.0
+q024,enumeration,What scientific applications has PyWren been used for according to the paper?,1.0,1.0,100.0
+q025,direct_fact,Ποιες τιμές ηλεκτρικού ρεύματος ανά κιλοβατώρα αναφέρει το paper και για ποιον λόγο διαφέρουν;,1.0,1.0,100.0
+q026,reasoning,Why is object storage such as S3 inadequate for fine-grained state sharing between serverless functions?,1.0,1.0,100.0
+q027,enumeration,"Which storage categories does the paper compare in its storage table, and what mean latency does each have?",0.667,0.64,66.7
+q028,direct_fact,Which encoder and command-line settings did the ExCamera evaluation use?,0.0,0.0,0.0
+q029,reasoning,Πώς εγγυάται το MapReduce το ίδιο αποτέλεσμα παρά τις αστοχίες μηχανημάτων;,0.178,0.0,100.0
+q030,reasoning,Γιατί το paper υποστηρίζει ότι η φράση pay as you go αποδίδει καλύτερα το οικονομικό όφελος από το CapEx to OpEx;,1.0,1.0,100.0
+q031,direct_fact,What does the paper say about the two major contributions of ExCamera?,1.0,1.0,100.0
+q032,enumeration,What opportunities does the paper pair with the obstacles of scaling quickly and software licensing?,0.556,0.667,100.0
+q033,direct_fact,Ποιο παράδειγμα κόστους αδειοδότησης λογισμικού δίνει το paper και πώς συγκρίνεται η τιμή του Windows στο EC2 με την έκδοση ανοιχτού κώδικα;,1.0,1.0,100.0
+q034,enumeration,"What fallacy about porting serverless applications does the paper identify, and which project does it cite as a step toward portability?",1.0,1.0,100.0
+q035,reasoning,Πώς απαντά το paper στον ισχυρισμό ότι οι cloud functions δεν μπορούν να εξυπηρετήσουν εφαρμογές χαμηλής καθυστέρησης;,0.333,0.5,100.0
+q036,direct_fact,What example of offloading API calls from a mobile app to the backend does the paper give?,1.0,1.0,100.0
+q037,direct_fact,Τι αναφέρει το κείμενο για την επέκταση του serverless πέρα από τα παραδοσιακά cloud platforms;,1.0,1.0,100.0
+q038,reasoning,Why does the CIDR paper argue that FaaS stymies hardware-accelerated software innovation?,1.0,1.0,100.0
+q039,reasoning,What does the CIDR paper mean by fluid code and data placement?,1.0,1.0,100.0
+q040,enumeration,On which four metrics was ExCamera evaluated and what was the headline result?,1.0,1.0,100.0
+q041,enumeration,Πώς λειτουργεί ο μηχανισμός των counters στο MapReduce;,1.0,1.0,100.0
+q042,reasoning,Πόσο επηρεάζουν οι backup tasks και οι αστοχίες μηχανημάτων τον χρόνο εκτέλεσης του sort;,1.0,1.0,100.0
+q043,direct_fact,How does PyWren package and execute a user's Python function on AWS Lambda?,1.0,1.0,100.0
+q044,multi_hop,The Berkeley view names ExCamera as an application that stretches serverless computing — what speedup does the ExCamera paper itself report?,0.111,0.167,33.3
+q045,multi_hop,Πώς περιγράφουν το πρόβλημα της αποθήκευσης στο serverless το Berkeley view και η κριτική του CIDR;,0.156,0.0,100.0
+q046,multi_hop,"How does MapReduce handle worker failures, and how does PyWren instead delegate that to the cloud provider?",0.714,0.667,100.0
+q047,multi_hop,Ποια στοιχεία προσθέτει η αρχιτεκτονική του OpenWhisk σε σχέση με το γενικό serverless επίπεδο που περιγράφει το Berkeley view;,0.333,0.421,66.7
+q048,out_of_corpus,What do the documents say about GDPR compliance requirements for cloud providers?,0.0,0.0,0.0
+q049,out_of_corpus,Ποια αποτελέσματα κλινικών δοκιμών αναφέρονται στα έγγραφα;,0.0,0.0,0.0
+q050,out_of_corpus,What benchmark results for GPU tensor cores are reported in these papers?,0.0,0.0,0.0

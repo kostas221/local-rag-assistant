@@ -1,13 +1,13 @@
-import asyncio
-import math
 import json
+import math
 import os
-from pydantic import BaseModel, Field
-import google.generativeai as genai
+
 from dotenv import load_dotenv
+from pydantic import BaseModel, Field
 
 # --- ΕΙΣΑΓΩΓΗ ΑΠΟ ΤΟ ΔΙΚΟ ΣΟΥ BACKEND ---
-from ai_core import search_documents, ask_ai
+from ai_core import ask_ai, search_documents
+from genai_compat import genai  # deprecated SDK, τεκμηριωμένο: βλ. genai_compat.py
 
 load_dotenv()
 
@@ -15,17 +15,37 @@ load_dotenv()
 genai.configure(api_key=os.getenv("GEMINI_API_KEY"))
 judge_model = genai.GenerativeModel(os.getenv("GEMINI_MODEL", "gemini-2.5-flash"))
 
-# Το golden_set_20 αφορά ΑΠΟΚΛΕΙΣΤΙΚΑ αυτά τα 2 papers (10 Q «Above the Clouds»,
-# 8 Q «Serverless», 2 αρνητικά out-of-corpus). Καρφώνουμε το eval corpus εδώ ώστε
-# τυχόν ΑΛΛΑ έγγραφα στη βάση (π.χ. demo uploads) να ΜΗΝ μολύνουν τη μέτρηση — το
-# αποτέλεσμα μένει reproducible πάνω στο documented corpus του RESULTS.md.
-GOLDEN_CORPUS = ["EECS-2009-28.pdf", "1902.03383v1.pdf"]
+# Καρφωμένο eval corpus: τυχόν ΑΛΛΑ έγγραφα στη βάση (π.χ. demo uploads) δεν
+# μολύνουν τη μέτρηση.
+#
+# v1 = τα 2 papers πάνω στα οποία μετρήθηκαν τα νούμερα του RESULTS.md.
+#      ΜΗΝ το αλλάξεις — είναι το reproducible baseline της διπλωματικής.
+CORPUS_V1 = ["EECS-2009-28.pdf", "1902.03383v1.pdf"]
+
+# v2 = τα ίδια 2 + 5 papers ίδιου πεδίου ως distractors. Δεν γράφονται ερωτήσεις
+#      γι' αυτά· υπάρχουν για να κάνουν το retrieval να ΞΕΧΩΡΙΣΕΙ, όχι απλώς να
+#      βρει. Χωρίς αυτά στη λίστα, το where filter τα κόβει και δεν παίζουν ρόλο.
+CORPUS_V2 = [
+    *CORPUS_V1,
+    "1812.03651.pdf",         # One Step Forward, Two Steps Back
+    "1702.04024.pdf",         # Occupy the Cloud (PyWren)
+    "1706.03178.pdf",         # Current Trends and Open Problems
+    "excamera-nsdi17.pdf",    # ExCamera
+    "mapreduce-osdi04.pdf",   # MapReduce
+]
+
+# Default v2. Για αναπαραγωγή των v1 νούμερων: EVAL_CORPUS=v1
+GOLDEN_CORPUS = CORPUS_V1 if os.getenv("EVAL_CORPUS", "v2").lower() == "v1" else CORPUS_V2
 
 
 class TestQuestion(BaseModel):
     question: str
     keywords: list[str]
     reference_answer: str
+    # Προαιρετικά, από το golden_set_50: σταθερό id (για versioning των
+    # αποτελεσμάτων) και κατηγορία. Τα παλιά σετ δεν τα έχουν -> default κενά.
+    id: str = ""
+    category: str = ""
 
 
 class RetrievalEval(BaseModel):
@@ -72,9 +92,21 @@ def calculate_ndcg(keyword: str, retrieved_docs: list, k: int = 10) -> float:
 # --- ΟΙ ΔΥΟ ΚΥΡΙΕΣ ΣΥΝΑΡΤΗΣΕΙΣ ΑΞΙΟΛΟΓΗΣΗΣ ---
 
 
-async def evaluate_retrieval(test: TestQuestion) -> RetrievalEval:
-    results = await search_documents(test.question, target_filenames=GOLDEN_CORPUS)
-    retrieved_texts = [text for text, meta in results]
+async def retrieve(test: TestQuestion):
+    """ΜΙΑ ανάκτηση ανά ερώτηση, μοιρασμένη σε όλα τα στάδια του eval.
+
+    Το search_documents είναι το ακριβό κομμάτι (dense embed + BM25 + cross-encoder,
+    ~13s σε CPU). Παλιότερα καλούνταν ΤΡΕΙΣ φορές ανά ερώτηση: μία στο
+    evaluate_retrieval, μία στο evaluate_answer για το context, και μία μέσα στο
+    ask_ai. Τώρα γίνεται μία και περνιέται παντού.
+    """
+    return await search_documents(test.question, target_filenames=GOLDEN_CORPUS)
+
+
+async def evaluate_retrieval(test: TestQuestion, retrieved=None) -> RetrievalEval:
+    if retrieved is None:
+        retrieved = await retrieve(test)
+    retrieved_texts = [text for text, meta in retrieved]
 
     if not retrieved_texts:
         return RetrievalEval(mrr=0.0, ndcg=0.0, keyword_coverage=0.0)
@@ -94,14 +126,18 @@ async def evaluate_retrieval(test: TestQuestion) -> RetrievalEval:
     return RetrievalEval(mrr=avg_mrr, ndcg=avg_ndcg, keyword_coverage=coverage)
 
 
-async def evaluate_answer(test: TestQuestion) -> tuple[AnswerEval, str]:
-    # 1. Φέρνουμε το ίδιο context που θα έβλεπε το μοντέλο (για το faithfulness)
-    retrieved = await search_documents(test.question, target_filenames=GOLDEN_CORPUS)
+async def evaluate_answer(test: TestQuestion, retrieved=None) -> tuple[AnswerEval, str]:
+    # 1. Το ίδιο context που θα έβλεπε το μοντέλο (για το faithfulness)
+    if retrieved is None:
+        retrieved = await retrieve(test)
     context = "\n---\n".join(text for text, meta in retrieved)
 
-    # 2. Παράγουμε την απάντηση του συστήματος (ίδιο pinned corpus)
+    # 2. Παράγουμε την απάντηση του συστήματος πάνω στο ΙΔΙΟ context — το
+    #    precomputed γλιτώνει την επανάληψη της ανάκτησης μέσα στο ask_ai και
+    #    εγγυάται ότι judge και μοντέλο είδαν ακριβώς τα ίδια αποσπάσματα.
     full_answer = ""
-    async for chunk in ask_ai(test.question, target_filenames=GOLDEN_CORPUS):
+    async for chunk in ask_ai(test.question, target_filenames=GOLDEN_CORPUS,
+                              precomputed=retrieved):
         if chunk["type"] == "text":
             full_answer += chunk["data"]
 

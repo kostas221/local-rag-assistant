@@ -7,8 +7,8 @@ import csv
 import json
 import statistics
 
-from evaluation.eval_engine import evaluate_retrieval, evaluate_answer, TestQuestion, GOLDEN_CORPUS
 from ai_core import search_documents
+from evaluation.eval_engine import GOLDEN_CORPUS, TestQuestion, evaluate_answer, evaluate_retrieval
 
 TESTS = "evaluation/golden_set_20.jsonl"
 DELAY = 5  # sec παύση μεταξύ ερωτήσεων. Με paid tier (1000 RPM) αρκεί ελάχιστο

@@ -1,27 +1,39 @@
-import os
+import asyncio
 import json
+import logging
+import os
+import sys
 import time
 import uuid
-import sys
-import shutil
-import logging
-from pathlib import Path
 from collections import defaultdict, deque
+from pathlib import Path
+
 # ΠΡΟΣΘΗΚΗ: Κάναμε import το BackgroundTasks
-from fastapi import FastAPI, Depends, HTTPException, UploadFile, File, Form, status, Request, BackgroundTasks
-from fastapi.responses import JSONResponse, StreamingResponse
+from fastapi import (
+    BackgroundTasks,
+    Depends,
+    FastAPI,
+    File,
+    HTTPException,
+    Request,
+    UploadFile,
+    status,
+)
 from fastapi.exceptions import RequestValidationError
-from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from fastapi.middleware.cors import CORSMiddleware  # <-- ΝΕΟ IMPORT ΑΣΦΑΛΕΙΑΣ
-from sqlalchemy.orm import Session, joinedload
-from sqlalchemy import or_, text
+from fastapi.responses import JSONResponse, Response, StreamingResponse
+from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from jose import JWTError, jwt
 from loguru import logger
+from sqlalchemy import or_, text
+from sqlalchemy.orm import Session, joinedload
+
+import ai_core  # <-- ΤΟ ΑΦΗΝΟΥΜΕ ΜΟΝΟ ΕΔΩ (Top-level)
+import database
+import metrics
 import models
 import schemas
-import database
 import security
-import ai_core  # <-- ΤΟ ΑΦΗΝΟΥΜΕ ΜΟΝΟ ΕΔΩ (Top-level)
 
 # --- 1. INTERCEPT HANDLER (Ο "Κατάσκοπος" των Logs) ---
 
@@ -166,6 +178,39 @@ def health_check(db: Session = Depends(get_db)):
             content={"status": "unhealthy", "database": "disconnected"})
 
 
+# Προαιρετικό κλειδί για το /metrics. Το πρότυπο του Prometheus είναι ανοιχτό
+# endpoint σε ΕΣΩΤΕΡΙΚΟ δίκτυο — εδώ όμως το API είναι εκτεθειμένο, και τα
+# metrics αποκαλύπτουν μοτίβα χρήσης (πόσες ερωτήσεις, πόσα tokens). Χωρίς
+# METRICS_TOKEN μένει ανοιχτό (τοπικό dev)· με token, απαιτείται.
+METRICS_TOKEN = os.getenv("METRICS_TOKEN", "")
+
+
+@app.get("/metrics")
+def prometheus_metrics(request: Request):
+    """Συσσωρευμένα metrics σε Prometheus text format.
+
+    ΟΧΙ per-request δεδομένα: αυτά πάνε ήδη σε logs + UI. Εδώ ζουν τα νούμερα
+    που έχουν νόημα ΜΟΝΟ αθροιστικά — πόσο συχνά κόβει το gate, πόσο συχνά
+    σώζει ο corrective agent, πώς κινείται το latency διαχρονικά."""
+    if METRICS_TOKEN and request.headers.get("X-Metrics-Token") != METRICS_TOKEN:
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
+                            detail="Invalid metrics token")
+    # Response, ΟΧΙ JSONResponse: το exposition format είναι ΩΜΟ κείμενο. Με
+    # JSONResponse θα γινόταν quoted string και κανένας scraper δεν θα το διάβαζε.
+    return Response(content=metrics.render(),
+                    media_type="text/plain; version=0.0.4; charset=utf-8")
+
+
+@app.get("/metrics/json")
+def metrics_json(request: Request):
+    """Ίδια δεδομένα για ανθρώπους, με τα παράγωγα ποσοστά ήδη υπολογισμένα
+    (gate_block_rate, corrective_success_rate) -> δεν τα ξαναϋπολογίζει ο καθένας."""
+    if METRICS_TOKEN and request.headers.get("X-Metrics-Token") != METRICS_TOKEN:
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
+                            detail="Invalid metrics token")
+    return metrics.snapshot()
+
+
 def get_current_user(token: str = Depends(oauth2_scheme), db: Session = Depends(get_db)):
     credentials_exception = HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED,
@@ -178,8 +223,9 @@ def get_current_user(token: str = Depends(oauth2_scheme), db: Session = Depends(
         username: str = payload.get("sub")
         if username is None:
             raise credentials_exception
-    except JWTError:
-        raise credentials_exception
+    except JWTError as e:
+        # `from e`: κρατά την αρχική αιτία στο traceback αντί να τη σβήνει
+        raise credentials_exception from e
 
     user = db.query(models.User).filter(
         models.User.username == username).first()
@@ -211,30 +257,45 @@ def register(user: schemas.UserCreate, db: Session = Depends(get_db)):
     return {"message": "User created successfully"}
 
 
-# --- Rate limiting στο login (anti brute-force) ---
-# Απλό in-memory fixed-window: max N προσπάθειες ανά IP σε X δευτερόλεπτα.
+# --- Rate limiting (anti brute-force + anti abuse) ---
+# Απλό in-memory fixed-window: max N αιτήματα ανά κλειδί σε X δευτερόλεπτα.
+# ΠΕΡΙΟΡΙΣΜΟΣ: in-memory σημαίνει (α) χάνεται σε restart, (β) ΔΕΝ μοιράζεται
+# μεταξύ processes. Με έναν worker (βλ. Dockerfile) είναι σωστό· σε οριζόντια
+# κλιμάκωση θέλει Redis — ίδιος περιορισμός με τα caches του ai_core.
 LOGIN_MAX_ATTEMPTS = 5
 LOGIN_WINDOW_SEC = 60
+# Το /chat καίει ~2s CPU (query embedding + rerank) ΚΑΙ ένα Gemini call ανά
+# αίτημα. Χωρίς όριο, ένας authenticated χρήστης γονατίζει τον server και καίει
+# το API quota όλων.
+CHAT_MAX_REQUESTS = int(os.getenv("CHAT_MAX_REQUESTS", "20"))
+CHAT_WINDOW_SEC = int(os.getenv("CHAT_WINDOW_SEC", "60"))
+
 _login_attempts = defaultdict(deque)
+_chat_attempts = defaultdict(deque)
 
 
-def check_login_rate_limit(ip: str):
+def _check_rate_limit(bucket: dict, key: str, max_hits: int,
+                      window_sec: int, message: str) -> None:
+    """Fixed-window rate limit, κοινό για login (ανά IP) και chat (ανά χρήστη)."""
     now = time.time()
-    # Καθάρισε ληγμένα IPs ώστε το dict να μη μεγαλώνει επ' άπειρον (memory leak):
-    # χωρίς αυτό, κάθε IP που μπήκε ποτέ έμενε για πάντα στη μνήμη.
-    if len(_login_attempts) > 1000:
-        for k in [k for k, dq in _login_attempts.items()
-                  if not dq or now - dq[-1] > LOGIN_WINDOW_SEC]:
-            del _login_attempts[k]
-    attempts = _login_attempts[ip]
-    # Πέτα τις προσπάθειες που βγήκαν εκτός του χρονικού παραθύρου
-    while attempts and now - attempts[0] > LOGIN_WINDOW_SEC:
-        attempts.popleft()
-    if len(attempts) >= LOGIN_MAX_ATTEMPTS:
-        raise HTTPException(
-            status_code=429,
-            detail="Πολλές προσπάθειες σύνδεσης. Δοκίμασε ξανά σε ένα λεπτό.")
-    attempts.append(now)
+    # Καθάρισε ληγμένα κλειδιά ώστε το dict να μη μεγαλώνει επ' άπειρον (memory
+    # leak): χωρίς αυτό, κάθε κλειδί που μπήκε ποτέ έμενε για πάντα στη μνήμη.
+    if len(bucket) > 1000:
+        for k in [k for k, dq in bucket.items()
+                  if not dq or now - dq[-1] > window_sec]:
+            del bucket[k]
+    hits = bucket[key]
+    # Πέτα τα αιτήματα που βγήκαν εκτός του χρονικού παραθύρου
+    while hits and now - hits[0] > window_sec:
+        hits.popleft()
+    if len(hits) >= max_hits:
+        raise HTTPException(status_code=429, detail=message)
+    hits.append(now)
+
+
+def check_login_rate_limit(ip: str) -> None:
+    _check_rate_limit(_login_attempts, ip, LOGIN_MAX_ATTEMPTS, LOGIN_WINDOW_SEC,
+                      "Πολλές προσπάθειες σύνδεσης. Δοκίμασε ξανά σε ένα λεπτό.")
 
 
 @app.post("/login")
@@ -265,10 +326,17 @@ def process_document(doc_id: int, file_path: str, filename: str, user_id: int):
         if doc:
             doc.status = new_status
             db.commit()
+        else:
+            # RACE: το έγγραφο διαγράφηκε ΟΣΟ έτρεχε το ingest. Το delete_document
+            # έτρεξε πριν γραφτεί έστω ένα chunk, οπότε δεν βρήκε τίποτα να σβήσει —
+            # και μόλις γράψαμε chunks για doc_id που δεν υπάρχει πια. Ορφανά:
+            # αόρατα στο UI, πλήρως ενεργά στο retrieval. Τα καθαρίζουμε εδώ.
+            logger.warning(
+                f"Το έγγραφο {doc_id} διαγράφηκε κατά το ingest — "
+                f"καθαρισμός ορφανών chunks του '{filename}'.")
+            ai_core.delete_file_from_db(filename, user_id=user_id, doc_id=doc_id)
     finally:
         db.close()
-
-# ΠΡΟΣΘΗΚΗ: Ασύγχρονη επεξεργασία αρχείων
 
 
 @app.post("/upload")
@@ -291,16 +359,24 @@ async def upload_file(
     # Γράψιμο σε streaming (σταθερή μνήμη ακόμα και για μεγάλα PDF)
         # Γράψιμο σε streaming ΜΕ όριο μεγέθους: χωρίς αυτό ένα τεράστιο "PDF"
     # γεμίζει τον δίσκο πριν καν φτάσει στο ingest.
+        # Γράψιμο σε streaming ΜΕ όριο μεγέθους: χωρίς αυτό ένα τεράστιο "PDF"
+    # γεμίζει τον δίσκο πριν καν φτάσει στο ingest.
     MAX_UPLOAD_BYTES = 50 * 1024 * 1024  # 50MB
-    written = 0
-    too_big = False
-    with open(file_path, "wb") as buffer:
-        while chunk := file.file.read(1024 * 1024):
-            written += len(chunk)
-            if written > MAX_UPLOAD_BYTES:
-                too_big = True
-                break
-            buffer.write(chunk)
+
+    def _write_stream() -> tuple[int, bool]:
+        """Blocking IO -> σε thread. Χωρίς αυτό, ένα upload 50MB μπλοκάρει το
+        event loop και ΟΛΟΥΣ τους άλλους χρήστες όσο διαρκεί (ASYNC230)."""
+        n, over = 0, False
+        with open(file_path, "wb") as buffer:
+            while chunk := file.file.read(1024 * 1024):
+                n += len(chunk)
+                if n > MAX_UPLOAD_BYTES:
+                    over = True
+                    break
+                buffer.write(chunk)
+        return n, over
+
+    _written, too_big = await asyncio.to_thread(_write_stream)
     if too_big:
         os.remove(file_path)
         raise HTTPException(status_code=413,
@@ -415,7 +491,14 @@ def delete_conversation(conversation_id: int, current_user: models.User = Depend
 
 
 @app.post("/chat")
-async def chat_with_ai(query: schemas.ChatMessage, current_user: models.User = Depends(get_current_user), db: Session = Depends(get_db)):
+async def chat_with_ai(query: schemas.ChatMessage,
+                       current_user: models.User = Depends(get_current_user),
+                       db: Session = Depends(get_db)):
+    # Ανά ΧΡΗΣΤΗ και όχι ανά IP: το endpoint είναι authenticated, και η IP
+    # μοιράζεται πίσω από NAT/proxy ή αλλάζει.
+    _check_rate_limit(_chat_attempts, str(current_user.id),
+                      CHAT_MAX_REQUESTS, CHAT_WINDOW_SEC,
+                      "Πολλά αιτήματα. Περίμενε λίγο πριν ξαναρωτήσεις.")
     # ΑΣΦΑΛΕΙΑ: επιβεβαίωσε ότι το conversation ανήκει στον χρήστη
     conv = db.query(models.Conversation).filter(
         models.Conversation.id == query.conversation_id,
@@ -442,6 +525,11 @@ async def chat_with_ai(query: schemas.ChatMessage, current_user: models.User = D
                 elif packet["type"] == "text":
                     full_answer += packet["data"]
                     yield f"{json.dumps({'type': 'text', 'data': packet['data']})}\n"
+
+                elif packet["type"] == "metrics":
+                    # Per-phase latency + tokens προς το UI. ΔΕΝ αποθηκεύεται στο
+                    # μήνυμα: αφορά αυτή την εκτέλεση, όχι το περιεχόμενο.
+                    yield f"{json.dumps({'type': 'metrics', 'data': packet['data']})}\n"
         finally:
             # Τρέχει ΚΑΙ αν ο χρήστης κλείσει τη σελίδα στη μέση του streaming:
             # σώζουμε ό,τι παρήχθη, αλλιώς η απάντηση εξαφανίζεται από το ιστορικό.

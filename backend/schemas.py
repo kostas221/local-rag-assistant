@@ -1,6 +1,7 @@
 import re
+from typing import Any
+
 from pydantic import BaseModel, validator
-from typing import List, Dict, Any, Optional
 
 EMAIL_RE = re.compile(r"^[^@\s]+@[^@\s]+\.[^@\s]+$")
 
@@ -50,7 +51,7 @@ class ChatMessage(BaseModel):
     target_filenames: list = []
     persona: str = "Researcher"  # The AI answer style
     # <--- Η ΠΡΟΣΘΗΚΗ ΜΑΣ: Δέχεται λίστα από λεξικά (τη μνήμη)
-    history: List[Dict[str, Any]] = []
+    history: list[dict[str, Any]] = []
 
 # Σχέδιο για το 👍 / 👎 feedback
 
@@ -58,7 +59,7 @@ class ChatMessage(BaseModel):
 class FeedbackCreate(BaseModel):
     message_id: int
     is_positive: bool
-    comment: Optional[str] = None
+    comment: str | None = None
 
     @validator("comment")
     def _trim_comment(cls, v):

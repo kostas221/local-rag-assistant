@@ -15,9 +15,14 @@ python-multipart==0.0.32
 
 # AI / RAG
 google-generativeai==0.8.6
+numpy<2
 chromadb==0.4.6
 sentence-transformers==5.5.1
 rank-bm25==0.2.2
+# pymupdf αντί για pypdf στην εξαγωγή: μετρημένο σε όλο το corpus, τα σπασμένα
+# tokens ("A WS", "distribu ted") πέφτουν 3.7% -> 2.5% και είναι 4x ταχύτερο.
+# Το pypdf μένει εγκατεστημένο: το χρησιμοποιούν τα probes για σύγκριση.
+pymupdf==1.28.0
 pypdf==6.13.0
 langchain-text-splitters==0.2.4
 

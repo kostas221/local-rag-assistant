@@ -1,0 +1,18 @@
+id,category,q1,q2,best1,best2,kw1,kw2,outcome
+h001,enumeration,How fast is each of the different kinds of storage they compared?,Storage performance comparison,-2.004324197769165,0.3326027989387512,3,3,ΣΩΘΗΚΕ
+h003,direct_fact,One of the obstacles they list is about moving big amounts of data around. What do they suggest doing about it?,Data transfer overhead mitigation strategies,-2.722794532775879,-3.504673480987549,3,2,ακόμα κομμ.
+h005,direct_fact,What is the difference between the two types of services they describe?,Service type comparison,-3.286621570587158,-5.283760070800781,2,1,ακόμα κομμ.
+h006,enumeration,Which kinds of programs have a hard time on these platforms today?,Workload characteristics challenging serverless platforms,-2.723301649093628,6.177927017211914,9,,ΣΩΘΗΚΕ
+h008,direct_fact,Why does the same thing end up costing different amounts in different places?,Cloud resource pricing variability,-5.175212860107422,0.4951850473880768,,,ΣΩΘΗΚΕ
+h009,direct_fact,What do the authors of that system paper themselves say they contributed?,What do the authors of that system paper themselves say they contributed?,-2.992046356201172,-2.992046356201172,,,ακόμα κομμ.
+h012,multi_hop,Specific implementation versus general description,Implementation vs. Specification,-6.179714202880859,-2.1345269680023193,,,ακόμα κομμ.
+h013,multi_hop,The two papers disagree about whether remote storage is fast enough to work with. What measurement settles the argument?,Remote storage performance metrics,-3.0940089225769043,1.577087163925171,1,2,ΣΩΘΗΚΕ
+h015,multi_hop,Is it still worth keeping the data right next to the machines doing the work?,Data locality benefits,-3.8718411922454834,1.5664881467819214,9,1,ΣΩΘΗΚΕ
+h016,multi_hop,Why do they bring up that older system as a warning?,"that older system"" ""anti-pattern",-9.957977294921875,-10.571674346923828,11,10,ακόμα κομμ.
+q019,out_of_corpus,What do the documents say about quantum computing performance?,Quantum computing performance,-3.98898983001709,-4.444197654724121,,,κομμένο
+q020,out_of_corpus,Bitcoin price,"This query is outside the field of computer science. It will be returned unchanged.
+
+Bitcoin price",-6.547511100769043,-9.611258506774902,,,κομμένο
+q048,out_of_corpus,What do the documents say about GDPR compliance requirements for cloud providers?,GDPR compliance cloud providers,-2.685126781463623,-4.836031913757324,,,κομμένο
+q049,out_of_corpus,clinical trial results,clinical trial results,-10.665491104125977,-10.665491104125977,,,κομμένο
+q050,out_of_corpus,What benchmark results for GPU tensor cores are reported in these papers?,GPU tensor core benchmarks,-3.27569580078125,-3.8330047130584717,,,κομμένο

@@ -1,0 +1,13 @@
+id,parent,category,leak_test,n_kw,cov_no_rw,cov_rw,cov_oracle,pages_no_rw,pages_rw,pages_oracle,followup,rewritten
+c001,q003,direct_fact,False,3,0,3,3,0,8,8,And the one about moving data around — what workaround do they suggest?,Data transfer bottlenecks workaround
+c002,q007,direct_fact,False,3,0,3,3,0,8,8,What is the difference between the two parts of that definition?,What is the difference between Functions as a Service and Backend as a Service in the Berkeley view of serverless computing?
+c003,q011,enumeration,False,3,0,3,3,0,8,8,Which applications actually run into those limits?,"Which applications actually run into inadequate storage for fine-grained operations, lack of coordination between functions, poor performance for standard communication patterns, and predictable performance issues such as cold starts?"
+c004,q016,reasoning,False,3,3,3,3,8,8,8,Και γιατί απλοποιεί τον προγραμματισμό;,Γιατί το serverless computing απλοποιεί τον προγραμματισμό;
+c005,q025,direct_fact,False,3,0,3,3,0,8,8,Τι τιμές αναφέρει για το ρεύμα και γιατί διαφέρουν;,Τι τιμές αναφέρει η τοποθεσία ενός datacenter για το ρεύμα και γιατί διαφέρουν;
+c006,q027,enumeration,False,3,3,3,3,8,8,8,What mean latency does each of them have?,What mean latency does each of the cloud storage options have?
+c007,q031,direct_fact,False,3,0,3,3,0,8,7,What do the authors list as its two main contributions?,ExCamera authors list two main contributions
+c008,q055,multi_hop,False,3,3,3,3,8,8,8,PyWren reports the same problem on its 1TB sort — where do its stragglers come from?,PyWren 1TB sort stragglers origin
+c009,q005,direct_fact,False,3,0,0,3,0,0,8,Which specific regulations do they name there?,Which specific regulations do the authors name in the paper regarding data confidentiality and the ability to audit what happens to data once it lives outside the company's own datacenter?
+c010,q020,out_of_corpus,True,1,0,0,0,0,0,0,Και ποια είναι η τιμή του Bitcoin;,Τιμή Bitcoin
+c011,q019,out_of_corpus,True,1,0,0,0,0,0,0,And what about quantum computing performance?,Quantum computing performance results reported in the paper
+c012,q042,reasoning,False,3,3,3,3,8,8,7,Πόσο το επηρεάζουν τα backup tasks και οι αστοχίες μηχανημάτων;,Πόσο επηρεάζουν τα backup tasks και οι αστοχίες μηχανημάτων το sort benchmark;
