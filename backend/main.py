@@ -5,7 +5,6 @@ import os
 import sys
 import time
 import uuid
-from collections import defaultdict, deque
 from pathlib import Path
 
 # ΠΡΟΣΘΗΚΗ: Κάναμε import το BackgroundTasks
@@ -32,6 +31,7 @@ import ai_core  # <-- ΤΟ ΑΦΗΝΟΥΜΕ ΜΟΝΟ ΕΔΩ (Top-level)
 import database
 import metrics
 import models
+import rate_limit
 import schemas
 import security
 
@@ -258,10 +258,11 @@ def register(user: schemas.UserCreate, db: Session = Depends(get_db)):
 
 
 # --- Rate limiting (anti brute-force + anti abuse) ---
-# Απλό in-memory fixed-window: max N αιτήματα ανά κλειδί σε X δευτερόλεπτα.
-# ΠΕΡΙΟΡΙΣΜΟΣ: in-memory σημαίνει (α) χάνεται σε restart, (β) ΔΕΝ μοιράζεται
-# μεταξύ processes. Με έναν worker (βλ. Dockerfile) είναι σωστό· σε οριζόντια
-# κλιμάκωση θέλει Redis — ίδιος περιορισμός με τα caches του ai_core.
+# Fixed-window με πλάτη την PostgreSQL: ΜΟΙΡΑΖΕΤΑΙ μεταξύ διεργασιών και
+# επιβιώνει σε restart. Η in-memory εκδοχή (defaultdict/deque) ήταν ο τελευταίος
+# λόγος που το σύστημα δεν άντεχε πάνω από μία διεργασία — ο άλλος, η ακύρωση
+# cache του corpus, είχε ήδη λυθεί με το mtime-based _corpus_signature.
+# Ο αλγόριθμος και οι δύο συνειδητές αλλαγές συμπεριφοράς: rate_limit.py
 LOGIN_MAX_ATTEMPTS = 5
 LOGIN_WINDOW_SEC = 60
 # Το /chat καίει ~2s CPU (query embedding + rerank) ΚΑΙ ένα Gemini call ανά
@@ -270,37 +271,15 @@ LOGIN_WINDOW_SEC = 60
 CHAT_MAX_REQUESTS = int(os.getenv("CHAT_MAX_REQUESTS", "20"))
 CHAT_WINDOW_SEC = int(os.getenv("CHAT_WINDOW_SEC", "60"))
 
-_login_attempts = defaultdict(deque)
-_chat_attempts = defaultdict(deque)
 
-
-def _check_rate_limit(bucket: dict, key: str, max_hits: int,
-                      window_sec: int, message: str) -> None:
-    """Fixed-window rate limit, κοινό για login (ανά IP) και chat (ανά χρήστη)."""
-    now = time.time()
-    # Καθάρισε ληγμένα κλειδιά ώστε το dict να μη μεγαλώνει επ' άπειρον (memory
-    # leak): χωρίς αυτό, κάθε κλειδί που μπήκε ποτέ έμενε για πάντα στη μνήμη.
-    if len(bucket) > 1000:
-        for k in [k for k, dq in bucket.items()
-                  if not dq or now - dq[-1] > window_sec]:
-            del bucket[k]
-    hits = bucket[key]
-    # Πέτα τα αιτήματα που βγήκαν εκτός του χρονικού παραθύρου
-    while hits and now - hits[0] > window_sec:
-        hits.popleft()
-    if len(hits) >= max_hits:
-        raise HTTPException(status_code=429, detail=message)
-    hits.append(now)
-
-
-def check_login_rate_limit(ip: str) -> None:
-    _check_rate_limit(_login_attempts, ip, LOGIN_MAX_ATTEMPTS, LOGIN_WINDOW_SEC,
-                      "Πολλές προσπάθειες σύνδεσης. Δοκίμασε ξανά σε ένα λεπτό.")
+def check_login_rate_limit(db: Session, ip: str) -> None:
+    rate_limit.check(db, "login", ip, LOGIN_MAX_ATTEMPTS, LOGIN_WINDOW_SEC,
+                     "Πολλές προσπάθειες σύνδεσης. Δοκίμασε ξανά σε ένα λεπτό.")
 
 
 @app.post("/login")
 def login(request: Request, form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(get_db)):
-    check_login_rate_limit(request.client.host)
+    check_login_rate_limit(db, request.client.host)
     user = db.query(models.User).filter(
         models.User.username == form_data.username).first()
     if not user or not security.verify_password(form_data.password, user.hashed_password):
@@ -494,11 +473,9 @@ def delete_conversation(conversation_id: int, current_user: models.User = Depend
 async def chat_with_ai(query: schemas.ChatMessage,
                        current_user: models.User = Depends(get_current_user),
                        db: Session = Depends(get_db)):
-    # Ανά ΧΡΗΣΤΗ και όχι ανά IP: το endpoint είναι authenticated, και η IP
-    # μοιράζεται πίσω από NAT/proxy ή αλλάζει.
-    _check_rate_limit(_chat_attempts, str(current_user.id),
-                      CHAT_MAX_REQUESTS, CHAT_WINDOW_SEC,
-                      "Πολλά αιτήματα. Περίμενε λίγο πριν ξαναρωτήσεις.")
+    rate_limit.check(db, "chat", str(current_user.id),
+                     CHAT_MAX_REQUESTS, CHAT_WINDOW_SEC,
+                     "Πολλά αιτήματα. Περίμενε λίγο πριν ξαναρωτήσεις.")
     # ΑΣΦΑΛΕΙΑ: επιβεβαίωσε ότι το conversation ανήκει στον χρήστη
     conv = db.query(models.Conversation).filter(
         models.Conversation.id == query.conversation_id,

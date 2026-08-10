@@ -1,0 +1,22 @@
+id,category,question,enriched,best_before,best_after,cov_before,cov_after,verdict
+h001,enumeration,How fast is each of the different kinds of storage they compared?,How fast is each of the different kinds of storage latency throughput they compared?,-1.907,-0.25,33.3,100.0,ίδιο
+h002,direct_fact,What exact settings did they use when they ran the encoder?,What exact settings did they use when they ran the encoder vpxenc codec bitrate?,1.27,3.249,0.0,100.0,ίδιο
+h003,direct_fact,One of the obstacles they list is about moving big amounts of data around. What do they suggest doing about it?,One of the obstacles they list is about moving big amounts of data around. What do they suggest doing about it? data transfer bandwidth,-2.392,0.398,100.0,100.0,ίδιο
+h004,direct_fact,Τι λένε για τα νομικά ζητήματα εμπιστευτικότητας και ελέγχου;,Τι λένε για τα νομικά ζητήματα εμπιστευτικότητας και ελέγχου;,-2.735,-2.735,0.0,0.0,ίδιο
+h005,direct_fact,Ποια είναι η διαφορά ανάμεσα στα δύο είδη υπηρεσιών που περιγράφουν;,Ποια είναι η διαφορά ανάμεσα στα δύο είδη υπηρεσιών που περιγράφουν serverless FaaS PaaS;,-3.442,-1.175,0.0,100.0,ΣΩΘΗΚΕ
+h006,enumeration,Which kinds of programs have a hard time on these platforms today?,Which kinds of programs have a hard time on these platforms today serverless FaaS latency?,-2.164,4.292,33.3,100.0,ίδιο
+h007,reasoning,Γιατί συμφέρει να μην αγοράζεις μηχανήματα από πριν;,Γιατί συμφέρει να μην αγοράζεις μηχανήματα από πριν cloud computing serverless pay-as-you-go,-5.735,-4.068,0.0,0.0,ίδιο
+h008,direct_fact,Why does the same thing end up costing different amounts in different places?,Why does the same thing end up costing different amounts in different places cloud pricing model,-6.236,0.127,0.0,0.0,ΣΩΘΗΚΕ
+h009,direct_fact,What do the authors of that system paper themselves say they contributed?,What do the authors of that system paper themselves say they contributed novelty?,-5.331,-7.819,0.0,0.0,ίδιο
+h010,direct_fact,Τι παράδειγμα δίνουν για κινητά;,Τι παράδειγμα δίνουν για κινητά mobile devices;,-7.966,-6.606,0.0,0.0,ίδιο
+h011,multi_hop,How much faster was it?,How much faster was it latency throughput performance?,-2.352,2.225,66.7,66.7,ίδιο
+h012,multi_hop,Τι προσθέτει η συγκεκριμένη υλοποίηση σε σχέση με τη γενική περιγραφή που δίνει το άλλο paper;,Τι προσθέτει η συγκεκριμένη υλοποίηση σε σχέση με τη γενική περιγραφή που δίνει το άλλο paper;,-1.477,-1.477,0.0,0.0,ίδιο
+h013,multi_hop,The two papers disagree about whether remote storage is fast enough to work with. What measurement settles the argument?,The two papers disagree about whether remote storage is fast enough to work with. What measurement latency throughput settles the argument?,-1.977,-0.573,33.3,33.3,ίδιο
+h014,multi_hop,What do they do about the few workers that finish much later than the rest?,What do they do about the few workers stragglers that finish much later than the rest?,-1.984,1.508,66.7,100.0,ίδιο
+h015,multi_hop,Is it still worth keeping the data right next to the machines doing the work?,Is it still worth keeping the data right next to the machines doing the work data locality?,-4.992,-2.855,0.0,0.0,ίδιο
+h016,multi_hop,Why do they bring up that older system as a warning?,Why do they bring up that older system as a warning?,-9.368,-9.368,0.0,0.0,ίδιο
+q019,out_of_corpus,What do the documents say about quantum computing performance?,What do the documents say about quantum computing performance quantum supremacy speedup?,-4.442,-7.332,0.0,0.0,ίδιο
+q020,out_of_corpus,Ποια είναι η τιμή του Bitcoin σύμφωνα με τα έγγραφα;,Ποια είναι η τιμή του Bitcoin σύμφωνα με τα έγγραφα;,-3.315,-3.315,0.0,0.0,ίδιο
+q048,out_of_corpus,What do the documents say about GDPR compliance requirements for cloud providers?,What do the documents say about GDPR compliance requirements for cloud providers data privacy?,-3.12,-1.999,0.0,0.0,*** ΔΙΑΡΡΟΗ ***
+q049,out_of_corpus,Ποια αποτελέσματα κλινικών δοκιμών αναφέρονται στα έγγραφα;,Ποια αποτελέσματα κλινικών δοκιμών αναφέρονται στα έγγραφα;,-3.397,-3.397,0.0,0.0,ίδιο
+q050,out_of_corpus,What benchmark results for GPU tensor cores are reported in these papers?,What benchmark results for GPU tensor cores NVIDIA are reported in these papers?,-5.053,-7.382,0.0,0.0,ίδιο

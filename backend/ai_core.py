@@ -1144,7 +1144,10 @@ async def ask_ai(question, target_filenames, history=None, user_id=None, persona
         metrics.inc("rag_gemini_errors_total", {"type": type(e).__name__})
         metrics.inc("rag_answers_total", {"outcome": "generation_error"})
         yield {"type": "text",
-               "data": "⚠️ Temporary AI issue (possibly a rate limit). Please try again shortly."}
+               "data": ("⚠️ Προσωρινό πρόβλημα με το AI (πιθανόν όριο ρυθμού). "
+                        "Δοκίμασε ξανά σε λίγο." if _has_greek(question)
+                        else "⚠️ Temporary AI issue (possibly a rate limit). "
+                             "Please try again shortly.")}
 
         # --- MLOps lite: latency ανά φάση + FinOps token counting (ποτέ fatal) ---
     # Τα ΙΔΙΑ νούμερα πάνε και στα logs και στο UI: observability που δεν βλέπει

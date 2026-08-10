@@ -57,3 +57,18 @@ class Feedback(Base):
     # Προαιρετικό σχόλιο (κυρίως στα 👎): το «γιατί» δεν άρεσε η απάντηση —
     # τροφοδοτεί τον βρόχο βελτίωσης (failure case -> νέο golden-set case).
     comment = Column(String, nullable=True)
+
+
+
+class RateLimit(Base):
+    """Μετρητής fixed-window, μοιρασμένος μεταξύ διεργασιών (βλ. rate_limit.py).
+
+    Σύνθετο primary key (bucket, key, window_start): είναι ΚΑΙ το μοναδικό
+    constraint πάνω στο οποίο δουλεύει το ON CONFLICT DO UPDATE, άρα η αύξηση
+    του μετρητή γίνεται ατομικά μέσα στη βάση — χωρίς race ανάμεσα σε workers.
+    """
+    __tablename__ = "rate_limits"
+    bucket = Column(String, primary_key=True)        # "login" | "chat"
+    key = Column(String, primary_key=True)           # IP ή user_id
+    window_start = Column(Integer, primary_key=True)  # unix, ευθυγραμμισμένο
+    hits = Column(Integer, nullable=False, default=0)
