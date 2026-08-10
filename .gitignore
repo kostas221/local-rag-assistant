@@ -9,6 +9,9 @@ backups/
 
 # committed Chroma collections caused stale data to seed the Docker volume
 vector_db/
+# πειραματικές βάσεις (v1 corpus, chunk sweeps) — χτίζονται από script, ποτέ commit
+vector_db_v1/
+vector_db_chunk*/
 ragas_env/
 
 # Σκουπίδι από Git Bash path conversion: ένα `pip download` με Linux path
