@@ -50,10 +50,16 @@ jobs:
         working-directory: backend
         # Το test_metrics.py ανήκει εδώ: το metrics.py δεν έχει ΚΑΜΙΑ εξάρτηση
         # (ούτε ai_core) — μόνο threading + time από τη stdlib.
+        #
+        # Το test_rate_limit.py ομοίως: SQLite in-memory, κανένα μοντέλο. Ελέγχει
+        # ότι το όριο ΟΝΤΩΣ κόβει — τα endpoint tests χτυπούν το /login αλλά ποτέ
+        # αρκετές φορές ώστε να ενεργοποιηθεί, δηλαδή επιβεβαιώνουν μόνο ότι δεν
+        # σκάει. Και ότι η αύξηση γίνεται ΜΕΣΑ στη βάση: αν ξαναγραφτεί ως
+        # read-modify-write σε Python, το race επανέρχεται ΣΙΩΠΗΛΑ.
         run: |
           pytest tests/test_schemas.py tests/test_security.py \
                  tests/test_gemini_rest.py tests/test_api_endpoints.py \
-                 tests/test_metrics.py -v
+                 tests/test_metrics.py tests/test_rate_limit.py -v
 
   core-tests:
     # Τα tests του RAG πυρήνα: el_tokenize, _has_greek, _build_where, _rrf_fuse

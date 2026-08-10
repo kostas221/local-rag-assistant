@@ -44,7 +44,7 @@ docker compose exec backend python evaluation/ablation_ladder.py
 - **Conversational rewriting** — follow-up questions are rewritten into self-contained queries using history. Measured at **90% coverage vs a 41.2% random floor**; leak tests confirm an off-topic follow-up is still refused
 - **Greek-aware BM25** — accent-stripping tokenizer so unaccented queries still match
 - **Robust PDF extraction** — PyMuPDF with Unicode NFKC normalization and de-hyphenation. Fixes broken intra-word spacing (`A WS` → `AWS`), ligatures, and line-break hyphens that silently break both lexical and semantic matching
-- **Built-in evaluation framework** — retrieval metrics, LLM-as-judge scoring, RAGAS cross-validation, per-stage query tracing, random-chance baselines, a determinism checker, and a CI regression gate
+- **Built-in evaluation framework** — retrieval metrics, LLM-as-judge scoring, RAGAS cross-validation, per-stage query tracing, random-chance baselines, and a determinism checker. CI runs lint plus 72 tests on every push; the retrieval evaluation runs locally, since the corpus is not committed
 - **Prometheus metrics** — `/metrics` in text exposition format, **zero dependencies, zero extra containers**: gate block rate, corrective success rate, token counts (FinOps), latency per phase
 - **Feedback capture** — 👍/👎 on every answer with an optional comment, upserted per message in Postgres — ground truth for error analysis
 - **Multi-user** — JWT auth, per-user document ownership, public/private sharing, and rate limiting **shared across processes** via Postgres
