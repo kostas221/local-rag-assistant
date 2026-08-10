@@ -44,7 +44,7 @@ docker compose exec backend python evaluation/ablation_ladder.py
 - **Conversational rewriting** — follow-up questions are rewritten into self-contained queries using history. Measured at **90% coverage vs a 41.2% random floor**; leak tests confirm an off-topic follow-up is still refused
 - **Greek-aware BM25** — accent-stripping tokenizer so unaccented queries still match
 - **Robust PDF extraction** — PyMuPDF with Unicode NFKC normalization and de-hyphenation. Fixes broken intra-word spacing (`A WS` → `AWS`), ligatures, and line-break hyphens that silently break both lexical and semantic matching
-- **Built-in evaluation framework** — retrieval metrics, LLM-as-judge scoring, RAGAS cross-validation, per-stage query tracing, random-chance baselines, and a determinism checker. CI runs lint plus 72 tests on every push; the retrieval evaluation runs locally, since the corpus is not committed
+- **Built-in evaluation framework** — retrieval metrics, LLM-as-judge scoring, RAGAS cross-validation, per-stage query tracing, random-chance baselines, and a determinism checker. CI runs lint plus 80 tests on every push; the retrieval evaluation runs locally, since the corpus is not committed
 - **Prometheus metrics** — `/metrics` in text exposition format, **zero dependencies, zero extra containers**: gate block rate, corrective success rate, token counts (FinOps), latency per phase
 - **Feedback capture** — 👍/👎 on every answer with an optional comment, upserted per message in Postgres — ground truth for error analysis
 - **Multi-user** — JWT auth, per-user document ownership, public/private sharing, and rate limiting **shared across processes** via Postgres
@@ -166,6 +166,27 @@ One measurement is **explicitly not reproducible** and is labelled as such: corr
 docker compose exec backend python evaluation/check_determinism.py
 ```
 
+### Confidence intervals — and what they disqualify
+
+Determinism guarantees the same *run* twice. It says nothing about whether a difference between two *configurations* is real. For most of this project that question was answered by a rule of thumb ("don't believe a delta under 0.01"). A **paired bootstrap** — resampling questions rather than runs, since both configurations saw identical questions — replaces the rule of thumb with a measurement:
+
+| L-6 → L-12, same 45 questions | Δ | 95% CI | Verdict |
+|---|---|---|---|
+| MRR 0.770 → 0.793 | +0.023 | [−0.016, +0.064] | **not proven** |
+| nDCG 0.786 → 0.807 | +0.021 | [−0.009, +0.052] | **not proven** |
+| Coverage 98.52 → 98.52 | 0.000 | [0.000, 0.000] | **identical in 45/45** |
+
+The noise floor at n=45 is **±0.04, not ±0.01** — the rule of thumb was four times too lenient. The honest consequence is uncomfortable and is stated anyway: **most decisions in this project were made in a region where the statistics cannot adjudicate.** That is an inherent limit of 122 pages and 45 questions, not a flaw in the method.
+
+So the reranker upgrade is kept as a **defensible decision, not a proven one**. It rests on four converging indications — hard set 10/16 → 12/16 (n=16), gate gap 0.89 → 1.04 (n=61), corrective hallucinations 2 → 0, correct chunk at rank 1 36 → 40/56 — **none of which is individually significant at its own sample size**, for a measured +9% end-to-end cost. Distinguishing an indication from a proof is worth more than claiming certainty.
+
+A zero-width interval is also worth reading correctly: it is **not** maximum uncertainty but the opposite — every resample returned 0, because the difference is 0 on every single question. Calling that "noise" would bury the strongest result the test can produce.
+
+```bash
+docker compose exec backend python evaluation/bootstrap_ci.py \
+    --compare evaluation/runs/retrieval_l6.csv evaluation/runs/retrieval_l12.csv
+```
+
 ### Performance
 
 | | Value |
@@ -186,6 +207,30 @@ Concurrency, re-measured after the reranker upgrade:
 
 The L-6 → L-12 upgrade cost **−35% throughput**, which is *exactly* the predicted ceiling (rerank got 1.61× heavier → 1/1.61 = 62%; measured 65%). The agreement matters more than the number: it proves there is **no hidden contention** — only the reranker's CPU cost. The saturation point did not move.
 
+### Cost
+
+Latency and quality are measured exhaustively in most RAG write-ups; cost usually isn't, even though every improvement to one is paid for by the other two. Here is the third axis, measured on the real retrieval path with **zero generation calls**:
+
+| Per 1,000 questions | |
+|---|---|
+| Gemini input (9,693 tokens/q) | $2.91 |
+| Gemini output (1,112 tokens/q) | $2.78 |
+| Embeddings, reranking, BM25 | **$0.00** — local, CPU |
+| **Total** | **$5.69** (€5.27) |
+
+Running it for a month at that volume costs **€10.27** all-in: €5 for a CPU-only VPS plus €5.27 of API. Generation is 51% of the bill; the rest is fixed and does not scale with usage. A GPU-hosted equivalent cannot make that claim — here embedding and reranking are free per call precisely because they run locally.
+
+Two things fall out of the breakdown that are worth stating:
+
+- **Output tokens cost 8.3× more than input tokens.** 1,112 output tokens cost nearly as much as 10,885 input tokens. So every context-size decision in this project (rejecting `EXPAND_INPUT=15`, rejecting decomposition at +4,640 tokens/question) was pulling the *cheap* lever. The expensive lever is answer length — and that is deliberately not touched, because the "Researcher" persona requires completeness.
+- **`THINKING_BUDGET=512` is 21% of the total bill** — $1.28 per 1,000 questions for reasoning the user never sees. That is not waste, it is a *price*: setting it to 0 was measured and dropped one multi-hop answer's faithfulness from 5.0 to **2.0**. The cost/quality trade is quantified rather than assumed.
+
+Token counts are estimated as characters ÷ 4.53, a ratio calibrated against a real `promptTokenCount`; the estimate lands at 9,693 against a measured ~9,800, a 1% error. Prices are parameters with documented defaults, not hard-coded assumptions.
+
+```bash
+docker compose exec backend python evaluation/measure_cost.py --ratio 4.53
+```
+
 ## Technical decisions
 
 What was measured, kept, and — more often — **rejected**. Each row is a real experiment, not an opinion.
@@ -196,7 +241,7 @@ What was measured, kept, and — more often — **rejected**. Each row is a real
 |---|---|
 | **PyMuPDF + NFKC** instead of pypdf | Broken tokens 3.7% → 2.5%; 721 ligatures and 941 hyphenations eliminated. MRR +0.026 |
 | **English reranker** (568M → 22M params) | The pipeline translates to English *before* retrieval, so the cross-encoder always sees English↔English. Latency 15,048 ms → **693 ms (21.7×)**, and answer accuracy went *up* (4.96 → 5.00) |
-| **MiniLM-L-6 → MiniLM-L-12** (22M → 33M) + recalibrating both thresholds | Hard set **10/16 → 12/16** · gate gap 0.89 → **1.04** · correct chunk at rank 1 **36 → 40 / 56** · corrective-pass hallucinations **2 → 0 at every threshold**. Unchanged: coverage (identical in all 45), 61/61 gate, 5/5 refusals, judge. Cost: **+275 ms (+9% e2e)** |
+| **MiniLM-L-6 → MiniLM-L-12** (22M → 33M) + recalibrating both thresholds | Hard set **10/16 → 12/16** · gate gap 0.89 → **1.04** · correct chunk at rank 1 **36 → 40 / 56** · corrective-pass hallucinations **2 → 0 at every threshold**. Unchanged: coverage (identical in all 45), 61/61 gate, 5/5 refusals, judge. Cost: **+275 ms (+9% e2e)**. Kept as a *defensible* decision, not a proven one — see [confidence intervals](#confidence-intervals--and-what-they-disqualify) |
 | **Exact search** instead of HNSW | Identical top-30 (30/30, same order), no speed cost at 418 vectors, and deterministic. Also reads vectors from the store rather than the graph, so a partially-built index cannot hide |
 | **Deterministic fusion** | `dict.fromkeys` + tie-break on chunk id. Made every subsequent measurement trustworthy |
 | **CPU thread count** | PyTorch picked 4 threads via a physical-core heuristic that comes out conservative under WSL2, while the container had 8. Rerank 667 ms → **479 ms (1.39×)**; retrieval scores bit-identical, since only the parallelism of the same computation changed |
@@ -316,9 +361,9 @@ First start downloads the embedding + reranker models (~2.5 GB, cached in a volu
 ```bash
 # full suite: validators, security, fusion logic, relevance gate, corrective
 # agent, metrics, REST generation, and HTTP endpoints incl. authorization
-docker compose exec backend python -m pytest tests/ -q          # 72 tests
+docker compose exec backend python -m pytest tests/ -q          # 80 tests
 
-# the model-free ones — no 2.4GB download, no Postgres, ~2s (43 tests, fast CI job)
+# the model-free ones — no 2.4GB download, no Postgres, ~1s (51 tests, fast CI job)
 
 # determinism — all stage signatures must be identical across runs
 docker compose exec backend python evaluation/check_determinism.py
@@ -368,6 +413,8 @@ backend/
     golden_conversations.jsonl   # 12 multi-turn, incl. 2 leak probes
     ablation_ladder.py           # what each stage contributes
     random_coverage_baseline.py  # analytic chance floor per set
+    bootstrap_ci.py              # paired bootstrap: is a delta real at this n?
+    measure_cost.py              # $ per 1,000 questions, zero generation calls
     trace_query.py               # per-stage tracer: where was the page lost?
     compare_pages_rerankers.py   # do the pages reaching the LLM change?
     measure_gate_margin.py       # gate calibration
@@ -376,7 +423,7 @@ backend/
     scaling_benchmark.py         # 418 → 200k chunks
     concurrency_benchmark.py     # latency vs throughput
     runs/                        # CSVs from rejected experiments, kept as evidence
-  tests/                # 72 tests; 43 need neither models nor Postgres
+  tests/                # 80 tests; 51 need neither models nor Postgres
 frontend/
   app_ui.py             # Streamlit chat UI
 docker-compose.yml      # postgres + backend + frontend, named volumes

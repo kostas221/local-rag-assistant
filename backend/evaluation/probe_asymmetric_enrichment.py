@@ -87,7 +87,10 @@ def main() -> int:
     ap.add_argument("--csv", default=None)
     args = ap.parse_args()
 
-    with open(args.src, encoding="utf-8") as f:
+    # utf-8-sig: ανέχεται BOM. Τα CSV που γράφτηκαν σε Windows ονομάζουν την
+    # πρώτη στήλη '﻿id' και το r["id"] σκάει (ή, χειρότερα, το .get() γυρίζει
+    # σιωπηλά None και όλες οι γραμμές «ταιριάζουν» μεταξύ τους).
+    with open(args.src, encoding="utf-8-sig") as f:
         rows = list(csv.DictReader(f))
     kw = load_keywords()
     print(f"{len(rows)} ερωτήσεις από {args.src} (ΜΗΔΕΝ κλήσεις Gemini)\n")

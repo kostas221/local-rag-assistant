@@ -72,6 +72,19 @@ dense μόνο     0.731         0/5
 **Είναι ορατό ΜΟΝΟ επειδή το golden set έχει ερωτήσεις ΧΩΡΙΣ απάντηση** — τα περισσότερα σετ δεν έχουν, και γι' αυτό δεν μπορούν να μετρήσουν την άμυνα κατά της ψευδαίσθησης.
 Το project είχε ~15 τεκμηριωμένες **απορρίψεις** και **καμία θετική σκάλα**. Ίδιο δεδομένο, ανάποδα — αλλά η θετική εκδοχή είναι αυτή που διαβάζεται σε 30 δευτερόλεπτα.
 
+### ⚠️ ΔΙΑΣΤΗΜΑΤΑ ΕΜΠΙΣΤΟΣΥΝΗΣ (`bootstrap_ci.py`, ζευγαρωτό, 10.000 resamples, seed=42)
+```
+L-6 -> L-12, ίδιες 45 ερωτήσεις, κάθε μοντέλο με ΤΟ ΔΙΚΟ ΤΟΥ κατώφλι:
+  MRR       0.770 -> 0.793   Δ +0.023   CI [−0.016, +0.064]   ΔΕΝ ΑΠΟΔΕΙΚΝΥΕΤΑΙ
+  nDCG      0.786 -> 0.807   Δ +0.021   CI [−0.009, +0.052]   ΔΕΝ ΑΠΟΔΕΙΚΝΥΕΤΑΙ
+  coverage  98.52 -> 98.52   Δ  0.000   CI [ 0.000,  0.000]   ΤΑΥΤΟΣΗΜΟ σε 45/45
+```
+**Το πάτωμα θορύβου είναι ±0.04 σε n=45, όχι ±0.01.** Ο εμπειρικός κανόνας ήταν **τετραπλάσια επιεικής**. Συνέπεια: **οι περισσότερες αποφάσεις αυτού του project πάρθηκαν σε περιοχή όπου η στατιστική δεν αποφαίνεται** — εγγενές όριο 122 σελίδων / 45 ερωτήσεων, όχι αδυναμία της δουλειάς.
+
+**Η αναβάθμιση σε L-12 ΔΕΝ αποδεικνύεται από το κύριο σετ.** Στηρίζεται σε **σύγκλιση τεσσάρων ενδείξεων** — hard set 10/16→12/16 (n=16), κενό gate 0.89→1.04 (n=61), corrective ψευδαισθήσεις 2→0, kw@1 36→40/56 — **καμία από τις οποίες είναι στατιστικά σημαντική στο δικό της n**. Είναι **υπερασπίσιμη απόφαση, ΟΧΙ αποδεδειγμένη**, με κόστος +9% e2e. Γράψ' το έτσι: η διάκριση ένδειξης/απόδειξης είναι ισχυρότερη από ισχυρισμό βεβαιότητας.
+
+**ΠΑΓΙΔΑ ΠΟΥ ΚΟΣΤΙΣΕ ΜΙΑ ΛΑΘΟΣ ΣΥΓΚΡΙΣΗ:** το `r_control.csv` είναι το control των ablation της **7/8**, ΟΧΙ L-6 baseline — coverage 89.3% (πριν τις διορθώσεις keywords + translation prompt). Η σύγκριση μαζί του μετράει «όλη τη δουλειά 7→10/8» (coverage +9.26, CI [+3.33,+16.66] = **ΠΡΑΓΜΑΤΙΚΗ ΒΕΛΤΙΩΣΗ**), όχι τον reranker. Ελέγχεται από την **αντίφαση**: το CLAUDE.md έλεγε ήδη «coverage ταυτόσημο», άρα ύποπτο ήταν το benchmark.
+
 ### Golden sets — ΤΡΙΑ αρχεία, ξεχωριστά επίτηδες
 ```
 golden_set_50.jsonl          45 in-corpus + 5 out_of_corpus · το σταθερό baseline
@@ -188,8 +201,22 @@ leak tests       2/2 σιωπηλά
 **Το leak test ήταν το πραγματικό ρίσκο και δεν υπάρχει:** με ιστορικό γεμάτο cloud/datacenter, το «Και ποια είναι η τιμή του Bitcoin;» έγινε **«Τιμή Bitcoin»** — καθαρό, και κόπηκε από το gate. Η άμυνα κατά της ψευδαίσθησης κρατάει και σε πολύγυρες συνομιλίες.
 **Μία αποτυχία (c009):** το rewrite κατάπιε ολόκληρη την προηγούμενη απάντηση (30 λέξεις) -> ο reranker κατέρρευσε, το gate έκοψε, **ούτε ο corrective το έσωσε**. Ίδιο μοτίβο με το hard set, αντίστροφη αιτία: εκεί πολύ **αόριστο**, εδώ πολύ **φλύαρο**. n=1 -> ΔΕΝ διορθώθηκε.
 
+### Κόστος (`measure_cost.py`, ΜΗΔΕΝ κλήσεις γέννησης) — 10/8/2026
+```
+ανά ερώτηση    context 7.9 σελ / 40.739 χαρ -> 9.693 tokens in · 1.112 out · 0.00569 $
+ανά 1.000      Gemini in 2.91 $ · out 2.78 $ · embeddings/rerank/BM25 0.00 $  =  5.69 $ (5.27 €)
+μήνας          VPS 5 € + Gemini 5.27 € = 10.27 €   (γέννηση = 51%)
+```
+**Βαθμονόμηση tokens:** ο λόγος `χαρ/token = 4.53` δεν είναι default — προκύπτει από το `measure_chunk_tokens.py` και **σταυρώνει** με το μετρημένο `promptTokenCount`: εκτίμηση 9.693 vs μετρημένο ~9.800 = **1% σφάλμα**. Με τον default 4.0 έβγαινε 10.885 (**+11%**).
+
+**Δύο ευρήματα:**
+1. **Η έξοδος κοστίζει 8.3× ανά token.** 1.112 tokens εξόδου ≈ ίδιο κόστος με 10.885 εισόδου. Άρα κάθε απόφαση για το μέγεθος του context (απόρριψη `EXPAND_INPUT=15`, απόρριψη decomposition με +4.640 tokens) τραβούσε τον **φθηνό** μοχλό. Ο ακριβός είναι το μήκος απάντησης — και δεν τον αγγίζουμε, γιατί η persona «Researcher» απαιτεί πληρότητα.
+2. **Το `THINKING_BUDGET=512` είναι το 21% του λογαριασμού** (1.28 $/1.000). ΔΕΝ είναι σπατάλη — είναι **τιμή**: το 0 μετρήθηκε και έριξε q047 faithfulness 5.0→**2.0**. Ποσοτικοποιημένο cost/quality trade, όχι υπόθεση.
+
+Το embedding/reranking/BM25 είναι **0 $ ανά κλήση** επειδή τρέχουν σε CPU. Ένα GPU demo δεν μπορεί να το πει αυτό — εκεί θα ήταν **τρίτο** μεταβλητό κόστος.
+
 ### Tests
-**72 tests** · 43 model-free (τρέχουν σε ~2 s, χωρίς μοντέλα/Postgres, στο fast CI job).
+**80 tests** · 51 model-free (τρέχουν σε ~1 s, χωρίς μοντέλα/Postgres, στο fast CI job). Ήταν καταγεγραμμένα 72/43 — τα 8 του `test_rate_limit.py` δεν είχαν προστεθεί.
 
 ## ΤΙ ΚΡΑΤΗΘΗΚΕ (με μέτρηση)
 
@@ -344,6 +371,8 @@ docker compose exec backend python -m pytest tests/ -q
 docker compose exec backend python evaluation/check_determinism.py
 docker compose exec backend python evaluation/verify_keywords.py evaluation/golden_set_50.jsonl
 docker compose exec backend python evaluation/random_coverage_baseline.py            # πάτωμα τύχης, ΟΛΑ τα σετ
+docker compose exec backend python evaluation/bootstrap_ci.py --compare evaluation/runs/retrieval_l6.csv evaluation/runs/retrieval_l12.csv
+docker compose exec backend python evaluation/measure_cost.py --ratio 4.53           # $/1.000, ΜΗΔΕΝ γέννηση
 docker compose exec backend python run_eval.py evaluation/golden_set_50.jsonl --retrieval-only
 docker compose exec backend python run_eval.py evaluation/golden_set_50.jsonl   # + judge, καίει quota
 docker compose exec backend python evaluation/measure_latency.py
@@ -433,6 +462,9 @@ backend/evaluation/probe_query_enrichment.py  εμπλουτισμός ερωτ�
 backend/evaluation/probe_asymmetric_enrichment.py  πλούσιο query στην ανάκτηση / αρχικό στον κριτή — ΑΠΟΡΡΙΦΘΗΚΕ (μηδέν κέρδος)
 backend/evaluation/prompts/enrich_v2.txt      αυστηρό enrichment prompt (≤3 όροι) — ΑΠΟΡΡΙΦΘΗΚΕ
 backend/evaluation/random_coverage_baseline.py  ΠΑΤΩΜΑ ΤΥΧΗΣ για coverage (υπεργεωμετρική, 0 κόστος)
+backend/evaluation/bootstrap_ci.py            ΖΕΥΓΑΡΩΤΟ bootstrap: είναι πραγματική η διαφορά σε αυτό το n;
+backend/evaluation/measure_cost.py            $ ανά 1.000 ερωτήσεις — ΜΗΔΕΝ κλήσεις γέννησης
+backend/tests/test_rate_limit.py              8 tests, SQLite· ελέγχει ότι η αύξηση γίνεται ΜΕΣΑ στη βάση
 backend/evaluation/measure_chunk_tokens.py    πόσα chunks περικόπτει ΣΙΩΠΗΛΑ ο reranker (0 μοντέλα, ~5 s)
 backend/rate_limit.py                         rate limiting σε PostgreSQL — μοιράζεται μεταξύ διεργασιών
 backend/evaluation/suggest_keywords.py        προτείνει ΣΠΑΝΙΑ keywords από τη σελίδα-στόχο (βάρος 1/df)
