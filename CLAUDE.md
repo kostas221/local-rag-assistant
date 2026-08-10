@@ -9,7 +9,8 @@
 - Τις αλλαγές σε **υπάρχοντα Python κώδικα** τις περνάει ο χρήστης — δώσε ακριβή ΑΠΟ/ΣΕ. Νέα scripts, config, CI workflows και τεκμηρίωση γράψ' τα μόνος.
 - Αν δεις κάτι άλλο που θέλει φτιάξιμο, **πες το αλλά μην το κάνεις**.
 - **Μέτρα πριν αλλάξεις.** Έχει σώσει τη βραδιά πάνω από πέντε φορές.
-- Μη δέχεσαι ισχυρισμούς από papers/εκθέσεις χωρίς μέτρηση **στα δικά μας δεδομένα**. Έχουν διαψευστεί **επτά** φορές (BGE sparse, jina reranker, ONNX INT8, torch INT8, thinking=0, λακωνικό corrective prompt, query decomposition). Οι δύο τελευταίες ήταν **δικές μου** προτάσεις — η μέτρηση δεν κάνει διακρίσεις.
+- Μη δέχεσαι ισχυρισμούς από papers/εκθέσεις χωρίς μέτρηση **στα δικά μας δεδομένα**. Έχουν διαψευστεί **εννιά** φορές (BGE sparse, jina reranker, ONNX INT8, torch INT8, thinking=0, λακωνικό corrective prompt, query decomposition, «μεγαλύτερο reranker = καλύτερο» → bge-base 3/16, «ίδιο coverage = ίδιο prompt» → 35/56 σελίδες άλλαξαν). Οι τέσσερις τελευταίες ήταν **δικές μου** — η μέτρηση δεν κάνει διακρίσεις.
+- **Μια απόρριψη ισχύει μόνο για το σετ πάνω στο οποίο έγινε.** Το bge-v2-m3 απορρίφθηκε το 2025 στο golden_set_50· όταν αποδείχθηκε ότι εκείνο το σετ είχε survivorship bias, η απόρριψη έπρεπε να ξαναελεγχθεί — και το **ενδιάμεσο μέγεθος (L-12) δεν είχε δοκιμαστεί ΠΟΤΕ**. Εκεί ήταν όλο το κέρδος. Όταν αλλάζει το σετ, ξανακοίτα τι είχες κόψει.
 - **Όταν ένα σετ δίνει τέλειο σκορ, ύποπτο είναι το σετ.** Το gate ήταν 61/61 επειδή είχαμε πετάξει την ερώτηση που το χαλούσε.
 - **Όταν ένα αποτέλεσμα αντιφάσκει με προηγούμενη πιο αξιόπιστη μέτρηση, ύποπτο είναι το benchmark — όχι το σύστημα.** Συνέβη δύο φορές (crossover στα 2.000 vectors, TORCH_THREADS=4).
 
@@ -32,9 +33,9 @@ FastAPI 0.99.1 + Pydantic V1 (pinned) · Streamlit · ChromaDB 0.4.6 · PostgreS
 2. dense **bge-m3** (1024-d, cosine) — exact brute-force, **ΟΧΙ HNSW** · `DENSE_CANDIDATES=30`
 3. BM25 με ελληνικό tokenizer (30)
 4. RRF k=60 με ντετερμινιστικό tie-break στο chunk id → top-`RERANK_CANDIDATES=15`
-5. cross-encoder **ms-marco-MiniLM-L-6-v2** (22M, αγγλικό — το pipeline μεταφράζει πριν) · `RERANK_BATCH_SIZE=4`
-6. relevance gate `MIN_RERANK_SCORE=-2.0` (**ωμά logits**, ΟΧΙ sigmoid)
-6β. **corrective retry** — ΜΟΝΟ αν το 6 έκοψε: rewrite με Gemini → πλήρες 2ο pass (2-5) → **αυστηρότερο** `CORRECTIVE_MIN_SCORE=+1.0`. Διακόπτης `ENABLE_CORRECTIVE`. Μηδέν κόστος στο happy path
+5. cross-encoder **ms-marco-MiniLM-L-12-v2** (33M, αγγλικό — το pipeline μεταφράζει πριν) · `RERANK_BATCH_SIZE=4`
+6. relevance gate `MIN_RERANK_SCORE=-2.6` (**ωμά logits**, ΟΧΙ sigmoid)
+6β. **corrective retry** — ΜΟΝΟ αν το 6 έκοψε: rewrite με Gemini → πλήρες 2ο pass (2-5) → **αυστηρότερο** `CORRECTIVE_MIN_SCORE=+0.4`. Διακόπτης `ENABLE_CORRECTIVE`. Μηδέν κόστος στο happy path
 7. `_expand_to_pages(sorted_final[:EXPAND_INPUT=12], MAX_PAGES=8)`
 8. Gemini streaming **μέσω REST** (`gemini_rest.py`) + metrics packet προς το UI
 
@@ -46,39 +47,63 @@ Caches (per-process, με locks): BM25 index, dense matrix, sparse weights, tran
 
 ## ΤΡΕΧΟΝΤΑ ΝΟΥΜΕΡΑ
 
-### Retrieval (ντετερμινιστικά, επαναλήψιμα) — 6/8/2026
+### Retrieval (ντετερμινιστικά, επαναλήψιμα) — 10/8/2026, MiniLM-L-12
 ```
-in-corpus (n=45)        MRR 0.770 · nDCG 0.786 · coverage 98.5%
+in-corpus (n=45)        MRR 0.793 · nDCG 0.807 · coverage 98.5%
 out_of_corpus (n=5)     0.000 — και τα 5 κόβονται σωστά από το gate
-ανά κατηγορία: direct_fact 0.869 · enumeration 0.686 · reasoning 0.851 · multi_hop 0.447
+ανά κατηγορία: direct_fact 0.869 · enumeration 0.751 · reasoning 0.831 · multi_hop 0.541
 ΤΥΧΑΙΟ BASELINE in-corpus: 0.149   (multi_hop: ~0.037 — τα keywords του είναι σπανιότερα)
 ```
-**ΗΤΑΝ 0.747 / 97.0%.** Το +0.023 **ΔΕΝ είναι όλο βελτίωση** — μέσα του κρύβονται δύο *διορθώσεις μέτρησης* (q047, q044 είχαν keywords που δεν υπήρχαν στο corpus) και η αλλαγή στο translation prompt. **Δεν απομονώθηκαν** — συνειδητή επιλογή: το prompt δεν επρόκειτο να αναιρεθεί, άρα η απομόνωση θα ήταν γνώση χωρίς συνέπεια.
+**ΗΤΑΝ 0.770 / 98.5% με το L-6** (και 0.747 / 97.0% πριν τις διορθώσεις q047/q044 + το translation prompt· εκείνο το +0.023 **ΔΕΝ ήταν όλο βελτίωση** — μέσα του κρύβονταν δύο *διορθώσεις μέτρησης*, και **δεν απομονώθηκαν** συνειδητά).
 
-**Το multi_hop 0.447 είναι ~12× πάνω από την τύχη του· το συνολικό 0.770 είναι 5.2×.** Κανονικοποιημένα, τα multi_hop σκοράρουν *καλύτερα* από τον μέσο όρο. Το πραγματικό τους πρόβλημα φαίνεται στον **judge**, όχι στο MRR: αποτυγχάνει η **σύνθεση** από δύο έγγραφα, όχι η ανάκτηση.
+**Το coverage ΔΕΝ κουνήθηκε: 98.5% → 98.5%, ταυτόσημο σε ΚΑΙ ΤΙΣ 45 ερωτήσεις.** Το L-12 δεν βρίσκει άλλο υλικό — το **κατατάσσει** καλύτερα. Αυτό είναι το προφίλ ενός καλύτερου reranker, και εξηγεί γιατί το judge βγήκε ουδέτερο.
+
+**Το multi_hop 0.541 είναι ~15× πάνω από την τύχη του· το συνολικό 0.793 είναι 5.3×.** Κανονικοποιημένα, τα multi_hop σκοράρουν *καλύτερα* από τον μέσο όρο. Το πραγματικό τους πρόβλημα φαίνεται στον **judge**, όχι στο MRR: αποτυγχάνει η **σύνθεση** από δύο έγγραφα, όχι η ανάκτηση.
 
 ### Golden sets — ΤΡΙΑ αρχεία, ξεχωριστά επίτηδες
 ```
 golden_set_50.jsonl          45 in-corpus + 5 out_of_corpus · το σταθερό baseline
 golden_multihop_new.jsonl    11 cross-document multi_hop  · MRR 0.493 · judge 5.00/5.00/5.00/5.00
-golden_hard_paraphrase.jsonl 16 ΣΚΟΠΙΜΑ κακοδιατυπωμένες παραφράσεις υπαρχουσών
+golden_hard_paraphrase.jsonl 16 ΣΚΟΠΙΜΑ κακοδιατυπωμένες παραφράσεις · keywords ΣΦΙΧΤΗΚΑΝ 10/8
 golden_conversations.jsonl   12 πολύγυρες συνομιλίες (10 in-corpus + 2 leak tests)
 ```
-Το τρίτο είναι **stress test, όχι baseline**: ίδια keywords με τη γονική ερώτηση (άρα ήδη επαληθευμένα), αλλάζει ΜΟΝΟ η διατύπωση. Αν το gate κόψει, η κοπή είναι **αποδεδειγμένα** λάθος. Πέντε τύποι: `meta` / `vague` / `nojargon` / `short` / `greek`.
+Το τρίτο είναι **stress test, όχι baseline**: ίδια keywords με τη γονική ερώτηση (άρα ήδη επαληθευμένα), αλλάζει ΜΟΝΟ η διατύπωση. Αν το gate κόψει, η κοπή είναι **αποδεδειγμένα** λάθος. Πέντε τύποι: `meta` / `vague` / `nojargon` / `short` / `greek`. **Απαντιούνται 12/16** (ήταν 5/16 πριν τον agent, 10/16 με agent+L-6).
 
-### Relevance gate — κατανομή (`measure_gate_margin.py`)
+**Αυτό το σετ είναι ο μόνος οδηγός βελτίωσης που έχει απομείνει** — τα άλλα τρία είναι στο ταβάνι (61/61 gate, 48/50 judge 5/5/5/5). Κάθε αλλαγή που «δεν δείχνει τίποτα» στα κανονικά σετ, δοκίμασέ την **εδώ**.
+
+**Keywords σφιγμένα 10/8/2026** (`suggest_keywords.py`): τυχαίο MRR **0.135 → 0.089**, τυχαίο coverage **32.3% → 23.1%**, αδύναμα keywords **10 → 3**.
 ```
-in-corpus (n=56)      min -1.80 (q027) · p10 0.55 · διάμεσος 4.15 · max 9.19
-out_of_corpus (n=5)   max -2.69 (q048 GDPR) · min -10.52
-κενό 0.89 logits, ΑΣΥΜΜΕΤΡΟ: 0.69 προς out_of_corpus, μόλις 0.20 προς in-corpus
+h003  transfer/disk/bottleneck  ->  fedex/bottleneck        («FedExing Disks» = η ΙΔΙΑ η απάντηση, 4/122 σελ)
+h005  faas/baas/lambda          ->  baas/mobile-centric
+h007  elasticity/provisioning/risk -> risk/underprovisioned/mis-estimating
+h009  compositing/inter-thread/fine-grained -> compositing/inter-thread
 ```
-Στα κανονικά σετ το gate είναι **61/61 τέλειο**. Στο hard set κόβονταν **11/16**. Το «τέλειο» ήταν **survivorship bias**: το q058 γράφτηκε φυσικά, κόπηκε με -5.23 (χαμηλότερα από 3 στα 5 out_of_corpus) και **το πετάξαμε**. Ο χρήστης της παραγωγής δεν έχει αυτή την επιλογή.
+**Το h006 ΔΕΝ διορθώθηκε ΕΠΙΤΗΔΕΣ** (`excamera`/`video`/`mapreduce`, 73-92% τυχαία). Είναι κοινά **αλλά είναι και η σωστή απάντηση** — το paper όντως λέει ότι δυσκολεύονται οι video/MapReduce εφαρμογές. Σπάνια keywords θα έλεγχαν **άλλο πράγμα** από αυτό που ρωτάει η ερώτηση. **Όριο της μεθόδου keyword-proxy, όχι σφάλμα προς διόρθωση** — καλύτερο χειρότερο νούμερο παρά καλύτερο νούμερο που μετράει λάθος πράγμα.
+
+### Relevance gate — κατανομή (`measure_gate_margin.py`, n=61)
+```
+                 in-corpus (56)                    out_of_corpus (5)     κενό
+L-6    min -1.80 · p10 0.55 · διάμ 4.15 · max 9.19      max -2.69        0.89
+L-12   min -2.08 · p10 0.81 · διάμ 4.62 · max 9.27      max -3.12        1.04
+```
+**Το L-12 ΜΕΓΑΛΩΣΕ το κενό.** Οι σωστές ανέβηκαν, οι άσχετες κατέβηκαν. Ολόκληρο το εύρος `[-3.12, -2.08]` δίνει **61/61**· το **-2.6** είναι το μέσο (0.52 περιθώριο και προς τις δύο πλευρές — μεγιστοποιεί το *χειρότερο* περιθώριο). Το παλιό -2.0 **θα έσπαγε** με το L-12: θα έκοβε το q027 (-2.08).
+
+Η ασυμμετρία του L-6 (0.69 / 0.20) ήταν σκόπιμη υπέρ της άρνησης. Δεν διατηρήθηκε: ο **corrective agent** δίνει πλέον δεύτερη ευκαιρία σε ό,τι κόβεται άδικα, ενώ μια διαρροή out_of_corpus **δεν έχει δίχτυ** — αλλά ούτε πάμε κάτω από το μέσο.
+
+Στα κανονικά σετ το gate ήταν **61/61 τέλειο** ήδη με το L-6. Στο hard set κόβονταν **11/16**. Το «τέλειο» ήταν **survivorship bias**: το q058 γράφτηκε φυσικά, κόπηκε με -5.23 (χαμηλότερα από 3 στα 5 out_of_corpus) και **το πετάξαμε**. Ο χρήστης της παραγωγής δεν έχει αυτή την επιλογή.
 
 ### Answer quality (LLM-judge, Gemini 2.5 Flash)
 ```
 χωρίς multi_hop (n=46)  accuracy 5.00 · completeness 4.98 · relevance 5.00 · faithfulness 5.00
 όλες (n=50)             4.94 / 4.90 / 4.96 / 4.94
 ```
+**48/50 ερωτήσεις είναι ΗΔΗ 5/5/5/5.** Αυτό σημαίνει ότι ένα judge run **δεν μπορεί να δείξει βελτίωση** — είναι αποκλειστικά έλεγχος μη-υποβάθμισης. Και το εκμεταλλευόμαστε: όταν το baseline είναι στο ταβάνι, αρκεί να τρέξει **μόνο** το νέο· ένα 5/5/5/5 δεν μπορεί να κρύβει πτώση. **Μισό κόστος.**
+
+Έλεγχος του L-12 (`make_risk_subset.py`, n=12 επιλεγμένες κατά ΡΙΣΚΟ — πόσες σελίδες άλλαξαν — όχι κατά ποσόστωση κατηγορίας):
+```
+10 ταυτόσημες · 1 ΚΑΛΥΤΕΡΑ (q036 completeness 4->5) · 1 «χειρότερα» (q021)
+```
+Το q021 **δεν είναι υποβάθμιση**: πρόσθεσε το gVisor στη λίστα serverless προσφορών (σωστή παράθεση, λάθος κατηγοριοποίηση). Το gVisor υπάρχει **μόνο** στο `1902.03383v1.pdf`, ενώ οι αποκλειστικές σελίδες των δύο εκτελέσεων ήταν από `1812.03651` και `1706.03178` — άρα το υλικό ήταν στις **κοινές** σελίδες **και στις δύο**. Το L-6 απλώς δεν το ανέφερε. **Θόρυβος γέννησης με ταυτόσημο υλικό.**
 
 ### RAGAS cross-validation (n=45, ανεξάρτητος κριτής)
 ```
@@ -90,18 +115,22 @@ faithfulness 0.9920 · context_recall 1.0000 · answer_relevancy 0.8552 · conte
 
 ### Latency
 ```
-warm retrieval  450 ms  (rerank 434 = 96.5%, dense 0.5, bm25 1.4, expand 8.6)
-end-to-end      2.5-4 s · TTFT 2.78 s · prompt ~9.800 tokens
+warm retrieval  725 ms  (rerank 706 = 97.3%, dense 0.5, bm25 1.4, expand 7.9)
+end-to-end      2.8-4.3 s · prompt ~9.800 tokens (ΑΜΕΤΑΒΛΗΤΟ: 438 σελίδες και στα δύο)
 ```
-Ήταν 682 ms warm / TTFT 3.90 s πριν τη δουλειά της 4-5/8/2026.
-**Το retrieval είναι πλέον ~13-23% του χρόνου** — ο μοχλός είναι η γέννηση.
+Ήταν **450 ms** με το L-6 (και 682 ms πριν τη δουλειά της 4-5/8). Το L-12 κοστίζει **+275 ms** (1.61× στο rerank) = **+9% end-to-end**.
+**Το retrieval είναι ~20-29% του χρόνου** (ήταν 13-23%) — ο μοχλός παραμένει η γέννηση.
 
-### Concurrency (μετρημένο, 8 threads)
+### Concurrency (μετρημένο, 8 threads) — ξαναμετρήθηκε 10/8/2026 με το L-12
 ```
-1 χρήστης  p50 0.45s · 2.17 req/s
-4 χρήστες  p50 1.50s · 2.57 req/s   <-- κορεσμός
-8 χρήστες  p50 5.72s · 1.36 req/s   <-- ΚΑΤΑΡΡΕΥΣΗ (λιγότερες απαντήσεις από 4)
+χρήστες      L-6 p50    L-12 p50    L-12 p95    L-12 throughput
+   1          0.45s      0.61s       0.62s        1.65 req/s
+   2            —        1.27s       1.38s        1.55 req/s
+   4          1.50s      2.30s       2.67s        1.67 req/s   <-- κορεσμός (ΙΔΙΟ σημείο)
+   8          5.72s      7.02s       7.25s        1.12 req/s   <-- ΚΑΤΑΡΡΕΥΣΗ
+throughput   2.57 req/s -> 1.67 req/s   = **-35%**
 ```
+**Το -35% είναι ΑΚΡΙΒΩΣ το αναμενόμενο** και γι' αυτό είναι καθησυχαστικό: το rerank έγινε 1.61× βαρύτερο -> ταβάνι στο 1/1.61 = 62%· μετρήθηκε 65%. Η συμφωνία σημαίνει ότι **δεν υπάρχει κρυφό contention** — μόνο η CPU του reranker. Ο κορεσμός **δεν** μετακινήθηκε (παραμένει στους 4): το bottleneck είναι το ίδιο, απλώς πιο ακριβό.
 
 ### Scaling (synthetic, `scaling_benchmark.py`)
 | chunks | dense exact | HNSW | BM25 query | BM25 build | RRF |
@@ -114,19 +143,35 @@ end-to-end      2.5-4 s · TTFT 2.78 s · prompt ~9.800 tokens
 
 ### Corrective retrieval (`verify_corrective.py`, στον ΠΡΑΓΜΑΤΙΚΟ κώδικα)
 ```
-hard set (16)   σιωπηλές 10 -> 6 · ΣΩΘΗΚΑΝ 4 (h001,h003,h005,h006) · ΨΕΥΔΑΙΣΘΗΣΕΙΣ 0
-out_of_corpus   5/5 σιωπηλά — το κριτήριο κράτησε
-κύριο σετ       61/61 ΑΝΕΠΑΦΟ — μηδέν παρενέργεια
-latency         +1.0-1.4 s ΜΟΝΟ στις κομμένες (0.5-0.9 rewrite + 0.5 retrieval)
+              L-6 @ -2.0 / +1.0        L-12 @ -2.6 / +0.4
+hard set      σιωπηλές 10 -> 6         σιωπηλές 6 -> 4
+              ΣΩΘΗΚΑΝ 4                ΣΩΘΗΚΑΝ 2 (h005, h015)
+              απαντιούνται 10/16       απαντιούνται 12/16
+ψευδαισθήσεις 0                        0
+out_of_corpus 5/5 σιωπηλά              5/5 σιωπηλά
+κύριο σετ     61/61 ΑΝΕΠΑΦΟ            61/61 ΑΝΕΠΑΦΟ
+latency       +1.0-1.4 s ΜΟΝΟ στις κομμένες (0.5-0.9 rewrite + 0.5 retrieval)
 ```
+**Ο agent «έχασε» δουλειά επειδή το reranker έγινε καλύτερο.** Τρεις από τις τέσσερις σώσεις του (h001, h003, h006) τις περνάει πλέον το L-12 **από την πρώτη** — και το h013, που το +1.0 έκοβε στο -0.00, δεν φτάνει καν σε αυτόν. Σύνολο **10/16 → 12/16**.
 
-### Conversational rewriting (`probe_conversational.py`, n=12) — ΠΡΩΤΗ ΜΕΤΡΗΣΗ
+### ⚠️ ΤΟ «ΣΩΘΗΚΑΝ N» ΔΕΝ ΕΙΝΑΙ ΝΤΕΤΕΡΜΙΝΙΣΤΙΚΟ (10/8/2026)
+Δεύτερη εκτέλεση, **μετά** τη διόρθωση των keywords: σιωπηλές 6→5, **ΣΩΘΗΚΑΝ 1** (μόνο h005). Το **h015 έφυγε — και τα keywords του ΔΕΝ είχαν αλλάξει**. Αιτία: το rewrite το γράφει το **Gemini**, χωρίς σταθερό seed· κάθε εκτέλεση δίνει άλλη αναδιατύπωση και οι οριακές περιπτώσεις γυρίζουν. Κάθε άλλη μέτρηση του project είναι επαναλήψιμη — **αυτή όχι**, και δεν ήταν καταγεγραμμένο.
+
+**Συνέπειες:** (α) μη συγκρίνεις δύο εκτελέσεις του `verify_corrective` σαν να είναι το ίδιο πείραμα· (β) το `CORRECTIVE_MIN_SCORE` βαθμονομείται πάνω σε **μη-ντετερμινιστική είσοδο** με n=1-2 — δεν είναι απλώς εύθραυστο, είναι **αμέτρητο** στην τρέχουσα κλίμακα. Για πραγματική βαθμονόμηση χρειάζονται πολλαπλές εκτελέσεις ανά κατώφλι (ακριβό σε quota) ή πολύ μεγαλύτερο hard set.
+
+**Με ΑΥΣΤΗΡΑ keywords το h005 βρίσκει 1/2** (πιθανότατα το `baas`, 47% τυχαία — όχι το `mobile-centric`, 7%). Δηλαδή η σελίδα με τον ορισμό FaaS/BaaS **δεν έρχεται**· έρχεται άλλη που τυχαίνει να λέει «BaaS». Η «σωτηρία» ήταν εν μέρει τεχνητή.
+
+**Στο 2ο pass το L-12 είναι επίσης πιο διαχωριστικό:** μηδέν ψευδαισθήσεις σε **ΚΑΘΕ** κατώφλι (η μόνη, h012, βυθίστηκε στο -6.06), ενώ το L-6 στο -2.0 έδινε 2.
+
+### Conversational rewriting (`probe_conversational.py`, n=12)
 ```
-χωρίς rewrite    40.0%   (κάτω όριο: το follow-up σκέτο)
-ΜΕ rewrite       90.0%   <- ο κώδικας παραγωγής· καλύπτει το 83% του κενού
+ΤΥΧΑΙΟ ΠΑΤΩΜΑ    41.2%   <- 8 τυχαίες σελίδες (random_coverage_baseline.py)
+χωρίς rewrite    40.0%   ΘΟΡΥΒΟΣ — ΔΕΝ είναι «κάτω όριο του συστήματος»
+ΜΕ rewrite       90.0%   <- ο κώδικας παραγωγής· +48.8 πάνω από την τύχη
 oracle           100.0%  (ταβάνι: η πλήρης αυτόνομη ερώτηση)
 leak tests       2/2 σιωπηλά
 ```
+**ΔΙΟΡΘΩΣΗ ΕΡΜΗΝΕΙΑΣ (10/8/2026):** το «40% χωρίς rewrite» γράφτηκε ως κάτω όριο. **Δεν είναι** — είναι *ακριβώς* το πάτωμα της τύχης (41.2%), δηλαδή το follow-up σκέτο αποδίδει ελαφρώς **χειρότερα** από τυχαίες σελίδες. Το τελικό συμπέρασμα («καλύπτει το 83% του κενού») **σώζεται και βγαίνει το ίδιο νούμερο** — αλλά κατά **σύμπτωση**, επειδή 40 ≈ 41.2. Σωστός υπολογισμός: (90−41.2)/(100−41.2) = **83%**.
 Το `_rewrite_query` έτρεχε σε **κάθε follow-up** από την αρχή του project και **δεν είχε μετρηθεί ποτέ**. Δουλεύει.
 **Το leak test ήταν το πραγματικό ρίσκο και δεν υπάρχει:** με ιστορικό γεμάτο cloud/datacenter, το «Και ποια είναι η τιμή του Bitcoin;» έγινε **«Τιμή Bitcoin»** — καθαρό, και κόπηκε από το gate. Η άμυνα κατά της ψευδαίσθησης κρατάει και σε πολύγυρες συνομιλίες.
 **Μία αποτυχία (c009):** το rewrite κατάπιε ολόκληρη την προηγούμενη απάντηση (30 λέξεις) -> ο reranker κατέρρευσε, το gate έκοψε, **ούτε ο corrective το έσωσε**. Ίδιο μοτίβο με το hard set, αντίστροφη αιτία: εκεί πολύ **αόριστο**, εδώ πολύ **φλύαρο**. n=1 -> ΔΕΝ διορθώθηκε.
@@ -154,6 +199,8 @@ leak tests       2/2 σιωπηλά
 | **corrective retrieval agent** | 4 ερωτήσεις από σιωπή → σωστή απάντηση, **0 ψευδαισθήσεις**, out_of_corpus 5/5, κύριο σετ 61/61 ανέπαφο |
 | `CORRECTIVE_MIN_SCORE=+1.0` (αυστηρότερο του gate) | χωρίς αυτό, 2 ερωτήσεις περνούσαν το gate **χωρίς σωστό υλικό** — ο agent ΠΑΡΑΚΑΜΠΤΕ την άμυνα με keyword stuffing |
 | **`metrics.py` + `/metrics`** (Prometheus text, **0 εξαρτήσεις**, 0 νέα containers) | τα per-request νούμερα υπήρχαν ήδη σε logs/UI· έλειπαν τα ΑΘΡΟΙΣΤΙΚΑ. Νέα ορατότητα: `gate_block_rate`, `corrective_success_rate`, tokens (FinOps), latency ανά φάση. **Το «πόσο συχνά κόβει το gate σε πραγματική χρήση» δεν είχε μετρηθεί ποτέ** |
+| **MiniLM-L-6 → MiniLM-L-12** (22M→33M) + gate −2.0→**−2.6** + corrective +1.0→**+0.4** | hard set **10/16 → 12/16** (+2 ερωτήσεις από σιωπή σε σωστή απάντηση) · κενό gate 0.89→**1.04** · σωστό chunk στη θέση 1 **36→40 / 56** · MRR 0.770→0.793 · corrective ψευδαισθήσεις **2→0 σε κάθε κατώφλι**. **ΑΜΕΤΑΒΛΗΤΑ:** coverage 98.5% (ταυτόσημο ανά ερώτηση), κύριο σετ 61/61, out_of_corpus 5/5, judge, 438 σελίδες prompt, 72 tests. **Κόστος: +275 ms (+9% e2e)** |
+| **η απόρριψη του bge-v2-m3 (2025) ήταν σωστή αλλά για λάθος λόγο** | είχε κριθεί «ισοπαλία» στο golden_set_50 — το σετ με survivorship bias. Στο hard set **δεν** είναι ισοπαλία (12/16 vs 7/16). Σωστός λόγος απόρριψης: 17× παράμετροι για **+1 πραγματική ΚΑΙ +1 ψευδαίσθηση** έναντι του L-12. **Το ενδιάμεσο μέγεθος δεν είχε δοκιμαστεί ΠΟΤΕ** — εκεί ήταν όλο το κέρδος |
 
 ## ΑΠΟΡΡΙΦΘΗΚΑΝ με μέτρηση — **ΜΗΝ ΤΑ ΞΑΝΑΠΡΟΤΕΙΝΕΙΣ**
 
@@ -168,6 +215,8 @@ leak tests       2/2 σιωπηλά
 | **torch dynamic INT8 (fbgemm)** | 1.37× ταχύτερο **αλλά σπάει το gate**: in-min −1.797→−2.283, κάτω από το κατώφλι. Διάκενο σχετικού/άσχετου −43%. **ρ=0.9970 και παρ' όλα αυτά αποτυγχάνει** — η συσχέτιση είναι άχρηστη μετρική για reranker |
 | **`THINKING_BUDGET=0`** | 2.73× ταχύτερο TTFT **αλλά** q047 faithfulness 5.0→**2.0**, accuracy 5.0→3.0· και οι 3 υποβαθμίσεις σε multi_hop. Το 512 τα επανέφερε όλα |
 | **`TORCH_THREADS=4` υπό concurrency** | κερδίζει 7-10% στους 2-4 χρήστες, **χάνει 20% στον έναν**· στους 8 αδιάφορο. Είχε γραφτεί ως σύσταση χωρίς μέτρηση και **αποσύρθηκε** |
+| **`bge-reranker-base` (278M)** | **ΧΕΙΡΟΤΕΡΟ ΚΑΙ ΑΠΟ ΤΟ 22M**: hard 3/16 ΚΑΙ κανονικές 6/10. ΔΕΝ είναι «μικρότερο v2-m3» — βαθμολογεί ψηλά τα out_of_corpus (thr* = +0.963), οπότε το κατώφλι που τα κόβει σκοτώνει και τα σωστά. **Η διαχωρισιμότητα δεν κλιμακώνεται με το μέγεθος** |
+| **`bge-reranker-v2-m3` (568M) — 2η απόρριψη, τώρα με σωστό λόγο** | 12/16 hard (καλύτερο) αλλά έναντι του L-12: **+1 πραγματική, +1 ψευδαίσθηση** = καθαρό μηδέν, για 17× παραμέτρους και ~15 s/ερώτηση. Και **πιο επιρρεπές στο να απαντήσει χωρίς υλικό**: το h008 περνάει με kw@− (ψευδαίσθηση) ενώ το L-12 σωστά το κόβει |
 | jina-reranker-v2 | το πλεονέκτημά του είναι Flash Attention 2 = GPU-only |
 | HyDE, ColBERT, Docling, Contextual Retrieval | βλ. README «Technical decisions» |
 | Langfuse | 6 containers για 50 traces· το project έχει 3. **Η απόρριψη ήταν σωστή** — αλλά πρέπει να ξέρεις να το στήνεις (μπαίνει στο επόμενο project) |
@@ -177,6 +226,7 @@ leak tests       2/2 σιωπηλά
 | όριο μήκους στο rewrite | θα σκότωνε και το h001, που απαρίθμησε όρους αποθήκευσης **σωστά**. Το πρόβλημα δεν είναι το μήκος, είναι η **διασπορά**: h001 = ένα θέμα, h015 = ολόκληρο το πεδίο |
 | **query decomposition για multi_hop** | Τρεις στρατηγικές συγχώνευσης, n=15: **A** ισομοιρασμός σελίδων 79.5%→**68.2%** (όταν ένα σκέλος κόβεται από το gate χάνονται οι μισές σελίδες· q046 3/3→0/3) · **B** baseline+συμπλήρωμα 84.1% αλλά 7.6→**11.5 σελίδες** (+4.640 tokens/ερώτηση) · **C** ενιαίο rerank με το ΑΡΧΙΚΟ ερώτημα 81.8% με ίδιες σελίδες — **η σωστή σχεδίαση**, αλλά το +2.3% είναι **35→36 keywords σε 45. ΕΝΑ.** Κόστος: +1.5-2.3 s σε **ΚΑΘΕ** ερώτηση (το σύστημα τρέχει σε 2.5-4 s) + 1 κλήση Gemini πάντα, γιατί το routing πρέπει να τρέξει ακόμα κι όταν αποφασίσει «μην σπάσεις». Τα multi_hop βγάζουν ήδη judge **5.00/5.00/5.00/5.00** — δεν υπάρχει πρόβλημα ποιότητας να λυθεί |
 | «περισσότερα έγγραφα = καλύτερο multi-hop» | **Διαψεύστηκε ρητά:** το q047 πήγε από 2 σε 4 έγγραφα και το coverage **έπεσε** 3/3→2/3. Η διασπορά **αραιώνει** το χρήσιμο υλικό |
+| **`RERANK_CANDIDATES` 15 → 12 ή 10** (μετά το L-12) | Το `tune_rerank_candidates.py` έδειξε **ταυτόσημα** best-logit, κενό gate, kw@1 και 56/56 στο N=10 — φαινομενικά 250 ms δωρεάν. **Ψευδές.** Το `compare_pages_rerankers.py --candidates` έδειξε ότι το N=12 αλλάζει τις σελίδες σε **42/56** ερωτήσεις (Jaccard 0.812) — **μεγαλύτερη αλλαγή prompt από την ίδια την αλλαγή μοντέλου** (0.854)· το N=10 σε 52/56 και **−29 σελίδες** context. Κέρδος 155 ms = **4%** σε σύστημα 2.8-4.3 s, έναντι ενός ακόμα judge run που **δεν μπορεί να δείξει κέρδος** (48/50 ήδη 5/5/5/5). Δεν λύνει μετρημένο πρόβλημα |
 
 ## ΤΟ ΚΕΝΤΡΙΚΟ ΕΥΡΗΜΑ
 
@@ -187,9 +237,36 @@ leak tests       2/2 σιωπηλά
 - reranker swap: MRR −0.052, accuracy 4.96→**5.00**
 
 - **11 νέες multi_hop: MRR 0.493 → judge 5.00 / 5.00 / 5.00 / 5.00** (6/8/2026, τρίτη ανεξάρτητη επιβεβαίωση)
+- **q021 στην αλλαγή reranker: MRR 0.500 → 1.000, judge accuracy 5→4 και faithfulness 5→4** (10/8/2026, τέταρτη — και η πρώτη με **αντίστροφο πρόσημο**: καλύτερη ανάκτηση, χειρότερη απάντηση, με **αποδεδειγμένα ταυτόσημο υλικό**)
 
 Με coverage 97%+, το σωστό υλικό φτάνει ήδη στο μοντέλο· το «lost in the middle» δεν εμφανίζεται στα ~9.800 tokens με Gemini 2.5 Flash.
 **Κρίνε αλλαγές με coverage + judge run, ΟΧΙ με MRR.**
+
+**ΚΑΙ ΤΟ ΑΝΤΙΣΤΡΟΦΟ: καμία μετρική ενδιάμεσου σταδίου δεν προβλέπει το τελικό prompt.** Δύο φορές την ίδια βραδιά:
+1. Το L-12 έδωσε **ταυτόσημο coverage σε 45/45** — και **35/56** ερωτήσεις πήραν άλλες σελίδες.
+2. Το `RERANK_CANDIDATES=10` έδωσε **ταυτόσημα** best-logit / κενό gate / kw@1 / 56/56 — και **52/56** ερωτήσεις πήραν άλλες σελίδες.
+
+Ο λόγος στη 2η: **ο reranker ΑΝΑΔΙΑΤΑΣΣΕΙ.** Ένα chunk στη θέση 14 του RRF μπορεί να ανέβει στη θέση 3 και να μπει κανονικά στα `EXPAND_INPUT=12`. Το «candidates ≥ expand_input» **δεν** εγγυάται ίδιες σελίδες.
+
+Το coverage μετράει keywords, το best-logit μετράει το top-1 — **το prompt είναι σελίδες**. Για «αξίζει judge run;» τρέξε `compare_pages_rerankers.py` (μηδέν κόστος). Είναι το μόνο που κοιτάει αυτό που πραγματικά φτάνει στο Gemini.
+
+## ΤΟ ΠΑΤΩΜΑ ΤΗΣ ΤΥΧΗΣ — κάθε ποσοστό διαβάζεται ΩΣ ΠΡΟΣ ΑΥΤΟ (10/8/2026)
+
+`random_coverage_baseline.py` — αναλυτικά (υπεργεωμετρική), μηδέν προσομοίωση:
+```
+σετ                       πάτωμα τύχης   παρατηρήθηκε      ετυμηγορία
+golden_multihop_new           22.6%         98.5%       +75.9  ΤΟ ΚΑΘΑΡΟΤΕΡΟ
+golden_hard_paraphrase        32.3%           —         10 αδύναμα keywords
+golden_set_50                 33.5%         98.5%       +65.0  ΠΡΑΓΜΑΤΙΚΟ
+golden_conversations          41.2%         90.0%       +48.8  ΠΡΑΓΜΑΤΙΚΟ
+```
+**Το coverage 98.5% στέκει** (+65, κλείνει 98% του περιθωρίου). Αλλά:
+
+1. **Το κύριο σετ έχει 31 keywords με >60% τυχαία εύρεση.** Ακραία: `serverless` 65/122 σελίδες = **99.8% τυχαία** · `storage` 62/122 · `execution` 46/122. Δεν μετρούν ανάκτηση — μετρούν συχνότητα λέξης. Το coverage δεν επηρεάζεται (είναι ήδη ~100%), το **MRR** ναι.
+2. **Το `golden_multihop_new` είναι το πιο έντιμα μετρημένο σετ** (πάτωμα 22.6%, κανένα αδύναμο keyword). Το MRR 0.541 του, που φαινόταν το χειρότερο νούμερο του project, είναι **6.6× πάνω από την τύχη του** — καλύτερη αναλογία από το κύριο σετ.
+3. **Το `verify_keywords.py` ΕΣΚΑΓΕ στο `golden_conversations.jsonl`** (`KeyError: 'question'` — το σετ έχει `followup`/`turn1_question`). Γι' αυτό δεν είχε ελεγχθεί ποτέ. Διορθώθηκε με `_question_of()`.
+
+**ΚΑΝΟΝΑΣ: πριν πιστέψεις οποιοδήποτε ποσοστό coverage, τρέξε το πάτωμα του.**
 
 ## ΤΟ ΔΕΥΤΕΡΟ ΕΥΡΗΜΑ (6/8/2026)
 
@@ -207,9 +284,11 @@ leak tests       2/2 σιωπηλά
 - Rate limiting in-memory → χάνεται σε restart, δεν μοιράζεται μεταξύ processes
 - `google.generativeai` deprecated — **παρακάμφθηκε στο κρίσιμο μονοπάτι** (REST), αλλά `optimize_query`/`_rewrite_query` το χρησιμοποιούν ακόμα
 - chunk_size=1500 είναι κληρονομιά του v1, όχι επικυρωμένο στο τρέχον corpus
-- **`CORRECTIVE_MIN_SCORE=+1.0` βαθμονομημένο σε n=10, ΧΩΡΙΣ validation set** — το πιο αδύναμο σημείο της αλυσίδας. Σάρωση: −2.0→5 σωστές/2 ψευδαισθήσεις · 0.0→4/1 · **+1.0→4/0** · +1.5→3/0. Το +1.0 κόβει και μία *πραγματική* σωτηρία (h013 στο −0.00). Αν μεγαλώσει το golden set, ΞΑΝΑΜΕΤΡΑ
+- **`CORRECTIVE_MIN_SCORE=+0.4` βαθμονομημένο σε n=6, ΧΩΡΙΣ validation set — ΕΓΙΝΕ ΠΙΟ ΑΔΥΝΑΜΟ, ΟΧΙ ΛΙΓΟΤΕΡΟ.** Το πιο εύθραυστο σημείο της αλυσίδας. Επειδή το L-12 λύνει μόνο του τις εύκολες, η βάση βαθμονόμησης **συρρικνώθηκε από n=10 σε n=6** και οι σωσμένες από 4 σε 2: το κατώφλι στηρίζεται πλέον σε **δύο ερωτήσεις** (h005, h015). Σάρωση L-12: ΟΛΟ το `[−2.6, +0.8]` → 2 σωστές/0 ψευδαισθήσεις · +1.0 → 1/0. Το +0.4 κρατά **ακριβώς 3.0 logits** πάνω από το gate, όπως το +1.0 πάνω από το −2.0. Αν μεγαλώσει το golden set, ΞΑΝΑΜΕΤΡΑ
+- **Το `verify_corrective.py` δεν είναι επαναλήψιμο** — το rewrite είναι κλήση Gemini χωρίς seed. Δύο εκτελέσεις έδωσαν «ΣΩΘΗΚΑΝ 2» και «ΣΩΘΗΚΑΝ 1» με το h015 να γυρίζει, χωρίς καμία αλλαγή στα δεδομένα του
 - `_rewrite_query`: 1/9 αποτυχία (c009) όταν το rewrite γίνεται >25 λέξεις καταπίνοντας την προηγούμενη απάντηση. n=1 -> δεν αγγίχτηκε· αν εμφανιστεί ξανά, το prompt δεν λέει τίποτα για συντομία
-- Ο corrective agent αφήνει **6/16** άλυτες. Οι 3 είναι εγγενώς ασαφείς χωρίς ιστορικό («γιατί αναφέρουν *εκείνο* το παλιότερο σύστημα;») — σωστό να μείνουν κομμένες
+- Το σύστημα αφήνει **4/16** hard άλυτες (ήταν 6/16 με το L-6): h008, h009, h012, h016. Οι περισσότερες είναι εγγενώς ασαφείς χωρίς ιστορικό («γιατί αναφέρουν *εκείνο* το παλιότερο σύστημα;») — σωστό να μείνουν κομμένες
+- **Το h002 περνάει το gate ΧΩΡΙΣ keyword** — και στα δύο μοντέλα, αμετάβλητο. Η μόνη ψευδαίσθηση του hard set. Δεν διερευνήθηκε αν φταίει το ίδιο το keyword (ίδια κλάση bug με q028/q044/q047)
 - `golden_multihop_new.jsonl` και `golden_hard_paraphrase.jsonl` **δεν** έχουν ενσωματωθεί στο `run_eval.py` — τρέχουν χειροκίνητα
 - Cross-document multi_hop: **n=11** πλέον (ήταν 4)· ακόμα μικρό για στατιστική βεβαιότητα
 - `dashboard.py` κάνει join με κείμενο ερώτησης (το id υπάρχει πλέον στα CSV)
@@ -239,6 +318,7 @@ docker compose exec backend sh -c 'cd /app && ruff check .'
 docker compose exec backend python -m pytest tests/ -q
 docker compose exec backend python evaluation/check_determinism.py
 docker compose exec backend python evaluation/verify_keywords.py evaluation/golden_set_50.jsonl
+docker compose exec backend python evaluation/random_coverage_baseline.py            # πάτωμα τύχης, ΟΛΑ τα σετ
 docker compose exec backend python run_eval.py evaluation/golden_set_50.jsonl --retrieval-only
 docker compose exec backend python run_eval.py evaluation/golden_set_50.jsonl   # + judge, καίει quota
 docker compose exec backend python evaluation/measure_latency.py
@@ -246,7 +326,10 @@ docker compose exec backend python evaluation/measure_e2e.py --n 3             #
 docker compose exec backend python evaluation/scaling_benchmark.py
 docker compose exec backend python evaluation/measure_gate_margin.py --csv evaluation/runs/gate_margin.csv
 docker compose exec backend python evaluation/probe_corrective_rewrite.py --csv evaluation/runs/corrective.csv
-docker compose exec backend python evaluation/verify_corrective.py       # on/off, ~15 rewrites
+docker compose exec backend python evaluation/verify_corrective.py       # on/off, ~11 rewrites
+docker compose exec backend python evaluation/compare_pages_rerankers.py --csv evaluation/runs/pages.csv   # ΔΩΡΕΑΝ: αλλάζει το prompt;
+docker compose exec backend python evaluation/make_risk_subset.py --n 12                                   # judge subset κατά ΡΙΣΚΟ
+docker compose exec backend python evaluation/inspect_page.py --grep gVisor                                # πού είναι ένας όρος
 docker compose exec -e TORCH_THREADS=8 backend python evaluation/concurrency_benchmark.py
 docker compose exec backend python reingest_corpus.py --dry-run
 docker compose restart backend
@@ -266,14 +349,16 @@ ragas_env\Scripts\python.exe backend\evaluation\run_ragas.py
 ## ΕΚΚΡΕΜΗ, κατά σειρά
 
 **✓ ΕΓΙΝΑΝ 6/8/2026:** ~~q047 keyword~~ (+ βρέθηκε και διορθώθηκε το **q044**, ίδιας κλάσης bug) · ~~multi_hop 4→11~~ · ~~corrective retrieval agent~~ (+ tests + CI).
+**✓ ΕΓΙΝΕ 10/8/2026:** ~~αναβάθμιση reranker σε MiniLM-L-12~~ με πλήρη επαναβαθμονόμηση και των δύο κατωφλίων (4 βήματα: gate margin → retrieval eval → corrective sweep → στοχευμένο judge).
 
-1. **[ΤΩΡΑ] Commit.** Η δουλειά της 5-6/8 είναι όλη **uncommitted**. Το `backend/C:/` στο git status είναι σκουπίδι από λάθος path — σβήσ' το πριν το commit.
+1. **[ΤΩΡΑ] Commit.** Η δουλειά της 5-6/8 **και** της 10/8 είναι όλη **uncommitted**. Το `backend/C:/` καλύπτεται πλέον από `.gitignore`.
 2. Split `ai_core.py` (**~1210 γρ.** πλέον, 7 ευθύνες). **Προσοχή:** 8 αρχεία κάνουν monkeypatch module-globals (`collection`, `reranker`, `_bm25_cache`, `ENABLE_CORRECTIVE`, `DENSE_CANDIDATES`…) — façade με `import *` **θα τα σπάσει σιωπηλά**. Σχέδιο: state μένει στο ai_core, φεύγει η λογική ως pure functions με ρητά ορίσματα.
 3. Live demo σε δημόσιο URL (HF Spaces + Neon/Supabase) — το μεγαλύτερο κέρδος για recruiter.
 4. LinkedIn post. Δύο εγκεκριμένες γωνίες + δύο νέες:
    - *«δύο ανεξάρτητα eval frameworks, το ίδιο μάθημα — η μετρική μετράει άλλο πράγμα από αυτό που νομίζεις»*
    - *«το gate μου ήταν 61/61 τέλειο — επειδή είχα πετάξει την ερώτηση που το χαλούσε»* (survivorship bias στο δικό μου golden set)
-5. Προαιρετικά: ενσωμάτωση των δύο νέων golden sets στο `run_eval.py` (τώρα τρέχουν χειροκίνητα).
+5. **Ξαναμέτρηση concurrency** — τα τρέχοντα νούμερα είναι από το L-6 και το rerank έγινε 1.61× βαρύτερο. Δωρεάν, μία εντολή.
+6. Προαιρετικά: ενσωμάτωση των δύο νέων golden sets στο `run_eval.py` (τώρα τρέχουν χειροκίνητα).
 
 ## ΑΡΧΕΙΑ ΠΟΥ ΔΗΜΙΟΥΡΓΗΘΗΚΑΝ
 
@@ -312,7 +397,14 @@ backend/evaluation/tune_reranker_runtime.py   batch_size + INT8
 backend/evaluation/eval_int8_reranker.py      INT8 με ανάλυση gate — ΑΠΟΡΡΙΦΘΗΚΕ
 backend/evaluation/probe_thinking_budget.py   REST + thinkingConfig
 backend/evaluation/compare_thinking_budgets.py keyword coverage ανά budget
-backend/evaluation/make_judge_subset.py       φθηνό judge subset + per-question diff
+backend/evaluation/make_judge_subset.py       φθηνό judge subset + per-question diff (κατά ΚΑΤΗΓΟΡΙΑ)
+backend/evaluation/compare_rerankers_hard.py  σύγκριση rerankers στο hard set, ανεξάρτητη κλίμακας
+backend/evaluation/compare_pages_rerankers.py ΙΔΙΕΣ σελίδες στο Gemini; — έλεγχος ΠΡΙΝ το judge, 0 κόστος
+backend/evaluation/make_risk_subset.py        judge subset κατά ΡΙΣΚΟ (πόσες σελίδες άλλαξαν) + κάλυψη κατηγοριών
+backend/evaluation/inspect_page.py            τι γράφει μια σελίδα / πού εμφανίζεται ένας όρος (post-mortem)
+backend/evaluation/random_coverage_baseline.py  ΠΑΤΩΜΑ ΤΥΧΗΣ για coverage (υπεργεωμετρική, 0 κόστος)
+backend/evaluation/suggest_keywords.py        προτείνει ΣΠΑΝΙΑ keywords από τη σελίδα-στόχο (βάρος 1/df)
+backend/evaluation/tune_rerank_candidates.py  σάρωση RERANK_CANDIDATES — ΠΡΟΣΟΧΗ στο όριό του
 backend/evaluation/scaling_benchmark.py       418 → 200k chunks
 backend/evaluation/concurrency_benchmark.py   latency vs throughput
 backend/evaluation/build_ragas_dataset.py     dataset από judge run, μηδέν API κόστος

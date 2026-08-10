@@ -165,6 +165,15 @@ def verdict(stats: dict, is_out_of_corpus: bool) -> tuple[str, str]:
     if stats["random"] > RANDOM_WEAK:
         return "ΑΔΥΝΑΜΟ", "warn"
     return "OK", "ok"
+def _question_of(q: dict) -> str:
+    """Το κείμενο της ερώτησης. Τα conversational sets ΔΕΝ έχουν `question`:
+    έχουν `followup` (το ερώτημα που πραγματικά ανακτά) + `turn1_question`.
+    Χωρίς αυτό το fallback, το golden_conversations.jsonl σκάει με KeyError
+    και ΔΕΝ ελέγχθηκε ποτέ — παρόλο που στηρίζει τη μέτρηση 40% -> 90%."""
+    for k in ("question", "followup", "turn1_question"):
+        if q.get(k):
+            return q[k]
+    return q.get("id", "?")
 
 
 def main() -> int:
@@ -201,7 +210,7 @@ def main() -> int:
     for q in questions:
         is_ooc = q.get("category") == "out_of_corpus"
         print(f"[{q['id']}] {q.get('category', 'uncategorized')} — "
-              f"\"{q['question'][:58]}\"")
+               f"\"{_question_of(q)[:58]}\"")
 
         worst = "ok"
         q_randoms = []

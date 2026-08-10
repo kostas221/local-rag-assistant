@@ -1,0 +1,57 @@
+id,category,n_a,n_b,common,jaccard,same_set,same_order,only_a,only_b
+q001,direct_fact,8,8,8,1.0,True,False,,
+q002,enumeration,8,8,7,0.778,False,False,EECS-2009-28.pdf:16,EECS-2009-28.pdf:22
+q003,direct_fact,8,8,8,1.0,True,False,,
+q004,reasoning,8,8,8,1.0,True,False,,
+q005,direct_fact,8,8,8,1.0,True,False,,
+q006,enumeration,8,8,7,0.778,False,False,EECS-2009-28.pdf:5,1902.03383v1.pdf:1
+q007,direct_fact,8,8,7,0.778,False,False,1812.03651.pdf:4,1812.03651.pdf:2
+q008,enumeration,8,8,7,0.778,False,False,1812.03651.pdf:3,1812.03651.pdf:1
+q009,reasoning,8,8,8,1.0,True,False,,
+q010,direct_fact,8,8,7,0.778,False,False,1902.03383v1.pdf:6,1902.03383v1.pdf:3
+q011,enumeration,8,8,7,0.778,False,False,1706.03178.pdf:2,1902.03383v1.pdf:1
+q012,direct_fact,8,8,8,1.0,True,False,,
+q013,enumeration,8,8,8,1.0,True,False,,
+q014,reasoning,8,8,7,0.778,False,False,EECS-2009-28.pdf:4,1812.03651.pdf:7
+q015,direct_fact,8,8,8,1.0,True,False,,
+q016,reasoning,8,8,7,0.778,False,False,1812.03651.pdf:3,1902.03383v1.pdf:22
+q017,direct_fact,8,8,6,0.6,False,False,1902.03383v1.pdf:7 | EECS-2009-28.pdf:22,1702.04024.pdf:8 | 1902.03383v1.pdf:17
+q018,reasoning,8,8,8,1.0,True,False,,
+q021,enumeration,7,7,6,0.75,False,False,1812.03651.pdf:3,1706.03178.pdf:2
+q022,enumeration,8,8,7,0.778,False,False,1902.03383v1.pdf:22,1902.03383v1.pdf:1
+q023,enumeration,8,8,7,0.778,False,False,1902.03383v1.pdf:23,1702.04024.pdf:3
+q024,enumeration,7,7,6,0.75,False,False,1812.03651.pdf:2,1702.04024.pdf:3
+q025,direct_fact,8,8,7,0.778,False,False,EECS-2009-28.pdf:21,EECS-2009-28.pdf:4
+q026,reasoning,8,8,7,0.778,False,False,1902.03383v1.pdf:6,1902.03383v1.pdf:16
+q027,enumeration,8,8,8,1.0,True,False,,
+q028,direct_fact,8,8,8,1.0,True,False,,
+q029,reasoning,8,8,8,1.0,True,False,,
+q030,reasoning,8,8,8,1.0,True,False,,
+q031,direct_fact,7,8,7,0.875,False,False,,excamera-nsdi17.pdf:12
+q032,enumeration,8,8,7,0.778,False,False,EECS-2009-28.pdf:3,1812.03651.pdf:6
+q033,direct_fact,8,8,7,0.778,False,False,EECS-2009-28.pdf:24,EECS-2009-28.pdf:5
+q034,enumeration,8,8,7,0.778,False,False,1706.03178.pdf:8,1812.03651.pdf:6
+q035,reasoning,8,8,8,1.0,True,False,,
+q036,direct_fact,8,8,7,0.778,False,False,1812.03651.pdf:2,1902.03383v1.pdf:4
+q037,direct_fact,8,8,7,0.778,False,False,1812.03651.pdf:7,1706.03178.pdf:15
+q038,reasoning,8,7,7,0.875,False,False,1812.03651.pdf:1,
+q039,reasoning,8,8,8,1.0,True,True,,
+q040,enumeration,8,8,7,0.778,False,False,excamera-nsdi17.pdf:10,excamera-nsdi17.pdf:2
+q041,enumeration,8,8,7,0.778,False,False,1902.03383v1.pdf:29,mapreduce-osdi04.pdf:5
+q042,reasoning,7,7,7,1.0,True,False,,
+q043,direct_fact,8,8,8,1.0,True,False,,
+q044,multi_hop,8,8,7,0.778,False,False,1812.03651.pdf:1,excamera-nsdi17.pdf:13
+q045,multi_hop,8,8,7,0.778,False,False,1902.03383v1.pdf:15,1902.03383v1.pdf:26
+q046,multi_hop,8,8,8,1.0,True,False,,
+q047,multi_hop,8,8,8,1.0,True,False,,
+q051,multi_hop,7,8,7,0.875,False,False,,EECS-2009-28.pdf:18
+q052,multi_hop,8,8,7,0.778,False,False,1702.04024.pdf:4,1702.04024.pdf:1
+q053,multi_hop,5,5,5,1.0,True,True,,
+q054,multi_hop,8,8,7,0.778,False,False,1902.03383v1.pdf:25,1902.03383v1.pdf:16
+q055,multi_hop,8,8,7,0.778,False,False,1702.04024.pdf:2,1702.04024.pdf:1
+q056,multi_hop,8,8,6,0.6,False,False,excamera-nsdi17.pdf:5 | excamera-nsdi17.pdf:9,1812.03651.pdf:2 | excamera-nsdi17.pdf:11
+q057,multi_hop,7,6,6,0.857,False,False,excamera-nsdi17.pdf:7,
+q059,multi_hop,8,8,6,0.6,False,False,1702.04024.pdf:7 | 1812.03651.pdf:4,1812.03651.pdf:3 | 1812.03651.pdf:8
+q060,multi_hop,7,7,7,1.0,True,False,,
+q061,multi_hop,8,8,7,0.778,False,False,1902.03383v1.pdf:4,1902.03383v1.pdf:15
+q062,multi_hop,8,8,6,0.6,False,False,mapreduce-osdi04.pdf:1 | mapreduce-osdi04.pdf:11,1702.04024.pdf:7 | 1902.03383v1.pdf:7
