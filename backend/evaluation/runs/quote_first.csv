@@ -1,0 +1,13 @@
+id,set,category,best2,coverage,rbo,quote_ok,quote_len,quote_kw,quote,rewrite
+q019,golden_set_50.jsonl,out_of_corpus,-4.466,0.0,0.0187,False,0,False,,Quantum computing performance analysis
+q020,golden_set_50.jsonl,out_of_corpus,,0.0,,False,0,False,,Bitcoin price
+q048,golden_set_50.jsonl,out_of_corpus,-5.705,0.0,0.1296,False,0,False,,GDPR compliance obligations cloud service providers
+q049,golden_set_50.jsonl,out_of_corpus,,0.0,,False,0,False,,clinical trial results
+q050,golden_set_50.jsonl,out_of_corpus,-5.291,0.0,0.1639,False,0,False,,GPU tensor core benchmarks
+h005,golden_hard_paraphrase.jsonl,direct_fact,0.997,50.0,0.3783,True,166,False,"One key difference between hosted Kubernetes services and serverless computing is the billing model. The former charges per reserved resources, whereas the latter per function execution duration.",Distinction between service models
+h008,golden_hard_paraphrase.jsonl,direct_fact,-3.164,100.0,0.1945,True,218,False,"The motivation behind choosing these locales is that the costs for electricity, cooling, labor, property purchase costs, and taxes are geographically variable, and of these costs, electricity and cooling alone can account for a third of the costs of the datacenter.",Cloud resource pricing variability across regions
+h009,golden_hard_paraphrase.jsonl,direct_fact,-4.447,100.0,0.0329,True,238,False,"The system makes two major contributions: a framework to run general-purpose parallel computations on a commercial “cloud function” service with low latency, and a video encoder built with this framework that achieves fine-grained parallelism without harming compression efficiency.",Author contributions system paper
+h012,golden_hard_paraphrase.jsonl,multi_hop,-6.061,0.0,0.0008,True,106,False,"Section 3 describes an implementation of the MapReduce interface tailored towards
+our cluster-based computing environment.",Concrete implementation versus abstract description
+h015,golden_hard_paraphrase.jsonl,multi_hop,-0.181,33.3,0.0165,False,0,False,,Data locality optimization distributed systems cloud computing serverless architectures performance implications storage proximity compute nodes
+h016,golden_hard_paraphrase.jsonl,multi_hop,-1.148,0.0,0.0383,False,0,False,,Cloud computing historical failures cautionary tales distributed systems legacy system vulnerabilities

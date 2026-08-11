@@ -1097,6 +1097,11 @@ async def ask_ai(question, target_filenames, history=None, user_id=None, persona
     t_generation = time.perf_counter()
     prompt_tokens = out_tokens = thinking_tokens = None
     produced_text = False  # για fallback αν το μοντέλο γυρίσει ΜΟΝΟ thinking
+    # Το outcome κρίνεται ΕΔΩ και καταγράφεται ΜΙΑ φορά στο τέλος. Πριν, το except
+    # έγραφε "generation_error" ΚΑΙ μετά συνέχιζε στο "ok": το ίδιο αποτυχημένο
+    # αίτημα μετριόταν δύο φορές, με το /metrics να δείχνει περισσότερες
+    # επιτυχίες από όσες υπήρξαν.
+    outcome = "ok"
     try:
         if USE_REST_GENERATION:
             # REST: το ΜΟΝΟ μονοπάτι που δέχεται thinkingConfig. Τα thinking
@@ -1132,6 +1137,7 @@ async def ask_ai(question, target_filenames, history=None, user_id=None, persona
         # μη γυρνάς κενό. Μήνυμα ασφαλείας (σπάνιο & διακοπτόμενο -> ξαναδοκίμασε).
         if not produced_text:
             logger.warning("Gemini: κενή απάντηση (thinking-only, finish_reason=STOP).")
+            outcome = "empty_answer"
             yield {"type": "text",
                    "data": ("Δεν κατάφερα να συνθέσω απάντηση αυτή τη στιγμή — "
                             "δοκίμασε ξανά την ερώτηση." if _has_greek(question)
@@ -1145,7 +1151,7 @@ async def ask_ai(question, target_filenames, history=None, user_id=None, persona
         # Π.χ. επίμονο rate limit (429): υποχωρούμε ομαλά αντί να κρασάρει το stream
         logger.error(f"Σφάλμα παραγωγής απάντησης από το Gemini: {e}")
         metrics.inc("rag_gemini_errors_total", {"type": type(e).__name__})
-        metrics.inc("rag_answers_total", {"outcome": "generation_error"})
+        outcome = "generation_error"
         yield {"type": "text",
                "data": ("⚠️ Προσωρινό πρόβλημα με το AI (πιθανόν όριο ρυθμού). "
                         "Δοκίμασε ξανά σε λίγο." if _has_greek(question)
@@ -1158,7 +1164,7 @@ async def ask_ai(question, target_filenames, history=None, user_id=None, persona
     try:
         generation_time = time.perf_counter() - t_generation
         metrics.observe("rag_generation_seconds", generation_time)
-        metrics.inc("rag_answers_total", {"outcome": "ok"})
+        metrics.inc("rag_answers_total", {"outcome": outcome})
         for kind, n in (("prompt", prompt_tokens), ("completion", out_tokens),
                         ("thinking", thinking_tokens)):
             if n:

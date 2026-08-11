@@ -1,0 +1,12 @@
+id,set,category,best2,coverage,verdict,rewrite
+q019,golden_set_50.jsonl,out_of_corpus,-4.466095447540283,0.0,NO,Quantum computing performance analysis
+q020,golden_set_50.jsonl,out_of_corpus,,0.0,-,Bitcoin price
+q048,golden_set_50.jsonl,out_of_corpus,-5.705289363861084,0.0,NO,GDPR compliance obligations cloud service providers
+q049,golden_set_50.jsonl,out_of_corpus,,0.0,-,clinical trial results
+q050,golden_set_50.jsonl,out_of_corpus,-5.291236877441406,0.0,NO,GPU tensor core benchmarks
+h005,golden_hard_paraphrase.jsonl,direct_fact,0.9968798756599426,50.0,YES,Distinction between service models
+h008,golden_hard_paraphrase.jsonl,direct_fact,-3.1644649505615234,100.0,YES,Cloud resource pricing variability across regions
+h009,golden_hard_paraphrase.jsonl,direct_fact,-4.447330474853516,100.0,YES,Author contributions system paper
+h012,golden_hard_paraphrase.jsonl,multi_hop,-6.060939788818359,0.0,YES,Concrete implementation versus abstract description
+h015,golden_hard_paraphrase.jsonl,multi_hop,-0.18112310767173767,33.333333333333336,NO,Data locality optimization distributed systems cloud computing serverless architectures performance implications storage proximity compute nodes
+h016,golden_hard_paraphrase.jsonl,multi_hop,-1.1480966806411743,0.0,NO,Cloud computing historical failures cautionary tales distributed systems legacy system vulnerabilities
