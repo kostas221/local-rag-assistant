@@ -1133,7 +1133,10 @@ async def ask_ai(question, target_filenames, history=None, user_id=None, persona
         if not produced_text:
             logger.warning("Gemini: κενή απάντηση (thinking-only, finish_reason=STOP).")
             yield {"type": "text",
-                   "data": "Δεν κατάφερα να συνθέσω απάντηση αυτή τη στιγμή — δοκίμασε ξανά την ερώτηση."}
+                   "data": ("Δεν κατάφερα να συνθέσω απάντηση αυτή τη στιγμή — "
+                            "δοκίμασε ξανά την ερώτηση." if _has_greek(question)
+                            else "I couldn't compose an answer just now — "
+                                 "please try asking again.")}
     except asyncio.CancelledError:
         logger.warning(
             "Ο χρήστης έκλεισε τη σύνδεση (Client Disconnected). Διακοπή streaming από το Gemini για προστασία πόρων (FinOps)!")

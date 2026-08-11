@@ -145,7 +145,7 @@ async def run(args) -> int:
 
 def main() -> int:
     ap = argparse.ArgumentParser(description="Eval runner για golden sets.")
-    ap.add_argument("dataset", nargs="?", default="evaluation/tests.jsonl",
+    ap.add_argument("dataset", nargs="?", default="evaluation/golden_set_50.jsonl",
                     help="διαδρομή στο .jsonl golden set")
     ap.add_argument("--retrieval-only", action="store_true",
                     help="μόνο μετρικές ανάκτησης — χωρίς judge, χωρίς κόστος")

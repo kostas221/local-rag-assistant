@@ -6,10 +6,10 @@ q004,reasoning,Why can cloud computing datacenters achieve economies of scale?,0
 q005,direct_fact,What are the obstacles related to data confidentiality and auditability?,0.556,0.667,100.0
 q006,enumeration,What new application opportunities does cloud computing enable according to the 2009 paper?,0.333,0.5,100.0
 q007,direct_fact,What is the difference between BaaS and FaaS?,0.833,0.898,100.0
-q008,enumeration,What are the main limitations of current serverless platforms discussed in the paper?,0.4,0.441,100.0
+q008,enumeration,What are the main limitations of current serverless platforms discussed in the paper?,0.375,0.441,100.0
 q009,reasoning,How does serverless billing differ from traditional serverful cloud billing?,0.833,0.823,100.0
 q010,direct_fact,When did serverless computing attract widespread attention and with which service?,1.0,0.96,100.0
-q011,enumeration,Which applications stretch the limits of today's serverless platforms according to the paper?,0.5,0.652,100.0
+q011,enumeration,Which applications stretch the limits of today's serverless platforms according to the paper?,0.333,0.21,100.0
 q012,direct_fact,Τι είναι το utility computing;,1.0,1.0,100.0
 q013,enumeration,Ποια είναι τα 10 κύρια εμπόδια του cloud computing που αναφέρει το paper;,1.0,1.0,100.0
 q014,reasoning,Πώς βοηθά η ελαστικότητα στη μεταφορά του ρίσκου πρόβλεψης ζήτησης;,1.0,1.0,100.0
@@ -26,8 +26,8 @@ q024,enumeration,What scientific applications has PyWren been used for according
 q025,direct_fact,Ποιες τιμές ηλεκτρικού ρεύματος ανά κιλοβατώρα αναφέρει το paper και για ποιον λόγο διαφέρουν;,1.0,1.0,100.0
 q026,reasoning,Why is object storage such as S3 inadequate for fine-grained state sharing between serverless functions?,1.0,1.0,100.0
 q027,enumeration,"Which storage categories does the paper compare in its storage table, and what mean latency does each have?",0.5,0.631,100.0
-q028,direct_fact,Which specific vpxenc command-line flags does the ExCamera appendix list for its encoding runs?,0.143,0.0,100.0
-q029,reasoning,Πώς εγγυάται το MapReduce το ίδιο αποτέλεσμα παρά τις αστοχίες μηχανημάτων;,0.162,0.0,100.0
+q028,direct_fact,Which specific vpxenc command-line flags does the ExCamera appendix list for its encoding runs?,0.167,0.0,100.0
+q029,reasoning,Πώς εγγυάται το MapReduce το ίδιο αποτέλεσμα παρά τις αστοχίες μηχανημάτων;,0.067,0.0,33.3
 q030,reasoning,Γιατί το paper υποστηρίζει ότι η φράση pay as you go αποδίδει καλύτερα το οικονομικό όφελος από το CapEx to OpEx;,1.0,1.0,100.0
 q031,direct_fact,What does the paper say about the two major contributions of ExCamera?,0.833,0.877,100.0
 q032,enumeration,What opportunities does the paper pair with the obstacles of scaling quickly and software licensing?,0.278,0.167,100.0
@@ -43,7 +43,7 @@ q041,enumeration,Πώς λειτουργεί ο μηχανισμός των coun
 q042,reasoning,Πόσο επηρεάζουν οι backup tasks και οι αστοχίες μηχανημάτων τον χρόνο εκτέλεσης του sort;,1.0,1.0,100.0
 q043,direct_fact,How does PyWren package and execute a user's Python function on AWS Lambda?,1.0,1.0,100.0
 q044,multi_hop,The Berkeley view names ExCamera as an application that stretches serverless computing — what speedup does the ExCamera paper itself report?,0.444,0.5,66.7
-q045,multi_hop,Πώς περιγράφουν το πρόβλημα της αποθήκευσης στο serverless το Berkeley view και η κριτική του CIDR;,0.194,0.167,66.7
+q045,multi_hop,Πώς περιγράφουν το πρόβλημα της αποθήκευσης στο serverless το Berkeley view και η κριτική του CIDR;,0.111,0.167,33.3
 q046,multi_hop,"How does MapReduce handle worker failures, and how does PyWren instead delegate that to the cloud provider?",0.75,0.667,100.0
 q047,multi_hop,Ποια στοιχεία προσθέτει η αρχιτεκτονική του OpenWhisk σε σχέση με το γενικό serverless επίπεδο που περιγράφει το Berkeley view;,0.778,0.833,100.0
 q048,out_of_corpus,What do the documents say about GDPR compliance requirements for cloud providers?,0.0,0.0,0.0

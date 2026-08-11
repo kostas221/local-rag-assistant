@@ -1,0 +1,3 @@
+chunk_size,depth_mode,chunks,mrr,ndcg,coverage,s_per_query,n_incorpus,mrr_direct_fact,mrr_enumeration,mrr_multi_hop,mrr_out_of_corpus,mrr_reasoning
+750,fixed,808,0.8329,0.8413,98.52,0.63,45,0.9059,0.7857,0.5952,0.0000,0.8759
+1500,fixed,418,0.7928,0.8070,98.52,0.90,45,0.8688,0.7508,0.5417,0.0000,0.8306

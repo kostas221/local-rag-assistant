@@ -75,4 +75,5 @@ ignore = [
 
 [lint.isort]
 known-first-party = ["ai_core", "database", "models", "schemas", "security",
-                     "genai_compat", "gemini_rest", "caches", "evaluation"]
+                     "genai_compat", "gemini_rest", "metrics", "rate_limit",
+                     "evaluation"]

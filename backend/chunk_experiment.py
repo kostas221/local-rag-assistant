@@ -40,6 +40,7 @@ coverage, τετριμμένα — υπάρχει απλώς περισσότε�
 """
 import argparse
 import asyncio
+import csv
 import glob
 import json
 import os
@@ -228,6 +229,25 @@ def report(rows: list, axis: str) -> None:
         print("   ΣΗΜ: το coverage ανεβαίνει τετριμμένα με περισσότερες σελίδες.")
         print("   Κοίτα ΠΟΥ ΠΛΑΤΩΝΕΙ, όχι ποια τιμή είναι η μέγιστη.")
 
+def write_csv(rows: list, args) -> None:
+    """Ένα artifact ανά πείραμα — όπως κάθε άλλη μέτρηση του project.
+
+    Η στήλη depth_mode μπαίνει επίτηδες: scaled και fixed ΔΕΝ συγκρίνονται
+    μεταξύ τους, και ένα CSV χωρίς αυτήν επιτρέπει ακριβώς αυτό το λάθος.
+    """
+    cats = sorted({c for r in rows for c in r["per_cat"]})
+    head = "chunk_size" if args.axis == "chunk" else "max_pages"
+    with open(args.csv, "w", newline="", encoding="utf-8") as fh:
+        w = csv.writer(fh)
+        w.writerow([head, "depth_mode", "chunks", "mrr", "ndcg", "coverage",
+                    "s_per_query", "n_incorpus"] + [f"mrr_{c}" for c in cats])
+        for r in rows:
+            w.writerow([r["label"], args.depth_mode, r["chunks"],
+                        f"{r['mrr']:.4f}", f"{r['ndcg']:.4f}", f"{r['cov']:.2f}",
+                        f"{r['t_query']:.2f}", r["n_incorpus"]]
+                       + [f"{r['per_cat'].get(c, float('nan')):.4f}" for c in cats])
+    print(f"→ γράφτηκε {args.csv}")
+
 
 async def main(args) -> int:
     tests = load_tests(args.dataset)
@@ -240,6 +260,8 @@ async def main(args) -> int:
     if not rows:
         return 1
     report(rows, args.axis)
+    if args.csv:
+        write_csv(rows, args)
     return 0
 
 
@@ -253,4 +275,6 @@ if __name__ == "__main__":
                     help="scaled = ίσος όγκος κειμένου (σωστό)· fixed = η παλιά μέθοδος")
     ap.add_argument("--limit", type=int, default=None,
                     help="τρέξε μόνο τις πρώτες N ερωτήσεις (γρήγορο πέρασμα)")
+    ap.add_argument("--csv", default=None,
+                    help="σώσε τον πίνακα σε CSV (artifact για τη διπλωματική)")
     raise SystemExit(asyncio.run(main(ap.parse_args())))

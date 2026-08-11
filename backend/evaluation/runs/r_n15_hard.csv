@@ -1,0 +1,17 @@
+﻿id,category,question,mrr,ndcg,keyword_coverage
+h001,enumeration,How fast is each of the different kinds of storage they compared?,0.167,0.21,33.3
+h002,direct_fact,What exact settings did they use when they ran the encoder?,0.0,0.0,0.0
+h003,direct_fact,One of the obstacles they list is about moving big amounts of data around. What do they suggest doing about it?,1.0,1.0,100.0
+h004,direct_fact,Τι λένε για τα νομικά ζητήματα εμπιστευτικότητας και ελέγχου;,1.0,1.0,100.0
+h005,direct_fact,Ποια είναι η διαφορά ανάμεσα στα δύο είδη υπηρεσιών που περιγράφουν;,0.0,0.0,0.0
+h006,enumeration,Which kinds of programs have a hard time on these platforms today?,0.167,0.21,33.3
+h007,reasoning,Γιατί συμφέρει να μην αγοράζεις μηχανήματα από πριν;,0.208,0.0,100.0
+h008,direct_fact,Why does the same thing end up costing different amounts in different places?,0.0,0.0,0.0
+h009,direct_fact,What do the authors of that system paper themselves say they contributed?,0.0,0.0,0.0
+h010,direct_fact,Τι παράδειγμα δίνουν για κινητά;,0.5,0.631,100.0
+h011,multi_hop,How much faster was it?,0.222,0.21,66.7
+h012,multi_hop,Τι προσθέτει η συγκεκριμένη υλοποίηση σε σχέση με τη γενική περιγραφή που δίνει το άλλο paper;,0.0,0.0,0.0
+h013,multi_hop,The two papers disagree about whether remote storage is fast enough to work with. What measurement settles the argument?,0.333,0.307,33.3
+h014,multi_hop,What do they do about the few workers that finish much later than the rest?,0.667,0.667,66.7
+h015,multi_hop,Is it still worth keeping the data right next to the machines doing the work?,0.0,0.0,0.0
+h016,multi_hop,Why do they bring up that older system as a warning?,0.0,0.0,0.0
