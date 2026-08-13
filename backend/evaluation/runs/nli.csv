@@ -1,0 +1,12 @@
+id,category,lang,claims,windows,supported,claim_coverage,min_entail,mean_entail,accept
+q019,out_of_corpus,EN,2,15,1,50.0,0.144,0.5691,False
+q020,out_of_corpus,EL,1,14,1,100.0,0.7427,0.7427,True
+q048,out_of_corpus,EN,2,17,2,100.0,0.8618,0.9124,True
+q049,out_of_corpus,EL,2,15,1,50.0,0.124,0.5596,False
+q050,out_of_corpus,EN,2,14,1,50.0,0.2764,0.4175,False
+h005,direct_fact,EL,8,11,6,75.0,0.2656,0.8076,False
+h008,direct_fact,EN,6,20,3,50.0,0.0197,0.492,False
+h009,direct_fact,EN,8,18,8,100.0,0.71,0.9496,True
+h012,multi_hop,EL,7,18,7,100.0,0.8066,0.9047,True
+h015,multi_hop,EN,4,14,3,75.0,0.1133,0.6414,False
+h016,multi_hop,EN,2,13,2,100.0,0.6479,0.7668,True

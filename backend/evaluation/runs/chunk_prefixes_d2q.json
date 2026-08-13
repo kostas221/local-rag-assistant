@@ -1,0 +1,3 @@
+{
+ "excamera-nsdi17.pdf_p14_c0_400e3b5f": "What are the command-line arguments used with vpxenc for video compression?\nWhat are the recommended settings for $NPROC and $TOK_PARTS when running vpx multi-threaded?\nHow do you tell the vpxenc program what quality you want the video to be?\nWhat are the specific instructions for using the vpxenc tool to compress a video file?\nvpxenc parameters"
+}

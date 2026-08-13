@@ -1,0 +1,106 @@
+id,set,has_history,question,regex,agent,clarify
+q001,golden_set_50,False,What is the definition of cloud computing given in the paper?,False,True,Which paper are you referring to?
+q002,golden_set_50,False,What are the three new aspects of cloud computing from a hardware provisioning point of view?,False,False,
+q003,golden_set_50,False,What is the data transfer bottleneck obstacle and a suggested workaround?,False,False,
+q004,golden_set_50,False,Why can cloud computing datacenters achieve economies of scale?,False,False,
+q005,golden_set_50,False,What are the obstacles related to data confidentiality and auditability?,False,False,
+q006,golden_set_50,False,What new application opportunities does cloud computing enable according to the 2009 paper?,False,True,Which 2009 paper are you referring to?
+q007,golden_set_50,False,What is the difference between BaaS and FaaS?,False,False,
+q008,golden_set_50,False,What are the main limitations of current serverless platforms discussed in the paper?,False,True,Which paper are you referring to?
+q009,golden_set_50,False,How does serverless billing differ from traditional serverful cloud billing?,False,False,
+q010,golden_set_50,False,When did serverless computing attract widespread attention and with which service?,False,False,
+q011,golden_set_50,False,Which applications stretch the limits of today's serverless platforms according to the paper?,False,True,Which paper are you referring to?
+q012,golden_set_50,False,Τι είναι το utility computing;,False,False,
+q013,golden_set_50,False,Ποια είναι τα 10 κύρια εμπόδια του cloud computing που αναφέρει το paper;,False,True,Ποιο paper αναφέρεστε;
+q014,golden_set_50,False,Πώς βοηθά η ελαστικότητα στη μεταφορά του ρίσκου πρόβλεψης ζήτησης;,False,False,
+q015,golden_set_50,False,Τι είναι το cold start στο serverless computing;,False,False,
+q016,golden_set_50,False,Γιατί το serverless απλοποιεί τον προγραμματισμό στο cloud;,False,False,
+q017,golden_set_50,False,Τι αναφέρει το paper για το reputation fate sharing;,False,True,Which paper are you referring to?
+q018,golden_set_50,False,Τι προβλέπει το paper για το μέλλον του serverless computing;,False,True,Which paper are you referring to?
+q019,golden_set_50,False,What do the documents say about quantum computing performance?,False,False,
+q020,golden_set_50,False,Ποια είναι η τιμή του Bitcoin σύμφωνα με τα έγγραφα;,False,False,
+q021,golden_set_50,False,Which specific AWS and Google Cloud services does the paper give as examples of serverless offerings?,False,False,
+q022,golden_set_50,False,Which five applications does the paper analyze in depth as stretching today's serverless computing?,False,True,Which paper are you referring to?
+q023,golden_set_50,False,Ποια είναι τα κύρια αρχιτεκτονικά στοιχεία της πλατφόρμας IBM OpenWhisk;,False,False,
+q024,golden_set_50,False,What scientific applications has PyWren been used for according to the paper?,False,True,Which paper are you referring to?
+q025,golden_set_50,False,Ποιες τιμές ηλεκτρικού ρεύματος ανά κιλοβατώρα αναφέρει το paper και για ποιον λόγο διαφέρουν;,False,False,
+q026,golden_set_50,False,Why is object storage such as S3 inadequate for fine-grained state sharing between serverless functions?,False,False,
+q027,golden_set_50,False,"Which storage categories does the paper compare in its storage table, and what mean latency does each have?",False,True,Which paper are you referring to?
+q028,golden_set_50,False,Which specific vpxenc command-line flags does the ExCamera appendix list for its encoding runs?,False,False,
+q029,golden_set_50,False,Πώς εγγυάται το MapReduce το ίδιο αποτέλεσμα παρά τις αστοχίες μηχανημάτων;,False,False,
+q030,golden_set_50,False,Γιατί το paper υποστηρίζει ότι η φράση pay as you go αποδίδει καλύτερα το οικονομικό όφελος από το CapEx to OpEx;,False,True,Ποιο paper εννοείτε;
+q031,golden_set_50,False,What does the paper say about the two major contributions of ExCamera?,False,True,Which paper are you referring to?
+q032,golden_set_50,False,What opportunities does the paper pair with the obstacles of scaling quickly and software licensing?,False,True,Which paper are you referring to?
+q033,golden_set_50,False,Ποιο παράδειγμα κόστους αδειοδότησης λογισμικού δίνει το paper και πώς συγκρίνεται η τιμή του Windows στο EC2 με την έκδοση ανοιχτού κώδικα;,False,True,Ποιο paper αναφέρεστε;
+q034,golden_set_50,False,"What fallacy about porting serverless applications does the paper identify, and which project does it cite as a step toward portability?",False,True,Which paper are you referring to?
+q035,golden_set_50,False,Πώς απαντά το paper στον ισχυρισμό ότι οι cloud functions δεν μπορούν να εξυπηρετήσουν εφαρμογές χαμηλής καθυστέρησης;,False,True,Ποιο paper;
+q036,golden_set_50,False,What example of offloading API calls from a mobile app to the backend does the paper give?,False,True,Which paper are you referring to?
+q037,golden_set_50,False,Τι αναφέρει το κείμενο για την επέκταση του serverless πέρα από τα παραδοσιακά cloud platforms;,False,False,
+q038,golden_set_50,False,Why does the CIDR paper argue that FaaS stymies hardware-accelerated software innovation?,False,False,
+q039,golden_set_50,False,What does the CIDR paper mean by fluid code and data placement?,False,True,Which CIDR paper are you referring to?
+q040,golden_set_50,False,On which four metrics was ExCamera evaluated and what was the headline result?,False,False,
+q041,golden_set_50,False,Πώς λειτουργεί ο μηχανισμός των counters στο MapReduce;,False,False,
+q042,golden_set_50,False,Πόσο επηρεάζουν οι backup tasks και οι αστοχίες μηχανημάτων τον χρόνο εκτέλεσης του sort;,False,False,
+q043,golden_set_50,False,How does PyWren package and execute a user's Python function on AWS Lambda?,False,False,
+q044,golden_set_50,False,The Berkeley view names ExCamera as an application that stretches serverless computing — what speedup does the ExCamera paper itself report?,False,False,
+q045,golden_set_50,False,Πώς περιγράφουν το πρόβλημα της αποθήκευσης στο serverless το Berkeley view και η κριτική του CIDR;,False,False,
+q046,golden_set_50,False,"How does MapReduce handle worker failures, and how does PyWren instead delegate that to the cloud provider?",False,False,
+q047,golden_set_50,False,Ποια στοιχεία προσθέτει η αρχιτεκτονική του OpenWhisk σε σχέση με το γενικό serverless επίπεδο που περιγράφει το Berkeley view;,False,False,
+q048,golden_set_50,False,What do the documents say about GDPR compliance requirements for cloud providers?,False,False,
+q049,golden_set_50,False,Ποια αποτελέσματα κλινικών δοκιμών αναφέρονται στα έγγραφα;,False,False,
+q050,golden_set_50,False,What benchmark results for GPU tensor cores are reported in these papers?,False,True,Which papers are you referring to?
+q051,golden_multihop_new,False,"PyWren finds that S3 keeps pace with a single local SSD per core, yet the CIDR critique brands FaaS a data-shipping architecture crippled by storage I/O. What per-Lambda network bandwidth does the critique measure to justify the opposite conclusion?",False,False,
+q052,golden_multihop_new,False,"How does ExCamera's mu framework react when a worker fails in the middle of a task, and how does PyWren's stateless model handle the same failure differently?",False,False,
+q053,golden_multihop_new,False,"The CIDR critique argues Lambda functions cannot be network-addressed and must communicate through slow storage. What mechanism lets ExCamera's workers exchange data directly, and how much faster is direct messaging in the critique's own measurements?",False,False,
+q054,golden_multihop_new,False,Το 'Above the Clouds' (2009) θεμελιώνει την ελαστικότητα του νέφους στο statistical multiplexing και στο cost associativity. Πώς αξιοποιεί την ίδια αρχή το serverless Berkeley view (2019) για την εφήμερη αποθήκευση;,False,False,
+q055,golden_multihop_new,False,"MapReduce mitigates slow 'straggler' tasks with a specific mechanism; PyWren also reports stragglers on its 1TB sort. What is MapReduce's mechanism, and where do PyWren's stragglers come from?",False,False,
+q056,golden_multihop_new,False,"Both ExCamera and PyWren run compute-heavy parallel jobs on AWS Lambda, a service built for microservices. What floating-point benchmark does each use to show the raw compute it can extract, and what aggregate peak do they report?",False,False,
+q057,golden_multihop_new,False,The 2019 Berkeley serverless view highlights ExCamera as a case study for cloud functions that communicate. What technique does the ExCamera paper itself use to keep compression efficiency while splitting the encoding into thousands of tiny tasks?,False,False,
+q059,golden_multihop_new,False,Το Berkeley view (2019) ορίζει serverless = FaaS + BaaS. Τι προειδοποιεί ο Baldini et al. για την εξάρτηση από το ecosystem των BaaS υπηρεσιών ενός παρόχου;,False,False,
+q060,golden_multihop_new,False,"MapReduce and ExCamera both parallelize across many workers but split the work very differently. What is the granularity of parallelism each targets, and why can't a standard video encoder be split the MapReduce way?",False,False,
+q061,golden_multihop_new,False,The Berkeley serverless view points to disaggregation of compute and storage as an enabling trend. How does the PyWren paper empirically justify that disaggregation is now viable?,False,False,
+q062,golden_multihop_new,False,"Hellerstein et al. invoke MapReduce as a cautionary analogy for serverless. In what sense do they call MapReduce a limited success, and what does the original MapReduce paper claim as its central contribution?",False,False,
+h001,golden_hard_paraphrase,False,How fast is each of the different kinds of storage they compared?,False,True,What kinds of storage are you referring to?
+h002,golden_hard_paraphrase,False,What exact settings did they use when they ran the encoder?,False,True,"Which ""they"" are you referring to?"
+h003,golden_hard_paraphrase,False,One of the obstacles they list is about moving big amounts of data around. What do they suggest doing about it?,False,True,"Who are ""they""?"
+h004,golden_hard_paraphrase,False,Τι λένε για τα νομικά ζητήματα εμπιστευτικότητας και ελέγχου;,False,False,
+h005,golden_hard_paraphrase,False,Ποια είναι η διαφορά ανάμεσα στα δύο είδη υπηρεσιών που περιγράφουν;,False,True,Ποια δύο είδη υπηρεσιών;
+h006,golden_hard_paraphrase,False,Which kinds of programs have a hard time on these platforms today?,False,True,Which platforms are you referring to?
+h007,golden_hard_paraphrase,False,Γιατί συμφέρει να μην αγοράζεις μηχανήματα από πριν;,False,False,
+h008,golden_hard_paraphrase,False,Why does the same thing end up costing different amounts in different places?,True,False,
+h009,golden_hard_paraphrase,False,What do the authors of that system paper themselves say they contributed?,True,True,Which system paper are you referring to?
+h010,golden_hard_paraphrase,False,Τι παράδειγμα δίνουν για κινητά;,False,True,What mobile example are you referring to?
+h011,golden_hard_paraphrase,False,How much faster was it?,False,True,How much faster was what?
+h012,golden_hard_paraphrase,False,Τι προσθέτει η συγκεκριμένη υλοποίηση σε σχέση με τη γενική περιγραφή που δίνει το άλλο paper;,True,True,What specific implementation are you referring to?
+h013,golden_hard_paraphrase,False,The two papers disagree about whether remote storage is fast enough to work with. What measurement settles the argument?,False,True,Which two papers are you referring to?
+h014,golden_hard_paraphrase,False,What do they do about the few workers that finish much later than the rest?,False,True,"Who are ""they""?"
+h015,golden_hard_paraphrase,False,Is it still worth keeping the data right next to the machines doing the work?,False,False,
+h016,golden_hard_paraphrase,False,Why do they bring up that older system as a warning?,True,True,What older system are you referring to?
+t001,golden_tables,False,What is the maximum run time and the maximum local storage of an AWS serverless cloud function?,False,False,
+t002,golden_tables,False,What is the minimum accounting unit for serverless cloud functions compared to serverful cloud VMs?,False,False,
+t003,golden_tables,False,"In the 2018 survey of serverless use cases, what percentage goes to web and API serving and what percentage to data processing?",False,False,
+t004,golden_tables,False,"Which serverless services are listed with their programming interfaces, and what is the cost model of BigQuery and Athena?",False,False,
+t005,golden_tables,False,How many MapReduce jobs were run in August 2004 and what was the average job completion time?,False,False,
+t006,golden_tables,False,"How much input data was read, how much intermediate data was produced and how much output data was written in August 2004?",False,False,
+t007,golden_tables,False,What was the average number of worker machines per job and the average number of worker deaths per job in August 2004?,False,False,
+t008,golden_tables,False,"What is the latency of invoking a no-op Lambda function on a 1KB argument, and how many times slower is it than a direct network message?",False,False,
+t009,golden_tables,False,What write speed does S3 reach and what write speed does a single SSD on a c3.8xlarge instance reach?,False,False,
+t010,golden_tables,False,What is the mean and the standard deviation of the lambda start latency in the featurization experiment?,False,False,
+t011,golden_tables,False,What did network and storage cost in a medium-sized datacenter compared to a very large datacenter in 2006?,False,False,
+t012,golden_tables,False,"What is the price per kilowatt-hour of electricity in Idaho and in California, and why do they differ?",False,False,
+t013,golden_tables,False,List every use case in the 2018 serverless survey together with its percentage.,False,False,
+t014,golden_tables,False,List every storage medium in the write bandwidth comparison together with its write speed.,False,True,Which write bandwidth comparison are you referring to?
+t015,golden_tables,False,List every phase of the featurization experiment with its mean time and its standard deviation.,False,False,
+t016,golden_tables,False,"List every technology in the economies of scale table with the cost in a medium-sized datacenter, the cost in a very large datacenter and the ratio.",False,True,Which economies of scale table are you referring to?
+c001,golden_conversations,True,And the one about moving data around — what workaround do they suggest?,False,True,Which one about moving data around?
+c002,golden_conversations,True,What is the difference between the two parts of that definition?,False,True,Which definition are you referring to?
+c003,golden_conversations,True,Which applications actually run into those limits?,False,True,Which limits are you referring to?
+c004,golden_conversations,True,Και γιατί απλοποιεί τον προγραμματισμό;,False,True,Τι απλοποιεί τον προγραμματισμό;
+c005,golden_conversations,True,Τι τιμές αναφέρει για το ρεύμα και γιατί διαφέρουν;,False,False,
+c006,golden_conversations,True,What mean latency does each of them have?,False,True,Which systems are you asking about?
+c007,golden_conversations,True,What do the authors list as its two main contributions?,False,True,"What is ""its""?"
+c008,golden_conversations,True,PyWren reports the same problem on its 1TB sort — where do its stragglers come from?,False,False,
+c009,golden_conversations,True,Which specific regulations do they name there?,False,True,Which regulations are you referring to?
+c010,golden_conversations,True,Και ποια είναι η τιμή του Bitcoin;,False,False,
+c011,golden_conversations,True,And what about quantum computing performance?,False,False,
+c012,golden_conversations,True,Πόσο το επηρεάζουν τα backup tasks και οι αστοχίες μηχανημάτων;,False,True,Τι επηρεάζουν τα backup tasks και οι αστοχίες μηχανημάτων;

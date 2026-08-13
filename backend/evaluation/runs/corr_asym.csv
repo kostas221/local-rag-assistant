@@ -1,0 +1,12 @@
+id,category,q1,q2,best2_q2,best2_csv,best2_q1,kw_q2,kw_q1,now,variant
+h005,direct_fact,What is the difference between the two types of services they describe?,Distinction between service models,0.9969,0.9968798756599426,-3.5874,1,1,ΠΕΡΝΑΕΙ,κομμένο
+h008,direct_fact,Why does the same thing end up costing different amounts in different places?,Cloud resource pricing variability across regions,-3.1645,-3.1644649505615234,-6.2357,4,8,κομμένο,κομμένο
+h009,direct_fact,What do the authors of that system paper themselves say they contributed?,Author contributions system paper,-4.4473,-4.447330474853516,-2.5131,3,3,κομμένο,ΠΕΡΝΑΕΙ
+h012,multi_hop,Specific implementation versus general description,Concrete implementation versus abstract description,-6.0609,-6.060939788818359,-6.6633,,,κομμένο,κομμένο
+h015,multi_hop,Is it still worth keeping the data right next to the machines doing the work?,"Data locality optimization in distributed systems, cloud computing, serverless architectures",2.5926,2.5926029682159424,-8.0976,,,ΠΕΡΝΑΕΙ,κομμένο
+h016,multi_hop,Why do they bring up that older system as a warning?,Cloud computing historical failures cautionary tales distributed systems legacy system vulnerabilities,-1.1481,-1.1480966806411743,-9.561,,,κομμένο,κομμένο
+q019,out_of_corpus,What do the documents say about quantum computing performance?,Quantum computing performance analysis,-4.4661,-4.466095447540283,-6.7916,,,κομμένο,κομμένο
+q020,out_of_corpus,Bitcoin price,Bitcoin price,-5.4599,-5.4598565101623535,-5.4599,,,κομμένο,κομμένο
+q048,out_of_corpus,What do the documents say about GDPR compliance requirements for cloud providers?,GDPR compliance obligations cloud service providers,-5.7053,-5.705289363861084,-3.1195,,,κομμένο,κομμένο
+q049,out_of_corpus,clinical trial results,clinical trial results,-9.4036,-9.403556823730469,-9.4036,,,κομμένο,κομμένο
+q050,out_of_corpus,What benchmark results for GPU tensor cores are reported in these papers?,GPU tensor core benchmarks,-5.2912,-5.291236877441406,-6.4064,,,κομμένο,κομμένο

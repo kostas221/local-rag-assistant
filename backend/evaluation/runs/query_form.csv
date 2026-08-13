@@ -1,0 +1,78 @@
+id,coverage,form,query,best,mean,worst,passes_gate,passes_corrective
+q019,0.0,ωμό,Quantum computing performance analysis,-4.466,-8.22,-10.104,False,False
+q019,0.0,what-is,What is Quantum computing performance analysis?,-6.386,-9.178,-10.646,False,False
+q019,0.0,what-about,What does the text say about Quantum computing performance analysis?,-7.102,-9.434,-10.824,False,False
+q019,0.0,how-why,How and why does Quantum computing performance analysis happen?,-5.61,-8.922,-10.402,False,False
+q019,0.0,explain,Explain Quantum computing performance analysis,-5.127,-8.684,-10.213,False,False
+q019,0.0,ΕΡΩΤΗΣΗ-LLM,How is quantum computing performance analyzed?,-7.461,-9.105,-10.612,False,False
+q019,0.0,ΕΡΩΤΗΣΗ-LLM+ανάκτηση,How is quantum computing performance analyzed?,-4.962,-9.32,-11.178,False,False
+q020,0.0,ωμό,Bitcoin price,-5.46,-9.647,-11.241,False,False
+q020,0.0,what-is,What is Bitcoin price?,-7.369,-10.265,-11.238,False,False
+q020,0.0,what-about,What does the text say about Bitcoin price?,-9.647,-10.815,-11.298,False,False
+q020,0.0,how-why,How and why does Bitcoin price happen?,-9.86,-10.618,-11.188,False,False
+q020,0.0,explain,Explain Bitcoin price,-7.501,-10.193,-11.246,False,False
+q020,0.0,ΕΡΩΤΗΣΗ-LLM,What is Bitcoin's price?,-7.796,-10.216,-11.239,False,False
+q020,0.0,ΕΡΩΤΗΣΗ-LLM+ανάκτηση,What is Bitcoin's price?,-7.796,-10.166,-11.318,False,False
+q048,0.0,ωμό,GDPR compliance obligations cloud service providers,-5.705,-8.923,-11.201,False,False
+q048,0.0,what-is,What is GDPR compliance obligations cloud service providers?,-6.223,-9.071,-11.085,False,False
+q048,0.0,what-about,What does the text say about GDPR compliance obligations cloud service providers?,-6.097,-9.272,-11.072,False,False
+q048,0.0,how-why,How and why does GDPR compliance obligations cloud service providers happen?,-3.452,-7.888,-10.718,False,False
+q048,0.0,explain,Explain GDPR compliance obligations cloud service providers,-4.528,-8.133,-10.94,False,False
+q048,0.0,ΕΡΩΤΗΣΗ-LLM,What are the GDPR compliance obligations for cloud service providers?,-4.957,-7.722,-10.978,False,False
+q048,0.0,ΕΡΩΤΗΣΗ-LLM+ανάκτηση,What are the GDPR compliance obligations for cloud service providers?,-4.957,-7.831,-10.219,False,False
+q049,0.0,ωμό,clinical trial results,-9.404,-11.079,-11.318,False,False
+q049,0.0,what-is,What is clinical trial results?,-10.868,-11.215,-11.329,False,False
+q049,0.0,what-about,What does the text say about clinical trial results?,-10.758,-11.192,-11.32,False,False
+q049,0.0,how-why,How and why does clinical trial results happen?,-11.023,-11.16,-11.309,False,False
+q049,0.0,explain,Explain clinical trial results,-10.584,-11.155,-11.316,False,False
+q049,0.0,ΕΡΩΤΗΣΗ-LLM,What are clinical trial results?,-10.819,-11.199,-11.328,False,False
+q049,0.0,ΕΡΩΤΗΣΗ-LLM+ανάκτηση,What are clinical trial results?,-10.819,-11.244,-11.306,False,False
+q050,0.0,ωμό,GPU tensor core benchmarks,-5.291,-9.634,-11.199,False,False
+q050,0.0,what-is,What is GPU tensor core benchmarks?,-5.887,-10.07,-11.222,False,False
+q050,0.0,what-about,What does the text say about GPU tensor core benchmarks?,-6.952,-10.09,-11.229,False,False
+q050,0.0,how-why,How and why does GPU tensor core benchmarks happen?,-6.769,-9.983,-11.162,False,False
+q050,0.0,explain,Explain GPU tensor core benchmarks,-5.519,-9.861,-11.204,False,False
+q050,0.0,ΕΡΩΤΗΣΗ-LLM,What are GPU tensor core benchmarks?,-5.539,-9.981,-11.216,False,False
+q050,0.0,ΕΡΩΤΗΣΗ-LLM+ανάκτηση,What are GPU tensor core benchmarks?,-5.539,-10.072,-11.282,False,False
+h005,50.0,ωμό,Distinction between service models,0.997,-3.955,-8.281,True,True
+h005,50.0,what-is,What is Distinction between service models?,0.491,-4.71,-8.041,True,True
+h005,50.0,what-about,What does the text say about Distinction between service models?,-1.831,-6.834,-9.525,True,False
+h005,50.0,how-why,How and why does Distinction between service models happen?,-0.918,-6.148,-8.771,True,False
+h005,50.0,explain,Explain Distinction between service models,0.191,-3.845,-7.369,True,False
+h005,50.0,ΕΡΩΤΗΣΗ-LLM,What is the distinction between service models?,0.574,-4.577,-8.161,True,True
+h005,50.0,ΕΡΩΤΗΣΗ-LLM+ανάκτηση,What is the distinction between service models?,0.574,-4.826,-9.383,True,True
+h008,100.0,ωμό,Cloud resource pricing variability across regions,-3.164,-7.03,-10.317,False,False
+h008,100.0,what-is,What is Cloud resource pricing variability across regions?,-3.872,-7.544,-10.641,False,False
+h008,100.0,what-about,What does the text say about Cloud resource pricing variability across regions?,-3.876,-7.163,-10.458,False,False
+h008,100.0,how-why,How and why does Cloud resource pricing variability across regions happen?,-3.451,-6.935,-10.115,False,False
+h008,100.0,explain,Explain Cloud resource pricing variability across regions,-2.916,-6.76,-10.361,False,False
+h008,100.0,ΕΡΩΤΗΣΗ-LLM,How does cloud resource pricing vary across regions?,-1.304,-5.986,-9.011,True,False
+h008,100.0,ΕΡΩΤΗΣΗ-LLM+ανάκτηση,How does cloud resource pricing vary across regions?,-1.304,-6.777,-10.967,True,False
+h009,100.0,ωμό,Author contributions system paper,-4.447,-8.939,-11.183,False,False
+h009,100.0,what-is,What is Author contributions system paper?,-6.093,-9.994,-11.286,False,False
+h009,100.0,what-about,What does the text say about Author contributions system paper?,-6.091,-10.431,-11.319,False,False
+h009,100.0,how-why,How and why does Author contributions system paper happen?,-7.025,-10.387,-11.321,False,False
+h009,100.0,explain,Explain Author contributions system paper,-4.589,-9.237,-11.238,False,False
+h009,100.0,ΕΡΩΤΗΣΗ-LLM,What system paper discusses author contributions?,-3.581,-8.696,-10.847,False,False
+h009,100.0,ΕΡΩΤΗΣΗ-LLM+ανάκτηση,What system paper discusses author contributions?,-3.581,-8.72,-10.847,False,False
+h012,0.0,ωμό,Concrete implementation versus abstract description,-6.061,-9.375,-11.293,False,False
+h012,0.0,what-is,What is Concrete implementation versus abstract description?,-5.379,-9.418,-11.311,False,False
+h012,0.0,what-about,What does the text say about Concrete implementation versus abstract description?,-6.8,-9.747,-11.31,False,False
+h012,0.0,how-why,How and why does Concrete implementation versus abstract description happen?,-7.237,-9.509,-11.289,False,False
+h012,0.0,explain,Explain Concrete implementation versus abstract description,-5.98,-9.294,-11.303,False,False
+h012,0.0,ΕΡΩΤΗΣΗ-LLM,How does concrete implementation differ from abstract description?,-6.166,-9.415,-11.258,False,False
+h012,0.0,ΕΡΩΤΗΣΗ-LLM+ανάκτηση,How does concrete implementation differ from abstract description?,-5.921,-8.852,-11.165,False,False
+h015,33.333333333333336,ωμό,Data locality optimization distributed systems cloud computing serverless architectures performance implications storage proximity compute nodes,-0.181,-2.252,-5.763,True,False
+h015,33.333333333333336,what-is,What is Data locality optimization distributed systems cloud computing serverless architectures performance implications storage proximity compute nodes?,-0.598,-2.729,-6.268,True,False
+h015,33.333333333333336,what-about,What does the text say about Data locality optimization distributed systems cloud computing serverless architectures performance implications storage proximity compute nodes?,-0.934,-2.787,-5.121,True,False
+h015,33.333333333333336,how-why,How and why does Data locality optimization distributed systems cloud computing serverless architectures performance implications storage proximity compute nodes happen?,-0.209,-2.331,-5.78,True,False
+h015,33.333333333333336,explain,Explain Data locality optimization distributed systems cloud computing serverless architectures performance implications storage proximity compute nodes,0.398,-1.794,-4.831,True,False
+h015,33.333333333333336,ΕΡΩΤΗΣΗ-LLM,"How do data locality optimization, distributed systems, cloud computing, serverless architectures, performance implications, storage proximity, and compute nodes relate?",0.24,-2.382,-3.761,True,False
+h015,33.333333333333336,ΕΡΩΤΗΣΗ-LLM+ανάκτηση,"How do data locality optimization, distributed systems, cloud computing, serverless architectures, performance implications, storage proximity, and compute nodes relate?",-0.046,-2.739,-4.456,True,False
+h016,0.0,ωμό,Cloud computing historical failures cautionary tales distributed systems legacy system vulnerabilities,-1.148,-5.848,-10.067,True,False
+h016,0.0,what-is,What is Cloud computing historical failures cautionary tales distributed systems legacy system vulnerabilities?,-2.263,-6.528,-10.292,True,False
+h016,0.0,what-about,What does the text say about Cloud computing historical failures cautionary tales distributed systems legacy system vulnerabilities?,-2.844,-6.439,-9.31,False,False
+h016,0.0,how-why,How and why does Cloud computing historical failures cautionary tales distributed systems legacy system vulnerabilities happen?,-0.845,-6.161,-10.071,True,False
+h016,0.0,explain,Explain Cloud computing historical failures cautionary tales distributed systems legacy system vulnerabilities,-0.749,-5.566,-10.327,True,False
+h016,0.0,ΕΡΩΤΗΣΗ-LLM,"What are the historical cloud computing failures, cautionary tales, distributed systems, and legacy system vulnerabilities?",-2.78,-6.49,-9.596,False,False
+h016,0.0,ΕΡΩΤΗΣΗ-LLM+ανάκτηση,"What are the historical cloud computing failures, cautionary tales, distributed systems, and legacy system vulnerabilities?",-2.78,-6.338,-8.822,False,False

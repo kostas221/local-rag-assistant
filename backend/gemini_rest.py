@@ -53,8 +53,9 @@ async def stream_generate(prompt: str, *, model: str, api_key: str,
     thinking_budget: 0 = σβηστό (default), None = άσε το μοντέλο να αποφασίσει
     (η προηγούμενη συμπεριφορά), θετικός αριθμός = ανώτατο όριο thinking tokens.
 
-    Retry σε 429/δικτυακά σφάλματα με τα ΙΔΙΑ waits (2,4,8,16,32s) που είχε το
-    _gemini_generate — καλύπτουν ένα ολόκληρο per-minute rate-limit window.
+        Retry σε 429/5xx/δικτυακά σφάλματα με τα ΙΔΙΑ waits (2,4,8,16,32s) που είχε
+    το _gemini_generate — καλύπτουν ένα ολόκληρο per-minute rate-limit window.
+    Αν ο server στείλει Retry-After, υπερισχύει ΜΟΝΟ όταν ζητάει περισσότερο.
     ΠΡΟΣΟΧΗ: το retry γίνεται ΜΟΝΟ πριν σταλεί το πρώτο κομμάτι κειμένου. Αν η
     σύνδεση σπάσει στη μέση, δεν ξαναρχίζουμε — ο χρήστης έχει ήδη δει μισή
     απάντηση και μια δεύτερη θα την κολλούσε από πάνω.
@@ -82,8 +83,18 @@ async def stream_generate(prompt: str, *, model: str, api_key: str,
             ):
                 if response.status_code != 200:
                     raw = (await response.aread())[:300].decode(errors="replace")
+                    hint = _retry_after(response.headers)
                     if response.status_code == 429:
-                        raise _RateLimited(raw)
+                        raise _RateLimited(raw, hint)
+                    # 5xx = ΠΑΡΟΔΙΚΟ πρόβλημα της άλλης πλευράς. Το 503
+                    # UNAVAILABLE ("model overloaded") είναι το συχνότερο
+                    # σφάλμα του Gemini σε ώρα αιχμής και περνάει με ένα retry
+                    # των 2s. Τα 4xx είναι ΔΙΚΟ ΜΑΣ λάθος (400 κακό body, 403
+                    # άκυρο κλειδί) -> retry = 62s καθυστέρηση πριν το ίδιο
+                    # ακριβώς σφάλμα.
+                    if response.status_code >= 500:
+                        raise _ServerError(
+                            f"Gemini REST {response.status_code}: {raw}", hint)
                     raise RuntimeError(
                         f"Gemini REST {response.status_code}: {raw}")
 
@@ -111,19 +122,57 @@ async def stream_generate(prompt: str, *, model: str, api_key: str,
             # Ο χρήστης έκλεισε τη σύνδεση -> προς τα πάνω, ώστε το FastAPI να
             # κλείσει το socket και να μη χρεωνόμαστε άλλα tokens (FinOps).
             raise
-        except (_RateLimited, httpx.ReadTimeout, httpx.ConnectTimeout,
+        except (_Retryable, httpx.ReadTimeout, httpx.ConnectTimeout,
                 httpx.RemoteProtocolError, httpx.ConnectError) as e:
             if emitted or attempt == retries - 1:
                 raise
             wait = min(32, 2 ** (attempt + 1))  # 2,4,8,16,32
+            # Το Retry-After υπερισχύει ΜΟΝΟ προς τα πάνω: ένα μικρό header θα
+            # μας έβαζε να ξαναχτυπήσουμε νωρίτερα απ' ό,τι αντέχει ο ίδιος ο
+            # server. Καπάκι 60s ώστε ένα παράλογο header να μη κρεμάσει το
+            # αίτημα πίσω από ένα ήδη ανοιχτό HTTP connection του χρήστη.
+            hint = getattr(e, "retry_after", None)
+            if hint is not None:
+                wait = min(60.0, max(wait, hint))
             logger.warning(f"Gemini REST ({type(e).__name__}). Retry σε {wait}s... "
                            f"[{attempt + 1}/{retries}]")
             await asyncio.sleep(wait)
     raise RuntimeError("Gemini REST: εξάντληση retries.")
 
 
-class _RateLimited(Exception):
-    """429 από το API — ξεχωριστός τύπος ώστε να μπαίνει στο ίδιο backoff."""
+class _Retryable(Exception):
+    """Παροδικό σφάλμα του API — μπαίνει στο backoff του stream_generate.
+
+    Κουβαλάει το Retry-After του server (δευτερόλεπτα ή None) ώστε η αναμονή
+    να είναι πληροφορημένη αντί για εικασία.
+    """
+
+    def __init__(self, message: str, retry_after: float | None = None):
+        super().__init__(message)
+        self.retry_after = retry_after
+
+
+class _RateLimited(_Retryable):
+    """429 — ξεπεράσαμε το quota ΜΑΣ."""
+
+
+class _ServerError(_Retryable):
+    """5xx — προσωρινό πρόβλημα στη μεριά του Google (503 = overloaded)."""
+
+
+def _retry_after(headers) -> float | None:
+    """Το Retry-After σε δευτερόλεπτα, αν ήρθε και είναι αριθμός.
+
+    Η μορφή HTTP-date ΔΕΝ καλύπτεται σκόπιμα: το Gemini στέλνει δευτερόλεπτα,
+    και ένα λάθος parse ημερομηνίας θα έδινε λάθος αναμονή αντί για καμία.
+    """
+    raw = headers.get("retry-after")
+    if not raw:
+        return None
+    try:
+        return max(0.0, float(str(raw).strip()))
+    except (TypeError, ValueError):
+        return None
 
 
 async def generate_once(prompt: str, *, model: str, api_key: str,

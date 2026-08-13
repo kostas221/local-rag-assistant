@@ -132,3 +132,13 @@ def test_old_windows_are_cleaned_up(db):
     time.sleep(1.05)
     _check(db, window=1)
     assert db.query(models.RateLimit).count() <= 2
+
+
+def test_429_carries_retry_after(db):
+    """Ο πελάτης πρέπει να ΞΕΡΕΙ πόσο να περιμένει: τα μπλοκαρισμένα αιτήματα
+    μετράνε, άρα το τυφλό retry αυτοτιμωρείται."""
+    for _ in range(3):
+        _check(db)
+    with pytest.raises(HTTPException) as exc:
+        _check(db)
+    assert 1 <= int(exc.value.headers["Retry-After"]) <= 60

@@ -1,4 +1,4 @@
-from sqlalchemy import Boolean, Column, ForeignKey, Integer, String
+from sqlalchemy import Boolean, Column, DateTime, ForeignKey, Integer, String, func
 from sqlalchemy.orm import relationship
 
 from database import Base
@@ -22,7 +22,11 @@ class Document(Base):
     file_name = Column(String, index=True, nullable=False)
     file_path = Column(String, nullable=False)
     is_public = Column(Boolean, default=False)
-    # processing | ready | failed
+    # SHA-256 του ΠΕΡΙΕΧΟΜΕΝΟΥ. Το file_name δεν αρκεί ως ταυτότητα: το ίδιο
+    # paper κατεβασμένο δεύτερη φορά έρχεται ως "1902.03383v1 (1).pdf".
+    # nullable: τα έγγραφα που ανέβηκαν πριν τη στήλη (βλ. migrate_add_file_hash).
+    file_hash = Column(String, index=True, nullable=True)
+    # processing | ready | empty (PDF χωρίς εξαγώγιμο κείμενο) | failed
     status = Column(String, default="processing")
     user_id = Column(Integer, ForeignKey("users.id"))
 
@@ -36,6 +40,12 @@ class Conversation(Base):
     id = Column(Integer, primary_key=True, index=True)
     title = Column(String, default="Νέα Συνομιλία")
     user_id = Column(Integer, ForeignKey("users.id"))
+    # server_default: την ώρα τη βάζει η ΒΑΣΗ, όχι η διεργασία — με πολλαπλούς
+    # workers τα ρολόγια τους δεν είναι εγγυημένα συγχρονισμένα.
+    # nullable: οι συνομιλίες που υπάρχουν ΠΡΙΝ τη στήλη δεν έχουν γνωστή ώρα
+    # και ΔΕΝ την εφευρίσκουμε (βλ. migrate_add_conversation_created_at.py).
+    created_at = Column(DateTime(timezone=True), server_default=func.now(),
+                        nullable=True)
 
 
 class Message(Base):

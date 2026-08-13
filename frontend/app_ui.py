@@ -3,6 +3,8 @@ import re
 import html
 import json
 import time
+from datetime import datetime, timezone
+
 import requests
 import streamlit as st
 
@@ -10,6 +12,30 @@ import streamlit as st
 st.set_page_config(page_title="Z-AI Platform", page_icon="🔬",
                    layout="wide", initial_sidebar_state="expanded")
 API_URL = os.getenv("BACKEND_URL", "http://localhost:8000")
+
+# --- HTTP προς το backend: ΕΝΑ σημείο για timeouts και σφάλματα δικτύου ---
+# ΓΙΑΤΙ: το requests ΧΩΡΙΣ timeout περιμένει ΓΙΑ ΠΑΝΤΑ. Το Streamlit τρέχει το
+# script σε ένα thread ανά session -> ένα κολλημένο αίτημα παγώνει την καρτέλα
+# χωρίς κανένα μήνυμα. Χειρότερα: τα υπάρχοντα except RequestException ΔΕΝ
+# ενεργοποιούνται ποτέ σε κολλημένο (σε αντίθεση με πεσμένο) backend.
+# Ο κορεσμός είναι ΜΕΤΡΗΜΕΝΟΣ: 4 ταυτόχρονοι χρήστες = σημείο κορεσμού,
+# 8 χρήστες = p95 7.25 s (concurrency_benchmark.py).
+# (connect, read): το connect μένει μικρό — ή απαντά αμέσως ή είναι κάτω.
+TIMEOUT = (5, 30)
+TIMEOUT_UPLOAD = (5, 120)   # 50MB μέσω δικτύου θέλει χώρο· το ingest είναι background
+
+
+def api(method, path, *, timeout=TIMEOUT, **kwargs):
+    """Επιστρέφει το Response ή None αν το backend δεν απάντησε καθόλου.
+
+    ΠΟΤΕ δεν πετάει exception: ένα RequestException εδώ ανεβαίνει ως κόκκινο
+    traceback και σταματά το render ΟΛΗΣ της σελίδας — ο χρήστης χάνει και
+    το ιστορικό που είχε ήδη μπροστά του. Ο caller ελέγχει για None."""
+    try:
+        return requests.request(method, f"{API_URL}{path}",
+                                timeout=timeout, **kwargs)
+    except requests.exceptions.RequestException:
+        return None
 
 # --- Logo (SVG) ---
 Z_LOGO_HTML = """
@@ -108,18 +134,51 @@ def new_chat():
     st.session_state.chat_history = []
 
 
+def chat_group(iso_ts):
+    """Σε ποιον χρονικό κάδο πέφτει μια συνομιλία, για τα headers του sidebar.
+
+    NULL -> "Earlier": οι συνομιλίες που προϋπήρχαν της στήλης created_at δεν
+    έχουν γνωστή ώρα. Πάνε στο τέλος αντί να τους δοθεί ψεύτικη ημερομηνία.
+    """
+    if not iso_ts:
+        return "Earlier"
+    try:
+        ts = datetime.fromisoformat(iso_ts)
+    except (TypeError, ValueError):
+        return "Earlier"
+    # Χωρίς tzinfo -> το θεωρούμε UTC: η βάση γράφει TIMESTAMPTZ, αλλά ένα
+    # naive string από παλιότερη εγγραφή δεν πρέπει να σκάει το sidebar.
+    if ts.tzinfo is None:
+        ts = ts.replace(tzinfo=timezone.utc)
+    days = (datetime.now(timezone.utc).astimezone().date()
+            - ts.astimezone().date()).days
+    if days <= 0:
+        return "Today"
+    if days == 1:
+        return "Yesterday"
+    if days < 7:
+        return "Previous 7 days"
+    return "Earlier"
+
 def delete_chat_callback(conv_id, token):
-    requests.delete(f"{API_URL}/conversations/{conv_id}",
-                    headers={"Authorization": f"Bearer {token}"})
+    res = api("DELETE", f"/conversations/{conv_id}",
+              headers={"Authorization": f"Bearer {token}"})
+    # Το session state καθαρίζεται ΜΟΝΟ αν η διαγραφή πέτυχε. Πριν, ένα 401
+    # (ληγμένο token) ή 500 άφηνε τη συνομιλία στη βάση αλλά έσβηνε το
+    # ιστορικό από την οθόνη -> ο χρήστης νόμιζε ότι το έχασε.
+    if res is None or res.status_code != 200:
+        st.session_state["flash_error"] = "Could not delete the chat."
+        return
     if st.session_state.current_conv_id == conv_id:
         st.session_state.current_conv_id = None
         st.session_state.chat_history = []
 
 
 def delete_doc_callback(doc_id, token):
-    requests.delete(f"{API_URL}/documents/{doc_id}",
-                    headers={"Authorization": f"Bearer {token}"})
-
+    res = api("DELETE", f"/documents/{doc_id}",
+              headers={"Authorization": f"Bearer {token}"})
+    if res is None or res.status_code != 200:
+        st.session_state["flash_error"] = "Could not delete the document."
 
 def render_sources(sources):
     """Πηγές με preview αποσπάσματος. Συμβατό και με ΠΑΛΙΑ μηνύματα όπου οι
@@ -170,8 +229,8 @@ def _library_body(headers, token, disabled=False):
     να ΜΗΝ διακόπτει το streaming."""
     st.subheader("📂 Library")
     try:
-        doc_res = requests.get(f"{API_URL}/documents", headers=headers)
-        if doc_res.status_code != 200:
+        doc_res = api("GET", "/documents", headers=headers)
+        if doc_res is None or doc_res.status_code != 200:
             st.caption("Could not load documents.")
             return
         docs = doc_res.json()
@@ -198,8 +257,14 @@ def _library_body(headers, token, disabled=False):
             author_label = "You" if doc['is_mine'] else doc.get(
                 'uploader_name', 'Unknown')
             status = doc.get('status', 'ready')
-            icon = {"ready": "✅", "processing": "⏳",
-                    "failed": "❌"}.get(status, "📄")
+            icon = {"ready": "✅", "processing": "⏳", "failed": "❌",
+                    "empty": "🚫"}.get(status, "📄")
+            # "empty": έγκυρο PDF χωρίς εξαγώγιμο κείμενο. Χωρίς αυτή τη διάκριση
+            # το αρχείο έδειχνε ✅ και δεν απαντούσε ΠΟΤΕ — ο χρήστης θα νόμιζε
+            # ότι φταίει το σύστημα.
+            help_text = (f"{doc['file_name']} — no extractable text "
+                         "(scanned PDF — needs OCR)" if status == "empty"
+                         else f"{doc['file_name']} — {status}")
 
             if f"check_{doc['id']}" not in st.session_state:
                 st.session_state[f"check_{doc['id']}"] = True
@@ -210,7 +275,7 @@ def _library_body(headers, token, disabled=False):
                     f"{icon} {display_name} ({author_label})",
                     key=f"check_{doc['id']}",
                     disabled=(disabled or status != "ready"),
-                    help=f"{doc['file_name']} — {status}")
+                    help=help_text)
             with col2:
                 if doc['is_mine']:
                     with st.popover("⋮"):
@@ -236,6 +301,12 @@ def render_library(headers, token, generating=False):
 def app_main(token):
     headers = {"Authorization": f"Bearer {token}"}
 
+    # Μηνύματα από on_click callbacks. Το callback τρέχει ΠΡΙΝ ζωγραφιστεί η
+    # σελίδα, οπότε δεν έχει container να γράψει· το μήνυμα ταξιδεύει εδώ.
+    flash = st.session_state.pop("flash_error", None)
+    if flash:
+        st.error(flash)
+
     # «Κλείδωμα» όσο τρέχει απάντηση: τα κουμπιά γίνονται disabled ώστε ένα κλικ
     # να ΜΗΝ ακυρώνει το streaming (στο Streamlit κάθε κλικ = rerun -> διακοπή).
     generating = st.session_state.get("pending_question") is not None
@@ -244,13 +315,14 @@ def app_main(token):
     # τότε το backend έχει σώσει την ερώτηση αλλά (ακόμα) όχι την απάντηση, οπότε
     # ένα reload θα έδειχνε μισό ζευγάρι και θα διπλασίαζε το inline-rendered turn.
     if st.session_state.current_conv_id and not generating:
-        try:
-            msg_res = requests.get(
-                f"{API_URL}/conversations/{st.session_state.current_conv_id}/messages", headers=headers)
-            if msg_res.status_code == 200:
-                st.session_state.chat_history = msg_res.json()
-        except requests.exceptions.RequestException:
+        msg_res = api(
+            "GET",
+            f"/conversations/{st.session_state.current_conv_id}/messages",
+            headers=headers)
+        if msg_res is None:
             st.error("Could not load history. Check that the backend is running.")
+        elif msg_res.status_code == 200:
+            st.session_state.chat_history = msg_res.json()
 
     # --- SIDEBAR ---
     with st.sidebar:
@@ -269,23 +341,29 @@ def app_main(token):
             disabled=generating)
 
         st.subheader("Recent Chats")
-        try:
-            conv_res = requests.get(
-                f"{API_URL}/conversations", headers=headers)
-            if conv_res.status_code == 200:
-                for conv in conv_res.json():
-                    display_title = conv['title'][:18] + \
-                        "..." if len(conv['title']) > 18 else conv['title']
-                    col1, col2 = st.columns([0.85, 0.15])
-                    with col1:
-                        st.button(f"💬 {display_title}", key=f"conv_{conv['id']}", use_container_width=True, on_click=change_chat, args=(
-                            conv['id'],), help=conv['title'], disabled=generating)
-                    with col2:
-                        with st.popover("⋮"):
-                            st.button("🗑️ Delete", key=f"del_conv_{conv['id']}", use_container_width=True, on_click=delete_chat_callback, args=(
-                                conv['id'], token), disabled=generating)
-        except requests.exceptions.RequestException:
+        conv_res = api("GET", "/conversations", headers=headers)
+        if conv_res is None:
             st.sidebar.error("⚠️ Backend not responding. Chats not loaded.")
+        elif conv_res.status_code == 200:
+            # Έρχονται ήδη ταξινομημένες (id DESC = νεότερες πρώτα), οπότε οι
+            # κάδοι βγαίνουν φυσικά σε σωστή σειρά και αρκεί να τυπώνουμε την
+            # επικεφαλίδα την πρώτη φορά που εμφανίζεται ο καθένας.
+            seen_groups = set()
+            for conv in conv_res.json():
+                group = chat_group(conv.get("created_at"))
+                if group not in seen_groups:
+                    st.caption(group)
+                    seen_groups.add(group)
+                display_title = conv['title'][:18] + \
+                    "..." if len(conv['title']) > 18 else conv['title']
+                col1, col2 = st.columns([0.85, 0.15])
+                with col1:
+                    st.button(f"💬 {display_title}", key=f"conv_{conv['id']}", use_container_width=True, on_click=change_chat, args=(
+                        conv['id'],), help=conv['title'], disabled=generating)
+                with col2:
+                    with st.popover("⋮"):
+                        st.button("🗑️ Delete", key=f"del_conv_{conv['id']}", use_container_width=True, on_click=delete_chat_callback, args=(
+                            conv['id'], token), disabled=generating)
 
         st.divider()
 
@@ -307,14 +385,24 @@ def app_main(token):
                         "file": (uploaded_file.name, uploaded_file.getvalue(), "application/pdf")}
                     upload_headers = {"Authorization": f"Bearer {token}"}
 
-                    response = requests.post(
-                        f"{API_URL}/upload", headers=upload_headers, files=files)
+                    response = api("POST", "/upload", headers=upload_headers,
+                                   files=files, timeout=TIMEOUT_UPLOAD)
 
-                    if response.status_code == 200:
+                    if response is None:
+                        st.error("The server is unreachable. Please try again.")
+                    elif response.status_code == 200:
                         st.session_state.uploader_key += 1
                         st.rerun()
                     else:
-                        st.error("Something went wrong with the upload.")
+                        # Το backend στέλνει ΣΥΓΚΕΚΡΙΜΕΝΟ detail (413 = πάνω από
+                        # 50MB, 400 = δεν είναι PDF). Το γενικό "something went
+                        # wrong" τα έκρυβε και τα δύο -> ο χρήστης ξαναδοκίμαζε
+                        # το ίδιο αρχείο.
+                        try:
+                            msg = response.json().get("detail")
+                        except ValueError:
+                            msg = None
+                        st.error(msg or "Something went wrong with the upload.")
 
         st.button("🚪 Logout", use_container_width=True, on_click=logout, disabled=generating)
 
@@ -359,11 +447,17 @@ def app_main(token):
                     # αυτό θα ξαναστέλναμε το ίδιο feedback ξανά και ξανά.
                     sent_key = f"feedback_sent_{msg_id}"
                     if st.session_state.get(sent_key) != feedback:
-                        requests.post(
-                            f"{API_URL}/feedback", headers=headers,
-                            json={"message_id": msg_id, "is_positive": feedback == 1})
-                        st.session_state[sent_key] = feedback
-                        st.toast("Thanks for your feedback!", icon="📈")
+                        fb_res = api("POST", "/feedback", headers=headers,
+                                     json={"message_id": msg_id,
+                                           "is_positive": feedback == 1})
+                        # Το sent_key γράφεται ΜΟΝΟ σε επιτυχία: αλλιώς ένα
+                        # χαμένο feedback δεν ξαναστέλνεται ΠΟΤΕ (ο guard το
+                        # θεωρεί ήδη σταλμένο).
+                        if fb_res is not None and fb_res.status_code == 200:
+                            st.session_state[sent_key] = feedback
+                            st.toast("Thanks for your feedback!", icon="📈")
+                        else:
+                            st.toast("Feedback not saved — try again.", icon="⚠️")
 
                     # Στο 👎 ζητάμε προαιρετικά και το «γιατί» — το πιο χρήσιμο σήμα
                     # βελτίωσης (failure case -> νέο golden-set case). Το backend
@@ -382,14 +476,17 @@ def app_main(token):
                                 if st.button("Send", key=f"fb_send_{msg_id}",
                                              type="primary", disabled=generating):
                                     if comment and comment.strip():
-                                        requests.post(
-                                            f"{API_URL}/feedback", headers=headers,
+                                        c_res = api(
+                                            "POST", "/feedback", headers=headers,
                                             json={"message_id": msg_id,
                                                   "is_positive": False,
                                                   "comment": comment.strip()})
-                                        st.session_state[comment_done] = True
-                                        st.rerun()
-
+                                        if c_res is not None and c_res.status_code == 200:
+                                            st.session_state[comment_done] = True
+                                            st.rerun()
+                                        else:
+                                            st.toast("Comment not saved — try again.",
+                                                     icon="⚠️")
     # Input: ΖΩΓΡΑΦΙΖΕΤΑΙ ΠΡΙΝ το streaming block ώστε το disabled=generating να
     # ισχύει ΚΑΤΑ τη διάρκεια του streaming. (Αν ζωγραφιστεί μετά, όσο το
     # write_stream μπλοκάρει, στην οθόνη μένει η παλιά ΞΕΚΛΕΙΔΩΤΗ έκδοση του input
@@ -431,10 +528,9 @@ def app_main(token):
 
         if st.session_state.current_conv_id is None:
             with st.spinner("Starting a new session..."):
-                conv_res = requests.post(
-                    f"{API_URL}/conversations", headers=headers,
-                    json={"title": q[:40] + "..."})
-                if conv_res.status_code == 200:
+                conv_res = api("POST", "/conversations", headers=headers,
+                               json={"title": q[:40] + "..."})
+                if conv_res is not None and conv_res.status_code == 200:
                     st.session_state.current_conv_id = conv_res.json()["id"]
 
         # Επιλεγμένα αρχεία (ready + τσεκαρισμένα) από το fragment της βιβλιοθήκης.
@@ -540,9 +636,11 @@ def auth_screen():
             log_user = st.text_input("Username")
             log_pass = st.text_input("Password", type="password")
             if st.button("Sign In", use_container_width=True, type="primary"):
-                res = requests.post(
-                    f"{API_URL}/login", data={"username": log_user, "password": log_pass})
-                if res.status_code == 200:
+                res = api("POST", "/login",
+                          data={"username": log_user, "password": log_pass})
+                if res is None:
+                    st.error("The server is unreachable. Please start the backend.")
+                elif res.status_code == 200:
                     set_login_state(res.json()["access_token"])
                     st.rerun()
                 elif res.status_code == 429:
@@ -556,20 +654,19 @@ def auth_screen():
             reg_pass = st.text_input("New Password", type="password")
 
             if st.button("Create Account", use_container_width=True):
-                try:
-                    res = requests.post(
-                        f"{API_URL}/register", json={"username": reg_user, "email": reg_email, "password": reg_pass})
-
-                    if res.status_code in (200, 201):
-                        st.success("Account created! You can now log in.")
-                    elif res.status_code in (400, 422):
-                        st.error(res.json().get(
-                            "detail", "Invalid details. (The email or username may already exist.)"))
-                    else:
-                        st.error(
-                            f"Failed to reach the server (error {res.status_code}).")
-                except requests.exceptions.RequestException:
+                res = api("POST", "/register",
+                          json={"username": reg_user, "email": reg_email,
+                                "password": reg_pass})
+                if res is None:
                     st.error("The server is unreachable. Please start the backend.")
+                elif res.status_code in (200, 201):
+                    st.success("Account created! You can now log in.")
+                elif res.status_code in (400, 422):
+                    st.error(res.json().get(
+                        "detail", "Invalid details. (The email or username may already exist.)"))
+                else:
+                    st.error(
+                        f"Failed to reach the server (error {res.status_code}).")
 
 
 if st.session_state.token:

@@ -1,0 +1,12 @@
+id,category,q1,q2,best1,best2,kw1,kw2,outcome
+h005,direct_fact,What is the difference between the two types of services they describe?,What is the distinction between the two types of services described?,-3.5874204635620117,-1.6509084701538086,1,1,ΣΩΘΗΚΕ
+h008,direct_fact,Why does the same thing end up costing different amounts in different places?,Why do cloud computing resource costs vary across different regions or availability zones?,-6.23569393157959,1.3544460535049438,,9,ΣΩΘΗΚΕ
+h009,direct_fact,What do the authors of that system paper themselves say they contributed?,What do the authors of that system paper themselves state as their contributions?,-5.330951690673828,-2.991150379180908,,,ακόμα κομμ.
+h012,multi_hop,Specific implementation versus general description,"What are the distinctions between a specific implementation and a general description in cloud computing, serverless computing, and distributed systems?",-5.298546314239502,3.273578643798828,,6,ΣΩΘΗΚΕ
+h015,multi_hop,Is it still worth keeping the data right next to the machines doing the work?,"In distributed systems, does data locality still provide significant performance benefits for co-locating data with compute resources?",-4.991783618927002,4.630537509918213,9,1,ΣΩΘΗΚΕ
+h016,multi_hop,Why do they bring up that older system as a warning?,"Why is that older system presented as a cautionary example in the context of cloud computing, serverless computing, or distributed systems?",-9.368318557739258,2.1894092559814453,8,,ΣΩΘΗΚΕ
+q019,out_of_corpus,What do the documents say about quantum computing performance?,"What is the performance impact of quantum computing on cloud computing, serverless computing, and distributed systems?",-4.441519260406494,2.327207088470459,,,ΔΙΑΡΡΟΗ
+q020,out_of_corpus,Bitcoin price,Bitcoin price?,-5.4598565101623535,-6.389163970947266,,,κομμένο
+q048,out_of_corpus,What do the documents say about GDPR compliance requirements for cloud providers?,What are the General Data Protection Regulation (GDPR) compliance requirements for cloud providers?,-3.119509220123291,-0.8676670789718628,,,ΔΙΑΡΡΟΗ
+q049,out_of_corpus,clinical trial results,Is there a distributed system for managing clinical trial results?,-9.403556823730469,-7.487299919128418,,,κομμένο
+q050,out_of_corpus,What benchmark results for GPU tensor cores are reported in these papers?,What are the reported benchmark results for GPU tensor cores in these papers?,-5.053423881530762,-6.308563709259033,,,κομμένο

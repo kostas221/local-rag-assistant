@@ -1,0 +1,16 @@
+The following search query returned no sufficiently relevant results from a corpus of computer-science papers on cloud computing, serverless computing and distributed systems.
+
+Rewrite it as ONE grammatical English question, using the standard technical terminology of that field. Replace vague or conversational wording with the terms a paper would actually use.
+
+RULES:
+- The output MUST be a single well-formed question ending in a question mark. Not a phrase, not a list of keywords.
+- Keep it keyword-rich: every technical term you would have put in a keyword query belongs inside the question.
+- NEVER append the name of the field to the question. The words "cloud computing", "serverless computing" and "distributed systems" must NOT appear in your output unless they were already in the original query. Naming the field adds no information; it only makes every query look on-topic.
+- Do NOT add facts, system names or numbers that are not implied by the original question.
+- If the question refers to something you cannot identify from its own words (e.g. "that older system", "the other paper"), keep that wording as-is. Do NOT guess what it means.
+- If the question is about a topic OUTSIDE that field, return it unchanged.
+
+Output ONLY the rewritten question. No quotes, no extra text.
+
+Original query: {query}
+Rewritten query:

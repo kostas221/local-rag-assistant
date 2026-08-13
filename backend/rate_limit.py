@@ -87,4 +87,10 @@ def check(db, bucket: str, key: str, max_hits: int, window_sec: int,
         db.commit()
 
     if hits > max_hits:
-        raise HTTPException(status_code=429, detail=message)
+        # Retry-After: πόσο ΑΚΡΙΒΩΣ μένει ως το τέλος του παραθύρου. Χωρίς αυτό
+        # ο πελάτης μαντεύει — και επειδή τα μπλοκαρισμένα αιτήματα μετράνε
+        # (συνειδητή διαφορά (α) παραπάνω), ένα UI που ξαναδοκιμάζει αμέσως
+        # παρατείνει μόνο του το μπλοκάρισμα.
+        raise HTTPException(
+            status_code=429, detail=message,
+            headers={"Retry-After": str(max(1, window_start + window_sec - now))})

@@ -1,0 +1,11 @@
+chunk,query_id,variant,rerank,dense_rank,cos,passes_gate
+excamera-nsdi17.pdf_p14_c0_400e3b5f,h002,αρχικό,-8.951,15,0.5022,False
+excamera-nsdi17.pdf_p14_c0_400e3b5f,h002,ΧΩΡΙΣ βιβλιογρ.,-9.968,21,0.4882,False
+excamera-nsdi17.pdf_p14_c0_400e3b5f,h002,πρόθεμα 1,-7.684,4,0.531,False
+excamera-nsdi17.pdf_p14_c0_400e3b5f,h002,πρόθεμα 2,-4.981,18,0.4947,False
+excamera-nsdi17.pdf_p14_c0_400e3b5f,h002,ΟΛΑ ΜΑΖΙ,-3.966,6,0.5157,False
+excamera-nsdi17.pdf_p14_c0_400e3b5f,q028,αρχικό,-1.971,7,0.5416,True
+excamera-nsdi17.pdf_p14_c0_400e3b5f,q028,ΧΩΡΙΣ βιβλιογρ.,-0.907,4,0.55,True
+excamera-nsdi17.pdf_p14_c0_400e3b5f,q028,πρόθεμα 1,2.129,3,0.5729,True
+excamera-nsdi17.pdf_p14_c0_400e3b5f,q028,πρόθεμα 2,-0.376,4,0.5495,True
+excamera-nsdi17.pdf_p14_c0_400e3b5f,q028,ΟΛΑ ΜΑΖΙ,1.515,3,0.5802,True

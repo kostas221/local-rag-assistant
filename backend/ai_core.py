@@ -187,20 +187,34 @@ reranker = CrossEncoder(RERANKER_MODEL, device=DEVICE)
 MIN_RERANK_SCORE = float(os.getenv("MIN_RERANK_SCORE", "-2.6"))
 
 # --- Corrective retrieval (2ο pass, ΜΟΝΟ όταν το gate έχει ήδη κόψει) ---
-# άμυνα αντί να τη βοηθά. Σάρωση κατωφλίου (πραγματικές/ψευδαισθήσεις):
-#   L-6  @ gate -2.0:  -2.0 -> 5/2 · 0.0 -> 4/1 · +1.0 -> 4/0 · +1.5 -> 3/0
-#   L-12 @ gate -2.6:  ΟΛΟ το [-2.6, +0.8] -> 2/0 · +1.0 -> 1/0
-# Τα 5 out_of_corpus μένουν κομμένα σε ΟΛΑ τα κατώφλια, και στα δύο μοντέλα.
-# Το +0.4 κρατά ΑΚΡΙΒΩΣ την ίδια σχετική αυστηρότητα: 3.0 logits πάνω από το
-# gate, όπως το +1.0 ήταν πάνω από το -2.0. Η αναλογία ήταν υπόθεση· η σάρωση
-# την επιβεβαίωσε ανεξάρτητα (το 0.4 είναι μέσα στο καθαρό εύρος).
+# Το κατώφλι του 2ου pass είναι ΞΕΧΩΡΙΣΤΟ από το gate επειδή η ΚΛΙΜΑΚΑ είναι
+# άλλη: το ms-marco-MiniLM είναι εκπαιδευμένο σε ΕΡΩΤΗΣΕΙΣ, ενώ ο corrective
+# agent παράγει ΟΝΟΜΑΤΙΚΕΣ ΦΡΑΣΕΙΣ ("Cloud resource pricing variability").
+# Ολόκληρη η κατανομή του 2ου pass είναι μετατοπισμένη προς τα κάτω — γι'
+# αυτό ένα κατώφλι ΑΥΣΤΗΡΟΤΕΡΟ του gate (το παλιό +0.4) πετούσε σωστό υλικό.
 #
-# ΠΡΟΣΟΧΗ — ΕΓΙΝΕ ΠΙΟ ΑΔΥΝΑΜΟ, ΟΧΙ ΛΙΓΟΤΕΡΟ: με το L-12 το gate κόβει 6 αντί 10
-# hard ερωτήσεις (λύνει μόνο του τις h001/h003/h006/h013), άρα η βάση βαθμονόμησης
-# ΣΥΡΡΙΚΝΩΘΗΚΕ από n=10 σε n=6 και οι σωσμένες από 4 σε 2. Το κατώφλι στηρίζεται
-# πλέον σε ΔΥΟ ερωτήσεις (h005, h015). Αν μεγαλώσει το golden set, ΞΑΝΑΜΕΤΡΑ.
+# ΜΕΤΡΗΜΕΝΗ ΚΑΤΑΝΟΜΗ best2 (runs/corr_v1_control.csv, L-12 @ gate -2.6):
+#   ΜΕ σωστό υλικό    : h015 +2.59 · h005 +1.00 · h008 -3.16 · h009 -4.45
+#   ΧΩΡΙΣ υλικό       : h016 -1.15 · h012 -6.06
+#   out_of_corpus (5) : q019 -4.47 · q050 -5.29 · q020 -5.46 · q048 -5.71
+#                       q049 -9.40
+# Το -3.8 είναι το ΜΕΣΟ του καθαρού διαστήματος [-4.47, -3.16]: 0.64 πάνω από
+# το h008, 0.67 κάτω από το πρώτο out_of_corpus. Ίδια αρχή με το gate στο -2.6
+# (μέσο του [-3.12, -2.08]) — μεγιστοποιεί το ΧΕΙΡΟΤΕΡΟ περιθώριο.
+#
+# ΓΙΑΤΙ ΟΧΙ ΠΙΟ ΧΑΜΗΛΑ: το h009 (-4.447) και το out_of_corpus q019 (-4.466)
+# απέχουν 0.019 logits. ΚΑΝΕΝΑ κατώφλι δεν σώζει το h009 χωρίς διαρροή.
+#
+# ΤΟ ΤΙΜΗΜΑ, ΜΕΤΡΗΜΕΝΟ: το h016 (-1.15) περνάει πλέον με κάλυψη 0%. Πέντε
+# κλήσεις γέννησης (runs/corr_floor_h016.csv, best2 -1.1481 ταυτόσημο και
+# στις 5) δίνουν και τις 5 φορές άρνηση ("The provided source text does not
+# explicitly state..."). Η 2η γραμμή άμυνας -- το system prompt -- κρατάει.
+# Καθαρό αποτέλεσμα: hard set 12/16 -> 13/16, out_of_corpus 5/5 σιωπηλά.
+#
+# ΠΡΟΣΟΧΗ: βάση βαθμονόμησης n=6 κομμένες ερωτήσεις, ΧΩΡΙΣ validation set.
+# Αν μεγαλώσει το golden set, ΞΑΝΑΜΕΤΡΑ.
 ENABLE_CORRECTIVE = os.getenv("ENABLE_CORRECTIVE", "1") not in ("0", "false", "False")
-CORRECTIVE_MIN_SCORE = float(os.getenv("CORRECTIVE_MIN_SCORE", "0.4"))
+CORRECTIVE_MIN_SCORE = float(os.getenv("CORRECTIVE_MIN_SCORE", "-3.8"))
 
 # Πόσα candidates (από το RRF) περνάνε στον reranker — ο ΑΚΡΙΒΟΣ βήμα στη CPU.
 RERANK_CANDIDATES = int(os.getenv("RERANK_CANDIDATES", "15"))
@@ -737,7 +751,7 @@ def _rrf_fuse(dense_ids, sparse_ids, all_ids, all_texts, all_metadatas,
     unique_ids = list(dict.fromkeys([i for lst in lists for i in lst]))
     rank_maps = [{id_: rank for rank, id_ in enumerate(lst)} for lst in lists]
 
-        # Θέση ανά id ΜΙΑ φορά: το all_ids.index() μέσα στον βρόχο ήταν O(n²)
+    # Θέση ανά id ΜΙΑ φορά:
     # (50 υποψήφια x 418 ids). ΤΟ ΜΙΣΟ ΠΡΟΒΛΗΜΑ ΕΜΕΝΕ: και το ίδιο το χτίσιμο
     # του dict είναι O(N) σε ΚΑΘΕ ερώτηση. ΜΕΤΡΗΜΕΝΟ (scaling_benchmark.py):
     # 0.06ms στα 418 chunks · 3.9ms στα 50.000 · 22ms στα 200.000 — για δουλειά
@@ -765,14 +779,19 @@ def _chunk_idx_from_id(chunk_id: str) -> int:
     return int(m.group(1)) if m else 0
 
 
-def _expand_to_pages(top_chunks, max_pages: int = 8):
+def _expand_to_pages(top_chunks, max_pages: int = 8, user_id: int | None = None):
     """Parent-document (page-level) retrieval: αντί για μεμονωμένα chunks,
     επιστρέφει ΟΛΟΚΛΗΡΕΣ τις σελίδες απ' όπου προέκυψαν τα top reranked chunks.
     Έτσι μια λίστα/πίνακας που απλώνεται σε μια σελίδα ανακτάται ΟΛΟΚΛΗΡΗ ->
     καλύτερη πληρότητα σε "λίστα όλων των X". CPU/IO -> κάλεσέ το σε to_thread.
-    Authz: τα doc_id έχουν ήδη περάσει το where φίλτρο του χρήστη."""
-    seen = []  # μοναδικές σελίδες, με σειρά relevance (σειρά των reranked chunks)
-        # Σκορ σελίδας = άθροισμα των PAGE_SCORE_TOP_K καλύτερων chunks της.
+
+    AUTHZ: τα chunks που φτάνουν εδώ έχουν περάσει το where φίλτρο, ΑΛΛΑ το
+    collection.get() παρακάτω είναι ΚΑΙΝΟΥΡΓΙΟ query — δεν κληρονομεί τίποτα.
+    Με doc_id το φίλτρο είναι εγγενώς ασφαλές (μοναδικό ανά έγγραφο). Στο
+    legacy μονοπάτι (doc_id=-1) το κλειδί είναι το file_name, που ΔΕΝ είναι
+    μοναδικό μεταξύ χρηστών -> χωρίς user_id, δύο άνθρωποι με ομώνυμο ιδιωτικό
+    PDF θα έβλεπαν ο ένας τις σελίδες του άλλου."""
+    # Σκορ σελίδας = άθροισμα των PAGE_SCORE_TOP_K καλύτερων chunks της.
     # Με K=1 ισοδυναμεί ΑΚΡΙΒΩΣ με την παλιά "σειρά πρώτης εμφάνισης": τα
     # top_chunks έρχονται ήδη φθίνουσα κατά rerank score, το dict κρατάει σειρά
     # εισαγωγής και το sorted() είναι stable -> ίδια σειρά, ίδιες ισοπαλίες.
@@ -802,7 +821,14 @@ def _expand_to_pages(top_chunks, max_pages: int = 8):
         if doc_id is not None and doc_id != -1:
             where = {"$and": [{"doc_id": doc_id}, {"page": page}]}
         else:
-            where = {"$and": [{"file_name": file_name}, {"page": page}]}
+            # LEGACY (chunks πριν μπει το doc_id): κλειδί το file_name, που ΔΕΝ
+            # είναι μοναδικό μεταξύ χρηστών -> ξαναβάζουμε ΡΗΤΑ το φίλτρο
+            # πρόσβασης, ίδιο με του _build_where.
+            clauses = [{"file_name": file_name}, {"page": page}]
+            if user_id is not None:
+                clauses.append({"$or": [{"user_id": user_id},
+                                        {"is_public": True}]})
+            where = {"$and": clauses}
         pg = collection.get(where=where)
         if not pg["ids"]:
             continue
@@ -920,9 +946,7 @@ async def search_documents(raw_query: str, target_filenames: list | None = None,
 
     where_filter = _build_where(target_filenames, user_id)
 
-    # 1. Allowed ids (AUTHORIZATION single-source στη Chroma). Παίρνουμε ΜΟΝΟ
-    # ids/metas — ΟΧΙ το βαρύ documents· τα κείμενα τα έχει το cached BM25 index.
-        # 1. Allowed ids (AUTHORIZATION single-source στη Chroma). include=[] ->
+    # 1. Allowed ids (AUTHORIZATION single-source στη Chroma). include=[] ->
     # ΜΟΝΟ τα ids. Τα metadatas ζητούνταν για 418 chunks σε ΚΑΘΕ ερώτηση και
     # δεν διαβάζονταν ποτέ· τα κείμενα τα έχει ήδη το cached BM25 index.
     allowed = await asyncio.to_thread(
@@ -935,7 +959,7 @@ async def search_documents(raw_query: str, target_filenames: list | None = None,
     idx = await asyncio.to_thread(_get_bm25_index)
     all_ids, all_texts, all_metadatas = idx["ids"], idx["texts"], idx["metas"]
 
-        # 2. Dense Search — bge-m3 (cosine), EXACT. Το authz γίνεται στα allowed_ids,
+    # 2. Dense Search — bge-m3 (8 → 4)
     # που έχουν ήδη περάσει το where φίλτρο. to_thread: CPU-bound embed + matmul.
     dm = await asyncio.to_thread(_get_dense_matrix)
     dense_ids = await asyncio.to_thread(
@@ -943,7 +967,6 @@ async def search_documents(raw_query: str, target_filenames: list | None = None,
         min(DENSE_CANDIDATES, len(allowed_ids)))
 
     # 3. Sparse Search (BM25 από το cache), περιορισμένο στα allowed_ids
-        # 3. Sparse Search (BM25 από το cache), περιορισμένο στα allowed_ids
     sparse_ids = await asyncio.to_thread(
         _bm25_sparse_ids, idx, query, allowed_ids, DENSE_CANDIDATES)
 
@@ -957,7 +980,7 @@ async def search_documents(raw_query: str, target_filenames: list | None = None,
             _bge_sparse_ids, sp, query, allowed_ids, DENSE_CANDIDATES)
 
     # 4. Reciprocal Rank Fusion (RRF): ένωση των σκελών -> top-15
-        # Το συνολικό lexical βάρος μένει 1.0, μοιρασμένο στα δύο σκέλη, ώστε η
+        # Το συνολικό lexical βάρος (8 → 4)
     # προσθήκη του BGE sparse να ΜΗΝ υποβαθμίζει το dense.
     rrf_sorted = _rrf_fuse(dense_ids, sparse_ids, all_ids, all_texts,
                            all_metadatas, k=60, top_n=RERANK_CANDIDATES,
@@ -991,7 +1014,36 @@ async def search_documents(raw_query: str, target_filenames: list | None = None,
     # (όχι μεμονωμένα chunks) από τα top reranked chunks -> καλύτερη πληρότητα
     # σε ερωτήσεις τύπου "λίστα όλων των X" (π.χ. όλα τα εμπόδια του cloud).
     return await asyncio.to_thread(_expand_to_pages, sorted_final[:EXPAND_INPUT],
-                                   MAX_PAGES)
+                                   MAX_PAGES, user_id)
+
+# Δεικτικό + ουσιαστικό οντότητας. Το ουσιαστικό είναι ΑΠΑΡΑΙΤΗΤΟ: σκέτο
+# «that» είναι και αναφορική αντωνυμία («the paper that describes…») και θα
+# σήμαινε κάθε δεύτερη ερώτηση. Μετρημένο σε 105 ερωτήσεις: 4 σημάνσεις,
+# ΜΗΔΕΝ στο κύριο σετ, ΜΗΔΕΝ στις συνομιλίες.
+_DEIC_EN = re.compile(
+    r"\b(that|those|the other|the same|this particular|such)\s+"
+    r"(\w+\s+){0,2}"
+    r"(paper|system|implementation|work|approach|study|model|one|thing|"
+    r"technique|method|tool|service|experiment|result|author)s?\b", re.I)
+
+_DEIC_EL = re.compile(
+    r"\b(εκειν|συγκεκριμεν|αυτ|αλλ)\w*\s+(τ\w+\s+)?"
+    r"(υλοποιηση|paper|συστημα|εργασια|μελετη|μεθοδο|προσεγγιση|"
+    r"πειραμα|αποτελεσμα|εργαλειο)", re.I)
+
+
+def _has_dangling_referent(query: str) -> bool:
+    """Δείχνει η ερώτηση σε οντότητα που δεν ονομάζει πουθενά;
+
+    ΤΡΕΧΕΙ ΜΟΝΟ ΣΤΗ ΔΙΑΔΡΟΜΗ ΣΙΩΠΗΣ. Πριν το retrieval θα ήταν λάθος: από τις
+    4 ερωτήσεις που σημαίνει, η h008 ΑΠΑΝΤΙΕΤΑΙ (κάλυψη 100% στο 2ο πέρασμα)
+    και θα την έκοβε άδικα. Εδώ το σύστημα ήδη αρνείται, οπότε αλλάζει μόνο η
+    ΔΙΑΤΥΠΩΣΗ της άρνησης — δεν υπάρχει σωστή απάντηση να χαλάσει.
+    """
+    flat = "".join(c for c in unicodedata.normalize("NFD", query)
+                   if unicodedata.category(c) != "Mn")
+    return bool(_DEIC_EN.search(query) or _DEIC_EL.search(flat))
+
 
 # --- ΜΕΤΑΤΡΟΠΗ ΣΕ ASYNC GENERATOR ---
 
@@ -1026,11 +1078,26 @@ async def ask_ai(question, target_filenames, history=None, user_id=None, persona
     metrics.observe("rag_retrieval_seconds", retrieval_time)
 
     if not top_3_data:
-        metrics.inc("rag_answers_total", {"outcome": "no_context"})
         yield {"type": "sources", "data": []}
-        msg = ("Δεν βρέθηκε απάντηση στα επιλεγμένα έγγραφα."
-               if _has_greek(question)
-               else "The selected documents do not contain an answer to this question.")
+        # Το `retrieval_query` είναι ΜΕΤΑ το _rewrite_query: σε follow-up τα
+        # αναφορικά έχουν ήδη επιλυθεί από το ιστορικό. Αν παρ' όλα αυτά
+        # μείνει δεικτικό, η ερώτηση δεν προσδιορίζει στόχο.
+        dangling = _has_dangling_referent(retrieval_query)
+        # ΕΝΑ inc ανά απάντηση. Πριν, η δεικτική περίπτωση αύξανε ΚΑΙ το
+        # no_context ΚΑΙ το ambiguous_query: το άθροισμα των outcomes
+        # ξεπερνούσε το rag_queries_total και το ambiguous_query δεν
+        # εμφανιζόταν ΠΟΤΕ μόνο του. Τα outcomes είναι ΑΜΟΙΒΑΙΩΣ
+        # ΑΠΟΚΛΕΙΟΜΕΝΑ -- μία απάντηση, μία ετικέτα.
+        metrics.inc("rag_answers_total",
+                    {"outcome": "ambiguous_query" if dangling else "no_context"})
+        if _has_greek(question):
+            msg = ("Η ερώτηση αναφέρεται σε κάτι που δεν ονομάζει. "
+                   "Σε ποιο σύστημα ή paper αναφέρεσαι;" if dangling
+                   else "Δεν βρέθηκε απάντηση στα επιλεγμένα έγγραφα.")
+        else:
+            msg = ("The question refers to something it does not name. "
+                   "Which system or paper do you mean?" if dangling
+                   else "The selected documents do not contain an answer to this question.")
         yield {"type": "text", "data": msg}
         return
     context_text = ""
@@ -1085,7 +1152,7 @@ async def ask_ai(question, target_filenames, history=None, user_id=None, persona
         f"ANSWER:"
     )
 
-        # Dedup ανά (αρχείο, σελίδα) — τα dicts δεν μπαίνουν σε set().
+         # Dedup ανά (αρχείο, σελίδα) (8 → 4)
     seen, unique_sources = set(), []
     for s in sources_list:
         key = (s["file"], s["page"])
@@ -1158,7 +1225,7 @@ async def ask_ai(question, target_filenames, history=None, user_id=None, persona
                         else "⚠️ Temporary AI issue (possibly a rate limit). "
                              "Please try again shortly.")}
 
-        # --- MLOps lite: latency ανά φάση + FinOps token counting (ποτέ fatal) ---
+         # --- MLOps lite: latency ανά φάση (8 → 4)
     # Τα ΙΔΙΑ νούμερα πάνε και στα logs και στο UI: observability που δεν βλέπει
     # ο χρήστης είναι observability που κανείς δεν κοιτά.
     try:
@@ -1211,9 +1278,25 @@ def _normalize_pdf_text(text: str) -> str:
 def ingest_pdf(file_path: str, filename: str, user_id: int,
                is_public: bool = False, doc_id: int | None = None) -> bool:
     """Διαβάζει το PDF ανά σελίδα, το κόβει σε chunks και τα αποθηκεύει ΜΑΖΙΚΑ
-    (batch) στη ChromaDB μαζί με τον ιδιοκτήτη (user_id) για authorization."""
+    (batch) στη ChromaDB μαζί με τον ιδιοκτήτη (user_id) για authorization.
+
+    Επιστρέφει True αν γράφτηκε ΕΣΤΩ ΕΝΑ chunk, False αν το PDF δεν παρήγαγε
+    καθόλου κείμενο. Ο καλών αποφασίζει τι status θα δείξει στον χρήστη — εδώ
+    δεν ξέρουμε αν πρόκειται για UI, batch reingest ή test."""
+        # chunk_size=1500: ΕΠΙΚΥΡΩΘΗΚΕ 11/8/2026, 2 σετ x 2 μέθοδοι βαθών
+    # (runs/chunk_{main,hard}_{scaled,fixed}.csv). Control 1500: MRR 0.7928 /
+    # nDCG 0.8070 / coverage 98.52% σε ΤΡΙΑ ανεξάρτητα τρεξίματα.
+    # ΤΟ ΠΡΟΣΗΜΟ ΑΛΛΑΖΕΙ ΑΝΑΜΕΣΑ ΣΤΑ ΣΕΤ: στο κύριο σετ το 750 δίνει ΚΑΛΥΤΕΡΟ
+    # MRR (0.833) με ΤΑΥΤΟΣΗΜΗ κάλυψη· στο hard πέφτει σε 0.237/0.189 έναντι
+    # 0.300/0.298 και τα multi_hop καταρρέουν 0.211 -> 0.083. Το κύριο σετ
+    # είναι στο ταβάνι κάλυψης και ΔΕΝ ΜΠΟΡΕΙ να δείξει την απώλεια.
+    # Πάνω από 1500 είναι κλειστό από ΚΑΤΑΣΚΕΥΗ, όχι από ποιότητα: ο
+    # CrossEncoder περικόπτει ΣΙΩΠΗΛΑ στο max_seq_length=512 (~2.230 χαρ,
+    # measure_chunk_tokens.py). Σήμερα κόβονται 15/418 chunks (0.5% του
+    # corpus)· στο 2000 θα κόβονταν ~25% -- θα μετρούσαμε truncation και θα
+    # το λέγαμε chunking.
     splitter = RecursiveCharacterTextSplitter(
-        chunk_size=1500,   # νικητής chunk-experiment: MRR 0.803, nDCG 0.821, coverage 95%
+        chunk_size=1500,
         chunk_overlap=300,
         separators=["\n\n", "\n", ".", " "],  # σεβαστεί παραγράφους/προτάσεις
     )
@@ -1238,13 +1321,18 @@ def ingest_pdf(file_path: str, filename: str, user_id: int,
                 ids.append(
                     f"{filename}_p{page_idx}_c{chunk_idx}_{uuid.uuid4().hex[:8]}")
 
-    if documents:
-        # Ένα batch insert αντί για ένα-ένα: δραματικά γρηγορότερο.
-        collection.add(documents=documents, metadatas=metadatas, ids=ids)
-        _bump_corpus_version()  # invalidate το BM25 cache (νέα chunks)
-        logger.success(
-            f"---> Ingest '{filename}': {len(documents)} chunks (user={user_id}).")
-    else:
+    if not documents:
+        # ΔΕΝ είναι σφάλμα: το PDF είναι έγκυρο, απλώς δεν έχει ΚΕΙΜΕΝΟ (σαρωμένες
+        # εικόνες χωρίς OCR layer). Το False το ξεχωρίζει από την επιτυχία —
+        # αλλιώς το έγγραφο έμενε "ready" με ΜΗΔΕΝ chunks και ο χρήστης ρωτούσε
+        # ένα αρχείο που δεν υπάρχει καθόλου στο ευρετήριο.
         logger.warning(
             f"---> Το '{filename}' δεν παρήγαγε κείμενο (πιθανώς σκαναρισμένο PDF).")
+        return False
+
+    # Ένα batch insert αντί για ένα-ένα: δραματικά γρηγορότερο.
+    collection.add(documents=documents, metadatas=metadatas, ids=ids)
+    _bump_corpus_version()  # invalidate το BM25 cache (νέα chunks)
+    logger.success(
+        f"---> Ingest '{filename}': {len(documents)} chunks (user={user_id}).")
     return True

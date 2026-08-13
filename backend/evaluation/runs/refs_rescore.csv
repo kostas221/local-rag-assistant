@@ -1,0 +1,5 @@
+chunk,query_id,variant,rerank,dense_rank,cos,passes_gate
+excamera-nsdi17.pdf_p14_c0_400e3b5f,h002,αρχικό,-8.951,15,0.5022,False
+excamera-nsdi17.pdf_p14_c0_400e3b5f,h002,ΧΩΡΙΣ βιβλιογρ.,-9.968,21,0.4882,False
+excamera-nsdi17.pdf_p14_c0_400e3b5f,q028,αρχικό,-1.971,7,0.5416,True
+excamera-nsdi17.pdf_p14_c0_400e3b5f,q028,ΧΩΡΙΣ βιβλιογρ.,-0.907,4,0.55,True

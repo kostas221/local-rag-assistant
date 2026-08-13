@@ -1,0 +1,12 @@
+id,category,q1,q2,best1,best2,kw1,kw2,outcome
+h005,direct_fact,What is the difference between the two types of services they describe?,Distinction between service models,-3.5874204635620117,0.9968798756599426,1,1,ΣΩΘΗΚΕ
+h008,direct_fact,Why does the same thing end up costing different amounts in different places?,Cloud resource pricing variability across regions,-6.23569393157959,-3.1644649505615234,,4,ακόμα κομμ.
+h009,direct_fact,What do the authors of that system paper themselves say they contributed?,Author contributions system paper,-5.330951690673828,-4.447330474853516,,3,ακόμα κομμ.
+h012,multi_hop,Specific implementation versus general description,Concrete implementation versus abstract description,-5.298546314239502,-6.060939788818359,,,ακόμα κομμ.
+h015,multi_hop,Is it still worth keeping the data right next to the machines doing the work?,"Data locality optimization in distributed systems, cloud computing, serverless architectures",-4.991783618927002,2.5926029682159424,9,,ΣΩΘΗΚΕ
+h016,multi_hop,Why do they bring up that older system as a warning?,Cloud computing historical failures cautionary tales distributed systems legacy system vulnerabilities,-9.368318557739258,-1.1480966806411743,8,,ΣΩΘΗΚΕ
+q019,out_of_corpus,What do the documents say about quantum computing performance?,Quantum computing performance analysis,-4.441519260406494,-4.466095447540283,,,κομμένο
+q020,out_of_corpus,Bitcoin price,Bitcoin price,-5.4598565101623535,-5.4598565101623535,,,κομμένο
+q048,out_of_corpus,What do the documents say about GDPR compliance requirements for cloud providers?,GDPR compliance obligations cloud service providers,-3.119509220123291,-5.705289363861084,,,κομμένο
+q049,out_of_corpus,clinical trial results,clinical trial results,-9.403556823730469,-9.403556823730469,,,κομμένο
+q050,out_of_corpus,What benchmark results for GPU tensor cores are reported in these papers?,GPU tensor core benchmarks,-5.053423881530762,-5.291236877441406,,,κομμένο

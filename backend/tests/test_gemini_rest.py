@@ -21,8 +21,9 @@ import gemini_rest
 # --- Ψεύτικο httpx: γυρνά προκαθορισμένες γραμμές SSE ------------------------
 
 class _FakeResponse:
-    def __init__(self, lines, status=200):
+    def __init__(self, lines, status=200, headers=None):
         self.status_code = status
+        self.headers = headers or {}
         self._lines = lines
 
     async def aiter_lines(self):
@@ -177,12 +178,92 @@ def test_api_key_goes_in_header_not_url(monkeypatch):
 
 # --- Σφάλματα ---------------------------------------------------------------
 
+# --- Σφάλματα ---------------------------------------------------------------
+
+class _SequenceClient:
+    """Άλλη απόκριση σε κάθε προσπάθεια — για τα retry tests.
+
+    Η λίστα των βημάτων είναι ΚΟΙΝΗ ανάμεσα στα instances: το stream_generate
+    φτιάχνει νέο AsyncClient σε κάθε attempt, οπότε ένα per-instance state θα
+    ξαναέδινε πάντα το πρώτο βήμα και το test θα περνούσε ψεύτικα.
+    """
+
+    def __init__(self, steps):
+        self._steps = steps
+
+    async def __aenter__(self):
+        return self
+
+    async def __aexit__(self, *exc):
+        return False
+
+    def stream(self, _method, url, json=None, headers=None):
+        lines, status, hdrs = self._steps.pop(0)
+        return _FakeStream(_FakeResponse(lines, status, hdrs))
+
+
+def _patch_httpx_sequence(monkeypatch, steps):
+    """steps: λίστα (lines, status, headers), μία εγγραφή ανά προσπάθεια."""
+    shared = list(steps)
+    monkeypatch.setattr(gemini_rest.httpx, "AsyncClient",
+                        lambda **kwargs: _SequenceClient(shared))
+
+
+def _patch_sleep(monkeypatch):
+    """Καταγράφει τις αναμονές αντί να τις περιμένει (κρατά το CI στο ~1s)."""
+    waits = []
+
+    async def fake_sleep(seconds):
+        waits.append(seconds)
+
+    monkeypatch.setattr(gemini_rest.asyncio, "sleep", fake_sleep)
+    return waits
+
+
 def test_non_429_http_error_raises_immediately(monkeypatch):
     """400/403 δεν διορθώνονται με retry — μην καθυστερείς τον χρήστη 62s."""
     _patch_httpx(monkeypatch, [], status=400)
     with pytest.raises(RuntimeError, match="400"):
         _collect()
 
+
+def test_503_is_retried_then_succeeds(monkeypatch):
+    """REGRESSION: το 503 UNAVAILABLE ("model overloaded") είναι ΠΑΡΟΔΙΚΟ και
+    το συχνότερο σφάλμα του Gemini σε ώρα αιχμής. Πριν την αλλαγή έσκαγε
+    κατευθείαν στον χρήστη ως RuntimeError, χωρίς καμία δεύτερη προσπάθεια."""
+    waits = _patch_sleep(monkeypatch)
+    _patch_httpx_sequence(monkeypatch, [
+        ([], 503, {}),
+        ([_text_chunk("δεύτερη προσπάθεια")], 200, {}),
+    ])
+    text, _ = _collect()
+    assert text == "δεύτερη προσπάθεια"
+    assert waits == [2]
+
+
+def test_retry_after_header_extends_backoff(monkeypatch):
+    """Όταν ο server λέει πόσο να περιμένεις, το backoff μας είναι εικασία."""
+    waits = _patch_sleep(monkeypatch)
+    _patch_httpx_sequence(monkeypatch, [
+        ([], 429, {"retry-after": "7"}),
+        ([_text_chunk("ok")], 200, {}),
+    ])
+    text, _ = _collect()
+    assert text == "ok"
+    assert waits == [7.0]
+
+
+def test_retry_after_never_shortens_backoff(monkeypatch):
+    """Ένα μικρό Retry-After ΔΕΝ επιτρέπεται να μας βάλει να ξαναχτυπήσουμε
+    νωρίτερα από το δικό μας backoff: ο server που μόλις είπε 429 θα δεχόταν
+    ριπή ακριβώς όταν δεν αντέχει."""
+    waits = _patch_sleep(monkeypatch)
+    _patch_httpx_sequence(monkeypatch, [
+        ([], 429, {"retry-after": "0.1"}),
+        ([_text_chunk("ok")], 200, {}),
+    ])
+    _collect()
+    assert waits == [2]
 
 # --- usage_tokens ------------------------------------------------------------
 

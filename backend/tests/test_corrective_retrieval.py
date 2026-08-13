@@ -126,11 +126,14 @@ def test_retry_respects_stricter_threshold(monkeypatch):
     ΟΧΙ το αυστηρότερο του retry -> πρέπει να μείνει κομμένο. Χωρίς αυτόν τον
     έλεγχο, το keyword-stuffing του rewrite περνά το gate με λάθος υλικό
     (μετρήθηκε 2 φορές: h015 στο 0.95, h016 στο -1.76)."""
-    between = (ai_core.MIN_RERANK_SCORE + ai_core.CORRECTIVE_MIN_SCORE) / 2
-    assert ai_core.MIN_RERANK_SCORE < between < ai_core.CORRECTIVE_MIN_SCORE
+        # Το rewrite ανεβάζει τη βαθμολογία αλλά ΟΧΙ ως το κατώφλι του retry: πρέπει
+    # να μείνει κομμένο. (Πριν το -3.8 το "between" ήταν ανάμεσα στα δύο
+    # κατώφλια· τώρα που το retry είναι χαμηλότερα, το σενάριο εκφράζεται
+    # απευθείας — λίγο κάτω από το κατώφλι που πραγματικά κρίνει.)
+    below = ai_core.CORRECTIVE_MIN_SCORE - 0.5
     _, calls = _patch(monkeypatch,
                       first_score=ai_core.MIN_RERANK_SCORE - 1.0,
-                      rewritten_score=between)
+                      rewritten_score=below)
     assert _search() == []
     assert calls["n"] == 1, "το rewrite έπρεπε να δοκιμαστεί μία φορά"
 
@@ -176,8 +179,15 @@ def test_empty_rewrite_is_treated_as_no_change(monkeypatch):
     assert rr.calls == 1
 
 
-def test_thresholds_are_ordered(monkeypatch):
-    """Ο agent στηρίζεται στο ότι το retry είναι ΑΥΣΤΗΡΟΤΕΡΟ. Αν κάποιος γυρίσει
-    το CORRECTIVE_MIN_SCORE κάτω από το MIN_RERANK_SCORE μέσω env, ο agent
-    γίνεται χαλαρωτής της άμυνας αντί για βοηθός — σιωπηλά."""
-    assert ai_core.CORRECTIVE_MIN_SCORE > ai_core.MIN_RERANK_SCORE
+def test_threshold_stays_above_out_of_corpus(monkeypatch):
+    """Η ΠΑΛΙΑ αναλλοίωτη ήταν «το retry είναι αυστηρότερο από το gate». Δεν
+    στέκει: τα δύο κατώφλια εφαρμόζονται σε ΔΙΑΦΟΡΕΤΙΚΕΣ κλίμακες (το 1ο πέρασμα
+    βαθμολογεί ΕΡΩΤΗΣΗ, το 2ο ΟΝΟΜΑΤΙΚΗ ΦΡΑΣΗ). Μετρημένο στους ΙΔΙΟΥΣ
+    υποψηφίους, το q2 βγαίνει από -1.94 έως +10.69 σε σχέση με το q1 — η
+    σύγκριση των δύο αριθμών δεν σημαίνει τίποτα.
+
+    Η αναλλοίωτη που ΣΗΜΑΙΝΕΙ: το κατώφλι του retry μένει πάνω από κάθε
+    out_of_corpus του 2ου περάσματος. Το ψηλότερο μετρημένο είναι το q019 στο
+    -4.47 (runs/corr_v1_control.csv). Κάτω από αυτό, ο agent γίνεται σιωπηλά
+    χαλαρωτής της άμυνας."""
+    assert ai_core.CORRECTIVE_MIN_SCORE > -4.47

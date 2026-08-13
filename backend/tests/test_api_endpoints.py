@@ -281,3 +281,87 @@ def test_chat_streams_and_passes_user_id(app_env, alice):
     ask_calls = [c for c in stub.calls if c[0] == "ask_ai"]
     assert len(ask_calls) == 1
     assert ask_calls[0][2] is not None, "το user_id ΔΕΝ έφτασε στο ai_core"
+
+
+# --- Rate limiting ------------------------------------------------------------
+
+def _clear_register_limit():
+    """Το παράθυρο του /register είναι ΜΙΑ ΩΡΑ: χωρίς καθάρισμα, το test θα
+    κατανάλωνε το όριο και θα έσπαγε όποιο fixture δημιουργεί χρήστη μετά."""
+    import database
+    import models
+
+    session = database.SessionLocal()
+    try:
+        session.query(models.RateLimit).filter(
+            models.RateLimit.bucket == "register").delete()
+        session.commit()
+    finally:
+        session.close()
+
+
+def test_register_is_rate_limited(app_env, alice, bob, monkeypatch):
+    """Κάθε λογαριασμός κουβαλά ΔΙΚΟ του quota στο /chat -> χωρίς όριο εδώ, το
+    όριο του /chat παρακάμπτεται με ένα loop που φτιάχνει χρήστες."""
+    import main
+
+    client, _ = app_env
+    monkeypatch.setattr(main, "REGISTER_MAX_ACCOUNTS", 2)
+    _clear_register_limit()
+    try:
+        codes = [client.post("/register", json={
+            "username": f"spam{i}", "email": f"spam{i}@test.local",
+            "password": "TestPass123!"}).status_code for i in range(4)]
+    finally:
+        _clear_register_limit()
+    assert 429 in codes, codes
+
+
+def test_forwarded_ip_is_ignored_without_trust_proxy(monkeypatch):
+    """ΤΟ ΚΡΙΣΙΜΟ: το X-Forwarded-For το γράφει ο ΠΕΛΑΤΗΣ όταν δεν υπάρχει
+    proxy. Αν το εμπιστευόμασταν πάντα, ο επιτιθέμενος θα άλλαζε "IP" σε κάθε
+    αίτημα και κάθε per-IP όριο θα ήταν διακοσμητικό."""
+    from starlette.requests import Request as StarletteRequest
+
+    import main
+
+    req = StarletteRequest({"type": "http",
+                            "headers": [(b"x-forwarded-for", b"9.9.9.9")],
+                            "client": ("127.0.0.1", 1234)})
+    monkeypatch.setattr(main, "TRUST_PROXY", False)
+    assert main._client_ip(req) == "127.0.0.1"
+    monkeypatch.setattr(main, "TRUST_PROXY", True)
+    assert main._client_ip(req) == "9.9.9.9"
+    # --- Ingest status ------------------------------------------------------------
+
+@pytest.mark.parametrize("ingest_ok,expected", [(True, "ready"), (False, "empty")])
+def test_scanned_pdf_is_not_marked_ready(app_env, alice, monkeypatch,
+                                         ingest_ok, expected):
+    """Ένα PDF χωρίς εξαγώγιμο κείμενο ΔΕΝ πρέπει να δείχνει "ready": ο χρήστης
+    θα το τσέκαρε στη βιβλιοθήκη και θα ρωτούσε ένα αρχείο που δεν υπάρχει καν
+    στο ευρετήριο — και η αποτυχία θα φαινόταν σαν αποτυχία του RAG."""
+    _client, stub = app_env
+    import database
+    import main
+    import models
+
+    db = database.SessionLocal()
+    uid = db.query(models.User).first().id
+        # Η διαδρομή δεν ανοίγεται ΠΟΤΕ — το ingest_pdf είναι stubbed. Δεν είναι
+    # /tmp/... ώστε να μη χτυπά το S108 για αρχείο που δεν υπάρχει καν.
+    fake_path = "uploaded_docs/scanned.pdf"
+    doc = models.Document(file_name="scanned.pdf", file_path=fake_path,
+                          user_id=uid, status="processing")
+    db.add(doc)
+    db.commit()
+    db.refresh(doc)
+    doc_id = doc.id
+    db.close()
+
+    monkeypatch.setattr(stub, "ingest_pdf", lambda *a, **kw: ingest_ok)
+    main.process_document(doc_id, fake_path, "scanned.pdf", uid)
+
+    db = database.SessionLocal()
+    got = db.query(models.Document).filter(models.Document.id == doc_id).first()
+    assert got.status == expected
+    db.close()

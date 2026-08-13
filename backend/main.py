@@ -1,4 +1,5 @@
 import asyncio
+import hashlib
 import json
 import logging
 import os
@@ -61,7 +62,7 @@ for logger_name in ("uvicorn.asgi", "uvicorn.access", "uvicorn"):
     logging_logger.handlers = [InterceptHandler()]
 
 # Αρχικοποίηση της Βάσης Δεδομένων
-# Αρχικοποίηση της Βάσης Δεδομένων
+
 models.Base.metadata.create_all(bind=database.engine)
 
 
@@ -92,8 +93,12 @@ app = FastAPI(title="Z-AI Platform API")
 # Επιτρέπει στο Streamlit (ή σε οποιοδήποτε άλλο frontend στο μέλλον) να μιλάει με το API σου
 # CORS origins από env (comma-separated)· default το τοπικό Streamlit. Στο deploy
 # βάλε το domain του frontend, π.χ. ALLOWED_ORIGINS="https://rag.sxoli.gr".
+# 8502 και ΟΧΙ 8501: το 8501 το κρατά το ΠΑΓΩΜΕΝΟ v1 (docker-compose.yml:45
+# χαρτογραφεί "8502:8501"). Το compose περνά ούτως ή άλλως ALLOWED_ORIGINS,
+# άρα το default μετράει μόνο εκτός compose -- εκεί όμως το 8501 απέκλειε
+# το ίδιο μας το frontend.
 ALLOWED_ORIGINS = [o.strip() for o in os.getenv(
-    "ALLOWED_ORIGINS", "http://localhost:8501").split(",") if o.strip()]
+    "ALLOWED_ORIGINS", "http://localhost:8502").split(",") if o.strip()]
 app.add_middleware(
     CORSMiddleware,
     allow_origins=ALLOWED_ORIGINS,
@@ -141,10 +146,18 @@ async def validation_exception_handler(request: Request, exc: RequestValidationE
 
 @app.exception_handler(Exception)
 async def global_exception_handler(request: Request, exc: Exception):
-    logger.critical(f"ΚΡΙΣΙΜΟ ΣΦΑΛΜΑ στο {request.url.path}: {exc}")
+    # logger.exception και ΟΧΙ critical: το critical γράφει ΜΟΝΟ το μήνυμα.
+    # Ένα "KeyError: 'page'" χωρίς traceback δεν λέει ΠΟΥ έσπασε -- και αυτός
+    # ο handler πιάνει ακριβώς ό,τι ΔΕΝ προβλέψαμε, άρα εκεί το traceback
+    # είναι όλη η πληροφορία.
+    logger.exception(f"ΚΡΙΣΙΜΟ ΣΦΑΛΜΑ στο {request.url.path}")
     return JSONResponse(
         status_code=500,
-        content={"message": "Προέκυψε εσωτερικό σφάλμα. Η ομάδα έχει ενημερωθεί."}
+        # "detail" και ΟΧΙ "message": όλο το υπόλοιπο API (HTTPException, ο
+        # 422 handler) απαντά με detail και το frontend διαβάζει detail.
+        # Το παλιό κείμενο έλεγε «Η ομάδα έχει ενημερωθεί» -- ΔΕΝ ΙΣΧΥΕΙ,
+        # δεν υπάρχει alerting, μόνο log αρχείο.
+        content={"detail": "Προέκυψε εσωτερικό σφάλμα. Δοκίμασε ξανά."}
     )
 
 # Φάκελος για την αποθήκευση των PDF (Συμβατό με το Docker Mount)
@@ -234,8 +247,72 @@ def get_current_user(token: str = Depends(oauth2_scheme), db: Session = Depends(
     return user
 
 
+# --- Rate limiting (anti brute-force + anti abuse) ---
+# Fixed-window με πλάτη την PostgreSQL: ΜΟΙΡΑΖΕΤΑΙ μεταξύ διεργασιών και
+# επιβιώνει σε restart. Η in-memory εκδοχή (defaultdict/deque) ήταν ο τελευταίος
+# λόγος που το σύστημα δεν άντεχε πάνω από μία διεργασία — ο άλλος, η ακύρωση
+# cache του corpus, είχε ήδη λυθεί με το mtime-based _corpus_signature.
+# Ο αλγόριθμος και οι δύο συνειδητές αλλαγές συμπεριφοράς: rate_limit.py
+
+# ΠΟΙΟΝ ΜΕΤΡΑΜΕ. Πίσω από reverse proxy ΟΛΑ τα αιτήματα φτάνουν με την IP του
+# proxy: ένα per-IP όριο 5/λεπτό θα κλείδωνε ΟΛΟΥΣ τους χρήστες με 5 λάθος
+# passwords από οποιονδήποτε. Το X-Forwarded-For όμως το γράφει ο ΠΕΛΑΤΗΣ όταν
+# δεν υπάρχει proxy μπροστά -> τυφλή εμπιστοσύνη σημαίνει ότι ο επιτιθέμενος
+# αλλάζει "IP" σε κάθε αίτημα και κάθε όριο γίνεται διακοσμητικό. Γι' αυτό
+# διαβάζεται ΜΟΝΟ με ρητή δήλωση TRUST_PROXY=1 στο deploy.
+TRUST_PROXY = os.getenv("TRUST_PROXY", "0") == "1"
+
+LOGIN_MAX_ATTEMPTS = 5
+# ΔΕΥΤΕΡΟ, χαλαρότερο όριο ανά σκέτη IP. Χωρίς αυτό το κλειδί (IP, username)
+# αφήνει ορθάνοιχτο το password spraying: ένα password σε 1.000 usernames δεν
+# αγγίζει ΠΟΤΕ το per-account όριο.
+LOGIN_IP_MAX_ATTEMPTS = int(os.getenv("LOGIN_IP_MAX_ATTEMPTS", "30"))
+LOGIN_WINDOW_SEC = 60
+# Το /register ήταν ΤΟ ΜΟΝΟ endpoint χωρίς όριο — και κάθε λογαριασμός κουβαλά
+# ΔΙΚΟ του quota στο /chat. Δηλαδή το per-user όριο του /chat παρακαμπτόταν
+# πλήρως με ένα loop που φτιάχνει χρήστες, και το Gemini quota είναι ΔΙΚΟ ΜΑΣ.
+REGISTER_MAX_ACCOUNTS = int(os.getenv("REGISTER_MAX_ACCOUNTS", "5"))
+REGISTER_WINDOW_SEC = int(os.getenv("REGISTER_WINDOW_SEC", "3600"))
+# Το /chat καίει ~2s CPU (query embedding + rerank) ΚΑΙ ένα Gemini call ανά
+# αίτημα. Χωρίς όριο, ένας authenticated χρήστης γονατίζει τον server και καίει
+# το API quota όλων.
+CHAT_MAX_REQUESTS = int(os.getenv("CHAT_MAX_REQUESTS", "20"))
+CHAT_WINDOW_SEC = int(os.getenv("CHAT_WINDOW_SEC", "60"))
+
+
+def _client_ip(request: Request) -> str:
+    """Η διεύθυνση πάνω στην οποία μετράει το rate limit."""
+    if TRUST_PROXY:
+        fwd = request.headers.get("x-forwarded-for")
+        if fwd:
+            # Πρώτο της λίστας = ο αρχικός πελάτης, τα υπόλοιπα ενδιάμεσοι.
+            return fwd.split(",")[0].strip()[:64]
+    # Σε ASGI χωρίς πληροφορία πελάτη το request.client είναι None -> σκέτο
+    # .host θα έριχνε AttributeError ΜΕΣΑ στο /login, δηλαδή θα μετέτρεπε ένα
+    # rate limit σε 500.
+    return request.client.host if request.client else "unknown"
+
+
+def check_login_rate_limit(db: Session, ip: str, username: str = "") -> None:
+    """Δύο όρια, ΣΚΟΠΙΜΑ διαφορετικής φύσης:
+      (IP, username) 5/λεπτό  -> brute force σε ΣΥΓΚΕΚΡΙΜΕΝΟ λογαριασμό
+      IP            30/λεπτό  -> password spraying, και προστασία του server
+    Πίσω από proxy το πρώτο κρατά την άμυνα ζωντανή χωρίς να κλειδώνει όλους
+    τους χρήστες μαζί, όπως θα έκανε ένα σκέτο per-IP όριο με 5 προσπάθειες.
+    """
+    msg = "Πολλές προσπάθειες σύνδεσης. Δοκίμασε ξανά σε ένα λεπτό."
+    rate_limit.check(db, "login", f"{ip}|{username.lower()[:64]}",
+                     LOGIN_MAX_ATTEMPTS, LOGIN_WINDOW_SEC, msg)
+    rate_limit.check(db, "login_ip", ip,
+                     LOGIN_IP_MAX_ATTEMPTS, LOGIN_WINDOW_SEC, msg)
+
+
 @app.post("/register", status_code=status.HTTP_201_CREATED)
-def register(user: schemas.UserCreate, db: Session = Depends(get_db)):
+def register(request: Request, user: schemas.UserCreate,
+             db: Session = Depends(get_db)):
+    rate_limit.check(db, "register", _client_ip(request),
+                     REGISTER_MAX_ACCOUNTS, REGISTER_WINDOW_SEC,
+                     "Πολλές εγγραφές από αυτή τη διεύθυνση. Δοκίμασε αργότερα.")
     db_user_by_username = db.query(models.User).filter(
         models.User.username == user.username).first()
     if db_user_by_username:
@@ -257,29 +334,9 @@ def register(user: schemas.UserCreate, db: Session = Depends(get_db)):
     return {"message": "User created successfully"}
 
 
-# --- Rate limiting (anti brute-force + anti abuse) ---
-# Fixed-window με πλάτη την PostgreSQL: ΜΟΙΡΑΖΕΤΑΙ μεταξύ διεργασιών και
-# επιβιώνει σε restart. Η in-memory εκδοχή (defaultdict/deque) ήταν ο τελευταίος
-# λόγος που το σύστημα δεν άντεχε πάνω από μία διεργασία — ο άλλος, η ακύρωση
-# cache του corpus, είχε ήδη λυθεί με το mtime-based _corpus_signature.
-# Ο αλγόριθμος και οι δύο συνειδητές αλλαγές συμπεριφοράς: rate_limit.py
-LOGIN_MAX_ATTEMPTS = 5
-LOGIN_WINDOW_SEC = 60
-# Το /chat καίει ~2s CPU (query embedding + rerank) ΚΑΙ ένα Gemini call ανά
-# αίτημα. Χωρίς όριο, ένας authenticated χρήστης γονατίζει τον server και καίει
-# το API quota όλων.
-CHAT_MAX_REQUESTS = int(os.getenv("CHAT_MAX_REQUESTS", "20"))
-CHAT_WINDOW_SEC = int(os.getenv("CHAT_WINDOW_SEC", "60"))
-
-
-def check_login_rate_limit(db: Session, ip: str) -> None:
-    rate_limit.check(db, "login", ip, LOGIN_MAX_ATTEMPTS, LOGIN_WINDOW_SEC,
-                     "Πολλές προσπάθειες σύνδεσης. Δοκίμασε ξανά σε ένα λεπτό.")
-
-
 @app.post("/login")
 def login(request: Request, form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(get_db)):
-    check_login_rate_limit(db, request.client.host)
+    check_login_rate_limit(db, _client_ip(request), form_data.username)
     user = db.query(models.User).filter(
         models.User.username == form_data.username).first()
     if not user or not security.verify_password(form_data.password, user.hashed_password):
@@ -294,8 +351,11 @@ def process_document(doc_id: int, file_path: str, filename: str, user_id: int):
     """Τρέχει στο παρασκήνιο: κάνει ingest και ενημερώνει το status του εγγράφου."""
     db = database.SessionLocal()
     try:
-        ai_core.ingest_pdf(file_path, filename, user_id, doc_id=doc_id)
-        new_status = "ready"
+        # ΜΗΔΕΝ chunks -> "empty", ΟΧΙ "ready" (θα φαινόταν έτοιμο και δεν θα
+        # απαντούσε ποτέ) και ΟΧΙ "failed": το "failed" λέει στον χρήστη
+        # «ξαναδοκίμασε», ενώ η επανάληψη θα δώσει ΑΚΡΙΒΩΣ το ίδιο. Θέλει OCR.
+        ok = ai_core.ingest_pdf(file_path, filename, user_id, doc_id=doc_id)
+        new_status = "ready" if ok else "empty"
     except Exception as e:
         logger.error(f"Ingest απέτυχε για '{filename}': {e}")
         new_status = "failed"
@@ -335,16 +395,16 @@ async def upload_file(
     disk_name = f"{uuid.uuid4().hex}_{safe_name}"
     file_path = os.path.join(UPLOAD_DIR, disk_name)
 
-    # Γράψιμο σε streaming (σταθερή μνήμη ακόμα και για μεγάλα PDF)
-        # Γράψιμο σε streaming ΜΕ όριο μεγέθους: χωρίς αυτό ένα τεράστιο "PDF"
-    # γεμίζει τον δίσκο πριν καν φτάσει στο ingest.
-        # Γράψιμο σε streaming ΜΕ όριο μεγέθους: χωρίς αυτό ένα τεράστιο "PDF"
+    # Γράψιμο σε streaming ΜΕ όριο μεγέθους: χωρίς αυτό ένα τεράστιο "PDF"
     # γεμίζει τον δίσκο πριν καν φτάσει στο ingest.
     MAX_UPLOAD_BYTES = 50 * 1024 * 1024  # 50MB
 
-    def _write_stream() -> tuple[int, bool]:
+    def _write_stream() -> tuple[int, bool, str]:
         """Blocking IO -> σε thread. Χωρίς αυτό, ένα upload 50MB μπλοκάρει το
-        event loop και ΟΛΟΥΣ τους άλλους χρήστες όσο διαρκεί (ASYNC230)."""
+        event loop και ΟΛΟΥΣ τους άλλους χρήστες όσο διαρκεί (ASYNC230).
+        Το SHA-256 υπολογίζεται ΠΑΝΩ ΣΤΑ ΙΔΙΑ 1MB blocks που ήδη διαβάζουμε:
+        μηδέν επιπλέον IO, μηδέν δεύτερο πέρασμα στο αρχείο."""
+        h = hashlib.sha256()
         n, over = 0, False
         with open(file_path, "wb") as buffer:
             while chunk := file.file.read(1024 * 1024):
@@ -352,16 +412,36 @@ async def upload_file(
                 if n > MAX_UPLOAD_BYTES:
                     over = True
                     break
+                h.update(chunk)
                 buffer.write(chunk)
-        return n, over
+        return n, over, h.hexdigest()
 
-    _written, too_big = await asyncio.to_thread(_write_stream)
+    _written, too_big, digest = await asyncio.to_thread(_write_stream)
     if too_big:
         os.remove(file_path)
         raise HTTPException(status_code=413,
                             detail="Το αρχείο ξεπερνά το όριο των 50MB.")
 
+    # --- ΔΙΠΛΟΤΥΠΟ: ίδιο ΠΕΡΙΕΧΟΜΕΝΟ, ανεξάρτητα από όνομα -------------
+    # Το φίλτρο είναι ΤΟ ΙΔΙΟ με του _build_where (δικά μου + public): το
+    # ερώτημα βλέπει ό,τι βλέπει και η ανάκτηση, άρα κόβουμε ακριβώς τα
+    # αντίγραφα που θα κατέληγαν δύο φορές στο ίδιο prompt.
+    dup = (db.query(models.Document)
+             .filter(models.Document.file_hash == digest,
+                     or_(models.Document.user_id == current_user.id,
+                         models.Document.is_public == True))
+             .first())
+    if dup:
+        os.remove(file_path)     # το γράψαμε ήδη στον δίσκο — δεν το κρατάμε
+        where = ("το έχεις ήδη ανεβάσει"
+                 if dup.user_id == current_user.id
+                 else "υπάρχει ήδη στη δημόσια συλλογή")
+        raise HTTPException(
+            status_code=409,
+            detail=f"Το ίδιο αρχείο {where} ως «{dup.file_name}».")
+
     new_doc = models.Document(file_name=safe_name, file_path=file_path,
+                              file_hash=digest,
                               user_id=current_user.id, status="processing")
     db.add(new_doc)
     db.commit()
