@@ -1048,6 +1048,27 @@ def _has_dangling_referent(query: str) -> bool:
 # --- ΜΕΤΑΤΡΟΠΗ ΣΕ ASYNC GENERATOR ---
 
 
+# Επικεφαλίδα πηγής μέσα στο context. Η ετικέτα S1..SN είναι ΤΟ ΑΓΚΙΣΤΡΟ των
+# inline citations: το μοντέλο γράφει ΜΟΝΟ «[S3]», δηλαδή έναν ΔΕΙΚΤΗ μέσα σε
+# ό,τι του δόθηκε -> επινοημένη πηγή είναι ΜΗ ΑΝΑΠΑΡΑΣΤΑΣΙΜΗ εξ ορισμού.
+# Μετρήθηκε (probe_inline_citations.py --format label): η ετικέτα βγήκε σωστή
+# 97/97, ενώ ο αριθμός σελίδας 10 φορές λάθος — το μοντέλο αντιγράφει τον
+# ΤΥΠΩΜΕΝΟ αριθμό μέσα στη σελίδα αντί για το πεδίο Page:. Ό,τι δεν ζητάμε από
+# το μοντέλο δεν μπορεί να βγει λάθος· το (αρχείο, σελίδα) το ξέρει ο server.
+SOURCE_HEADER = "[S{i}: {file}, Page: {page}]"
+
+# Ο κανόνας παραπομπής (κανόνας 6 του system prompt). Ξεχωριστή σταθερά ώστε
+# ένα probe να μπορεί να τον ΣΒΗΣΕΙ (CITATION_RULE = "") και να πάρει το prompt
+# ΑΚΡΙΒΩΣ όπως ήταν πριν, χωρίς να αντιγράψει το χτίσιμο του prompt.
+CITATION_RULE = (
+    "End every factual sentence with the label of its source in square "
+    "brackets, copying it from the [S...: ...] header of the passage you "
+    "used, like this: [S3]. Write ONLY the label — no file name, no page "
+    "number, no other text inside the brackets. ONE label per bracket: if a "
+    "sentence draws on two passages, write two brackets. Cite ONLY labels "
+    "that appear in the SOURCE TEXT, and do not add a bibliography at the end."
+)
+
 # Στυλ απάντησης ανά persona (η γλώσσα & ο κανόνας μη-ψευδαίσθησης μένουν σταθερά)
 PERSONA_STYLES = {
     "Researcher": "Maintain an objective, scientific tone. Provide a THOROUGH, well-structured answer that fully addresses the question using ALL relevant details from the sources. State the main finding first, then expand with supporting evidence, context and nuances. Use as many sentences as needed for completeness (typically 4-8); do NOT artificially shorten.",
@@ -1103,17 +1124,23 @@ async def ask_ai(question, target_filenames, history=None, user_id=None, persona
     context_text = ""
     sources_list = []
 
-    for text, meta in top_3_data:
+    for i, (text, meta) in enumerate(top_3_data, 1):
         file_n = meta.get('file_name', 'Unknown File')
         page_n = meta.get('page', '?')
-        context_text += f"\n[Source: {file_n}, Page: {page_n}]\n{text}\n"
+        header = SOURCE_HEADER.format(i=i, file=file_n, page=page_n)
+        context_text += f"\n{header}\n{text}\n"
         # Πλούσιο αντικείμενο αντί για string: το UI δείχνει και απόσπασμα
         # του chunk -> ο χρήστης ΕΠΑΛΗΘΕΥΕΙ από πού βγήκε η απάντηση.
         sources_list.append({
+            # Η ετικέτα ταξιδεύει ΜΕ το αντικείμενο, δεν ξαναϋπολογίζεται στο
+            # UI: το dedup παρακάτω αλλάζει την αρίθμηση, οπότε ένα enumerate()
+            # στο frontend θα έδειχνε [2] για μια απάντηση που λέει [S3].
+            "label": f"S{i}",
             "file": file_n,
             "page": page_n,
             "preview": text[:400] + ("…" if len(text) > 400 else ""),
         })
+        
 
     history_text = ""
     if history:
@@ -1124,7 +1151,9 @@ async def ask_ai(question, target_filenames, history=None, user_id=None, persona
         history_text += "---------------------------\n\n"
 
     # --- SYSTEM PROMPT: γλώσσα + persona-στυλ + κανόνας μη-ψευδαίσθησης ---
+        # --- SYSTEM PROMPT: γλώσσα + persona-στυλ + κανόνας μη-ψευδαίσθησης ---
     persona_style = PERSONA_STYLES.get(persona, PERSONA_STYLES["Researcher"])
+    citation_rule = f"\n    6. CITATIONS: {CITATION_RULE}" if CITATION_RULE else ""
     system_prompt = f"""You are an expert Research Assistant. Provide precise, evidence-based answers using ONLY the provided SOURCE TEXT.
 
     STRICT PROTOCOLS:
@@ -1132,7 +1161,7 @@ async def ask_ai(question, target_filenames, history=None, user_id=None, persona
     2. STYLE: {persona_style}
     3. NO HALLUCINATIONS: Base your answer EXCLUSIVELY on the SOURCE TEXT. If the answer is not in the text, clearly state that you cannot find the answer in the provided documents (in the SAME language as the question).
     4. FORMATTING: If you use a numbered list, number the items sequentially starting from 1 (1, 2, 3, ...). NEVER reuse the numbering from the source document, and ensure any count you state (e.g. "five challenges") exactly matches the number of items you list.
-    5. COMPLETENESS: Do NOT state a total count of items (e.g. "five obstacles") unless that exact number is explicitly written in the SOURCE TEXT. List EVERY relevant item present in the sources; if the sources appear partial, present what you found without claiming the list is complete.
+    5. COMPLETENESS: Do NOT state a total count of items (e.g. "five obstacles") unless that exact number is explicitly written in the SOURCE TEXT. List EVERY relevant item present in the sources; if the sources appear partial, present what you found without claiming the list is complete.{citation_rule}
     """
 
     # Ντετερμινιστική οδηγία γλώσσας: ανιχνεύουμε ΕΜΕΙΣ τη γλώσσα της τρέχουσας
