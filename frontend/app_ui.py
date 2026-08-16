@@ -7,6 +7,7 @@ from datetime import datetime, timezone
 
 import requests
 import streamlit as st
+import streamlit.components.v1 as components
 
 # --- Page config MUST be the first Streamlit command ---
 st.set_page_config(page_title="Z-AI Platform", page_icon="🔬",
@@ -63,7 +64,7 @@ st.markdown("""
     #MainMenu, footer, [data-testid="stHeader"] { visibility: hidden; }
     .stAppDeployButton { display: none !important; }
     header { background: transparent !important; height: 0px !important; }
-    [data-testid="collapsedControl"] { visibility: visible !important; }
+    [data-testid="stSidebarCollapseButton"] { display: none !important; }
 
     /* Κεντραρισμένη στήλη συνομιλίας: οι γραμμές σε όλο το πλάτος είναι δυσανάγνωστες. */
     [data-testid="stMainBlockContainer"], .main .block-container {
@@ -188,7 +189,12 @@ def render_sources(sources):
     with st.expander(f"📚 Sources ({len(sources)})"):
         for i, src in enumerate(sources):
             if isinstance(src, dict):
-                st.caption(f"**[{i+1}]** {src.get('file')} — Page {src.get('page')}")
+                # Η ετικέτα έρχεται από τον server και είναι ΑΥΤΗ που γράφει η
+                # απάντηση μέσα στο κείμενο. Το enumerate μένει ΜΟΝΟ ως fallback
+                # για παλιά αποθηκευμένα μηνύματα: αριθμεί ΜΕΤΑ το dedup, οπότε
+                # θα έδειχνε [2] για μια παραπομπή που λέει [S3].
+                label = src.get("label") or f"{i+1}"
+                st.caption(f"**[{label}]** {src.get('file')} — Page {src.get('page')}")
                 preview = src.get("preview")
                 if preview:
                     st.markdown(
@@ -553,20 +559,35 @@ def app_main(token):
             t_start = time.perf_counter()
 
             def show_status(label):
-                # Phased status + ΧΡΟΝΟΣ: ο χρήστης βλέπει ΤΙ γίνεται και ΠΟΣΟ έχει
-                # πάρει μέχρι εδώ, αντί για γενικό "Thinking…". Το δεύτερο κάλεσμα
-                # ("Composing") εμφανίζεται μόλις τελειώσει η ανάκτηση, άρα ο
-                # αριθμός που δείχνει ΕΙΝΑΙ ο χρόνος του retrieval — ορατός ζωντανά.
-                elapsed = time.perf_counter() - t_start
-                message_placeholder.markdown(f"""
-                    <div style='display:flex; align-items:center; gap:8px; margin-top:-8px;'>
-                        <div style='animation: spin 1.4s linear infinite; font-size: 1.1em;'>⏳</div>
-                        <div style='color: #888; font-style: italic;'>{label}</div>
-                        <div style='color: #555; font-size: 0.85em;
-                                    font-variant-numeric: tabular-nums;'>{elapsed:.1f}s</div>
-                    </div>
-                    <style>@keyframes spin {{ 0%{{transform:rotate(0)}} 100%{{transform:rotate(360deg)}} }}</style>
-                """, unsafe_allow_html=True)
+                # Phased status + ΖΩΝΤΑΝΟΣ χρόνος. Ο μετρητής ΔΕΝ γίνεται σε Python:
+                # το thread μπλοκάρει στο response.iter_lines() κατά την ανάκτηση,
+                # άρα ένα server-rendered {elapsed} ΠΑΓΩΝΕΙ. Τον τρέχουμε στον browser
+                # (setInterval μέσω components.html) -> ανεξάρτητος από το μπλοκαρισμένο
+                # thread. Περνάμε το ΗΔΗ περασμένο base ώστε η 2η φάση ("Composing") να
+                # συνεχίζει χωρίς άλμα στο 0. Το iframe ζει μέσα στο message_placeholder:
+                # με το πρώτο token, το message_placeholder.empty() το καταστρέφει και ο
+                # μετρητής σταματά μόνος του — καμία επιπλέον λογική.
+                base = time.perf_counter() - t_start
+                with message_placeholder.container():
+                    components.html(f"""
+                        <style>
+                            body {{ margin:0; }}
+                            @keyframes spin {{ 0%{{transform:rotate(0)}} 100%{{transform:rotate(360deg)}} }}
+                        </style>
+                        <div style='display:flex; align-items:center; gap:8px; font-family:sans-serif;'>
+                            <div style='animation:spin 1.4s linear infinite; font-size:1.1em;'>⏳</div>
+                            <div style='color:#888; font-style:italic;'>{label}</div>
+                            <div id='zt' style='color:#555; font-size:0.85em;
+                                        font-variant-numeric:tabular-nums;'></div>
+                        </div>
+                        <script>
+                            const base = {base};
+                            const t0 = Date.now();
+                            const el = document.getElementById('zt');
+                            function tick() {{ el.textContent = (base + (Date.now()-t0)/1000).toFixed(1) + 's'; }}
+                            tick(); setInterval(tick, 100);
+                        </script>
+                    """, height=36)    
 
             show_status("🔍 Searching your documents…")
 
