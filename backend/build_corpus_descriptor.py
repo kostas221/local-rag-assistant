@@ -83,7 +83,11 @@ async def main():
         print(f"Ο descriptor ΔΕΝ αναλύθηκε σωστά — δεν γράφτηκε τίποτα:\n{raw}")
         return 1
 
-    with open(OUT, "w", encoding="utf-8") as f:
+    # Το ASYNC230 στοχεύει blocking IO σε async server που παγώνει το event loop.
+    # Εδώ είναι εφάπαξ CLI script, μία coroutine, μηδέν ταυτοχρονία — το sync
+    # open() είναι ακίνδυνο και το async wrapper υπάρχει μόνο για το await της
+    # γέννησης. Γι' αυτό παρακάμπτεται τοπικά:
+    with open(OUT, "w", encoding="utf-8") as f:  # noqa: ASYNC230
         json.dump({"domain": domain, "terms": terms}, f, ensure_ascii=False, indent=2)
     print(f"Γράφτηκε: {OUT}  (από {len(docs)} chunks, μοντέλο {args.model})")
     print(f"  DOMAIN: {domain}")
