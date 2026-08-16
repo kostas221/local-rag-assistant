@@ -428,6 +428,31 @@ def _embed_query(query: str) -> np.ndarray:
         _save_query_emb_cache()
     return v
 
+# --- Domain descriptor: ΠΑΡΑΓΕΤΑΙ από το corpus (build_corpus_descriptor.py),
+# ΟΧΙ καρφωμένος. Fallback στο ιστορικό cloud/serverless αν λείπει το αρχείο,
+# ώστε το σύστημα να δουλεύει και πριν τρέξει το script. Φορτώνεται στο import·
+# άλλαξες corpus -> τρέξε το script -> restart backend.
+_DESCRIPTOR_PATH = os.path.join(os.path.dirname(__file__), "corpus_descriptor.json")
+_FALLBACK_DOMAIN = ("computer-science papers on cloud computing, serverless "
+                    "computing and distributed systems")
+
+
+def _load_corpus_descriptor():
+    try:
+        with open(_DESCRIPTOR_PATH, encoding="utf-8") as f:
+            d = json.load(f)
+        if d.get("domain"):
+            return d["domain"], d.get("terms", "")
+    except FileNotFoundError:
+        pass
+    except Exception as e:
+        logger.warning(f"--- Corpus descriptor load failed: {e} ---")
+    return _FALLBACK_DOMAIN, ""
+
+
+_CORPUS_DOMAIN, _CORPUS_TERMS = _load_corpus_descriptor()
+
+
 async def optimize_query(query: str):
     """Translate-then-Retrieve: τα έγγραφα είναι ΑΓΓΛΙΚΑ, οπότε αν η ερώτηση
     είναι ελληνική τη μεταφράζουμε σε αγγλικά ΜΟΝΟ για την ανάκτηση (retrieval).
@@ -442,22 +467,24 @@ async def optimize_query(query: str):
     try:
         # ΤΟ ΠΡΟΒΛΗΜΑ ΠΟΥ ΛΥΝΕΙ (μετρημένο, measure_gate_margin.py):
         # χωρίς domain context ο μεταφραστής βγάζει καθημερινά αγγλικά, όχι όρους
-        # του πεδίου: «μηχανήματα» -> "machinery" (βιομηχανικά!) αντί για "servers",
-        # «ελέγχου» -> "control" αντί για "auditability". Το retrieval ψάχνει μετά
-        # λέξεις που ΔΕΝ υπάρχουν στα papers.
+        # του πεδίου: «μηχανήματα» -> "machinery" αντί για "servers", «ελέγχου» ->
+        # "control" αντί για "auditability". Το retrieval ψάχνει μετά λέξεις που ΔΕΝ
+        # υπάρχουν στα έγγραφα. Το ΠΕΔΙΟ (_CORPUS_DOMAIN/_CORPUS_TERMS) ΠΑΡΑΓΕΤΑΙ από
+        # το corpus (build_corpus_descriptor.py) -> δουλεύει για οποιοδήποτε πεδίο.
+        glossary = (f"Prefer the vocabulary of this corpus glossary: {_CORPUS_TERMS}. "
+                    if _CORPUS_TERMS else "")
         prompt = (
             "You are a translation assistant for an English-only academic search engine. "
-            "The corpus is computer-science papers on cloud computing, serverless "
-            "computing and distributed systems. Translate the user's question to English "
-            "using the STANDARD TECHNICAL TERMINOLOGY of that field: map everyday words to "
-            "the term a paper would actually use (e.g. Greek 'μηχανήματα' -> 'servers', "
-            "NOT 'machinery'; 'έλεγχος' in a compliance context -> 'auditability'). "
+            f"The corpus is about: {_CORPUS_DOMAIN}. "
+            "Translate the user's question to English using the STANDARD TECHNICAL "
+            "TERMINOLOGY of that field: map everyday words to the term a document would "
+            "actually use, NOT the literal everyday translation. "
+            + glossary +
             "Preserve every domain term already present in the question - never drop or "
-            "generalize one. Output ONLY a concise English "
-            "search query with the key terms. No quotes, no extra text.\n\n"
+            "generalize one. Output ONLY a concise English search query with the key "
+            "terms. No quotes, no extra text.\n\n"
             f"User question: {query}"
         )
-        
         english_query = (await gemini_rest.generate_once(
             prompt, model=GEMINI_MODEL, api_key=GEMINI_API_KEY)).strip(' "\'\n')
         _translation_cache[query] = english_query
