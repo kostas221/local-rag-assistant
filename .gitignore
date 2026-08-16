@@ -16,5 +16,10 @@ ragas_env/
 
 # Σκουπίδι από Git Bash path conversion: ένα `pip download` με Linux path
 # κατέληξε σε κυριολεκτικό φάκελο "C:" μέσα στο backend/ (βλ. ΠΑΓΙΔΕΣ
-# ΠΕΡΙΒΑΛΛΟΝΤΟΣ στο CLAUDE.md). Περιέχει μόνο ένα .whl.
+# ΠΕΡΙΒΑΛΛΟΝΤΟΣ). Περιέχει μόνο ένα .whl.
 backend/C*/
+
+# Ιδιωτικό working file του εργαλείου AI (οδηγίες + πλήρεις σημειώσεις). Η
+# δημόσια, επιμελημένη εκδοχή είναι το ENGINEERING_LOG.md.
+CLAUDE.md
+AGENTS.md
