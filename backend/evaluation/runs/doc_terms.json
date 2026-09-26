@@ -1,0 +1,9 @@
+{
+  "1702.04024.pdf": "PyWren, AWS Lambda, Apache Spark, PySpark, HDFS, Yarn, OpenBLAS, ImageNet LargeScale Visual Recognition Challenge, Terasort, RAMCloud, HOGWILD!, Solar Dynamics Observatory, stragglers, shuffle, spot instances",
+  "1706.03178.pdf": "Infrastructure-as-a-Service (IaaS), Platform-as-a-Service (PaaS), Function-as-a-Service (FaaS), Software-as-a-Service (SaaS), AWS Lambda, Google Cloud Functions, Microsoft Azure Functions, IBM OpenWhisk, OpenLambda, Kratos, LeverOS, Zappa, Chalice, cold start, scale to zero",
+  "1812.03651.pdf": "MapReduce, FaaS, AWS Lambda, AWS Athena, S3, SQS, EC2, DynamoDB, AdamOptimizer, Clipper, ZeroMQ, Firecracker, Google Cloud Dataprep, Embarrassingly parallel, Data-Shipping Architecture",
+  "1902.03383v1.pdf": "BigQuery, DynamoDB, SQS, ETL (Extract, Transform, and Load), serverful, ExCamera, Azure Functions, gVisor, Cockroach DB, Apache Airflow, Spectre, numpywren, Cholesky decomposition, Cirrus, BaaS",
+  "EECS-2009-28.pdf": "AppEngine, MegaStore, BigTable, Force.com, RightScale, Amazon Elastic Block Store, Software as a Service (SaaS), Instruction Set Architecture (ISA), Common Language Runtime (CLR), Distributed Denial of Service (DDoS), statistical multiplexing, gang scheduling, energy proportionality, Surge Computing, multitenant",
+  "excamera-nsdi17.pdf": "ExCamera, VP8, AWS Lambda, MapReduce, Hadoop, Spark, mu, PyWren, Stream Access Point, key frame, interframe, motion vectors, residue, rebasing, GCE",
+  "mapreduce-osdi04.pdf": "MapReduce, GFS, Lisp, Distributed Grep, TeraSort, EmitIntermediate, Combiner, NUMA, gdb, map, reduce, master, worker, stragglers, splits"
+}

@@ -10,8 +10,12 @@ import streamlit as st
 import streamlit.components.v1 as components
 
 # --- Page config MUST be the first Streamlit command ---
-st.set_page_config(page_title="Z-AI Platform", page_icon="🔬",
-                   layout="wide", initial_sidebar_state="expanded")
+st.set_page_config(
+    page_title="Z-AI Platform",
+    page_icon="🔬",
+    layout="wide",
+    initial_sidebar_state="expanded",
+)
 API_URL = os.getenv("BACKEND_URL", "http://localhost:8000")
 
 # --- HTTP προς το backend: ΕΝΑ σημείο για timeouts και σφάλματα δικτύου ---
@@ -23,7 +27,7 @@ API_URL = os.getenv("BACKEND_URL", "http://localhost:8000")
 # 8 χρήστες = p95 7.25 s (concurrency_benchmark.py).
 # (connect, read): το connect μένει μικρό — ή απαντά αμέσως ή είναι κάτω.
 TIMEOUT = (5, 30)
-TIMEOUT_UPLOAD = (5, 120)   # 50MB μέσω δικτύου θέλει χώρο· το ingest είναι background
+TIMEOUT_UPLOAD = (5, 120)  # 50MB μέσω δικτύου θέλει χώρο· το ingest είναι background
 
 
 def api(method, path, *, timeout=TIMEOUT, **kwargs):
@@ -33,10 +37,10 @@ def api(method, path, *, timeout=TIMEOUT, **kwargs):
     traceback και σταματά το render ΟΛΗΣ της σελίδας — ο χρήστης χάνει και
     το ιστορικό που είχε ήδη μπροστά του. Ο caller ελέγχει για None."""
     try:
-        return requests.request(method, f"{API_URL}{path}",
-                                timeout=timeout, **kwargs)
+        return requests.request(method, f"{API_URL}{path}", timeout=timeout, **kwargs)
     except requests.exceptions.RequestException:
         return None
+
 
 # --- Logo (SVG) ---
 Z_LOGO_HTML = """
@@ -55,7 +59,8 @@ Z_LOGO_HTML = """
 """
 
 # --- Refined CSS (clean, professional dark theme) ---
-st.markdown("""
+st.markdown(
+    """
 <style>
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap');
     .stApp { font-family: 'Inter', sans-serif; }
@@ -103,7 +108,9 @@ st.markdown("""
     ::-webkit-scrollbar-thumb { background: #2a2f3a; border-radius: 4px; }
     ::-webkit-scrollbar-thumb:hover { background: #3a4150; }
 </style>
-""", unsafe_allow_html=True)
+""",
+    unsafe_allow_html=True,
+)
 
 if "uploader_key" not in st.session_state:
     st.session_state.uploader_key = 0
@@ -123,7 +130,6 @@ def logout():
     st.session_state.token = None
     st.session_state.current_conv_id = None
     st.session_state.chat_history = []
-    st.rerun()
 
 
 def change_chat(conv_id):
@@ -151,8 +157,9 @@ def chat_group(iso_ts):
     # naive string από παλιότερη εγγραφή δεν πρέπει να σκάει το sidebar.
     if ts.tzinfo is None:
         ts = ts.replace(tzinfo=timezone.utc)
-    days = (datetime.now(timezone.utc).astimezone().date()
-            - ts.astimezone().date()).days
+    days = (
+        datetime.now(timezone.utc).astimezone().date() - ts.astimezone().date()
+    ).days
     if days <= 0:
         return "Today"
     if days == 1:
@@ -161,9 +168,13 @@ def chat_group(iso_ts):
         return "Previous 7 days"
     return "Earlier"
 
+
 def delete_chat_callback(conv_id, token):
-    res = api("DELETE", f"/conversations/{conv_id}",
-              headers={"Authorization": f"Bearer {token}"})
+    res = api(
+        "DELETE",
+        f"/conversations/{conv_id}",
+        headers={"Authorization": f"Bearer {token}"},
+    )
     # Το session state καθαρίζεται ΜΟΝΟ αν η διαγραφή πέτυχε. Πριν, ένα 401
     # (ληγμένο token) ή 500 άφηνε τη συνομιλία στη βάση αλλά έσβηνε το
     # ιστορικό από την οθόνη -> ο χρήστης νόμιζε ότι το έχασε.
@@ -176,10 +187,12 @@ def delete_chat_callback(conv_id, token):
 
 
 def delete_doc_callback(doc_id, token):
-    res = api("DELETE", f"/documents/{doc_id}",
-              headers={"Authorization": f"Bearer {token}"})
+    res = api(
+        "DELETE", f"/documents/{doc_id}", headers={"Authorization": f"Bearer {token}"}
+    )
     if res is None or res.status_code != 200:
         st.session_state["flash_error"] = "Could not delete the document."
+
 
 def render_sources(sources):
     """Πηγές με preview αποσπάσματος. Συμβατό και με ΠΑΛΙΑ μηνύματα όπου οι
@@ -193,7 +206,7 @@ def render_sources(sources):
                 # απάντηση μέσα στο κείμενο. Το enumerate μένει ΜΟΝΟ ως fallback
                 # για παλιά αποθηκευμένα μηνύματα: αριθμεί ΜΕΤΑ το dedup, οπότε
                 # θα έδειχνε [2] για μια παραπομπή που λέει [S3].
-                label = src.get("label") or f"{i+1}"
+                label = src.get("label") or f"{i + 1}"
                 st.caption(f"**[{label}]** {src.get('file')} — Page {src.get('page')}")
                 preview = src.get("preview")
                 if preview:
@@ -201,9 +214,12 @@ def render_sources(sources):
                         "<div style='border-left:2px solid #ff4b4b; padding:4px 10px; "
                         "margin:2px 0 10px; color:#9aa0ac; font-size:0.85em;'>"
                         f"{html.escape(preview)}</div>",
-                        unsafe_allow_html=True)
+                        unsafe_allow_html=True,
+                    )
             else:
-                st.caption(f"**[{i+1}]** {src}")
+                st.caption(f"**[{i + 1}]** {src}")
+
+
 def render_metrics(m, total_s=None):
     """Per-phase latency + token usage κάτω από την απάντηση.
 
@@ -215,16 +231,17 @@ def render_metrics(m, total_s=None):
         return
     # Το total μετριέται στο FRONTEND, άρα περιλαμβάνει και δίκτυο + streaming —
     # είναι ο χρόνος που ΟΝΤΩΣ περίμενε ο χρήστης, όχι μόνο ο server-side.
-    parts = ([f"⏱️ σύνολο {total_s:.1f}s"] if total_s else [])
-    parts += [f"🔍 ανάκτηση {m['retrieval_s']:.2f}s",
-             f"✍️ παραγωγή {m['generation_s']:.2f}s",
-             f"📄 {m['pages']} σελίδες"]
+    parts = [f"⏱️ σύνολο {total_s:.1f}s"] if total_s else []
+    parts += [
+        f"🔍 ανάκτηση {m['retrieval_s']:.2f}s",
+        f"✍️ παραγωγή {m['generation_s']:.2f}s",
+        f"📄 {m['pages']} σελίδες",
+    ]
     if m.get("prompt_tokens"):
         parts.append(
-            f"🎫 {m['prompt_tokens']}→{m.get('completion_tokens') or '?'} tokens")
+            f"🎫 {m['prompt_tokens']}→{m.get('completion_tokens') or '?'} tokens"
+        )
     st.caption(" · ".join(parts))
-
-
 
 
 def _library_body(headers, token, disabled=False):
@@ -258,19 +275,29 @@ def _library_body(headers, token, disabled=False):
                     st.session_state[f"check_{d['id']}"] = False
 
         for doc in docs:
-            display_name = doc['file_name'][:18] + \
-                "..." if len(doc['file_name']) > 18 else doc['file_name']
-            author_label = "You" if doc['is_mine'] else doc.get(
-                'uploader_name', 'Unknown')
-            status = doc.get('status', 'ready')
-            icon = {"ready": "✅", "processing": "⏳", "failed": "❌",
-                    "empty": "🚫"}.get(status, "📄")
+            display_name = (
+                doc["file_name"][:18] + "..."
+                if len(doc["file_name"]) > 18
+                else doc["file_name"]
+            )
+            author_label = (
+                "You" if doc["is_mine"] else doc.get("uploader_name", "Unknown")
+            )
+            status = doc.get("status", "ready")
+            icon = {
+                "ready": "✅",
+                "processing": "⏳",
+                "failed": "❌",
+                "empty": "🚫",
+            }.get(status, "📄")
             # "empty": έγκυρο PDF χωρίς εξαγώγιμο κείμενο. Χωρίς αυτή τη διάκριση
             # το αρχείο έδειχνε ✅ και δεν απαντούσε ΠΟΤΕ — ο χρήστης θα νόμιζε
             # ότι φταίει το σύστημα.
-            help_text = (f"{doc['file_name']} — no extractable text "
-                         "(scanned PDF — needs OCR)" if status == "empty"
-                         else f"{doc['file_name']} — {status}")
+            help_text = (
+                f"{doc['file_name']} — no extractable text (scanned PDF — needs OCR)"
+                if status == "empty"
+                else f"{doc['file_name']} — {status}"
+            )
 
             if f"check_{doc['id']}" not in st.session_state:
                 st.session_state[f"check_{doc['id']}"] = True
@@ -281,14 +308,19 @@ def _library_body(headers, token, disabled=False):
                     f"{icon} {display_name} ({author_label})",
                     key=f"check_{doc['id']}",
                     disabled=(disabled or status != "ready"),
-                    help=help_text)
+                    help=help_text,
+                )
             with col2:
-                if doc['is_mine']:
+                if doc["is_mine"]:
                     with st.popover("⋮"):
-                        st.button("🗑️", key=f"del_doc_{doc['id']}",
-                                  use_container_width=True,
-                                  on_click=delete_doc_callback,
-                                  args=(doc['id'], token), disabled=disabled)
+                        st.button(
+                            "🗑️",
+                            key=f"del_doc_{doc['id']}",
+                            use_container_width=True,
+                            on_click=delete_doc_callback,
+                            args=(doc["id"], token),
+                            disabled=disabled,
+                        )
     except requests.exceptions.RequestException:
         st.warning("⚠️ Could not load documents.")
 
@@ -301,7 +333,8 @@ def render_library(headers, token, generating=False):
         κλειδώνουν, ώστε ένα κλικ να ΜΗΝ κόβει την απάντηση.
     Το page-level rerun μετά την απάντηση τα ξανανοίγει."""
     st.fragment(_library_body, run_every=None if generating else "4s")(
-        headers, token, disabled=generating)
+        headers, token, disabled=generating
+    )
 
 
 def app_main(token):
@@ -324,7 +357,8 @@ def app_main(token):
         msg_res = api(
             "GET",
             f"/conversations/{st.session_state.current_conv_id}/messages",
-            headers=headers)
+            headers=headers,
+        )
         if msg_res is None:
             st.error("Could not load history. Check that the backend is running.")
         elif msg_res.status_code == 200:
@@ -334,8 +368,13 @@ def app_main(token):
     with st.sidebar:
         st.markdown(Z_LOGO_HTML, unsafe_allow_html=True)
 
-        st.button("✨ New Research", use_container_width=True,
-                  type="primary", on_click=new_chat, disabled=generating)
+        st.button(
+            "✨ New Research",
+            use_container_width=True,
+            type="primary",
+            on_click=new_chat,
+            disabled=generating,
+        )
 
         # Answer style -> sent to the backend as "persona"
         # disabled όσο streamάρει: η αλλαγή του = rerun -> κόβει την απάντηση.
@@ -344,7 +383,8 @@ def app_main(token):
             ["Researcher", "Educator", "Concise"],
             help="How the assistant phrases its answers",
             key="persona_select",
-            disabled=generating)
+            disabled=generating,
+        )
 
         st.subheader("Recent Chats")
         conv_res = api("GET", "/conversations", headers=headers)
@@ -360,16 +400,32 @@ def app_main(token):
                 if group not in seen_groups:
                     st.caption(group)
                     seen_groups.add(group)
-                display_title = conv['title'][:18] + \
-                    "..." if len(conv['title']) > 18 else conv['title']
+                display_title = (
+                    conv["title"][:18] + "..."
+                    if len(conv["title"]) > 18
+                    else conv["title"]
+                )
                 col1, col2 = st.columns([0.85, 0.15])
                 with col1:
-                    st.button(f"💬 {display_title}", key=f"conv_{conv['id']}", use_container_width=True, on_click=change_chat, args=(
-                        conv['id'],), help=conv['title'], disabled=generating)
+                    st.button(
+                        f"💬 {display_title}",
+                        key=f"conv_{conv['id']}",
+                        use_container_width=True,
+                        on_click=change_chat,
+                        args=(conv["id"],),
+                        help=conv["title"],
+                        disabled=generating,
+                    )
                 with col2:
                     with st.popover("⋮"):
-                        st.button("🗑️ Delete", key=f"del_conv_{conv['id']}", use_container_width=True, on_click=delete_chat_callback, args=(
-                            conv['id'], token), disabled=generating)
+                        st.button(
+                            "🗑️ Delete",
+                            key=f"del_conv_{conv['id']}",
+                            use_container_width=True,
+                            on_click=delete_chat_callback,
+                            args=(conv["id"], token),
+                            disabled=generating,
+                        )
 
         st.divider()
 
@@ -381,18 +437,36 @@ def app_main(token):
         st.divider()
         with st.expander("⬆️ Upload Document"):
             uploaded_file = st.file_uploader(
-                "PDF", type="pdf", key=f"pdf_uploader_{st.session_state.uploader_key}",
-                label_visibility="collapsed", disabled=generating)
+                "PDF",
+                type="pdf",
+                key=f"pdf_uploader_{st.session_state.uploader_key}",
+                label_visibility="collapsed",
+                disabled=generating,
+            )
 
-            if st.button("Add to Library", use_container_width=True,
-                         disabled=generating) and uploaded_file:
+            if (
+                st.button(
+                    "Add to Library", use_container_width=True, disabled=generating
+                )
+                and uploaded_file
+            ):
                 with st.spinner("Uploading & processing..."):
                     files = {
-                        "file": (uploaded_file.name, uploaded_file.getvalue(), "application/pdf")}
+                        "file": (
+                            uploaded_file.name,
+                            uploaded_file.getvalue(),
+                            "application/pdf",
+                        )
+                    }
                     upload_headers = {"Authorization": f"Bearer {token}"}
 
-                    response = api("POST", "/upload", headers=upload_headers,
-                                   files=files, timeout=TIMEOUT_UPLOAD)
+                    response = api(
+                        "POST",
+                        "/upload",
+                        headers=upload_headers,
+                        files=files,
+                        timeout=TIMEOUT_UPLOAD,
+                    )
 
                     if response is None:
                         st.error("The server is unreachable. Please try again.")
@@ -410,13 +484,20 @@ def app_main(token):
                             msg = None
                         st.error(msg or "Something went wrong with the upload.")
 
-        st.button("🚪 Logout", use_container_width=True, on_click=logout, disabled=generating)
+        st.button(
+            "🚪 Logout", use_container_width=True, on_click=logout, disabled=generating
+        )
 
     # --- MAIN SCREEN ---
     if not st.session_state.chat_history:
         st.markdown(
-            "<h2 style='text-align: center; margin-top: 6vh; font-weight: 600;'>How can I assist your research?</h2>", unsafe_allow_html=True)
-        st.markdown("<p style='text-align: center; color: #888; font-size: 1.05em; margin-bottom: 1.5rem;'>Ask questions across your uploaded scientific papers.</p>", unsafe_allow_html=True)
+            "<h2 style='text-align: center; margin-top: 6vh; font-weight: 600;'>How can I assist your research?</h2>",
+            unsafe_allow_html=True,
+        )
+        st.markdown(
+            "<p style='text-align: center; color: #888; font-size: 1.05em; margin-bottom: 1.5rem;'>Ask questions across your uploaded scientific papers.</p>",
+            unsafe_allow_html=True,
+        )
 
         # Υπόδειξη αντί για generic starters: τα αόριστα prompts κόβονται συχνά
         # από το relevance gate -> καθοδηγούμε σε ΣΥΓΚΕΚΡΙΜΕΝΕΣ ερωτήσεις.
@@ -424,7 +505,8 @@ def app_main(token):
             "<p style='text-align:center; color:#8a8f9c; font-size:0.92em;'>"
             "Tip: ask specific questions — e.g. <i>“What is serverless computing?”</i>"
             " or <i>“Ποια είναι τα εμπόδια υιοθέτησης του cloud;”</i></p>",
-            unsafe_allow_html=True)
+            unsafe_allow_html=True,
+        )
 
     # --- MESSAGE HISTORY ---
     for index, message in enumerate(st.session_state.chat_history):
@@ -447,15 +529,20 @@ def app_main(token):
                 # Feedback ΜΟΝΟ στις απαντήσεις του AI — στέλνεται πραγματικά στο backend.
                 # disabled όσο streamάρει: ένα κλικ εδώ = rerun -> κόβει την απάντηση.
                 msg_id = message.get("id")
-                feedback = st.feedback("thumbs", key=f"feed_{index}", disabled=generating)
+                feedback = st.feedback(
+                    "thumbs", key=f"feed_{index}", disabled=generating
+                )
                 if feedback is not None and msg_id:
                     # Guard: το st.feedback κρατά την τιμή σε κάθε rerun -> χωρίς
                     # αυτό θα ξαναστέλναμε το ίδιο feedback ξανά και ξανά.
                     sent_key = f"feedback_sent_{msg_id}"
                     if st.session_state.get(sent_key) != feedback:
-                        fb_res = api("POST", "/feedback", headers=headers,
-                                     json={"message_id": msg_id,
-                                           "is_positive": feedback == 1})
+                        fb_res = api(
+                            "POST",
+                            "/feedback",
+                            headers=headers,
+                            json={"message_id": msg_id, "is_positive": feedback == 1},
+                        )
                         # Το sent_key γράφεται ΜΟΝΟ σε επιτυχία: αλλιώς ένα
                         # χαμένο feedback δεν ξαναστέλνεται ΠΟΤΕ (ο guard το
                         # θεωρεί ήδη σταλμένο).
@@ -476,23 +563,39 @@ def app_main(token):
                             with st.popover("💬 Tell us what went wrong (optional)"):
                                 comment = st.text_area(
                                     "What was wrong with this answer?",
-                                    key=f"fb_comment_{msg_id}", max_chars=1000,
+                                    key=f"fb_comment_{msg_id}",
+                                    max_chars=1000,
                                     placeholder="e.g. incomplete answer, wrong source page, wrong language…",
-                                    label_visibility="collapsed")
-                                if st.button("Send", key=f"fb_send_{msg_id}",
-                                             type="primary", disabled=generating):
+                                    label_visibility="collapsed",
+                                )
+                                if st.button(
+                                    "Send",
+                                    key=f"fb_send_{msg_id}",
+                                    type="primary",
+                                    disabled=generating,
+                                ):
                                     if comment and comment.strip():
                                         c_res = api(
-                                            "POST", "/feedback", headers=headers,
-                                            json={"message_id": msg_id,
-                                                  "is_positive": False,
-                                                  "comment": comment.strip()})
-                                        if c_res is not None and c_res.status_code == 200:
+                                            "POST",
+                                            "/feedback",
+                                            headers=headers,
+                                            json={
+                                                "message_id": msg_id,
+                                                "is_positive": False,
+                                                "comment": comment.strip(),
+                                            },
+                                        )
+                                        if (
+                                            c_res is not None
+                                            and c_res.status_code == 200
+                                        ):
                                             st.session_state[comment_done] = True
                                             st.rerun()
                                         else:
-                                            st.toast("Comment not saved — try again.",
-                                                     icon="⚠️")
+                                            st.toast(
+                                                "Comment not saved — try again.",
+                                                icon="⚠️",
+                                            )
     # Input: ΖΩΓΡΑΦΙΖΕΤΑΙ ΠΡΙΝ το streaming block ώστε το disabled=generating να
     # ισχύει ΚΑΤΑ τη διάρκεια του streaming. (Αν ζωγραφιστεί μετά, όσο το
     # write_stream μπλοκάρει, στην οθόνη μένει η παλιά ΞΕΚΛΕΙΔΩΤΗ έκδοση του input
@@ -509,8 +612,12 @@ def app_main(token):
     if generating:
         _, _mid, _ = st.columns([5, 2, 5])
         with _mid:
-            st.button("⏹ Stop", key="stop_generation", use_container_width=True,
-                      help="Διακόπτει την τρέχουσα απάντηση για να ρωτήσεις κάτι άλλο")
+            st.button(
+                "⏹ Stop",
+                key="stop_generation",
+                use_container_width=True,
+                help="Διακόπτει την τρέχουσα απάντηση για να ρωτήσεις κάτι άλλο",
+            )
 
     # --- PENDING QUESTION: επεξεργάζεται ΕΔΩ, με το UI «κλειδωμένο» (όλα τα
     # widgets disabled), ώστε ένα κλικ να ΜΗΝ ακυρώνει την απάντηση που τρέχει. ---
@@ -534,15 +641,20 @@ def app_main(token):
 
         if st.session_state.current_conv_id is None:
             with st.spinner("Starting a new session..."):
-                conv_res = api("POST", "/conversations", headers=headers,
-                               json={"title": q[:40] + "..."})
+                conv_res = api(
+                    "POST",
+                    "/conversations",
+                    headers=headers,
+                    json={"title": q[:40] + "..."},
+                )
                 if conv_res is not None and conv_res.status_code == 200:
                     st.session_state.current_conv_id = conv_res.json()["id"]
 
         # Επιλεγμένα αρχεία (ready + τσεκαρισμένα) από το fragment της βιβλιοθήκης.
         docs_cache = st.session_state.get("docs_cache", [])
         active_filenames = [
-            d["file_name"] for d in docs_cache
+            d["file_name"]
+            for d in docs_cache
             if d.get("status") == "ready"
             and st.session_state.get(f"check_{d['id']}", True)
         ]
@@ -569,7 +681,8 @@ def app_main(token):
                 # μετρητής σταματά μόνος του — καμία επιπλέον λογική.
                 base = time.perf_counter() - t_start
                 with message_placeholder.container():
-                    components.html(f"""
+                    components.html(
+                        f"""
                         <style>
                             body {{ margin:0; }}
                             @keyframes spin {{ 0%{{transform:rotate(0)}} 100%{{transform:rotate(360deg)}} }}
@@ -587,7 +700,9 @@ def app_main(token):
                             function tick() {{ el.textContent = (base + (Date.now()-t0)/1000).toFixed(1) + 's'; }}
                             tick(); setInterval(tick, 100);
                         </script>
-                    """, height=36)    
+                    """,
+                        height=36,
+                    )
 
             show_status("🔍 Searching your documents…")
 
@@ -598,8 +713,13 @@ def app_main(token):
                 nonlocal sources_data, metrics_data
                 first_chunk = True
                 try:
-                    with requests.post(f"{API_URL}/chat", json=payload, headers=headers,
-                                       stream=True, timeout=(10, 180)) as response:
+                    with requests.post(
+                        f"{API_URL}/chat",
+                        json=payload,
+                        headers=headers,
+                        stream=True,
+                        timeout=(10, 180),
+                    ) as response:
                         if response.status_code == 200:
                             for line in response.iter_lines():
                                 if not line:
@@ -648,7 +768,10 @@ def app_main(token):
 
 def auth_screen():
     st.markdown(Z_LOGO_HTML, unsafe_allow_html=True)
-    st.markdown("<p style='text-align: center; color: #888; font-size: 1.15em; margin-bottom: 40px;'>Academic Research Network</p>", unsafe_allow_html=True)
+    st.markdown(
+        "<p style='text-align: center; color: #888; font-size: 1.15em; margin-bottom: 40px;'>Academic Research Network</p>",
+        unsafe_allow_html=True,
+    )
 
     col1, col2, col3 = st.columns([1, 2, 1])
     with col2:
@@ -657,8 +780,9 @@ def auth_screen():
             log_user = st.text_input("Username")
             log_pass = st.text_input("Password", type="password")
             if st.button("Sign In", use_container_width=True, type="primary"):
-                res = api("POST", "/login",
-                          data={"username": log_user, "password": log_pass})
+                res = api(
+                    "POST", "/login", data={"username": log_user, "password": log_pass}
+                )
                 if res is None:
                     st.error("The server is unreachable. Please start the backend.")
                 elif res.status_code == 200:
@@ -675,19 +799,28 @@ def auth_screen():
             reg_pass = st.text_input("New Password", type="password")
 
             if st.button("Create Account", use_container_width=True):
-                res = api("POST", "/register",
-                          json={"username": reg_user, "email": reg_email,
-                                "password": reg_pass})
+                res = api(
+                    "POST",
+                    "/register",
+                    json={
+                        "username": reg_user,
+                        "email": reg_email,
+                        "password": reg_pass,
+                    },
+                )
                 if res is None:
                     st.error("The server is unreachable. Please start the backend.")
                 elif res.status_code in (200, 201):
                     st.success("Account created! You can now log in.")
                 elif res.status_code in (400, 422):
-                    st.error(res.json().get(
-                        "detail", "Invalid details. (The email or username may already exist.)"))
-                else:
                     st.error(
-                        f"Failed to reach the server (error {res.status_code}).")
+                        res.json().get(
+                            "detail",
+                            "Invalid details. (The email or username may already exist.)",
+                        )
+                    )
+                else:
+                    st.error(f"Failed to reach the server (error {res.status_code}).")
 
 
 if st.session_state.token:

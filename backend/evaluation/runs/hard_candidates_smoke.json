@@ -1,0 +1,74 @@
+[
+ {
+  "pid": "p001",
+  "parent": "q001",
+  "type": "nojargon",
+  "question": "How do the papers describe what this type of internet-based computation is, covering both the online programs and the underlying machinery that runs them, especially when you only pay for what you use?",
+  "question_en": "How do the papers describe what this type of internet-based computation is, covering both the online programs and the underlying machinery that runs them, especially when you only pay for what you use?",
+  "decision": "keep",
+  "reason": ""
+ },
+ {
+  "pid": "p002",
+  "parent": "q001",
+  "type": "vague",
+  "question": "What's the general idea of that whole 'computing over the internet' thing, as explained in the text?",
+  "question_en": "What's the general idea of that whole 'computing over the internet' thing, as explained in the text?",
+  "decision": "keep",
+  "reason": ""
+ },
+ {
+  "pid": "p003",
+  "parent": "q002",
+  "type": "meta",
+  "question": "What three new aspects of providing computer equipment do the authors of the paper discussing the future of cloud computing highlight?",
+  "question_en": "What three new aspects of providing computer equipment do the authors of the paper discussing the future of cloud computing highlight?",
+  "decision": "keep",
+  "reason": ""
+ },
+ {
+  "pid": "p004",
+  "parent": "q002",
+  "type": "short",
+  "question": "Three new aspects?",
+  "question_en": "Three new aspects?",
+  "decision": "drop",
+  "reason": "same_need/self_contained: The paraphrase is too short and vague to be understood as a first message, lacking context for 'Three new aspects?'."
+ },
+ {
+  "pid": "p005",
+  "parent": "q004",
+  "type": "greek",
+  "question": "Γιατί οι πάροχοι υπηρεσιών υπολογιστών που έχουν πολύ μεγάλες εγκαταστάσεις μπορούν να μειώσουν το κόστος τους;",
+  "question_en": "Why can computer service providers with very large facilities reduce their costs?",
+  "decision": "keep",
+  "reason": ""
+ },
+ {
+  "pid": "p006",
+  "parent": "q004",
+  "type": "nojargon",
+  "question": "Why can very large centers that host computer services offer lower prices per unit of work?",
+  "question_en": "Why can very large centers that host computer services offer lower prices per unit of work?",
+  "decision": "keep",
+  "reason": ""
+ },
+ {
+  "pid": "p007",
+  "parent": "q006",
+  "type": "vague",
+  "question": "What new kinds of programs or uses did that 2009 analysis suggest this internet-based computing would make possible?",
+  "question_en": "What new kinds of programs or uses did that 2009 analysis suggest this internet-based computing would make possible?",
+  "decision": "keep",
+  "reason": ""
+ },
+ {
+  "pid": "p008",
+  "parent": "q006",
+  "type": "meta",
+  "question": "What new types of software applications does the 2009 paper from Berkeley say this internet-based computing enables?",
+  "question_en": "What new types of software applications does the 2009 paper from Berkeley say this internet-based computing enables?",
+  "decision": "keep",
+  "reason": ""
+ }
+]

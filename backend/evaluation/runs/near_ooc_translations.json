@@ -1,0 +1,23 @@
+{
+ "Πώς συγκρίνεται το OpenFaaS με το OpenWhisk όσον αφορά την ανάπτυξη serverless εφαρμογών;": "OpenFaaS OpenWhisk serverless application development",
+ "Ποια είναι η τρέχουσα υιοθέτηση του Knative στις επιχειρήσεις;": "Knative enterprise adoption",
+ "Ποιο είναι το μέσο κόστος ανά εκτέλεση για μια λειτουργία Azure με 128MB μνήμης;": "What is the average cost per execution for an Azure function with 128MB memory",
+ "Πώς έχουν αντιμετωπιστεί οι προκλήσεις της διαχείρισης δεδομένων σε distributed serverless συστήματα μετά το 2019;": "data management challenges distributed serverless systems after 2019",
+ "Πώς επηρεάζει η επιλογή της γλώσσας προγραμματισμού την autoscaling συμπεριφορά των serverless εφαρμογών στην AWS;": "How does the choice of programming language affect the autoscaling behavior of serverless applications on AWS",
+ "Ποιο είναι το μέσο κόστος ανά GB για αποθήκευση αντικειμένων σε μια υβριδική αρχιτεκτονική νέφους το 2023;": "What is the average cost per GB for object storage in a hybrid cloud architecture in 2023?",
+ "Ποιες νέες προκλήσεις προέκυψαν στην ασφάλεια των λειτουργιών serverless μετά το 2020;": "serverless functions security challenges after 2020",
+ "Ποιες είναι οι κύριες προκλήσεις που αντιμετωπίζουν οι οργανισμοί στη διαχείριση της ασφάλειας σε περιβάλλοντα πολλαπλών cloud το 2024;": "main challenges organizations face managing security multi-cloud environments 2024",
+ "Ποια είναι η επίδοση του Google Cloud Video Intelligence API σε σύγκριση με τις προσεγγίσεις που συζητούνται;": "Google Cloud Video Intelligence API performance compared to discussed approaches",
+ "Ποιο είναι το μέγιστο μέγεθος αρχείου βίντεο που μπορεί να επεξεργαστεί αποτελεσματικά το ExCamera με καθυστέρηση κάτω του ενός δευτερολέπτου;": "ExCamera video file processing performance",
+ "Πώς έχουν εξελιχθεί οι προσεγγίσεις για την διαχείριση της κατάστασης σε serverless συναρτήσεις για επεξεργασία βίντεο μετά το 2019;": "Evolution of state management approaches in serverless functions for video processing after 2019",
+ "Πώς επηρεάζει η επιλογή διαφορετικών παρόχων cloud (π.χ. Google Cloud Functions έναντι AWS Lambda) την απόδοση του συστήματος ExCamera για μεγάλα σύνολα δεδομένων βίντεο;": "How does the choice of different cloud providers (e.g. Google Cloud Functions versus AWS Lambda) affect the performance of the ExCamera system for large video data sets?",
+ "Ποια είναι τα κύρια χαρακτηριστικά της πλατφόρμας Vercel Edge Functions για την ανάπτυξη serverless εφαρμογών;": "Vercel Edge Functions platform serverless applications",
+ "Ποια είναι η κύρια λειτουργία του Red Hat OpenShift στην ανάπτυξη εφαρμογών serverless;": "Red Hat OpenShift serverless application development functions",
+ "Ποιο είναι το μέσο κόστος ανά GB-μήνα για την αποθήκευση δεδομένων σε AWS S3 Glacier Deep Archive το 2024;": "What is the average cost per GB-month for data storage in AWS S3 Glacier Deep Archive in 2024",
+ "Ποιες εξελίξεις έχουν σημειωθεί στη βελτιστοποίηση της κατανάλωσης ενέργειας για λειτουργίες χωρίς διακομιστή μετά το 2021;": "Energy consumption optimization in serverless functions post-2021",
+ "Ποια είναι η μέση καθυστέρηση δικτύου για την επικοινωνία μεταξύ λειτουργιών σε διαφορετικές περιοχές cloud;": "What is the average network latency for communication between functions in different cloud regions?",
+ "Πώς έχουν εξελιχθεί οι πολιτικές αποθήκευσης δεδομένων για serverless εφαρμογές μετά το 2021;": "How have data storage policies for serverless applications evolved after 2021",
+ "Ποια είναι η βασική αρχή λειτουργίας του Open Container Initiative;": "Open Container Initiative operating principle",
+ "Ποιο είναι το μέσο κόστος ανά gigabyte-ώρα για αποθήκευση δεδομένων σε serverless βάσεις δεδομένων το 2023;": "What is the average cost per gigabyte-hour for data storage in serverless databases in 2023",
+ "Πώς έχει εξελιχθεί η υποστήριξη για μη-σχεσιακές βάσεις δεδομένων ως πηγές εισόδου/εξόδου για το MapReduce μετά το 2019;": "MapReduce non-relational databases input output"
+}

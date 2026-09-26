@@ -1,0 +1,19 @@
+variant,id,category,rep,translation,rewrite,best1,best2,delta,cov2,pages2,skip,today,with_delta
+A_cloud,v3,reasoning,0,Which model do they propose to explain the linear relationship?,Proposed model linear relationship,-4.914,-6.671,-1.757,100.0,8,,κομμένο,κομμένο
+A_cloud,o1,out_of_corpus,0,What is the price of Bitcoin today?,What is the price of Bitcoin today?,-11.117,,,,0,identical,σιωπή,σιωπή
+A_cloud,o2,out_of_corpus,0,How does a quantum computer work?,How does a quantum computer work?,-10.961,,,,0,identical,σιωπή,σιωπή
+A_cloud,o3,out_of_corpus,0,aspirin dosage after myocardial infarction,aspirin dosage after myocardial infarction,-5.413,,,,0,identical,σιωπή,σιωπή
+A_cloud,o4,out_of_corpus,0,Vesuvius eruptions,Vesuvius eruptions,-3.462,,,,0,identical,σιωπή,σιωπή
+A_cloud,o5,out_of_corpus,0,Which statins reduce cholesterol the most?,Which statins reduce cholesterol the most?,-5.172,,,,0,identical,σιωπή,σιωπή
+B_generic,v3,reasoning,0,Which model do they propose to explain the linear relationship?,Proposed model explaining linear relationship,-4.914,-7.408,-2.494,100.0,8,,κομμένο,κομμένο
+B_generic,o1,out_of_corpus,0,What is the price of Bitcoin today?,Bitcoin spot price,-11.117,-11.213,-0.096,,7,,σιωπή,σιωπή
+B_generic,o2,out_of_corpus,0,How does a quantum computer work?,Quantum computing principles operation,-10.961,-10.865,0.096,,8,,σιωπή,σιωπή
+B_generic,o3,out_of_corpus,0,aspirin dosage after myocardial infarction,Acetylsalicylic acid post-myocardial infarction regimen,-5.413,-5.183,0.229,,7,,σιωπή,σιωπή
+B_generic,o4,out_of_corpus,0,Vesuvius eruptions,Mount Vesuvius volcanic eruptions,-3.462,-2.081,1.38,,6,,ΔΙΑΡΡΟΗ,ΔΙΑΡΡΟΗ
+B_generic,o5,out_of_corpus,0,Which statins reduce cholesterol the most?,Comparative efficacy of HMG-CoA reductase inhibitors on serum lipid profiles,-5.172,-1.869,3.302,,6,,ΔΙΑΡΡΟΗ,ΔΙΑΡΡΟΗ
+C_terms,v3,reasoning,0,Which model do they propose to explain the linear relationship?,Linear relationship explanatory model,-4.914,-4.809,0.105,100.0,8,,κομμένο,κομμένο
+C_terms,o1,out_of_corpus,0,What is the price of Bitcoin today?,Bitcoin price today,-11.117,-11.096,0.021,,8,,σιωπή,σιωπή
+C_terms,o2,out_of_corpus,0,How does a quantum computer work?,How does a quantum computer work?,-10.961,,,,0,identical,σιωπή,σιωπή
+C_terms,o3,out_of_corpus,0,aspirin dosage after myocardial infarction,Aspirin post-myocardial infarction dosing,-5.413,-6.099,-0.687,,8,,σιωπή,σιωπή
+C_terms,o4,out_of_corpus,0,Vesuvius eruptions,Vesuvius eruptive activity,-3.462,-1.209,2.253,,6,,ΔΙΑΡΡΟΗ,ΔΙΑΡΡΟΗ
+C_terms,o5,out_of_corpus,0,Which statins reduce cholesterol the most?,Which statins demonstrate the greatest efficacy in cholesterol reduction?,-5.172,-1.307,3.864,,7,,ΔΙΑΡΡΟΗ,ΔΙΑΡΡΟΗ

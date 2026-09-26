@@ -1,0 +1,76 @@
+﻿condition,id,paper,coverage,pages,best_logit,verdict,translation
+C0_no_glossary,c1,cureus-0015-00000046486.pdf,100.0,6,+6.38,,Global prevalence of heart failure
+C0_no_glossary,c2,cureus-0015-00000046486.pdf,100.0,7,+6.18,,Reduced ejection fraction heart failure definition
+C0_no_glossary,c3,cureus-0015-00000046486.pdf,100.0,5,+6.68,,Which class of antidiabetic drugs has been shown to be beneficial in heart failure?
+C0_no_glossary,c4,cureus-0015-00000046486.pdf,100.0,6,+7.24,,What is the combination of sacubitril/valsartan?
+C0_no_glossary,c5,cureus-0015-00000046486.pdf,100.0,5,+6.16,,Which clinical trial demonstrated the superiority of sacubitril/valsartan over enalapril?
+C0_no_glossary,c6,cureus-0015-00000046486.pdf,100.0,8,+2.37,,What is cardiac resynchronization therapy?
+C0_no_glossary,c7,cureus-0015-00000046486.pdf,100.0,8,+3.49,,Which types of stem cells are studied for myocardial regeneration?
+C0_no_glossary,c8,cureus-0015-00000046486.pdf,100.0,7,-0.46,,Mechanism of action of ivabradine
+C0_no_glossary,c9,cureus-0015-00000046486.pdf,100.0,7,+4.65,,Promising biomarkers for early detection of heart failure
+C0_no_glossary,c10,cureus-0015-00000046486.pdf,100.0,6,+6.88,,Ventricular assist devices and their applications
+C0_no_glossary,v1,s41598-017-03833-3.pdf,100.0,6,+5.21,,Which effusive eruptions of Stromboli does the study compare?
+C0_no_glossary,v2,s41598-017-03833-3.pdf,100.0,7,+5.86,,What is linearly correlated with erupted lava volumes?
+C0_no_glossary,v3,s41598-017-03833-3.pdf,0.0,0,-4.91,,Which model do they propose to explain the linear relationship?
+C0_no_glossary,v4,s41598-017-03833-3.pdf,100.0,5,+3.42,,What is the steady-state magma supply rate from the deep reservoir?
+C0_no_glossary,v5,s41598-017-03833-3.pdf,100.0,7,+5.96,,What lava volume threshold triggers paroxysmal eruptions?
+C0_no_glossary,v6,s41598-017-03833-3.pdf,100.0,6,+7.76,,What decompression rates were calculated for the 2003 and 2007 eruptions?
+C0_no_glossary,v7,s41598-017-03833-3.pdf,100.0,7,+2.21,,Which satellite instrument was used for the measurement of effusion rates?
+C0_no_glossary,v8,s41598-017-03833-3.pdf,100.0,6,+6.35,,What percentage of magma drains from the reservoir in the first days?
+C0_no_glossary,v9,s41598-017-03833-3.pdf,0.0,0,-4.44,,Which instruments detected ground subsidence during the onset of injection?
+C0_no_glossary,v10,s41598-017-03833-3.pdf,0.0,0,-4.46,,What flow regime models the injection rate along the pipeline?
+C0_no_glossary,o1,-,,0,-11.12,σιωπή,What is the price of Bitcoin today?
+C0_no_glossary,o2,-,,0,-10.83,σιωπή,How does a quantum computer operate?
+C0_no_glossary,o3,-,,0,-4.14,σιωπή,Recommended aspirin dosage post myocardial infarction
+C0_no_glossary,o4,-,,0,-3.28,σιωπή,When did Vesuvius last erupt?
+C0_no_glossary,o5,-,,0,-4.10,σιωπή,Which statins most reduce cholesterol?
+CD_chunks,c1,cureus-0015-00000046486.pdf,100.0,6,+6.23,,How many patients suffer from cardiac failure globally?
+CD_chunks,c2,cureus-0015-00000046486.pdf,100.0,7,+5.55,,How is heart failure with reduced ejection fraction defined?
+CD_chunks,c3,cureus-0015-00000046486.pdf,100.0,7,+5.98,,Which class of antidiabetic therapies has been shown to be beneficial in cardiac failure?
+CD_chunks,c4,cureus-0015-00000046486.pdf,100.0,6,+9.08,,sacubitril/valsartan therapy
+CD_chunks,c5,cureus-0015-00000046486.pdf,100.0,6,+7.48,,sacubitril/valsartan versus enalapril clinical trial
+CD_chunks,c6,cureus-0015-00000046486.pdf,100.0,7,+4.06,,cardiac resynchronization therapy
+CD_chunks,c7,cureus-0015-00000046486.pdf,100.0,8,+3.54,,What types of stem cells are being studied for myocardial regeneration?
+CD_chunks,c8,cureus-0015-00000046486.pdf,100.0,7,-0.46,,Mechanism of action of ivabradine
+CD_chunks,c9,cureus-0015-00000046486.pdf,100.0,7,+2.79,,Which biomarkers are promising for the early detection of cardiac failure?
+CD_chunks,c10,cureus-0015-00000046486.pdf,100.0,5,+7.49,,ventricular assist devices and their use
+CD_chunks,v1,s41598-017-03833-3.pdf,100.0,6,+5.21,,Which effusive eruptions of Stromboli does the study compare?
+CD_chunks,v2,s41598-017-03833-3.pdf,100.0,8,+4.14,,What correlates linearly with effusive lava volumes?
+CD_chunks,v3,s41598-017-03833-3.pdf,0.0,0,-4.91,,Which model do they propose to explain the linear relationship?
+CD_chunks,v4,s41598-017-03833-3.pdf,100.0,5,+4.60,,What is the steady rate of magma supply from the deep reservoir?
+CD_chunks,v5,s41598-017-03833-3.pdf,100.0,7,+4.52,,What volume threshold triggers explosive eruptions?
+CD_chunks,v6,s41598-017-03833-3.pdf,100.0,6,+7.76,,What decompression rates were calculated for the 2003 and 2007 eruptions?
+CD_chunks,v7,s41598-017-03833-3.pdf,100.0,8,+1.85,,Which satellite instrument was used to measure effusion rates?
+CD_chunks,v8,s41598-017-03833-3.pdf,100.0,5,+6.54,,What is the rate of magma drained from the reservoir in the first days?
+CD_chunks,v9,s41598-017-03833-3.pdf,100.0,6,+3.67,,Which instruments detected ground subsidence at the onset of effusion?
+CD_chunks,v10,s41598-017-03833-3.pdf,100.0,8,+5.77,,What type of flow models the effusion rate along the conduit?
+CD_chunks,o1,-,,0,-11.12,σιωπή,What is the price of Bitcoin today?
+CD_chunks,o2,-,,0,-10.96,σιωπή,How does a quantum computer work?
+CD_chunks,o3,-,,0,-5.41,σιωπή,aspirin dosage after myocardial infarction
+CD_chunks,o4,-,,0,-3.46,σιωπή,Vesuvius eruptions
+CD_chunks,o5,-,,0,-5.17,σιωπή,Which statins reduce cholesterol the most?
+CM_pages,c1,cureus-0015-00000046486.pdf,100.0,6,+4.13,,How many people suffer from cardiac hfref globally?
+CM_pages,c2,cureus-0015-00000046486.pdf,100.0,5,+3.65,,How is hfref defined?
+CM_pages,c3,cureus-0015-00000046486.pdf,100.0,4,+5.43,,Which class of antidiabetic medicine has been shown to be beneficial in cardiac hfref?
+CM_pages,c4,cureus-0015-00000046486.pdf,100.0,6,+8.67,,sacubitril/valsartan medicine
+CM_pages,c5,cureus-0015-00000046486.pdf,100.0,6,+6.28,,sacubitril/valsartan clinical trial enalapril superiority
+CM_pages,c6,cureus-0015-00000046486.pdf,100.0,7,+4.06,,cardiac resynchronization therapy
+CM_pages,c7,cureus-0015-00000046486.pdf,100.0,8,+3.54,,What types of stem cells are being studied for myocardial regeneration?
+CM_pages,c8,cureus-0015-00000046486.pdf,100.0,8,-0.79,,Ivabradine mechanism of action
+CM_pages,c9,cureus-0015-00000046486.pdf,100.0,6,-0.97,,biomarkers promising early detection cardiac hfref
+CM_pages,c10,cureus-0015-00000046486.pdf,100.0,5,+7.49,,ventricular assist devices and their use
+CM_pages,v1,s41598-017-03833-3.pdf,100.0,4,+8.04,,Stromboli explosive eruptions
+CM_pages,v2,s41598-017-03833-3.pdf,100.0,7,+5.51,,lava volume effusion
+CM_pages,v3,s41598-017-03833-3.pdf,0.0,0,-4.91,,Which model do they propose to explain the linear relationship?
+CM_pages,v4,s41598-017-03833-3.pdf,100.0,5,+4.60,,What is the steady rate of magma supply from the deep reservoir?
+CM_pages,v5,s41598-017-03833-3.pdf,100.0,7,+5.96,,What lava volume threshold triggers paroxysmal eruptions?
+CM_pages,v6,s41598-017-03833-3.pdf,100.0,6,+7.76,,What decompression rates were calculated for the 2003 and 2007 eruptions?
+CM_pages,v7,s41598-017-03833-3.pdf,100.0,8,+1.85,,Which satellite instrument was used to measure effusion rates?
+CM_pages,v8,s41598-017-03833-3.pdf,100.0,5,+6.33,,What rate of the magma drains from the reservoir in the first days?
+CM_pages,v9,s41598-017-03833-3.pdf,100.0,6,+3.67,,Which instruments detected ground subsidence at the onset of effusion?
+CM_pages,v10,s41598-017-03833-3.pdf,100.0,7,+4.89,,What type of flow models the effusion rate along the vent?
+CM_pages,o1,-,,0,-11.12,σιωπή,What is the price of Bitcoin today?
+CM_pages,o2,-,,0,-10.96,σιωπή,How does a quantum computer work?
+CM_pages,o3,-,,0,-5.15,σιωπή,aspirin dosage myocardial infarction
+CM_pages,o4,-,,6,-1.60,ΔΙΑΡΡΟΗ,Vesuvius explosive activity
+CM_pages,o5,-,,0,-5.03,σιωπή,statins reduce cholesterol

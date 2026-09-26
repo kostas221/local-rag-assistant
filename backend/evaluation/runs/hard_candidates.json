@@ -1,0 +1,722 @@
+[
+ {
+  "pid": "p001",
+  "parent": "q001",
+  "type": "nojargon",
+  "question": "How do the authors describe the concept of using shared computing resources over the internet?",
+  "question_en": "How do the authors describe the concept of using shared computing resources over the internet?",
+  "decision": "keep",
+  "reason": ""
+ },
+ {
+  "pid": "p002",
+  "parent": "q001",
+  "type": "vague",
+  "question": "Can you tell me what the paper means by 'cloud'?",
+  "question_en": "Can you tell me what the paper means by 'cloud'?",
+  "decision": "drop",
+  "reason": "same_need: The paraphrase asks for the definition of 'cloud' as a noun, but the reference answer defines 'cloud computing'."
+ },
+ {
+  "pid": "p003",
+  "parent": "q002",
+  "type": "meta",
+  "question": "What three new points about how computing resources are made available are highlighted by the authors?",
+  "question_en": "What three new points about how computing resources are made available are highlighted by the authors?",
+  "decision": "keep",
+  "reason": ""
+ },
+ {
+  "pid": "p004",
+  "parent": "q002",
+  "type": "short",
+  "question": "Three new resource aspects?",
+  "question_en": "Three new resource aspects?",
+  "decision": "keep",
+  "reason": ""
+ },
+ {
+  "pid": "p005",
+  "parent": "q004",
+  "type": "greek",
+  "question": "Γιατί οι μεγάλες εγκαταστάσεις υπολογιστών μπορούν να προσφέρουν υπηρεσίες πιο φθηνά;",
+  "question_en": "Why can large computer facilities offer services more cheaply?",
+  "decision": "keep",
+  "reason": ""
+ },
+ {
+  "pid": "p006",
+  "parent": "q004",
+  "type": "nojargon",
+  "question": "How do the very large facilities that provide computing services manage to lower their costs?",
+  "question_en": "How do the very large facilities that provide computing services manage to lower their costs?",
+  "decision": "keep",
+  "reason": ""
+ },
+ {
+  "pid": "p007",
+  "parent": "q006",
+  "type": "vague",
+  "question": "What sorts of new things can people do with the internet-based computing described in the older paper?",
+  "question_en": "What sorts of new things can people do with the internet-based computing described in the older paper?",
+  "decision": "keep",
+  "reason": ""
+ },
+ {
+  "pid": "p008",
+  "parent": "q006",
+  "type": "meta",
+  "question": "What new opportunities for applications does the 2009 paper say that internet-based computing makes possible?",
+  "question_en": "What new opportunities for applications does the 2009 paper say that internet-based computing makes possible?",
+  "decision": "keep",
+  "reason": ""
+ },
+ {
+  "pid": "p009",
+  "parent": "q008",
+  "type": "short",
+  "question": "Main serverless platform problems?",
+  "question_en": "Main serverless platform problems?",
+  "decision": "keep",
+  "reason": ""
+ },
+ {
+  "pid": "p010",
+  "parent": "q008",
+  "type": "greek",
+  "question": "Ποια είναι τα βασικά προβλήματα των σημερινών πλατφορμών χωρίς δικούς σου διακομιστές;",
+  "question_en": "What are the main problems with current server-free platforms?",
+  "decision": "keep",
+  "reason": ""
+ },
+ {
+  "pid": "p011",
+  "parent": "q009",
+  "type": "nojargon",
+  "question": "How is paying for computing without always-on machines different from paying for dedicated machines?",
+  "question_en": "How is paying for computing without always-on machines different from paying for dedicated machines?",
+  "decision": "keep",
+  "reason": ""
+ },
+ {
+  "pid": "p012",
+  "parent": "q009",
+  "type": "vague",
+  "question": "What's the difference in how you pay for the newer kind of internet computing compared to the older kind?",
+  "question_en": "What's the difference in how you pay for the newer kind of internet computing compared to the older kind?",
+  "decision": "keep",
+  "reason": ""
+ },
+ {
+  "pid": "p013",
+  "parent": "q010",
+  "type": "meta",
+  "question": "When did computing without dedicated servers gain popularity, and with which specific offering?",
+  "question_en": "When did computing without dedicated servers gain popularity, and with which specific offering?",
+  "decision": "keep",
+  "reason": ""
+ },
+ {
+  "pid": "p014",
+  "parent": "q010",
+  "type": "short",
+  "question": "Serverless popularity start?",
+  "question_en": "Serverless popularity start?",
+  "decision": "drop",
+  "reason": "same_need: The paraphrase asks for less information than the original question, omitting the 'with which service' part."
+ },
+ {
+  "pid": "p015",
+  "parent": "q012",
+  "type": "greek",
+  "question": "Τι είναι η υπολογιστική ως υπηρεσία κοινής ωφέλειας;",
+  "question_en": "What is computing as a public service?",
+  "decision": "drop",
+  "reason": "περιέχει keyword «public»"
+ },
+ {
+  "pid": "p016",
+  "parent": "q012",
+  "type": "nojargon",
+  "question": "How is computing offered like a public service defined?",
+  "question_en": "How is computing offered like a public service defined?",
+  "decision": "drop",
+  "reason": "περιέχει keyword «public»"
+ },
+ {
+  "pid": "p017",
+  "parent": "q013",
+  "type": "vague",
+  "question": "What are the big problems that the papers say make using internet-based computing difficult?",
+  "question_en": "What are the big problems that the papers say make using internet-based computing difficult?",
+  "decision": "keep",
+  "reason": ""
+ },
+ {
+  "pid": "p018",
+  "parent": "q013",
+  "type": "meta",
+  "question": "Which ten major challenges of internet-based computing does the paper list?",
+  "question_en": "Which ten major challenges of internet-based computing does the paper list?",
+  "decision": "keep",
+  "reason": ""
+ },
+ {
+  "pid": "p019",
+  "parent": "q015",
+  "type": "short",
+  "question": "Τι είναι η αρχική καθυστέρηση;",
+  "question_en": "What is the initial delay?",
+  "decision": "drop",
+  "reason": "same_need: The paraphrase asks for a definition of 'initial delay' which is too generic compared to 'cold start in serverless computing'."
+ },
+ {
+  "pid": "p020",
+  "parent": "q015",
+  "type": "greek",
+  "question": "Τι σημαίνει η απρόβλεπτη καθυστέρηση στην πρώτη εκκίνηση μιας μικρής λειτουργίας στο cloud;",
+  "question_en": "What does the unpredictable delay mean for a small cloud function's first start?",
+  "decision": "drop",
+  "reason": "περιέχει keyword «startup»"
+ },
+ {
+  "pid": "p021",
+  "parent": "q016",
+  "type": "nojargon",
+  "question": "Γιατί το μοντέλο υπολογισμών που εκτελεί κώδικα χωρίς να χρειάζεται να διαχειρίζεσαι υποδομή, κάνει ευκολότερη την ανάπτυξη εφαρμογών στο διαδίκτυο;",
+  "question_en": "Why does the computing model that executes code without needing to manage infrastructure make application development easier on the internet?",
+  "decision": "keep",
+  "reason": ""
+ },
+ {
+  "pid": "p022",
+  "parent": "q016",
+  "type": "vague",
+  "question": "Πώς βοηθάει τους προγραμματιστές η προσέγγιση που δεν απαιτεί διαχείριση μηχανημάτων, όταν φτιάχνουν εφαρμογές;",
+  "question_en": "How does the approach that doesn't require machine management help developers when building applications?",
+  "decision": "keep",
+  "reason": ""
+ },
+ {
+  "pid": "p023",
+  "parent": "q017",
+  "type": "meta",
+  "question": "Τι λένε οι συγγραφείς του κειμένου που αναλύει τις τρέχουσες τάσεις στους υπολογισμούς χωρίς διακομιστές, για το πώς η κακή χρήση από κάποιον επηρεάζει τους άλλους;",
+  "question_en": "What do the authors of the text analyzing current trends in computing without servers say about how misuse by one person affects others?",
+  "decision": "drop",
+  "reason": "same_need/unique: The paraphrase is too generic and could refer to any shared resource problem, not specifically 'reputation fate sharing' in serverless computing. It could also fit the 'Security concerns' section in [1812.03651.pdf p.7]."
+ },
+ {
+  "pid": "p024",
+  "parent": "q017",
+  "type": "short",
+  "question": "Κίνδυνος κοινών πόρων;",
+  "question_en": "Risk of shared resources?",
+  "decision": "drop",
+  "reason": "same_need/unique: The paraphrase is too generic and could refer to any shared resource problem, not specifically 'reputation fate sharing' in serverless computing. It could also fit the 'Security concerns' section in [1812.03651.pdf p.7]."
+ },
+ {
+  "pid": "p025",
+  "parent": "q018",
+  "type": "greek",
+  "question": "Τι πιστεύουν οι συγγραφείς ότι θα γίνει με την τεχνολογία που τρέχει κώδικα χωρίς να χρειάζεται να ασχολείσαι με υπολογιστές, στο μέλλον;",
+  "question_en": "What do the authors believe will happen with the technology that runs code without needing to deal with computers, in the future?",
+  "decision": "keep",
+  "reason": ""
+ },
+ {
+  "pid": "p026",
+  "parent": "q018",
+  "type": "nojargon",
+  "question": "Τι προβλέπει το κείμενο για την εξέλιξη της αρχιτεκτονικής όπου οι προγραμματιστές δεν διαχειρίζονται υποδομή;",
+  "question_en": "What does the text predict for the evolution of the architecture where developers don't manage infrastructure?",
+  "decision": "keep",
+  "reason": ""
+ },
+ {
+  "pid": "p027",
+  "parent": "q021",
+  "type": "vague",
+  "question": "Ποιες συγκεκριμένες διαδικτυακές υπηρεσίες αναφέρονται ως παραδείγματα αυτού του μοντέλου λειτουργίας χωρίς δική σου υποδομή;",
+  "question_en": "Which specific online services are mentioned as examples of this operating model without your own infrastructure?",
+  "decision": "keep",
+  "reason": ""
+ },
+ {
+  "pid": "p028",
+  "parent": "q021",
+  "type": "meta",
+  "question": "Ποιες υπηρεσίες της Amazon και της Google δίνονται ως παραδείγματα αυτών των προσφορών από το κείμενο που αναλύει την πρόοδο και τις προκλήσεις των υπολογισμών χωρίς διακομιστές;",
+  "question_en": "Which Amazon and Google services are given as examples of these offerings by the text analyzing the progress and challenges of computing without servers?",
+  "decision": "keep",
+  "reason": ""
+ },
+ {
+  "pid": "p029",
+  "parent": "q022",
+  "type": "short",
+  "question": "Πέντε εφαρμογές που πιέζουν τα όρια;",
+  "question_en": "Five applications pushing limits?",
+  "decision": "keep",
+  "reason": ""
+ },
+ {
+  "pid": "p030",
+  "parent": "q022",
+  "type": "greek",
+  "question": "Ποιες πέντε εφαρμογές εξετάζει λεπτομερώς το κείμενο, ως περιπτώσεις που δυσκολεύουν τη σημερινή τεχνολογία όπου τρέχει κώδικας χωρίς δική σου υποδομή;",
+  "question_en": "Which five applications does the text analyze in detail, as cases that challenge today's technology where code runs without your own infrastructure?",
+  "decision": "keep",
+  "reason": ""
+ },
+ {
+  "pid": "p031",
+  "parent": "q023",
+  "type": "nojargon",
+  "question": "Ποια είναι τα βασικά μέρη της αρχιτεκτονικής του συστήματος της IBM που εκτελεί κώδικα με βάση γεγονότα;",
+  "question_en": "What are the main components of IBM's system architecture that executes code based on events?",
+  "decision": "keep",
+  "reason": ""
+ },
+ {
+  "pid": "p032",
+  "parent": "q023",
+  "type": "vague",
+  "question": "Ποια είναι τα κύρια δομικά στοιχεία της πλατφόρμας που περιγράφεται ως ανοιχτή και εκτελεί λειτουργίες κατ' απαίτηση;",
+  "question_en": "What are the main structural elements of the platform described as open and executing functions on demand?",
+  "decision": "keep",
+  "reason": ""
+ },
+ {
+  "pid": "p033",
+  "parent": "q024",
+  "type": "meta",
+  "question": "Για ποιες επιστημονικές χρήσεις δηλώνουν οι συγγραφείς του κειμένου για την απλοποιημένη επεξεργασία δεδομένων σε μεγάλα συμπλέγματα, ότι έχει χρησιμοποιηθεί το εργαλείο τους;",
+  "question_en": "For what scientific uses do the authors of the text on simplified data processing in large clusters state their tool has been used?",
+  "decision": "keep",
+  "reason": ""
+ },
+ {
+  "pid": "p034",
+  "parent": "q024",
+  "type": "short",
+  "question": "Επιστημονικές εφαρμογές του PyWren;",
+  "question_en": "Scientific applications of PyWren?",
+  "decision": "keep",
+  "reason": ""
+ },
+ {
+  "pid": "p035",
+  "parent": "q026",
+  "type": "greek",
+  "question": "Γιατί η αποθήκευση αρχείων όπως το S3 δεν είναι κατάλληλη για να μοιράζονται δεδομένα γρήγορα οι μικρές λειτουργίες που τρέχουν χωρίς δική σου υποδομή;",
+  "question_en": "Why is file storage like S3 not suitable for fast data sharing between small functions running without your own infrastructure?",
+  "decision": "keep",
+  "reason": ""
+ },
+ {
+  "pid": "p036",
+  "parent": "q026",
+  "type": "nojargon",
+  "question": "Γιατί οι υπηρεσίες αποθήκευσης αντικειμένων δεν επαρκούν για τη γρήγορη ανταλλαγή μικρών δεδομένων μεταξύ των λειτουργιών που εκτελούνται χωρίς διαχείριση υποδομής;",
+  "question_en": "Why are object storage services insufficient for fast exchange of small data between functions running without infrastructure management?",
+  "decision": "keep",
+  "reason": ""
+ },
+ {
+  "pid": "p037",
+  "parent": "q029",
+  "type": "vague",
+  "question": "Πώς εξασφαλίζει η μέθοδος επεξεργασίας δεδομένων σε μεγάλα συμπλέγματα το ίδιο τελικό αποτέλεσμα, ακόμα κι αν κάποια μηχανήματα αποτύχουν;",
+  "question_en": "How does the method for processing data in large clusters ensure the same final result, even if some machines fail?",
+  "decision": "keep",
+  "reason": ""
+ },
+ {
+  "pid": "p038",
+  "parent": "q029",
+  "type": "meta",
+  "question": "Πώς εγγυώνται οι συγγραφείς του κειμένου για την απλοποιημένη επεξεργασία δεδομένων σε μεγάλα συμπλέγματα, την ορθότητα του αποτελέσματος παρά τα προβλήματα των μηχανημάτων;",
+  "question_en": "How do the authors of the text on simplified data processing in large clusters guarantee the correctness of the result despite machine problems?",
+  "decision": "keep",
+  "reason": ""
+ },
+ {
+  "pid": "p039",
+  "parent": "q030",
+  "type": "short",
+  "question": "Γιατί 'πληρώνεις ό,τι χρησιμοποιείς' καλύτερο;",
+  "question_en": "Why 'pay as you go' better?",
+  "decision": "keep",
+  "reason": ""
+ },
+ {
+  "pid": "p040",
+  "parent": "q030",
+  "type": "greek",
+  "question": "Γιατί το κείμενο λέει ότι η φράση «πληρώνεις για ό,τι καταναλώνεις» δείχνει καλύτερα το κέρδος από το να μην αγοράζεις δικό σου εξοπλισμό;",
+  "question_en": "Why does the text say that the phrase 'pay for what you consume' better illustrates the benefit of not buying your own equipment?",
+  "decision": "keep",
+  "reason": ""
+ },
+ {
+  "pid": "p041",
+  "parent": "q032",
+  "type": "nojargon",
+  "question": "What solutions does the document suggest for the challenges of rapidly increasing system size and how software is paid for?",
+  "question_en": "What solutions does the document suggest for the challenges of rapidly increasing system size and how software is paid for?",
+  "decision": "keep",
+  "reason": ""
+ },
+ {
+  "pid": "p042",
+  "parent": "q032",
+  "type": "vague",
+  "question": "What does this paper say could help with the problems of making things bigger fast and how software is sold?",
+  "question_en": "What does this paper say could help with the problems of making things bigger fast and how software is sold?",
+  "decision": "keep",
+  "reason": ""
+ },
+ {
+  "pid": "p043",
+  "parent": "q033",
+  "type": "meta",
+  "question": "What software cost example do the authors give, and how do they compare the price of a common operating system in a cloud instance with its open-source alternative?",
+  "question_en": "What software cost example do the authors give, and how do they compare the price of a common operating system in a cloud instance with its open-source alternative?",
+  "decision": "keep",
+  "reason": ""
+ },
+ {
+  "pid": "p044",
+  "parent": "q033",
+  "type": "short",
+  "question": "Παράδειγμα κόστους λογισμικού και σύγκριση;",
+  "question_en": "Software cost example and comparison?",
+  "decision": "keep",
+  "reason": ""
+ },
+ {
+  "pid": "p045",
+  "parent": "q034",
+  "type": "greek",
+  "question": "Ποια λανθασμένη αντίληψη για την μεταφορά εφαρμογών που τρέχουν σε μικρές λειτουργίες αναγνωρίζει η μελέτη, και ποιο έργο αναφέρει ως βήμα προς την ευκολότερη μεταφορά;",
+  "question_en": "What mistaken belief about moving applications that run as small functions does the study identify, and which project does it mention as a step towards easier transfer?",
+  "decision": "keep",
+  "reason": ""
+ },
+ {
+  "pid": "p046",
+  "parent": "q034",
+  "type": "nojargon",
+  "question": "What wrong idea about moving small, on-demand programs between different providers does the paper point out, and which initiative is mentioned as a step towards making this easier?",
+  "question_en": "What wrong idea about moving small, on-demand programs between different providers does the paper point out, and which initiative is mentioned as a step towards making this easier?",
+  "decision": "keep",
+  "reason": ""
+ },
+ {
+  "pid": "p047",
+  "parent": "q035",
+  "type": "vague",
+  "question": "How does this document respond to the claim that on-demand computing functions can't handle quick responses?",
+  "question_en": "How does this document respond to the claim that on-demand computing functions can't handle quick responses?",
+  "decision": "keep",
+  "reason": ""
+ },
+ {
+  "pid": "p048",
+  "parent": "q035",
+  "type": "meta",
+  "question": "How do the authors of the paper about tiny cloud functions respond to the claim that these functions cannot serve low-latency applications?",
+  "question_en": "How do the authors of the paper about tiny cloud functions respond to the claim that these functions cannot serve low-latency applications?",
+  "decision": "keep",
+  "reason": ""
+ },
+ {
+  "pid": "p049",
+  "parent": "q037",
+  "type": "short",
+  "question": "Επέκταση μικρών λειτουργιών πέρα από cloud;",
+  "question_en": "Extension of small functions beyond cloud?",
+  "decision": "keep",
+  "reason": ""
+ },
+ {
+  "pid": "p050",
+  "parent": "q037",
+  "type": "greek",
+  "question": "Τι αναφέρει το κείμενο για την εξάπλωση των μικρών λειτουργιών έξω από τις συνηθισμένες πλατφόρμες cloud;",
+  "question_en": "What does the text mention about the spread of small functions outside of traditional cloud platforms?",
+  "decision": "keep",
+  "reason": ""
+ },
+ {
+  "pid": "p051",
+  "parent": "q038",
+  "type": "nojargon",
+  "question": "Why does the document argue that using tiny, on-demand computing functions hinders progress in software that uses specialized hardware?",
+  "question_en": "Why does the document argue that using tiny, on-demand computing functions hinders progress in software that uses specialized hardware?",
+  "decision": "drop",
+  "reason": "περιέχει keyword «hardware-accelerated»"
+ },
+ {
+  "pid": "p052",
+  "parent": "q038",
+  "type": "vague",
+  "question": "Why does this document claim that using small, event-driven programs slows down new ideas for special computer parts?",
+  "question_en": "Why does this document claim that using small, event-driven programs slows down new ideas for special computer parts?",
+  "decision": "keep",
+  "reason": ""
+ },
+ {
+  "pid": "p053",
+  "parent": "q039",
+  "type": "meta",
+  "question": "What do the authors of the paper criticizing serverless computing mean by adaptable placement of programs and information?",
+  "question_en": "What do the authors of the paper criticizing serverless computing mean by adaptable placement of programs and information?",
+  "decision": "keep",
+  "reason": ""
+ },
+ {
+  "pid": "p054",
+  "parent": "q039",
+  "type": "short",
+  "question": "Ευέλικτη τοποθέτηση κώδικα και δεδομένων;",
+  "question_en": "Flexible code and data placement?",
+  "decision": "keep",
+  "reason": ""
+ },
+ {
+  "pid": "p055",
+  "parent": "q040",
+  "type": "greek",
+  "question": "Πώς αξιολογήθηκε το σύστημα ExCamera και ποιο ήταν το βασικό του αποτέλεσμα;",
+  "question_en": "How was the ExCamera system evaluated and what was its main result?",
+  "decision": "keep",
+  "reason": ""
+ },
+ {
+  "pid": "p056",
+  "parent": "q040",
+  "type": "nojargon",
+  "question": "What four factors were used to assess the ExCamera system, and what was the main finding?",
+  "question_en": "What four factors were used to assess the ExCamera system, and what was the main finding?",
+  "decision": "keep",
+  "reason": ""
+ },
+ {
+  "pid": "p057",
+  "parent": "q041",
+  "type": "vague",
+  "question": "How do the counting mechanisms work in the data processing framework described?",
+  "question_en": "How do the counting mechanisms work in the data processing framework described?",
+  "decision": "keep",
+  "reason": ""
+ },
+ {
+  "pid": "p058",
+  "parent": "q041",
+  "type": "meta",
+  "question": "How do the authors describe the operation of the counting feature in their data processing system?",
+  "question_en": "How do the authors describe the operation of the counting feature in their data processing system?",
+  "decision": "keep",
+  "reason": ""
+ },
+ {
+  "pid": "p059",
+  "parent": "q042",
+  "type": "short",
+  "question": "Επίδραση εφεδρικών εργασιών σε χρόνο ταξινόμησης;",
+  "question_en": "Impact of backup tasks on sort time?",
+  "decision": "keep",
+  "reason": ""
+ },
+ {
+  "pid": "p060",
+  "parent": "q042",
+  "type": "greek",
+  "question": "Πώς επηρεάζουν οι εφεδρικές εργασίες και οι βλάβες υπολογιστών τον χρόνο που χρειάζεται για την ταξινόμηση δεδομένων;",
+  "question_en": "How do backup tasks and computer failures affect the time it takes to sort data?",
+  "decision": "keep",
+  "reason": ""
+ },
+ {
+  "pid": "p061",
+  "parent": "q043",
+  "type": "nojargon",
+  "question": "How does the PyWren system prepare and run a user's Python code on the cloud's processing units?",
+  "question_en": "How does the PyWren system prepare and run a user's Python code on the cloud's processing units?",
+  "decision": "keep",
+  "reason": ""
+ },
+ {
+  "pid": "p062",
+  "parent": "q043",
+  "type": "vague",
+  "question": "What's the process for getting someone's Python code to run using that serverless framework, especially for putting it together and running it?",
+  "question_en": "What's the process for getting someone's Python code to run using that serverless framework, especially for putting it together and running it?",
+  "decision": "drop",
+  "reason": "self_contained: The paraphrase refers to 'that serverless framework' without identifying it within the question itself."
+ },
+ {
+  "pid": "p063",
+  "parent": "q045",
+  "type": "meta",
+  "question": "How do the Berkeley paper on cloud computing and the critical paper from CIDR describe the problems with data storage in serverless systems?",
+  "question_en": "How do the Berkeley paper on cloud computing and the critical paper from CIDR describe the problems with data storage in serverless systems?",
+  "decision": "keep",
+  "reason": ""
+ },
+ {
+  "pid": "p064",
+  "parent": "q045",
+  "type": "greek",
+  "question": "Πώς βλέπουν το ζήτημα της αποθήκευσης δεδομένων σε συστήματα χωρίς servers η άποψη του Berkeley και η κριτική του συνεδρίου CIDR;",
+  "question_en": "How do the Berkeley view and the CIDR conference critique see the issue of data storage in serverless systems?",
+  "decision": "keep",
+  "reason": ""
+ },
+ {
+  "pid": "p065",
+  "parent": "q046",
+  "type": "nojargon",
+  "question": "How does the MapReduce approach deal with processing units that stop working, and how does the PyWren system instead let the service provider handle such failures?",
+  "question_en": "How does the MapReduce approach deal with processing units that stop working, and how does the PyWren system instead let the service provider handle such failures?",
+  "decision": "keep",
+  "reason": ""
+ },
+ {
+  "pid": "p066",
+  "parent": "q046",
+  "type": "vague",
+  "question": "What's the difference in how MapReduce recovers from a computer stopping, compared to how that other serverless framework leaves the recovery up to the cloud company?",
+  "question_en": "What's the difference in how MapReduce recovers from a computer stopping, compared to how that other serverless framework leaves the recovery up to the cloud company?",
+  "decision": "drop",
+  "reason": "self_contained: The paraphrase refers to 'that other serverless framework' without identifying it within the question itself."
+ },
+ {
+  "pid": "p067",
+  "parent": "q052",
+  "type": "meta",
+  "question": "What happens when a computer stops working during a task in the video processing framework, and how do the authors of the PyWren paper say their method handles this differently?",
+  "question_en": "What happens when a computer stops working during a task in the video processing framework, and how do the authors of the PyWren paper say their method handles this differently?",
+  "decision": "keep",
+  "reason": ""
+ },
+ {
+  "pid": "p068",
+  "parent": "q052",
+  "type": "greek",
+  "question": "Πώς αντιδρά το πλαίσιο mu της ExCamera αν σταματήσει ένας υπολογιστής στη μέση μιας εργασίας, και πώς το μοντέλο του PyWren, που δεν κρατάει κατάσταση, χειρίζεται διαφορετικά την ίδια βλάβη;",
+  "question_en": "How does ExCamera's mu framework react if a computer stops in the middle of a task, and how does PyWren's stateless model handle the same failure differently?",
+  "decision": "keep",
+  "reason": ""
+ },
+ {
+  "pid": "p069",
+  "parent": "q053",
+  "type": "nojargon",
+  "question": "The critical paper says cloud functions can't directly talk to each other and must use slow storage. What method allows the video processing system's components to communicate directly, and how much faster is this direct communication according to the critical paper's own findings?",
+  "question_en": "The critical paper says cloud functions can't directly talk to each other and must use slow storage. What method allows the video processing system's components to communicate directly, and how much faster is this direct communication according to the critical paper's own findings?",
+  "decision": "keep",
+  "reason": ""
+ },
+ {
+  "pid": "p070",
+  "parent": "q053",
+  "type": "vague",
+  "question": "There's a claim that cloud functions can't chat directly, but that video system has a way for its parts to talk. How much quicker is that direct talking compared to other methods, based on some measurements?",
+  "question_en": "There's a claim that cloud functions can't chat directly, but that video system has a way for its parts to talk. How much quicker is that direct talking compared to other methods, based on some measurements?",
+  "decision": "drop",
+  "reason": "self_contained: The paraphrase refers to 'that video system' without identifying it within the question itself."
+ },
+ {
+  "pid": "p071",
+  "parent": "q054",
+  "type": "meta",
+  "question": "The 2009 Berkeley paper on cloud computing sets out principles for cloud flexibility. How does the 2019 Berkeley paper on serverless computing apply a similar idea to temporary data storage?",
+  "question_en": "The 2009 Berkeley paper on cloud computing sets out principles for cloud flexibility. How does the 2019 Berkeley paper on serverless computing apply a similar idea to temporary data storage?",
+  "decision": "keep",
+  "reason": ""
+ },
+ {
+  "pid": "p072",
+  "parent": "q054",
+  "type": "greek",
+  "question": "Το 'Above the Clouds' (2009) μιλάει για την ευελιξία του νέφους. Πώς χρησιμοποιεί την ίδια ιδέα η άποψη του Berkeley (2019) για τα συστήματα χωρίς servers, όσον αφορά την προσωρινή αποθήκευση;",
+  "question_en": "''Above the Clouds' (2009) talks about cloud flexibility. How does the Berkeley view (2019) for serverless systems use the same idea regarding temporary storage?",
+  "decision": "keep",
+  "reason": ""
+ },
+ {
+  "pid": "p073",
+  "parent": "q056",
+  "type": "nojargon",
+  "question": "Both the video processing system and PyWren run heavy calculations on a service meant for small tasks. What kind of math test does each use to show its raw computing power, and what's the highest total power they report?",
+  "question_en": "Both the video processing system and PyWren run heavy calculations on a service meant for small tasks. What kind of math test does each use to show its raw computing power, and what's the highest total power they report?",
+  "decision": "keep",
+  "reason": ""
+ },
+ {
+  "pid": "p074",
+  "parent": "q056",
+  "type": "vague",
+  "question": "What kind of calculation test do those two cloud function systems use to show how much raw processing they can do, and what's the biggest number they got?",
+  "question_en": "What kind of calculation test do those two cloud function systems use to show how much raw processing they can do, and what's the biggest number they got?",
+  "decision": "keep",
+  "reason": ""
+ },
+ {
+  "pid": "p075",
+  "parent": "q057",
+  "type": "meta",
+  "question": "The 2019 Berkeley serverless paper highlights the ExCamera system as an example of communicating cloud functions. What method does the ExCamera paper itself use to maintain good compression when splitting video processing into many small tasks?",
+  "question_en": "The 2019 Berkeley serverless paper highlights the ExCamera system as an example of communicating cloud functions. What method does the ExCamera paper itself use to maintain good compression when splitting video processing into many small tasks?",
+  "decision": "keep",
+  "reason": ""
+ },
+ {
+  "pid": "p076",
+  "parent": "q057",
+  "type": "greek",
+  "question": "Η άποψη του Berkeley (2019) αναφέρει την ExCamera ως παράδειγμα για συναρτήσεις νέφους που επικοινωνούν. Τι τεχνική χρησιμοποιεί η ίδια η ExCamera για να διατηρήσει την απόδοση συμπίεσης όταν χωρίζει την κωδικοποίηση σε χιλιάδες μικρές εργασίες;",
+  "question_en": "The Berkeley view (2019) mentions ExCamera as an example of communicating cloud functions. What technique does ExCamera itself use to maintain compression efficiency when splitting encoding into thousands of tiny tasks?",
+  "decision": "drop",
+  "reason": "περιέχει keyword «video encoding»"
+ },
+ {
+  "pid": "p077",
+  "parent": "q059",
+  "type": "nojargon",
+  "question": "The Berkeley view (2019) defines serverless as functions plus other services. What warning does Baldini et al. give about relying on a provider's ecosystem of these other services?",
+  "question_en": "The Berkeley view (2019) defines serverless as functions plus other services. What warning does Baldini et al. give about relying on a provider's ecosystem of these other services?",
+  "decision": "keep",
+  "reason": ""
+ },
+ {
+  "pid": "p078",
+  "parent": "q059",
+  "type": "vague",
+  "question": "If serverless means using small functions and a bunch of other tools, what's that paper by Baldini and others say about depending too much on a single company's set of tools?",
+  "question_en": "If serverless means using small functions and a bunch of other tools, what's that paper by Baldini and others say about depending too much on a single company's set of tools?",
+  "decision": "keep",
+  "reason": ""
+ },
+ {
+  "pid": "p079",
+  "parent": "q060",
+  "type": "meta",
+  "question": "MapReduce and the video processing system both use many computers for parallel work but divide it differently. What's the smallest unit of work each targets, and why can't a typical video encoder be split the MapReduce way, according to the papers?",
+  "question_en": "MapReduce and the video processing system both use many computers for parallel work but divide it differently. What's the smallest unit of work each targets, and why can't a typical video encoder be split the MapReduce way, according to the papers?",
+  "decision": "keep",
+  "reason": ""
+ },
+ {
+  "pid": "p080",
+  "parent": "q060",
+  "type": "greek",
+  "question": "Το MapReduce και η ExCamera μοιράζουν εργασία σε πολλούς υπολογιστές, αλλά με διαφορετικό τρόπο. Ποια είναι η μικρότερη μονάδα παράλληλης εργασίας για το καθένα, και γιατί δεν μπορεί να χωριστεί ένας τυπικός κωδικοποιητής βίντεο με τον τρόπο του MapReduce;",
+  "question_en": "MapReduce and ExCamera both divide work among many computers, but in different ways. What is the smallest unit of parallel work for each, and why can't a typical video encoder be split the MapReduce way?",
+  "decision": "keep",
+  "reason": ""
+ }
+]

@@ -28,14 +28,16 @@
 οπότε τα ξεχωρίζουμε ΡΗΤΑ αντί για το heuristic του _safe_chunk_text (που
 έπιανε το thinking μόνο έμμεσα, μέσω exception στο chunk.text).
 """
+
 import asyncio
 import json
 
 import httpx
 from loguru import logger
 
-ENDPOINT = ("https://generativelanguage.googleapis.com/v1beta/models/"
-            "{model}:streamGenerateContent?alt=sse")
+ENDPOINT = (
+    "https://generativelanguage.googleapis.com/v1beta/models/{model}:streamGenerateContent?alt=sse"
+)
 
 # Ξεχωριστά timeouts: το connect πρέπει να αποτύχει γρήγορα, αλλά το read
 # περιμένει ολόκληρη τη γέννηση — με μεγάλο context και πολλά output tokens
@@ -43,12 +45,22 @@ ENDPOINT = ("https://generativelanguage.googleapis.com/v1beta/models/"
 TIMEOUT = httpx.Timeout(connect=15.0, read=180.0, write=30.0, pool=15.0)
 
 
-async def stream_generate(prompt: str, *, model: str, api_key: str,
-                          temperature: float = 0.1,
-                          max_output_tokens: int = 4096,
-                          thinking_budget: int | None = 0,
-                          retries: int = 5):
+async def stream_generate(
+    prompt: str,
+    *,
+    model: str,
+    api_key: str,
+    temperature: float = 0.1,
+    max_output_tokens: int = 4096,
+    thinking_budget: int | None = 0,
+    retries: int = 5,
+    with_finish: bool = False,
+):
     """Async generator που δίνει ('text', str) και στο τέλος ('usage', dict).
+
+    with_finish=True: δίνει ΚΑΙ ('finish', finishReason) — ΓΙΑΤΙ σταμάτησε το μοντέλο.
+    OFF by default: οι υπάρχοντες καταναλωτές (ai_core, tests) θεωρούν ό,τι δεν
+    είναι 'text' ως usage, και ένα νέο είδος θα τους έσπαγε.
 
     thinking_budget: 0 = σβηστό (default), None = άσε το μοντέλο να αποφασίσει
     (η προηγούμενη συμπεριφορά), θετικός αριθμός = ανώτατο όριο thinking tokens.
@@ -68,8 +80,7 @@ async def stream_generate(prompt: str, *, model: str, api_key: str,
         },
     }
     if thinking_budget is not None:
-        body["generationConfig"]["thinkingConfig"] = {
-            "thinkingBudget": thinking_budget}
+        body["generationConfig"]["thinkingConfig"] = {"thinkingBudget": thinking_budget}
 
     url = ENDPOINT.format(model=model)
     headers = {"x-goog-api-key": api_key, "Content-Type": "application/json"}
@@ -93,10 +104,8 @@ async def stream_generate(prompt: str, *, model: str, api_key: str,
                     # άκυρο κλειδί) -> retry = 62s καθυστέρηση πριν το ίδιο
                     # ακριβώς σφάλμα.
                     if response.status_code >= 500:
-                        raise _ServerError(
-                            f"Gemini REST {response.status_code}: {raw}", hint)
-                    raise RuntimeError(
-                        f"Gemini REST {response.status_code}: {raw}")
+                        raise _ServerError(f"Gemini REST {response.status_code}: {raw}", hint)
+                    raise RuntimeError(f"Gemini REST {response.status_code}: {raw}")
 
                 async for line in response.aiter_lines():
                     if not line.startswith("data: "):
@@ -115,6 +124,8 @@ async def stream_generate(prompt: str, *, model: str, api_key: str,
                             if text:
                                 emitted = True
                                 yield ("text", text)
+                        if with_finish and cand.get("finishReason"):
+                            yield ("finish", cand["finishReason"])
                     if "usageMetadata" in payload:
                         yield ("usage", payload["usageMetadata"])
             return
@@ -122,8 +133,13 @@ async def stream_generate(prompt: str, *, model: str, api_key: str,
             # Ο χρήστης έκλεισε τη σύνδεση -> προς τα πάνω, ώστε το FastAPI να
             # κλείσει το socket και να μη χρεωνόμαστε άλλα tokens (FinOps).
             raise
-        except (_Retryable, httpx.ReadTimeout, httpx.ConnectTimeout,
-                httpx.RemoteProtocolError, httpx.ConnectError) as e:
+        except (
+            _Retryable,
+            httpx.ReadTimeout,
+            httpx.ConnectTimeout,
+            httpx.RemoteProtocolError,
+            httpx.ConnectError,
+        ) as e:
             if emitted or attempt == retries - 1:
                 raise
             wait = min(32, 2 ** (attempt + 1))  # 2,4,8,16,32
@@ -134,8 +150,9 @@ async def stream_generate(prompt: str, *, model: str, api_key: str,
             hint = getattr(e, "retry_after", None)
             if hint is not None:
                 wait = min(60.0, max(wait, hint))
-            logger.warning(f"Gemini REST ({type(e).__name__}). Retry σε {wait}s... "
-                           f"[{attempt + 1}/{retries}]")
+            logger.warning(
+                f"Gemini REST ({type(e).__name__}). Retry σε {wait}s... [{attempt + 1}/{retries}]"
+            )
             await asyncio.sleep(wait)
     raise RuntimeError("Gemini REST: εξάντληση retries.")
 
@@ -175,11 +192,16 @@ def _retry_after(headers) -> float | None:
         return None
 
 
-async def generate_once(prompt: str, *, model: str, api_key: str,
-                        temperature: float = 0.1,
-                        max_output_tokens: int = 256,
-                        thinking_budget: int | None = 0,
-                        retries: int = 5) -> str:
+async def generate_once(
+    prompt: str,
+    *,
+    model: str,
+    api_key: str,
+    temperature: float = 0.1,
+    max_output_tokens: int = 256,
+    thinking_budget: int | None = 0,
+    retries: int = 5,
+) -> str:
     """Μία σύντομη, ΜΗ streaming απάντηση (μετάφραση ερωτήματος, query rewrite).
 
     Χτίζεται πάνω στο stream_generate αντί για ξεχωριστό endpoint: ένα μονοπάτι
@@ -193,13 +215,29 @@ async def generate_once(prompt: str, *, model: str, api_key: str,
       • max_output_tokens=256 αντί για 4096 — καπάκι κόστους χωρίς κανένα ρίσκο
         κοψίματος σε έξοδο αυτού του μεγέθους.
     """
-    parts = []
+    # ΜΙΣΗ ΑΠΑΝΤΗΣΗ = ΣΦΑΛΜΑ, ΟΧΙ ΑΠΟΤΕΛΕΣΜΑ (25/9/2026): η μετάφραση της q025
+    # βγήκε «cost per» και ΚΛΕΙΔΩΘΗΚΕ στο cache (MRR 1.0 -> 0.33 σε κάθε τρέξιμο).
+    # Το ίδιο prompt 5 φορές: 5/5 ολόκληρες, finishReason=STOP — σπάνια κακή κλήση
+    # που περνούσε σιωπηλά επειδή κανείς δεν κοίταζε ΓΙΑΤΙ σταμάτησε το μοντέλο.
+    # Κάθε καλών έχει ήδη except με ασφαλή εναλλακτική (η μετάφραση γυρνά την
+    # αρχική ερώτηση ΧΩΡΙΣ να τη βάλει στο cache).
+    parts, finish = [], None
     async for kind, data in stream_generate(
-            prompt, model=model, api_key=api_key, temperature=temperature,
-            max_output_tokens=max_output_tokens,
-            thinking_budget=thinking_budget, retries=retries):
+        prompt,
+        model=model,
+        api_key=api_key,
+        temperature=temperature,
+        max_output_tokens=max_output_tokens,
+        thinking_budget=thinking_budget,
+        retries=retries,
+        with_finish=True,
+    ):
         if kind == "text":
             parts.append(data)
+        elif kind == "finish":
+            finish = data
+    if finish != "STOP":
+        raise RuntimeError(f"Gemini REST: ημιτελής απάντηση (finishReason={finish})")
     return "".join(parts)
 
 

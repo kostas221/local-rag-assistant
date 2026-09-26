@@ -5,6 +5,96 @@
 
 ---
 
+## 🚀 Εγκατάσταση και εκτέλεση από το μηδέν
+
+**Προαπαιτούμενα:** Docker & Docker Compose. ~6GB ελεύθερος χώρος (2.4GB μοντέλα
++ images + volumes). Καμία άλλη εγκατάσταση — ούτε Python, ούτε Postgres.
+
+**1. Κατέβασμα του κώδικα**
+
+```bash
+git clone <repo-url> rag-v2
+cd rag-v2
+```
+
+Για την έκδοση πάνω στην οποία έγιναν οι μετρήσεις της διπλωματικής:
+`git checkout v1.0-thesis`.
+
+**2. Ρυθμίσεις**
+
+```bash
+cp .env.example .env
+```
+
+Συμπλήρωσε στο `.env` τρεις τιμές (το αρχείο είναι gitignored):
+
+| Μεταβλητή | Τιμή |
+|---|---|
+| `GEMINI_API_KEY` | από <https://aistudio.google.com/apikey> |
+| `POSTGRES_PASSWORD` | οτιδήποτε δυνατό |
+| `SECRET_KEY` | `openssl rand -hex 32` |
+
+Χωρίς `SECRET_KEY` και `DATABASE_URL` το backend **σταματά επίτηδες** στην
+εκκίνηση αντί να ξεκινήσει με ανασφαλείς προεπιλογές.
+
+**3. Χτίσιμο και εκκίνηση**
+
+```bash
+docker compose up --build -d
+```
+
+**4. Πρώτο ξεκίνημα — περίμενε**
+
+Το backend κατεβάζει και φορτώνει ~2.4GB μοντέλων (bge-m3 + cross-encoder).
+Γι' αυτό ο healthcheck έχει `start_period: 300s` και το frontend δεν ξεκινά
+πριν το backend γίνει `healthy` (`condition: service_healthy`). Παρακολούθηση:
+
+```bash
+docker compose logs -f backend
+```
+
+Τα μοντέλα μένουν στο named volume `huggingface_cache`, οπότε τα επόμενα
+ξεκινήματα είναι γρήγορα.
+
+**5. Πρόσβαση**
+
+| Υπηρεσία | Διεύθυνση |
+|---|---|
+| UI (Streamlit) | <http://localhost:8502> |
+| API docs | <http://127.0.0.1:8010/docs> — μόνο τοπικά |
+| Postgres | `127.0.0.1:5434` — μόνο τοπικά |
+
+Οι θύρες του host είναι μετατοπισμένες ώστε να μη συγκρούονται με την v1 αν
+τρέχει παράλληλα (v1: 8501 / 8000 / 5432).
+
+**6. Έλεγχος ότι δουλεύει**
+
+```bash
+docker compose ps                       # και τα τρία up, backend healthy
+curl http://127.0.0.1:8010/health       # {"status":"ok"}
+```
+
+Μετά: εγγραφή χρήστη στο UI, ανέβασμα ενός PDF, αναμονή μέχρι να γίνει `ready`,
+και μια ερώτηση πάνω του.
+
+**7. Σταμάτημα**
+
+```bash
+docker compose down      # κρατάει βάση, ChromaDB και μοντέλα
+docker compose down -v   # ΣΒΗΝΕΙ τα πάντα, μαζί και τα 2.4GB μοντέλων
+```
+
+**Δοκιμή από άλλους χωρίς server.** Προσωρινή δημόσια διεύθυνση προς το
+τοπικό UI, όσο μένει ανοιχτό το παράθυρο:
+
+```bash
+cloudflared tunnel --url http://localhost:8502
+```
+
+Δεν είναι φιλοξενία — η εφαρμογή εξακολουθεί να τρέχει στο μηχάνημά σου.
+
+---
+
 ## 📋 Βήμα 0 — Τι να μάθω από τον καθηγητή/admin (ΠΡΙΝ αγγίξω τον server)
 
 Πριν κάνω οποιαδήποτε ενέργεια, μαζεύω αυτές τις πληροφορίες. Κάθε απάντηση «κλειδώνει» μια απόφαση παρακάτω.
@@ -65,7 +155,7 @@
 ## ✅ Ολοκληρώθηκαν (code / config — στο repo)
 
 **Ασφάλεια & deploy-hardening**
-- **Πόρτες:** `db` (5432) & `backend` (8000) δεμένα σε `127.0.0.1` (όχι εκτεθειμένα στο δίκτυο)· `frontend` (8501) = το UI.
+- **Πόρτες:** `db` (host 5434) & `backend` (host 8010) δεμένα σε `127.0.0.1` (όχι εκτεθειμένα στο δίκτυο)· `frontend` (host 8502) = το UI.
 - **CORS env-configurable:** `ALLOWED_ORIGINS` (comma-separated, default τοπικό Streamlit).
 - **Rate-limiting login** με bounded memory (όχι unbounded leak).
 - **Orphaned upload files:** το `delete_document` σβήνει πλέον και το PDF από τον δίσκο.
@@ -92,10 +182,10 @@
   Χωρίς αυτό οι κωδικοί πάνε plaintext. (Caddy = ~5 γραμμές, auto-certs.)
 - **Τιμές secrets στο `.env` του server:** `SECRET_KEY`=`openssl rand -hex 32`,
   δυνατό `POSTGRES_PASSWORD`, **paid** `GEMINI_API_KEY`, `ALLOWED_ORIGINS`=το πραγματικό domain.
-- **Frontend πίσω από proxy:** στον server δέσε `127.0.0.1:8501:8501` και βγάλε το έξω μέσω του proxy (443).
+- **Frontend πίσω από proxy:** στον server δέσε `127.0.0.1:8502:8501` και βγάλε το έξω μέσω του proxy (443).
 
 ### 🟡 Δίκτυο / δεδομένα / λειτουργία
-- **Firewall:** δημόσιο μόνο 443 (+22 SSH). Κλειστά 8000/8501/5432.
+- **Firewall:** δημόσιο μόνο 443 (+22 SSH). Κλειστά 8010/8502/5434.
 - **Backups (scheduling):** το script υπάρχει — βάλ' το σε cron (π.χ. καθημερινά). 
 - **Καθαρό ξεκίνημα:** ο server με άδεια volumes (ή pre-load papers). Μην κουβαλήσεις τα dev volumes.
 - **ΜΟΝΟ 1 backend instance** (ChromaDB single-writer) — όχι `--workers`/replicas.
@@ -108,7 +198,7 @@
 ---
 
 ## Πώς το τεστάρουν χρήστες
-- **Γρήγορα (χωρίς server):** `ngrok http 8501` → προσωρινό δημόσιο **HTTPS** link. (Τρέχει στο PC σου: αργό CPU, πρέπει να μένει ανοιχτό.)
+- **Γρήγορα (χωρίς server):** `cloudflared tunnel --url http://localhost:8502` → προσωρινό δημόσιο **HTTPS** link. (Τρέχει στο PC σου: αργό CPU, πρέπει να μένει ανοιχτό.)
 - **Κανονικά:** ο server με τα παραπάνω.
 
 ## 📊 Μετρήσεις (τοπικά, CPU — Ryzen 7 5700X)

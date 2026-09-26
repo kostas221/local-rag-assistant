@@ -1,0 +1,30 @@
+{
+  "1702.04024.pdf": {
+    "domain": "Distributed Computing",
+    "terms": "PyWren, AWS Lambda, Apache Hadoop, Apache Spark, PySpark, HDFS, Yarn, JVM, EC2, S3, OpenBLAS, Intel MKL, Redis, HOGWILD!, Daytona sort"
+  },
+  "1706.03178.pdf": {
+    "domain": "Serverless Computing",
+    "terms": "Infrastructure-as-a-Service (IaaS), Platform-as-a-Service (PaaS), Function-as-a-Service (FaaS), AWS Lambda, Google Cloud Functions, Microsoft Azure Functions, IBM OpenWhisk, OpenLambda, Kratos, LeverOS, Zappa, Chalice, Open Stack, cold start, scale to zero"
+  },
+  "1812.03651.pdf": {
+    "domain": "Cloud Computing and Distributed Systems",
+    "terms": "FaaS, AWS Lambda, AWS Athena, S3, SQS, EC2, DynamoDB, AdamOptimizer, Clipper, ZeroMQ, Firecracker, Google Cloud Dataprep, MapReduce, embarrassingly parallel, warm start"
+  },
+  "1902.03383v1.pdf": {
+    "domain": "Serverless Computing",
+    "terms": "ExCamera, numpywren, Cirrus, Anna, gVisor, BigQuery, DynamoDB, serverful, BaaS, ETL, IOPS, vCPU, Cholesky decomposition, Apache Airflow, Cockroach DB"
+  },
+  "EECS-2009-28.pdf": {
+    "domain": "Cloud Computing Infrastructure and Economics",
+    "terms": "Amazon Web Services, Microsoft Azure, Google AppEngine, MegaStore, BigTable, Force.com, Xen VM, Microsoft Common Language Runtime (CLR), Software as a Service (SaaS), Amazon Elastic Block Store, Amazon EC2, statistical multiplexing, Surge Computing, gang scheduling, energy proportionality"
+  },
+  "excamera-nsdi17.pdf": {
+    "domain": "Cloud-based Video Processing",
+    "terms": "ExCamera, AWS Lambda, VP8, mu, EC2, GCE, Stream Access Point, key frame, interframe, rebasing, residue, prediction modes, motion vectors, PyWren, MapReduce"
+  },
+  "mapreduce-osdi04.pdf": {
+    "domain": "Distributed Computing",
+    "terms": "MapReduce, Map, Reduce, GFS, Combiner, EmitIntermediate, TeraSort, NUMA, UDP, HTTP, master, worker, stragglers, input split, Distributed Grep"
+  }
+}

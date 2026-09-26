@@ -1,0 +1,40 @@
+variant,id,category,rep,translation,rewrite,best1,best2,delta,cov2,pages2,skip,today,with_delta,absent,with_oov
+A_cloud,h004,direct_fact,0,confidentiality and control legal issues,Confidentiality legal issues control cloud computing distributed systems serverless computing,-7.525,1.583,9.108,33.3,8,,ΣΩΘΗΚΕ,ΣΩΘΗΚΕ,,ΣΩΘΗΚΕ
+A_cloud,h005,direct_fact,0,What is the difference between the two types of services they describe,Distinction between service models,-3.064,0.997,4.06,50.0,8,,ΣΩΘΗΚΕ,ΣΩΘΗΚΕ,,ΣΩΘΗΚΕ
+A_cloud,h007,reasoning,0,Why is it beneficial not to purchase machines beforehand,Benefits of on-demand resource provisioning in cloud computing,-3.59,6.083,9.673,0.0,8,,ΧΩΡΙΣ ΥΛΙΚΟ,ΧΩΡΙΣ ΥΛΙΚΟ,,ΧΩΡΙΣ ΥΛΙΚΟ
+A_cloud,h008,direct_fact,0,Why does the same thing end up costing different amounts in different places?,Cloud resource pricing variability across regions,-6.236,-3.164,3.071,100.0,8,,ΣΩΘΗΚΕ,ΣΩΘΗΚΕ,,ΣΩΘΗΚΕ
+A_cloud,h009,direct_fact,0,What do the authors of that system paper themselves say they contributed?,Author contributions system paper,-5.331,-4.447,0.884,100.0,8,,κομμένο,κομμένο,,κομμένο
+A_cloud,h012,multi_hop,0,What does this implementation add compared to the general description given by the other paper?,Implementation-specific enhancements versus generalized architectural description,-6.492,-5.828,0.664,0.0,8,,κομμένο,κομμένο,generalized,κομμένο
+A_cloud,h015,multi_hop,0,Is it still worth keeping the data right next to the machines doing the work?,Data locality optimization distributed systems cloud computing serverless architectures performance implications storage proximity compute nodes,-4.992,-0.181,4.811,33.3,8,,ΣΩΘΗΚΕ,ΣΩΘΗΚΕ,proximity,κομμένο
+A_cloud,h016,multi_hop,0,Why do they bring up that older system as a warning?,Legacy system cautionary tale,-9.368,-8.32,1.048,33.3,8,,κομμένο,κομμένο,"cautionary,tale",κομμένο
+A_cloud,q019,out_of_corpus,0,What do the documents say about quantum computing performance?,Quantum computing performance analysis,-4.442,-4.466,-0.025,,8,,σιωπή,σιωπή,quantum,σιωπή
+A_cloud,q020,out_of_corpus,0,Bitcoin cost,Bitcoin transaction fees,-8.014,-10.017,-2.004,,8,,σιωπή,σιωπή,bitcoin,σιωπή
+A_cloud,q048,out_of_corpus,0,What do the documents say about GDPR compliance requirements for cloud providers?,GDPR compliance obligations cloud service providers,-3.12,-5.705,-2.586,,8,,σιωπή,σιωπή,"gdpr,compliance",σιωπή
+A_cloud,q049,out_of_corpus,0,clinical trials results,clinical trials results,-9.639,,,,0,identical,σιωπή,σιωπή,,σιωπή
+A_cloud,q050,out_of_corpus,0,What benchmark results for GPU tensor cores are reported in these papers?,GPU tensor core benchmarks,-5.053,-5.291,-0.238,,8,,σιωπή,σιωπή,,σιωπή
+B_generic,h004,direct_fact,0,confidentiality and control legal issues,Confidentiality legal issues data control,-7.525,-5.566,1.959,100.0,8,,κομμένο,κομμένο,,κομμένο
+B_generic,h005,direct_fact,0,What is the difference between the two types of services they describe,Service differentiation analysis: Type 1 versus Type 2 service models,-3.064,-6.625,-3.561,50.0,8,,κομμένο,κομμένο,differentiation,κομμένο
+B_generic,h007,reasoning,0,Why is it beneficial not to purchase machines beforehand,Benefits of not acquiring manufacturing equipment pre-production,-3.59,-7.652,-4.062,66.7,8,,κομμένο,κομμένο,,κομμένο
+B_generic,h008,direct_fact,0,Why does the same thing end up costing different amounts in different places?,Geographic price variation determinants,-6.236,-9.247,-3.012,100.0,8,,κομμένο,κομμένο,determinants,κομμένο
+B_generic,h009,direct_fact,0,What do the authors of that system paper themselves say they contributed?,Author contributions stated in system design paper,-5.331,-0.656,4.675,100.0,8,,ΣΩΘΗΚΕ,ΣΩΘΗΚΕ,stated,κομμένο
+B_generic,h012,multi_hop,0,What does this implementation add compared to the general description given by the other paper?,Implementation-specific enhancements versus generalized algorithmic description,-6.492,-2.445,4.047,0.0,8,,ΧΩΡΙΣ ΥΛΙΚΟ,ΧΩΡΙΣ ΥΛΙΚΟ,generalized,κομμένο
+B_generic,h015,multi_hop,0,Is it still worth keeping the data right next to the machines doing the work?,Data locality optimization for distributed computing systems,-4.992,5.278,10.269,0.0,8,,ΧΩΡΙΣ ΥΛΙΚΟ,ΧΩΡΙΣ ΥΛΙΚΟ,,ΧΩΡΙΣ ΥΛΙΚΟ
+B_generic,h016,multi_hop,0,Why do they bring up that older system as a warning?,Historical system failures as cautionary tales,-9.368,-8.525,0.843,33.3,8,,κομμένο,κομμένο,"historical,cautionary,tales",κομμένο
+B_generic,q019,out_of_corpus,0,What do the documents say about quantum computing performance?,Quantum computing performance metrics,-4.442,-2.535,1.906,,8,,ΔΙΑΡΡΟΗ,ΔΙΑΡΡΟΗ,quantum,σιωπή
+B_generic,q020,out_of_corpus,0,Bitcoin cost,Bitcoin transaction fees,-8.014,-10.017,-2.004,,8,,σιωπή,σιωπή,bitcoin,σιωπή
+B_generic,q048,out_of_corpus,0,What do the documents say about GDPR compliance requirements for cloud providers?,GDPR compliance obligations cloud service providers,-3.12,-5.705,-2.586,,8,,σιωπή,σιωπή,"gdpr,compliance",σιωπή
+B_generic,q049,out_of_corpus,0,clinical trials results,Clinical trial outcomes,-9.639,-9.269,0.37,,7,,σιωπή,σιωπή,"clinical,trial,outcomes",σιωπή
+B_generic,q050,out_of_corpus,0,What benchmark results for GPU tensor cores are reported in these papers?,GPU tensor core performance benchmarks,-5.053,-3.825,1.228,,8,,σιωπή,σιωπή,,σιωπή
+C_terms,h004,direct_fact,0,confidentiality and control legal issues,"confidentiality legal issues, data control legal issues",-7.525,-5.623,1.901,100.0,8,,κομμένο,κομμένο,,κομμένο
+C_terms,h005,direct_fact,0,What is the difference between the two types of services they describe,Serverless computing models: stateless vs. stateful function execution and data storage,-3.064,7.601,10.664,50.0,8,,ΣΩΘΗΚΕ,ΣΩΘΗΚΕ,,ΣΩΘΗΚΕ
+C_terms,h007,reasoning,0,Why is it beneficial not to purchase machines beforehand,Benefits of on-demand resource provisioning in cloud computing,-3.59,6.083,9.673,0.0,8,,ΧΩΡΙΣ ΥΛΙΚΟ,ΧΩΡΙΣ ΥΛΙΚΟ,,ΧΩΡΙΣ ΥΛΙΚΟ
+C_terms,h008,direct_fact,0,Why does the same thing end up costing different amounts in different places?,Serverless computing cost variability across cloud providers,-6.236,4.795,11.031,0.0,8,,ΧΩΡΙΣ ΥΛΙΚΟ,ΧΩΡΙΣ ΥΛΙΚΟ,,ΧΩΡΙΣ ΥΛΙΚΟ
+C_terms,h009,direct_fact,0,What do the authors of that system paper themselves say they contributed?,system paper contributions,-5.331,-0.466,4.865,100.0,8,,ΣΩΘΗΚΕ,ΣΩΘΗΚΕ,,ΣΩΘΗΚΕ
+C_terms,h012,multi_hop,0,What does this implementation add compared to the general description given by the other paper?,Implementation-specific enhancements versus generalized architectural description,-6.492,-5.828,0.664,0.0,8,,κομμένο,κομμένο,generalized,κομμένο
+C_terms,h015,multi_hop,0,Is it still worth keeping the data right next to the machines doing the work?,Data locality in distributed computing systems performance,-4.992,2.213,7.205,100.0,8,,ΣΩΘΗΚΕ,ΣΩΘΗΚΕ,,ΣΩΘΗΚΕ
+C_terms,h016,multi_hop,0,Why do they bring up that older system as a warning?,Why is that legacy system presented as a cautionary example?,-9.368,-4.548,4.82,0.0,8,,κομμένο,κομμένο,cautionary,κομμένο
+C_terms,q019,out_of_corpus,0,What do the documents say about quantum computing performance?,quantum computing performance,-4.442,-4.117,0.325,,8,,σιωπή,σιωπή,quantum,σιωπή
+C_terms,q020,out_of_corpus,0,Bitcoin cost,Bitcoin transaction cost,-8.014,-9.112,-1.098,,8,,σιωπή,σιωπή,bitcoin,σιωπή
+C_terms,q048,out_of_corpus,0,What do the documents say about GDPR compliance requirements for cloud providers?,GDPR compliance requirements cloud providers,-3.12,-2.883,0.236,,8,,ΔΙΑΡΡΟΗ,σιωπή,"gdpr,compliance",σιωπή
+C_terms,q049,out_of_corpus,0,clinical trials results,clinical trial outcomes,-9.639,-9.269,0.37,,6,,σιωπή,σιωπή,"clinical,trial,outcomes",σιωπή
+C_terms,q050,out_of_corpus,0,What benchmark results for GPU tensor cores are reported in these papers?,GPU tensor core benchmark results,-5.053,-4.377,0.676,,8,,σιωπή,σιωπή,,σιωπή

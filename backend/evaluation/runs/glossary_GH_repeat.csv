@@ -1,0 +1,101 @@
+condition,id,category,mrr,ndcg,keyword_coverage,pages,best_logit,silent,translation
+G_doc_terms,q001,direct_fact,1.0000,0.9465,100.0,8,+3.63,,What is the definition of cloud computing given in the paper?
+G_doc_terms,q002,enumeration,1.0000,1.0000,100.0,8,+9.27,,What are the three new aspects of cloud computing from a hardware provisioning point of view?
+G_doc_terms,q003,direct_fact,1.0000,1.0000,100.0,8,+2.06,,What is the data transfer bottleneck obstacle and a suggested workaround?
+G_doc_terms,q004,reasoning,0.8333,0.8978,100.0,8,+6.14,,Why can cloud computing datacenters achieve economies of scale?
+G_doc_terms,q005,direct_fact,0.5556,0.6667,100.0,8,+4.81,,What are the obstacles related to data confidentiality and auditability?
+G_doc_terms,q006,enumeration,0.3333,0.5000,100.0,8,+4.63,,What new application opportunities does cloud computing enable according to the 2009 paper?
+G_doc_terms,q007,direct_fact,0.8333,0.8978,100.0,8,+2.14,,What is the difference between BaaS and FaaS?
+G_doc_terms,q008,enumeration,0.4000,0.4415,100.0,8,+5.44,,What are the main limitations of current serverless platforms discussed in the paper?
+G_doc_terms,q009,reasoning,0.8333,0.8235,100.0,8,+5.06,,How does serverless billing differ from traditional serverful cloud billing?
+G_doc_terms,q010,direct_fact,1.0000,0.9599,100.0,8,+5.70,,When did serverless computing attract widespread attention and with which service?
+G_doc_terms,q011,enumeration,0.5000,0.6518,100.0,8,+5.43,,Which applications stretch the limits of today's serverless platforms according to the paper?
+G_doc_terms,q012,direct_fact,1.0000,1.0000,100.0,7,+3.78,,What is utility computing?
+G_doc_terms,q013,enumeration,1.0000,1.0000,100.0,8,+6.72,,Top 10 cloud computing challenges mentioned in the paper
+G_doc_terms,q014,reasoning,1.0000,1.0000,100.0,8,+0.68,,Elasticity demand forecasting risk transfer
+G_doc_terms,q015,direct_fact,0.5556,0.6667,100.0,8,+6.49,,What is cold start in serverless computing?
+G_doc_terms,q016,reasoning,0.4444,0.5873,100.0,8,+7.41,,Why does serverless simplify cloud programming?
+G_doc_terms,q017,direct_fact,1.0000,1.0000,100.0,8,+6.00,,reputation fate sharing
+G_doc_terms,q018,reasoning,0.7500,0.8155,100.0,8,+8.11,,Future of serverless computing
+G_doc_terms,q019,out_of_corpus,0.0000,0.0000,0.0,0,-4.44,σιωπή,What do the documents say about quantum computing performance?
+G_doc_terms,q020,out_of_corpus,0.0000,0.0000,0.0,0,-7.98,σιωπή,Bitcoin price documents
+G_doc_terms,q021,enumeration,1.0000,1.0000,100.0,7,+5.63,,Which specific AWS and Google Cloud services does the paper give as examples of serverless offerings?
+G_doc_terms,q022,enumeration,1.0000,0.9465,100.0,8,+7.10,,Which five applications does the paper analyze in depth as stretching today's serverless computing?
+G_doc_terms,q023,enumeration,1.0000,1.0000,100.0,8,+6.30,,IBM OpenWhisk architectural components
+G_doc_terms,q024,enumeration,1.0000,1.0000,100.0,7,+5.45,,What scientific applications has PyWren been used for according to the paper?
+G_doc_terms,q025,direct_fact,1.0000,1.0000,100.0,8,+1.09,,electricity prices per kilowatt-hour and why they differ
+G_doc_terms,q026,reasoning,1.0000,1.0000,100.0,8,+7.69,,Why is object storage such as S3 inadequate for fine-grained state sharing between serverless functions?
+G_doc_terms,q027,enumeration,0.5000,0.6309,100.0,8,-2.08,,"Which storage categories does the paper compare in its storage table, and what mean latency does each have?"
+G_doc_terms,q028,direct_fact,0.1429,0.0000,100.0,8,+0.38,,Which specific vpxenc command-line flags does the ExCamera appendix list for its encoding runs?
+G_doc_terms,q029,reasoning,0.5000,0.6309,100.0,8,+4.95,,How does MapReduce guarantee the same result despite machine failures?
+G_doc_terms,q030,reasoning,1.0000,1.0000,100.0,8,+6.08,,Why does the paper argue that pay as you go better captures the economic benefit than CapEx to OpEx?
+G_doc_terms,q031,direct_fact,0.8333,0.8770,100.0,8,+6.10,,What does the paper say about the two major contributions of ExCamera?
+G_doc_terms,q032,enumeration,0.2778,0.1667,100.0,8,+3.02,,What opportunities does the paper pair with the obstacles of scaling quickly and software licensing?
+G_doc_terms,q033,direct_fact,1.0000,1.0000,100.0,8,+7.02,,Software licensing cost example and Windows EC2 price comparison open source
+G_doc_terms,q034,enumeration,1.0000,1.0000,100.0,8,+4.54,,"What fallacy about porting serverless applications does the paper identify, and which project does it cite as a step toward portability?"
+G_doc_terms,q035,reasoning,1.0000,1.0000,100.0,8,+2.67,,How does the paper address the claim that cloud functions cannot serve low-latency applications?
+G_doc_terms,q036,direct_fact,1.0000,1.0000,100.0,8,+4.93,,What example of offloading API calls from a mobile app to the backend does the paper give?
+G_doc_terms,q037,direct_fact,1.0000,1.0000,100.0,8,+8.88,,serverless beyond traditional cloud platforms
+G_doc_terms,q038,reasoning,1.0000,1.0000,100.0,7,+6.87,,Why does the CIDR paper argue that FaaS stymies hardware-accelerated software innovation?
+G_doc_terms,q039,reasoning,1.0000,1.0000,100.0,8,+2.81,,What does the CIDR paper mean by fluid code and data placement?
+G_doc_terms,q040,enumeration,1.0000,1.0000,100.0,8,+4.14,,On which four metrics was ExCamera evaluated and what was the headline result?
+G_doc_terms,q041,enumeration,1.0000,1.0000,100.0,8,+6.14,,How do counters work in MapReduce?
+G_doc_terms,q042,reasoning,1.0000,1.0000,100.0,7,+7.09,,How do backup tasks and machine failures affect sort execution time?
+G_doc_terms,q043,direct_fact,1.0000,1.0000,100.0,8,+5.49,,How does PyWren package and execute a user's Python function on AWS Lambda?
+G_doc_terms,q044,multi_hop,0.4444,0.5000,66.7,8,+4.09,,The Berkeley view names ExCamera as an application that stretches serverless computing — what speedup does the ExCamera paper itself report?
+G_doc_terms,q045,multi_hop,0.1944,0.1667,66.7,8,+3.10,,Berkeley view serverless storage CIDR
+G_doc_terms,q046,multi_hop,0.7500,0.6667,100.0,8,+2.34,,"How does MapReduce handle worker failures, and how does PyWren instead delegate that to the cloud provider?"
+G_doc_terms,q047,multi_hop,0.7778,0.8333,100.0,8,+0.12,,OpenWhisk architecture additions to Berkeley view serverless layer
+G_doc_terms,q048,out_of_corpus,0.0000,0.0000,0.0,0,-3.12,σιωπή,What do the documents say about GDPR compliance requirements for cloud providers?
+G_doc_terms,q049,out_of_corpus,0.0000,0.0000,0.0,0,-9.40,σιωπή,clinical trial results
+G_doc_terms,q050,out_of_corpus,0.0000,0.0000,0.0,0,-5.05,σιωπή,What benchmark results for GPU tensor cores are reported in these papers?
+H_generic_domain,q001,direct_fact,1.0000,0.9465,100.0,8,+3.63,,What is the definition of cloud computing given in the paper?
+H_generic_domain,q002,enumeration,1.0000,1.0000,100.0,8,+9.27,,What are the three new aspects of cloud computing from a hardware provisioning point of view?
+H_generic_domain,q003,direct_fact,1.0000,1.0000,100.0,8,+2.06,,What is the data transfer bottleneck obstacle and a suggested workaround?
+H_generic_domain,q004,reasoning,0.8333,0.8978,100.0,8,+6.14,,Why can cloud computing datacenters achieve economies of scale?
+H_generic_domain,q005,direct_fact,0.5556,0.6667,100.0,8,+4.81,,What are the obstacles related to data confidentiality and auditability?
+H_generic_domain,q006,enumeration,0.3333,0.5000,100.0,8,+4.63,,What new application opportunities does cloud computing enable according to the 2009 paper?
+H_generic_domain,q007,direct_fact,0.8333,0.8978,100.0,8,+2.14,,What is the difference between BaaS and FaaS?
+H_generic_domain,q008,enumeration,0.4000,0.4415,100.0,8,+5.44,,What are the main limitations of current serverless platforms discussed in the paper?
+H_generic_domain,q009,reasoning,0.8333,0.8235,100.0,8,+5.06,,How does serverless billing differ from traditional serverful cloud billing?
+H_generic_domain,q010,direct_fact,1.0000,0.9599,100.0,8,+5.70,,When did serverless computing attract widespread attention and with which service?
+H_generic_domain,q011,enumeration,0.5000,0.6518,100.0,8,+5.43,,Which applications stretch the limits of today's serverless platforms according to the paper?
+H_generic_domain,q012,direct_fact,1.0000,1.0000,100.0,7,+3.78,,What is utility computing?
+H_generic_domain,q013,enumeration,1.0000,0.9465,100.0,8,+7.20,,What are the 10 main obstacles of cloud computing mentioned in the paper?
+H_generic_domain,q014,reasoning,1.0000,1.0000,100.0,7,+1.57,,How does elasticity help in transferring demand forecasting risk?
+H_generic_domain,q015,direct_fact,0.6667,0.7540,100.0,8,+6.78,,cold start serverless computing
+H_generic_domain,q016,reasoning,0.4444,0.5873,100.0,8,+7.41,,Why does serverless simplify cloud programming?
+H_generic_domain,q017,direct_fact,1.0000,1.0000,100.0,8,+6.00,,reputation fate sharing
+H_generic_domain,q018,reasoning,0.7500,0.8155,100.0,8,+8.11,,Future of serverless computing
+H_generic_domain,q019,out_of_corpus,0.0000,0.0000,0.0,0,-4.44,σιωπή,What do the documents say about quantum computing performance?
+H_generic_domain,q020,out_of_corpus,0.0000,0.0000,0.0,0,-5.46,σιωπή,Bitcoin price
+H_generic_domain,q021,enumeration,1.0000,1.0000,100.0,7,+5.63,,Which specific AWS and Google Cloud services does the paper give as examples of serverless offerings?
+H_generic_domain,q022,enumeration,1.0000,0.9465,100.0,8,+7.10,,Which five applications does the paper analyze in depth as stretching today's serverless computing?
+H_generic_domain,q023,enumeration,1.0000,1.0000,100.0,8,+6.30,,IBM OpenWhisk architectural components
+H_generic_domain,q024,enumeration,1.0000,1.0000,100.0,7,+5.45,,What scientific applications has PyWren been used for according to the paper?
+H_generic_domain,q025,direct_fact,1.0000,1.0000,100.0,8,+0.68,,electricity prices per kilowatt-hour and why do they differ
+H_generic_domain,q026,reasoning,1.0000,1.0000,100.0,8,+7.69,,Why is object storage such as S3 inadequate for fine-grained state sharing between serverless functions?
+H_generic_domain,q027,enumeration,0.5000,0.6309,100.0,8,-2.08,,"Which storage categories does the paper compare in its storage table, and what mean latency does each have?"
+H_generic_domain,q028,direct_fact,0.1429,0.0000,100.0,8,+0.38,,Which specific vpxenc command-line flags does the ExCamera appendix list for its encoding runs?
+H_generic_domain,q029,reasoning,0.1667,0.0000,100.0,8,+5.19,,MapReduce fault tolerance guarantees
+H_generic_domain,q030,reasoning,1.0000,1.0000,100.0,8,+5.10,,Why does the paper argue that pay as you go better describes the financial benefit than CapEx to OpEx?
+H_generic_domain,q031,direct_fact,0.8333,0.8770,100.0,8,+6.10,,What does the paper say about the two major contributions of ExCamera?
+H_generic_domain,q032,enumeration,0.2778,0.1667,100.0,8,+3.02,,What opportunities does the paper pair with the obstacles of scaling quickly and software licensing?
+H_generic_domain,q033,direct_fact,1.0000,1.0000,100.0,8,+6.32,,Software licensing cost example in paper and Windows EC2 price compared to open source version
+H_generic_domain,q034,enumeration,1.0000,1.0000,100.0,8,+4.54,,"What fallacy about porting serverless applications does the paper identify, and which project does it cite as a step toward portability?"
+H_generic_domain,q035,reasoning,1.0000,1.0000,100.0,8,+2.67,,How does the paper address the claim that cloud functions cannot serve low-latency applications?
+H_generic_domain,q036,direct_fact,1.0000,1.0000,100.0,8,+4.93,,What example of offloading API calls from a mobile app to the backend does the paper give?
+H_generic_domain,q037,direct_fact,1.0000,1.0000,100.0,8,+8.88,,serverless beyond traditional cloud platforms
+H_generic_domain,q038,reasoning,1.0000,1.0000,100.0,7,+6.87,,Why does the CIDR paper argue that FaaS stymies hardware-accelerated software innovation?
+H_generic_domain,q039,reasoning,1.0000,1.0000,100.0,8,+2.81,,What does the CIDR paper mean by fluid code and data placement?
+H_generic_domain,q040,enumeration,1.0000,1.0000,100.0,8,+4.14,,On which four metrics was ExCamera evaluated and what was the headline result?
+H_generic_domain,q041,enumeration,1.0000,1.0000,100.0,8,+6.14,,How do counters work in MapReduce?
+H_generic_domain,q042,reasoning,1.0000,1.0000,100.0,7,+7.61,,Impact of backup tasks and machine failures on sort execution time
+H_generic_domain,q043,direct_fact,1.0000,1.0000,100.0,8,+5.49,,How does PyWren package and execute a user's Python function on AWS Lambda?
+H_generic_domain,q044,multi_hop,0.4444,0.5000,66.7,8,+4.09,,The Berkeley view names ExCamera as an application that stretches serverless computing — what speedup does the ExCamera paper itself report?
+H_generic_domain,q045,multi_hop,0.1944,0.1667,66.7,8,+2.41,,Berkeley view serverless storage problem CIDR critique
+H_generic_domain,q046,multi_hop,0.7500,0.6667,100.0,8,+2.34,,"How does MapReduce handle worker failures, and how does PyWren instead delegate that to the cloud provider?"
+H_generic_domain,q047,multi_hop,0.6667,0.6667,66.7,8,+0.20,,OpenWhisk architecture additions compared to Berkeley serverless view
+H_generic_domain,q048,out_of_corpus,0.0000,0.0000,0.0,0,-3.12,σιωπή,What do the documents say about GDPR compliance requirements for cloud providers?
+H_generic_domain,q049,out_of_corpus,0.0000,0.0000,0.0,0,-9.40,σιωπή,clinical trial results
+H_generic_domain,q050,out_of_corpus,0.0000,0.0000,0.0,0,-5.05,σιωπή,What benchmark results for GPU tensor cores are reported in these papers?

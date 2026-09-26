@@ -1,0 +1,203 @@
+Φόρτωση μοντέλων (40-60 s χωρίς έξοδο) — ΜΗΝ το διακόψεις...
+Store: 418 chunks στο /tmp/eval_near_ooc_chroma · domain μετάφρασης: 'Cloud Computing and Distributed Systems'
+Μεταφράσεις από προηγούμενο τρέξιμο: 21
+
+==========================================================================================
+h109 (short, enumeration) · ΑΠΟΦΑΣΗ: χωρίς υλικό · best1 5.63 (ίδιο με το τρέξιμο)
+  ΕΡΩΤΗΣΗ     Main serverless platform problems?
+  ΓΟΝΙΚΗ q008  What are the main limitations of current serverless platforms discussed in the paper?
+  ΑΠΑΝΤΗΣΗ    Limited execution lifetimes, no fast addressable storage shared between functions, lack of fine-grained coordination and direct communication between functions, and unpredictable cold-start latency.
+  λέξεις ΝΕΕΣ ['fine-grained operations', 'fine-grained coordination', 'communication patterns']   ΠΑΛΙΕΣ ['storage', 'communication', 'coordination']
+   - 1706.03178.pdf:15  νέες —  παλιές —
+       (6 κοινές) Serverless Computing: Current Trends and Open Problems 15 • Security: Strong isolation of functions is critical since functions from many users are running on a shared platform.
+   - 1706.03178.pdf:5  νέες —  παλιές —
+       (4 κοινές) Serverless Computing: Current Trends and Open Problems 5 Edge UI API Gateway Cloud Event Sources Master Worker Worker Event Queue Dispatcher function main() { return {payload: 'Hello World}; } code code code code Fig.
+   - 1706.03178.pdf:9  νέες —  παλιές —
+       (5 κοινές) The main difference among them is the cloud ecosystem: current serverless platforms only make it easy to use the services in their own ecosystem and the choice of platform will likely force developers to use the services native to that platform.
+   - 1706.03178.pdf:7  νέες —  παλιές —
+       (4 κοινές) Serverless Computing: Current Trends and Open Problems 7 Microsoft Azure Functions [23] provides HTTP webhooks and integration with Azure services to run user provided functions.
+   - 1706.03178.pdf:1  νέες —  παλιές —
+       (3 κοινές) Serverless Computing: Current Trends and Open Problems Ioana Baldini, Paul Castro, Kerry Chang, Perry Cheng, Stephen Fink, Vatche Ishakian, Nick Mitchell, Vinod Muthusamy, Rodric Rabbah, Aleksander Slominski, Philippe Suter Abstract Serverless computing has emerged as a new compe
+   - 1706.03178.pdf:17  νέες —  παλιές —
+       (3 κοινές) Serverless Computing: Current Trends and Open Problems 17 As serverless is gaining popularity the boundaries between different types of ”asa-Service” may be disappearing (see Figure 9).
+   - 1706.03178.pdf:14  νέες —  παλιές —
+       (3 κοινές) • Cold start: A key differentiator of serverless is the ability to scale to zero, or not charging customers for idle time.
+   - 1706.03178.pdf:6  νέες —  παλιές —
+       (4 κοινές) • Security and accounting: Serverless platforms are multi-tenant and must isolate the execution of functions between users and provide detailed accounting so users understand how much they need to pay.
+  ΣΕΛΙΔΕΣ-ΣΤΟΧΟΙ (≥2 νέες λέξεις): 1902.03383v1.pdf:1, 1902.03383v1.pdf:12
+
+==========================================================================================
+h111 (nojargon, reasoning) · ΑΠΟΦΑΣΗ: χωρίς υλικό · best1 -1.48 (ίδιο με το τρέξιμο)
+  ΕΡΩΤΗΣΗ     How is paying for computing without always-on machines different from paying for dedicated machines?
+  ΓΟΝΙΚΗ q009  How does serverless billing differ from traditional serverful cloud billing?
+  ΑΠΑΝΤΗΣΗ    Serverless users pay only for actual execution time and resources consumed while code runs, instead of renting and paying for reserved instances that also cost money while idle.
+  λέξεις ΝΕΕΣ ['reserved', '100 ms', 'pay only']   ΠΑΛΙΕΣ ['billing', 'execution', 'accounting']
+   - EECS-2009-28.pdf:14  νέες —  παλιές —
+       (4 κοινές) UserHourscloud × (revenue −Costcloud) ≥UserHoursdatacenter × (revenue −Costdatacenter Utilization ) (2) The left-hand side multiplies the net revenue per user-hour (revenue realized per user-hour minus cost of paying Cloud Computing per user-hour) by the number of user-hours, giv
+   - 1706.03178.pdf:14  νέες —  παλιές ['execution']
+       (4 κοινές) Infrequent but bursty workloads may be better served by serverless, which provides horizontal scaling without the need for dedicated infrastructure that charges for idle time.
+   - EECS-2009-28.pdf:15  νέες —  παλιές —
+       (4 κοινές) On one hand, since Utility Computing uses virtual machines instead of physical machines, from the cloud user’s point of view these tasks are shifted to the cloud provider.
+   - EECS-2009-28.pdf:22  νέες —  παλιές ['billing']
+       (5 κοινές) Pay-as-you-go involves metering usage and charging based on actual use, independently of the time period 3Usage-based pricing is different from renting.
+   - EECS-2009-28.pdf:3  νέες —  παλιές —
+       (4 κοινές) The illusion of infinite computing resources available on demand, thereby eliminating the need for Cloud Computing users to plan far ahead for provisioning.
+   - EECS-2009-28.pdf:19  νέες —  παλιές —
+       (3 κοινές) Number 5 Obstacle: Performance Unpredictability Our experience is that multiple Virtual Machines can share CPUs and main memory surprisingly well in Cloud Computing, but that I/O sharing is more problematic.
+   - EECS-2009-28.pdf:6  νέες —  παλιές —
+       (4 κοινές) The illusion of infinite computing resources available on demand, thereby eliminating the need for Cloud Computing users to plan far ahead for provisioning; 2.
+   - 1902.03383v1.pdf:6  νέες —  παλιές ['billing', 'execution']
+       (4 κοινές) Instead of requesting resources, the user provides a piece of code and the cloud automatically provisions resources to execute that code.
+  ΣΕΛΙΔΕΣ-ΣΤΟΧΟΙ (≥2 νέες λέξεις): 1902.03383v1.pdf:7
+
+==========================================================================================
+h126 (nojargon, reasoning) · ΑΠΟΦΑΣΗ: χωρίς υλικό · best1 4.93 (ίδιο με το τρέξιμο)
+  ΕΡΩΤΗΣΗ     Τι προβλέπει το κείμενο για την εξέλιξη της αρχιτεκτονικής όπου οι προγραμματιστές δεν διαχειρίζονται υποδομή;
+  (αγγλικά)   What does the text predict for the evolution of the architecture where developers don't manage infrastructure?
+  μετάφραση   serverless architecture evolution developers manage infrastructure
+  ΓΟΝΙΚΗ q018  Τι προβλέπει το paper για το μέλλον του serverless computing;
+  ΑΠΑΝΤΗΣΗ    Προβλέπει ότι το serverless θα κυριαρχήσει ως το προεπιλεγμένο υπολογιστικό παράδειγμα της επόμενης δεκαετίας του cloud, όπως οι γλώσσες υψηλού επιπέδου επικράτησαν της assembly.
+  λέξεις ΝΕΕΣ ['default computing paradigm', 'next decade', 'dominate']   ΠΑΛΙΕΣ ['serverless', 'serverful']
+   - 1706.03178.pdf:2  νέες —  παλιές ['serverless']
+       (4 κοινές) From the perspective of a cloud provider, serverless computing provides an additional opportunity to control the entire development stack, reduce operational costs by efficient optimization and management of cloud resources, offer a platform that encourages the use of additional 
+   - 1706.03178.pdf:18  νέες —  παλιές ['serverless']
+       (4 κοινές) It is an evolution of the trend towards higher levels of abstractions in cloud programming models, and currently exemplified by the Function-as-a-Service (FaaS) model where developers write small stateless code snippets and allow the platform to manage the complexities of scalabl
+   - 1706.03178.pdf:1  νέες —  παλιές ['serverless']
+       (3 κοινές) 1 Introduction Serverless Computing (or simply serverless) is emerging as a new and compelling paradigm for the deployment of cloud applications, largely due to the recent shift of enterprise application architectures to containers and microservices [22].
+   - 1706.03178.pdf:3  νέες —  παλιές ['serverless']
+       (3 κοινές) One way to explain serverless is to consider the varying levels of developer control over the cloud infrastructure, as illustrated in Figure 2.
+   - 1706.03178.pdf:4  νέες —  παλιές ['serverless']
+       (3 κοινές) 4 2 Evolution Serverless computing was popularized by Amazon in the re:Invent 2014 session “Getting Started with AWS Lambda” [4].
+   - 1706.03178.pdf:8  νέες —  παλιές ['serverless']
+       (3 κοινές) Additionally they are working with Cloud Foundry to bring multi-cloud serverless support to Cloud Foundry Kratos [18] that allows developers to convert AWS Lambda functions into Docker images, and is available under an Apache 2 license.
+   - 1706.03178.pdf:9  νέες —  παλιές ['serverless']
+       (3 κοινές) The main difference among them is the cloud ecosystem: current serverless platforms only make it easy to use the services in their own ecosystem and the choice of platform will likely force developers to use the services native to that platform.
+   - 1706.03178.pdf:5  νέες —  παλιές ['serverless']
+       (3 κοινές) Serverless Computing: Current Trends and Open Problems 5 Edge UI API Gateway Cloud Event Sources Master Worker Worker Event Queue Dispatcher function main() { return {payload: 'Hello World}; } code code code code Fig.
+  ΣΕΛΙΔΕΣ-ΣΤΟΧΟΙ (≥2 νέες λέξεις): καμία!
+
+==========================================================================================
+h138 (meta, reasoning) · ΑΠΟΦΑΣΗ: χωρίς υλικό · best1 1.90 (ίδιο με το τρέξιμο)
+  ΕΡΩΤΗΣΗ     Πώς εγγυώνται οι συγγραφείς του κειμένου για την απλοποιημένη επεξεργασία δεδομένων σε μεγάλα συμπλέγματα, την ορθότητα του αποτελέσματος παρά τα προβλήματα των μηχανημάτων;
+  (αγγλικά)   How do the authors of the text on simplified data processing in large clusters guarantee the correctness of the result despite machine problems?
+  μετάφραση   How do the authors of the text guarantee simplified data processing in large clusters, the correctness of the output despite machine problems?
+  ΓΟΝΙΚΗ q029  Πώς εγγυάται το MapReduce το ίδιο αποτέλεσμα παρά τις αστοχίες μηχανημάτων;
+  ΑΠΑΝΤΗΣΗ    Όταν οι συναρτήσεις map και reduce είναι ντετερμινιστικές, η κατανεμημένη υλοποίηση παράγει το ίδιο αποτέλεσμα με μια σειριακή εκτέλεση χωρίς σφάλματα. Αυτό επιτυγχάνεται με ατομικές δεσμεύσεις: κάθε εργασία γράφει σε ιδιωτικά προσωρινά αρχεία και τα μετονομάζει ατομικά στο τέλος, ενώ ο master αγνοεί μηνύματα ολοκλήρωσης για ήδη ολοκληρωμένες εργασίες.
+  λέξεις ΝΕΕΣ ['non-faulting', 'checkpointed', 'commits']   ΠΑΛΙΕΣ ['non-faulting', 'checkpointed', 'commits']
+   - mapreduce-osdi04.pdf:1  νέες —  παλιές —
+       (6 κοινές) MapReduce: Simplified Data Processing on Large Clusters Jeffrey Dean and Sanjay Ghemawat jeff@google.com, sanjay@google.com Google, Inc.
+   - EECS-2009-28.pdf:24  νέες —  παλιές —
+       (6 κοινές) Mapreduce: simplified data processing on large clusters.
+   - mapreduce-osdi04.pdf:8  νέες —  παλιές —
+       (4 κοινές) The master aggregates the counter values from successful map and reduce tasks and returns them to the user code when the MapReduce operation is completed.
+   - mapreduce-osdi04.pdf:12  νέες —  παλιές —
+       (3 κοινές) Second, a large variety of problems are easily expressible as MapReduce computations.
+   - 1702.04024.pdf:2  νέες —  παλιές —
+       (4 κοινές) For data-bound workloads, a large number of users would be served by a simpler version of the existing map-reduce framework where outputs can be easily persisted on object storage.
+   - mapreduce-osdi04.pdf:11  νέες —  παλιές —
+       (3 κοινές) • The indexing process has become much easier to operate, because most of the problems caused by machine failures, slow machines, and networking hiccups are dealt with automatically by the MapReduce library without operator intervention.
+   - EECS-2009-28.pdf:19  νέες —  παλιές —
+       (2 κοινές) The obstacle to attracting HPC is not the use of clusters; most parallel computing today is done in large clusters using the message-passing interface MPI.
+   - mapreduce-osdi04.pdf:6  νέες —  παλιές —
+       (4 κοινές) 3.6 Backup Tasks One of the common causes that lengthens the total time taken for a MapReduce operation is a “straggler”: a machine that takes an unusually long time to complete one of the last few map or reduce tasks in the computation.
+  ΣΕΛΙΔΕΣ-ΣΤΟΧΟΙ (≥2 νέες λέξεις): mapreduce-osdi04.pdf:5
+
+==========================================================================================
+h145 (greek, enumeration) · ΑΠΟΦΑΣΗ: χωρίς υλικό · best1 -8.43 (ίδιο με το τρέξιμο)
+  ΕΡΩΤΗΣΗ     Ποια λανθασμένη αντίληψη για την μεταφορά εφαρμογών που τρέχουν σε μικρές λειτουργίες αναγνωρίζει η μελέτη, και ποιο έργο αναφέρει ως βήμα προς την ευκολότερη μεταφορά;
+  (αγγλικά)   What mistaken belief about moving applications that run as small functions does the study identify, and which project does it mention as a step towards easier transfer?
+  μετάφραση   What misconception about migrating applications running in small functions does the study identify, and what project does it mention as a step towards easier migration?
+  αναδιατύπ.  Serverless application migration misconceptions, function-as-a-service (FaaS) migration challenges, serverless refactoring tools, cloud migration strategies for microservices
+  ΓΟΝΙΚΗ q034  What fallacy about porting serverless applications does the paper identify, and which project does it cite as a step toward portability?
+  ΑΠΑΝΤΗΣΗ    The fallacy is that because serverless programming uses high-level languages like Python, porting applications between providers is easy. In reality function invocation semantics and packaging differ between providers, and many serverless applications rely on an ecosystem of proprietary BaaS offerings that lacks standardization, such as object storage, key-value databases, authentication, logging and monitoring. Portability would require embracing a standard API, and Google's Knative project is cited as a step in that direction.
+  λέξεις ΝΕΕΣ ['knative', 'portability', 'packaging']   ΠΑΛΙΕΣ ['knative', 'portability', 'packaging']
+   - 1706.03178.pdf:2  νέες —  παλιές —
+       (4 κοινές) The version of serverless that explicitly uses functions as the deployment unit is also called Function-as-a-Service (FaaS).
+   - 1706.03178.pdf:18  νέες —  παλιές —
+       (4 κοινές) It is an evolution of the trend towards higher levels of abstractions in cloud programming models, and currently exemplified by the Function-as-a-Service (FaaS) model where developers write small stateless code snippets and allow the platform to manage the complexities of scalabl
+   - 1706.03178.pdf:4  νέες —  παλιές —
+       (2 κοινές) Other vendors followed in 2016 with the introduction of Google Cloud Functions [14], Microsoft Azure Functions [23] and IBM OpenWhisk [16].
+   - 1902.03383v1.pdf:4  νέες —  παλιές —
+       (5 κοινές) While cloud functions—packaged as FaaS (Function as a Service) offerings2—represent the core of serverless computing, cloud platforms also provide specialized serverless frameworks that cater to specific application requirements as BaaS (Backend as a Service) offerings [7].
+   - 1706.03178.pdf:15  νέες —  παλιές —
+       (4 κοινές) As serverless functions are running for shorter amounts of time there will be many orders of magnitude more of them running making it harder to identify problems and bottlenecks.
+   - 1902.03383v1.pdf:6  νέες —  παλιές —
+       (8 κοινές) Serverless Hardware Base Cloud Platform Degree of Abstraction Applications VPC Block Storage VM Cloud Functions Object Storage Key-Value Database Big Data Transform Messaging Server Network Storage Accelerator Web APIs Event Data Processing Future Serverless Applications Billing 
+   - 1812.03651.pdf:7  νέες —  παλιές —
+       (4 κοινές) Ideally, application developers could specify applications using high-level DSLs, and the cloud providers would compile those applications to the most cost-effective hardware that meets user specified SLOs.
+   - 1812.03651.pdf:1  νέες —  παλιές —
+       (5 κοινές) And whether cause or effect, the results are clearly visible in practice: the majority of cloud services are simply multi-tenant, easier-to-administer clones of legacy enterprise data services like object storage, databases, queueing systems, and web/app servers.
+  ΣΕΛΙΔΕΣ-ΣΤΟΧΟΙ (≥2 νέες λέξεις): 1902.03383v1.pdf:21
+
+==========================================================================================
+h152 (vague, reasoning) · ΑΠΟΦΑΣΗ: χωρίς υλικό · best1 -0.92 (ίδιο με το τρέξιμο)
+  ΕΡΩΤΗΣΗ     Why does this document claim that using small, event-driven programs slows down new ideas for special computer parts?
+  ΓΟΝΙΚΗ q038  Why does the CIDR paper argue that FaaS stymies hardware-accelerated software innovation?
+  ΑΠΑΝΤΗΣΗ    Because current FaaS offerings all run on a uniform and fairly mundane virtual machine platform. These VMs offer no custom processors such as the GPUs pervasive in deep learning or the accelerators used for database processing, and they do not even support main-memory databases with large RAM-based data structures — the largest Lambda instance allows only 3GB of RAM. Together with inappropriate pricing models this significantly limits FaaS as a platform for software innovation.
+  λέξεις ΝΕΕΣ ['hardware-accelerated', 'mundane', 'accelerators']   ΠΑΛΙΕΣ ['hardware-accelerated', 'mundane', 'accelerators']
+   - 1812.03651.pdf:3  νέες —  παλιές —
+       (5 κοινές) One might argue that FaaS encourages a new, event-driven distributed programming model based on global state.
+   - 1812.03651.pdf:5  νέες —  παλιές —
+       (5 κοινές) As another example, today’s FaaS frameworks offer no guarantees of physical hardware locality: developers cannot control where a function will run, or if its physical address will even remain constant.
+   - 1706.03178.pdf:11  νέες —  παλιές —
+       (3 κοινές) This includes applications that exhibit event-driven and flow-like processing patterns.
+   - 1702.04024.pdf:3  νέες —  παλιές —
+       (4 κοινές) While Lambda was designed to run event-driven microservices (such as resizing a single useruploaded image) at scale, by dynamically extracting code from S3 we make each Lambda invocation run a different function.
+   - 1702.04024.pdf:7  νέες —  παλιές —
+       (3 κοινές) Tensorflow: A system for large-scale machine learning.
+   - 1812.03651.pdf:7  νέες —  παλιές —
+       (3 κοινές) This is often best achieved by shipping code to data, rather than the current FaaS approach of pulling data to code.
+   - mapreduce-osdi04.pdf:11  νέες —  παλιές —
+       (3 κοινές) MapReduce can be considered a simplification and distillation of some of these models based on our experience with large real-world computations.
+   - EECS-2009-28.pdf:25  νέες —  παλιές —
+       (3 κοινές) Memory bandwidth and machine balance in current high performance computers.
+  ΣΕΛΙΔΕΣ-ΣΤΟΧΟΙ (≥2 νέες λέξεις): 1812.03651.pdf:4
+
+==========================================================================================
+h158 (meta, enumeration) · ΑΠΟΦΑΣΗ: σιωπή · best1 -4.64 (ίδιο με το τρέξιμο)
+  ΕΡΩΤΗΣΗ     How do the authors describe the operation of the counting feature in their data processing system?
+  ** ΚΟΠΗΚΕ — παρακάτω ό,τι θα γύριζε ΧΩΡΙΣ φύλακα **
+  ΓΟΝΙΚΗ q041  Πώς λειτουργεί ο μηχανισμός των counters στο MapReduce;
+  ΑΠΑΝΤΗΣΗ    Ο χρήστης δημιουργεί έναν counter και τον αυξάνει μέσα στη map ή τη reduce. Οι τιμές από τα worker μηχανήματα προωθούνται περιοδικά στον master, piggybacked πάνω στην απάντηση του ping. Ο master συναθροίζει τις τιμές από τις επιτυχημένες εργασίες, εξαλείφοντας τις επιπτώσεις διπλών εκτελέσεων ώστε να μη γίνει διπλή μέτρηση, και τις επιστρέφει στον κώδικα του χρήστη· εμφανίζονται επίσης στη σελίδα κατάστασης του master.
+  λέξεις ΝΕΕΣ ['piggybacked', 'iscapitalized', 'aggregates']   ΠΑΛΙΕΣ ['piggybacked', 'iscapitalized', 'aggregates']
+   - mapreduce-osdi04.pdf:1  νέες —  παλιές —
+       (4 κοινές) We realized that most of our computations involved applying a map operation to each logical “record” in our input in order to compute a set of intermediate key/value pairs, and then applying a reduce operation to all the values that shared the same key, in order to combine the de
+   - mapreduce-osdi04.pdf:8  νέες ['piggybacked', 'iscapitalized', 'aggregates']  παλιές ['piggybacked', 'iscapitalized', 'aggregates']
+       (7 κοινές) Counter* uppercase; uppercase = GetCounter("uppercase"); map(String name, String contents): for each word w in contents: if (IsCapitalized(w)): uppercase->Increment(); EmitIntermediate(w, "1"); The counter values from individual worker machines are periodically propagated to the 
+   - mapreduce-osdi04.pdf:2  νέες —  παλιές —
+       (3 κοινές) The user of the MapReduce library expresses the computation as two functions: Map and Reduce.
+   - 1902.03383v1.pdf:13  νέες —  παλιές —
+       (3 κοινές) Persistence and availability guarantees describe how well the system tolerates failures: local provides reliable storage at one site, distributed ensures the ability to survive site failures, and ephemeral describes data that resides in memory and is subject to loss, e.g., in the
+   - mapreduce-osdi04.pdf:7  νέες —  παλιές —
+       (4 κοινές) Before invoking a user Map or Reduce operation, the MapReduce library stores the sequence number of the argument in a global variable.
+   - mapreduce-osdi04.pdf:11  νέες —  παλιές —
+       (3 κοινές) Our locality optimization draws its inspiration from techniques such as active disks [12, 15], where computation is pushed into processing elements that are close to local disks, to reduce the amount of data sent across I/O subsystems or the network.
+   - 1702.04024.pdf:7  νέες —  παλιές —
+       (2 κοινές) Starfish: A self-tuning system for big data analytics.
+   - mapreduce-osdi04.pdf:13  νέες —  παλιές —
+       (3 κοινές) #include "mapreduce/mapreduce.h" // User’s map function class WordCounter : public Mapper { public: virtual void Map(const MapInput& input) { const string& text = input.value(); const int n = text.size(); for (int i = 0; i < n; ) { // Skip past leading whitespace while ((i < n) &
+  ΣΕΛΙΔΕΣ-ΣΤΟΧΟΙ (≥2 νέες λέξεις): mapreduce-osdi04.pdf:8 ✓ΗΡΘΕ
+
+==========================================================================================
+h167 (meta, multi_hop) · ΑΠΟΦΑΣΗ: χωρίς υλικό · best1 -0.92 (ίδιο με το τρέξιμο)
+  ΕΡΩΤΗΣΗ     What happens when a computer stops working during a task in the video processing framework, and how do the authors of the PyWren paper say their method handles this differently?
+  ΓΟΝΙΚΗ q052  How does ExCamera's mu framework react when a worker fails in the middle of a task, and how does PyWren's stateless model handle the same failure differently?
+  ΑΠΑΝΤΗΣΗ    In ExCamera's mu, a mid-task worker failure kills the whole job: mu assigns work only to workers that start up and open a TLS connection to the coordinator, and does not recover from a failure in the middle of a task (three of 640 jobs failed outright). PyWren instead uses stateless, idempotent functions - on failure it simply restarts the function on the same input, needing only atomic writes to remote storage to track which functions have succeeded.
+  λέξεις ΝΕΕΣ ['idempotent', 'atomic writes', 'rendezvous']   ΠΑΛΙΕΣ ['idempotent', 'atomic writes', 'rendezvous']
+   - excamera-nsdi17.pdf:13  νέες —  παλιές —
+       (4 κοινές) To our knowledge, ExCamera is the first system to use such cloud functions for compute-heavy tasks, such as video encoding; current uses [25] are focused on server-side scripts for Web microservices and asynchronous event handlers.
+   - excamera-nsdi17.pdf:2  νέες —  παλιές —
+       (4 κοινές) In this paper, we describe ExCamera, a massively parallel, cloud-based video-processing framework that we envision as the backend for interactive video-processing applications.
+   - 1702.04024.pdf:6  νέες —  παλιές —
+       (6 κοινές) However, for applications like particle simulations, which require a lot of coordination between long running processes, the PyWren model of using stateless functions with remote storage might not be a good fit.
+   - 1702.04024.pdf:5  νέες —  παλιές —
+       (3 κοινές) Working with applied physics colleagues, we have used PyWren to design novel types of microscope point-spread functions for 3d superresolution microscopy.
+   - 1702.04024.pdf:2  νέες —  παλιές —
+       (3 κοινές) Further we find that this scales to 60-80 GB/s to S3 across 2800 simultaneous functions, showing that existing remote storage systems may not be a significant bottleneck.
+   - 1902.03383v1.pdf:10  νέες —  παλιές —
+       (3 κοινές) In particular, each task takes the internal state along with video frames as input, and emits the modified internal state as output.
+   - 1702.04024.pdf:4  νέες —  παλιές —
+       (4 κοινές) 0 500 1000 1500 2000 2500 workers 0 20 40 60 80 aggregate GB/s read write 20 30 40 50 60 70 rate (MB/s) Figure 3: Remote storage on S3 linearly scales with each worker getting around 30 MB/s bandwidth (inset histogram).
+  ΣΕΛΙΔΕΣ-ΣΤΟΧΟΙ (≥2 νέες λέξεις): 1702.04024.pdf:3
+
+Πλήρες κείμενο σελίδων: /app/evaluation/runs/hard_failures_pages.json

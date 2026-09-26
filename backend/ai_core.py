@@ -19,6 +19,7 @@ from loguru import logger
 from rank_bm25 import BM25Okapi
 from sentence_transformers import CrossEncoder
 
+import corpus_glossary
 import gemini_rest
 import metrics
 from genai_compat import genai  # deprecated SDK, τεκμηριωμένο: βλ. genai_compat.py
@@ -74,8 +75,8 @@ async def _gemini_generate(prompt, stream=False, retries=5):
         except gexc.ResourceExhausted:
             wait = min(32, 2 ** (attempt + 1))  # 2,4,8,16,32
             logger.warning(
-                f"Gemini rate limit (429). Retry σε {wait}s... "
-                f"[{attempt + 1}/{retries}]")
+                f"Gemini rate limit (429). Retry σε {wait}s... [{attempt + 1}/{retries}]"
+            )
             await asyncio.sleep(wait)
     raise RuntimeError("Gemini: εξάντληση retries λόγω rate limit (429).")
 
@@ -99,6 +100,8 @@ def _safe_chunk_text(chunk) -> str:
                 if t:
                     parts.append(t)
         return "".join(parts)
+
+
 # ---------------------------------
 
 logger.info("---> Αρχικοποίηση της AI Βάσης Δεδομένων (ChromaDB)...")
@@ -130,9 +133,11 @@ logger.info(f"---> Inference device: {DEVICE}")
 TORCH_THREADS = int(os.getenv("TORCH_THREADS", "0"))  # 0 = auto (όλοι οι πυρήνες)
 if DEVICE == "cpu":
     if TORCH_THREADS <= 0:
-        TORCH_THREADS = (len(os.sched_getaffinity(0))
-                         if hasattr(os, "sched_getaffinity")
-                         else (os.cpu_count() or 1))
+        TORCH_THREADS = (
+            len(os.sched_getaffinity(0))
+            if hasattr(os, "sched_getaffinity")
+            else (os.cpu_count() or 1)
+        )
     torch.set_num_threads(TORCH_THREADS)
     logger.info(f"---> CPU threads: {TORCH_THREADS}")
 
@@ -143,7 +148,9 @@ sentence_transformer_ef = embedding_functions.SentenceTransformerEmbeddingFuncti
 collection = chroma_client.get_or_create_collection(
     name="ai_research_docs",
     embedding_function=sentence_transformer_ef,
-    metadata={"hnsw:space": "cosine"},  # bge-m3 είναι φτιαγμένο για cosine (default της Chroma είναι L2)
+    metadata={
+        "hnsw:space": "cosine"
+    },  # bge-m3 είναι φτιαγμένο για cosine (default της Chroma είναι L2)
 )
 
 logger.info("---> Φόρτωση του Reranker (Αξιολογητή)...")
@@ -262,8 +269,7 @@ USE_BGE_SPARSE = os.getenv("USE_BGE_SPARSE", "0") not in ("0", "false", "False")
 SPARSE_CACHE_PATH = os.path.join(db_path, "_sparse_weights.json")
 
 
-def delete_file_from_db(filename: str, user_id: int | None = None,
-                        doc_id: int | None = None):
+def delete_file_from_db(filename: str, user_id: int | None = None, doc_id: int | None = None):
     """Διαγράφει τα chunks ενός αρχείου. Αν δοθεί user_id, διαγράφει ΜΟΝΟ τα
     chunks αυτού του χρήστη — ώστε δύο χρήστες με ομώνυμο αρχείο να μην
     σβήνουν ο ένας τα δεδομένα του άλλου."""
@@ -276,8 +282,7 @@ def delete_file_from_db(filename: str, user_id: int | None = None,
             where = {"file_name": filename}
         collection.delete(where=where)
         _bump_corpus_version()  # invalidate το BM25 cache (λιγότερα chunks)
-        logger.success(
-            f"---> Επιτυχία: Τα δεδομένα του '{filename}' διαγράφηκαν.")
+        logger.success(f"---> Επιτυχία: Τα δεδομένα του '{filename}' διαγράφηκαν.")
     except Exception as e:
         # ΞΑΝΑΠΕΤΑΜΕ: χωρίς αυτό ο caller (main.py delete_document) νόμιζε ότι η
         # διαγραφή πέτυχε και έσβηνε το Postgres row -> ορφανά chunks, ενεργά στο
@@ -292,17 +297,13 @@ def el_tokenize(text: str) -> list:
     Έτσι 'Ελληνικά' == 'ελληνικα' για το BM25 (οι χρήστες γράφουν συχνά άτονα)."""
     text = text.lower()
     # NFD: σπάει το γράμμα από τον τόνο -> πετάμε τα combining marks (κατηγορία Mn)
-    text = "".join(
-        c for c in unicodedata.normalize("NFD", text)
-        if unicodedata.category(c) != "Mn"
-    )
+    text = "".join(c for c in unicodedata.normalize("NFD", text) if unicodedata.category(c) != "Mn")
     return re.findall(r"\w+", text, flags=re.UNICODE)
 
 
 def _has_greek(text: str) -> bool:
     """True αν το κείμενο περιέχει ελληνικούς χαρακτήρες (Greek + Greek Extended)."""
-    return any(0x0370 <= ord(ch) <= 0x03FF or 0x1F00 <= ord(ch) <= 0x1FFF
-               for ch in text)
+    return any(0x0370 <= ord(ch) <= 0x03FF or 0x1F00 <= ord(ch) <= 0x1FFF for ch in text)
 
 
 # Απλό cache μεταφράσεων: η ίδια ερώτηση δεν ξαναμεταφράζεται (γλιτώνει API κλήσεις).
@@ -328,8 +329,9 @@ def _load_translation_cache() -> dict:
 
 
 _translation_cache = _load_translation_cache()
-logger.info(f"---> Translation cache: {len(_translation_cache)} εγγραφές "
-            f"από {_translation_cache_path}")
+logger.info(
+    f"---> Translation cache: {len(_translation_cache)} εγγραφές από {_translation_cache_path}"
+)
 
 
 def _save_translation_cache() -> None:
@@ -343,6 +345,8 @@ def _save_translation_cache() -> None:
             os.replace(tmp, _translation_cache_path)
     except OSError as e:
         logger.warning(f"--- Δεν αποθηκεύτηκε το translation cache: {e} ---")
+
+
 # --- Cache των query embeddings -----------------------------------------------
 # ΓΙΑΤΙ: μετρήθηκε ότι το embedding ΜΙΑΣ ερώτησης με το bge-m3 (568M) κοστίζει
 # ~1190ms σε CPU — το 60% όλου του retrieval — ενώ το matmul των 418 διανυσμάτων
@@ -374,14 +378,16 @@ def _load_query_emb_cache() -> dict:
             if str(z["model"]) != EMBED_MODEL_NAME:
                 logger.warning(
                     f"--- Query embedding cache από άλλο μοντέλο "
-                    f"('{z['model']}' != '{EMBED_MODEL_NAME}') -> αγνοείται ---")
+                    f"('{z['model']}' != '{EMBED_MODEL_NAME}') -> αγνοείται ---"
+                )
                 return {}
             vecs = z["vectors"]
             if vecs.ndim != 2 or vecs.shape[1] != EMBED_DIM:
                 logger.warning(
                     f"--- Query embedding cache με λάθος διάσταση "
                     f"({vecs.shape} != (n, {EMBED_DIM})) -> αγνοείται. "
-                    f"Συνήθης αιτία: το έγραψε test με stubbed embedder. ---")
+                    f"Συνήθης αιτία: το έγραψε test με stubbed embedder. ---"
+                )
                 return {}
             return dict(zip(z["queries"].tolist(), vecs))
     except (OSError, ValueError, KeyError):
@@ -389,8 +395,9 @@ def _load_query_emb_cache() -> dict:
 
 
 _query_emb_cache = _load_query_emb_cache()
-logger.info(f"---> Query embedding cache: {len(_query_emb_cache)} εγγραφές "
-            f"από {QUERY_EMB_CACHE_PATH}")
+logger.info(
+    f"---> Query embedding cache: {len(_query_emb_cache)} εγγραφές από {QUERY_EMB_CACHE_PATH}"
+)
 
 
 def _save_query_emb_cache() -> None:
@@ -404,9 +411,11 @@ def _save_query_emb_cache() -> None:
             tmp = QUERY_EMB_CACHE_PATH + ".tmp"
             with open(tmp, "wb") as f:
                 np.savez_compressed(
-                    f, model=np.array(EMBED_MODEL_NAME),
+                    f,
+                    model=np.array(EMBED_MODEL_NAME),
                     queries=np.array([q for q, _ in items]),
-                    vectors=np.stack([v for _, v in items]))
+                    vectors=np.stack([v for _, v in items]),
+                )
             os.replace(tmp, QUERY_EMB_CACHE_PATH)
     except (OSError, ValueError) as e:
         logger.warning(f"--- Δεν αποθηκεύτηκε το query embedding cache: {e} ---")
@@ -428,13 +437,13 @@ def _embed_query(query: str) -> np.ndarray:
         _save_query_emb_cache()
     return v
 
+
 # --- Domain descriptor: ΠΑΡΑΓΕΤΑΙ από το corpus (build_corpus_descriptor.py),
 # ΟΧΙ καρφωμένος. Fallback στο ιστορικό cloud/serverless αν λείπει το αρχείο,
 # ώστε το σύστημα να δουλεύει και πριν τρέξει το script. Φορτώνεται στο import·
 # άλλαξες corpus -> τρέξε το script -> restart backend.
 _DESCRIPTOR_PATH = os.path.join(os.path.dirname(__file__), "corpus_descriptor.json")
-_FALLBACK_DOMAIN = ("computer-science papers on cloud computing, serverless "
-                    "computing and distributed systems")
+_FALLBACK_DOMAIN = "scientific research papers"
 
 
 def _load_corpus_descriptor():
@@ -453,7 +462,7 @@ def _load_corpus_descriptor():
 _CORPUS_DOMAIN, _CORPUS_TERMS = _load_corpus_descriptor()
 
 
-async def optimize_query(query: str):
+async def optimize_query(query: str, domain: str | None = None, terms: str | None = None):
     """Translate-then-Retrieve: τα έγγραφα είναι ΑΓΓΛΙΚΑ, οπότε αν η ερώτηση
     είναι ελληνική τη μεταφράζουμε σε αγγλικά ΜΟΝΟ για την ανάκτηση (retrieval).
     Η απάντηση μένει στη γλώσσα του χρήστη (το αναλαμβάνει το system prompt)."""
@@ -464,33 +473,52 @@ async def optimize_query(query: str):
     if query in _translation_cache:
         return _translation_cache[query]
 
+    # Glossary/domain ΤΟΥ SCOPE (τα χτίζει το search_documents από τα in-scope
+    # αρχεία). Fallback στα καθολικά όταν λείπουν: legacy chunks πριν το backfill,
+    # ή κλήση χωρίς ορίσματα (tests/probes/CLI). Το ΚΕΝΟ string πέφτει κι αυτό στο
+    # fallback — γι' αυτό `or`, όχι έλεγχος για None.
+    domain = domain or _CORPUS_DOMAIN
+    terms = terms or _CORPUS_TERMS
+
     try:
         # ΤΟ ΠΡΟΒΛΗΜΑ ΠΟΥ ΛΥΝΕΙ (μετρημένο, measure_gate_margin.py):
         # χωρίς domain context ο μεταφραστής βγάζει καθημερινά αγγλικά, όχι όρους
         # του πεδίου: «μηχανήματα» -> "machinery" αντί για "servers", «ελέγχου» ->
         # "control" αντί για "auditability". Το retrieval ψάχνει μετά λέξεις που ΔΕΝ
-        # υπάρχουν στα έγγραφα. Το ΠΕΔΙΟ (_CORPUS_DOMAIN/_CORPUS_TERMS) ΠΑΡΑΓΕΤΑΙ από
-        # το corpus (build_corpus_descriptor.py) -> δουλεύει για οποιοδήποτε πεδίο.
-        glossary = (f"Prefer the vocabulary of this corpus glossary: {_CORPUS_TERMS}. "
-                    if _CORPUS_TERMS else "")
+        # υπάρχουν στα έγγραφα.
+        # Η ΟΔΗΓΙΑ ΕΙΝΑΙ ΠΕΡΙΟΡΙΣΤΙΚΗ ΕΠΙΤΗΔΕΣ (probe_domain_glossary.py, 17/8/2026):
+        # το «Prefer the vocabulary of this corpus glossary» ΠΡΟΣΘΕΤΕ όρους που δεν
+        # υπάρχουν στην ερώτηση -> «Πότε εξερράγη ο Βεζούβιος;» έγινε "Vesuvius eruption
+        # RATE" (+0.49) και ΠΕΡΑΣΕ το gate με μηδέν σχετικό υλικό. Ίδιος μηχανισμός με
+        # το απορριφθέν query enrichment: ο reranker βαθμολογεί το ΛΕΞΙΛΟΓΙΟ, όχι την
+        # ερώτηση. Ουδέτερη διατύπωση ΔΕΝ αρκεί (μετρήθηκε: ταυτόσημη διαρροή) — χρειάζεται
+        # ΡΗΤΗ απαγόρευση. Με την περιοριστική: coverage 95% ΑΜΕΤΑΒΛΗΤΟ, ooc 4/5 -> 5/5.
+        glossary = (
+            f"Corpus glossary: {terms}. Use a glossary term ONLY as the "
+            "translation of a word that is actually present in the question. NEVER add "
+            "a glossary term that the question does not mention, and NEVER map a proper "
+            "noun (a place, person, product or brand name) onto glossary vocabulary. "
+            if terms
+            else ""
+        )
         prompt = (
             "You are a translation assistant for an English-only academic search engine. "
-            f"The corpus is about: {_CORPUS_DOMAIN}. "
+            f"The corpus is about: {domain}. "
             "Translate the user's question to English using the STANDARD TECHNICAL "
             "TERMINOLOGY of that field: map everyday words to the term a document would "
             "actually use, NOT the literal everyday translation. "
-            + glossary +
-            "Preserve every domain term already present in the question - never drop or "
+            + glossary
+            + "Preserve every domain term already present in the question - never drop or "
             "generalize one. Output ONLY a concise English search query with the key "
             "terms. No quotes, no extra text.\n\n"
             f"User question: {query}"
         )
-        english_query = (await gemini_rest.generate_once(
-            prompt, model=GEMINI_MODEL, api_key=GEMINI_API_KEY)).strip(' "\'\n')
+        english_query = (
+            await gemini_rest.generate_once(prompt, model=GEMINI_MODEL, api_key=GEMINI_API_KEY)
+        ).strip(" \"'\n")
         _translation_cache[query] = english_query
         _save_translation_cache()
-        logger.info(
-            f"---> Retrieval translate: '{query[:40]}...' -> '{english_query}'")
+        logger.info(f"---> Retrieval translate: '{query[:40]}...' -> '{english_query}'")
         return english_query
     except Exception as e:
         logger.warning(f"--- Query translation failed: {e} ---")
@@ -506,7 +534,8 @@ async def _rewrite_query(question: str, history: list) -> str:
     (η απάντηση & η γλώσσα ακολουθούν την αρχική ερώτηση)."""
     hist_text = "\n".join(
         f"{'USER' if m.get('role') == 'user' else 'ASSISTANT'}: {m.get('content', '')}"
-        for m in history[-4:])
+        for m in history[-4:]
+    )
     prompt = (
         "Rewrite the user's follow-up question into a SINGLE self-contained search "
         "query for a document search engine, resolving pronouns/references using the "
@@ -516,8 +545,9 @@ async def _rewrite_query(question: str, history: list) -> str:
         f"Follow-up question: {question}\n\nStandalone search query:"
     )
     try:
-        rewritten = (await gemini_rest.generate_once(
-            prompt, model=GEMINI_MODEL, api_key=GEMINI_API_KEY)).strip(' "\'\n')
+        rewritten = (
+            await gemini_rest.generate_once(prompt, model=GEMINI_MODEL, api_key=GEMINI_API_KEY)
+        ).strip(" \"'\n")
         if rewritten:
             logger.info(f"---> Query rewrite: '{question[:40]}...' -> '{rewritten}'")
             return rewritten
@@ -585,11 +615,14 @@ def _get_bm25_index():
         tokenized = [el_tokenize(t) for t in texts]
         _bm25_cache.clear()
         _bm25_cache.update(
-            version=sig, ids=ids, texts=texts, metas=metas,
+            version=sig,
+            ids=ids,
+            texts=texts,
+            metas=metas,
             bm25=(BM25Okapi(tokenized) if tokenized else None),
-            pos={id_: i for i, id_ in enumerate(ids)})
-        logger.info(f"BM25 index (re)built: {len(ids)} chunks "
-                    f"(version {_corpus_version}).")
+            pos={id_: i for i, id_ in enumerate(ids)},
+        )
+        logger.info(f"BM25 index (re)built: {len(ids)} chunks (version {_corpus_version}).")
         return _bm25_cache
 
 
@@ -604,6 +637,8 @@ def _bm25_sparse_ids(idx: dict, query: str, allowed_ids: list, top_n: int = 30):
     scored = [(scores[pos[i]], i) for i in allowed_ids if i in pos]
     scored.sort(key=lambda x: x[0], reverse=True)
     return [i for _, i in scored[:top_n]]
+
+
 # --- Exact dense αναζήτηση (αντικαθιστά το HNSW της Chroma) ------------------
 _dense_lock = threading.Lock()
 _dense_cache = {"version": None}
@@ -624,10 +659,14 @@ def _get_dense_matrix():
         norms[norms == 0] = 1.0
         _dense_cache.clear()
         _dense_cache.update(
-            version=sig, ids=data["ids"], matrix=M / norms,
-            pos={id_: i for i, id_ in enumerate(data["ids"])})
-        logger.info(f"Dense matrix (re)built: {M.shape[0]}x{M.shape[1]} "
-                    f"(version {_corpus_version}).")
+            version=sig,
+            ids=data["ids"],
+            matrix=M / norms,
+            pos={id_: i for i, id_ in enumerate(data["ids"])},
+        )
+        logger.info(
+            f"Dense matrix (re)built: {M.shape[0]}x{M.shape[1]} (version {_corpus_version})."
+        )
         return _dense_cache
 
 
@@ -645,11 +684,13 @@ def _dense_exact_ids(dm: dict, query: str, allowed_ids: list, top_n: int = 30):
     ids_allowed = [i for i in allowed_ids if i in pos]
     if not ids_allowed:
         return []
-    v = _embed_query(query)          # cached: ~1190ms -> ~0 σε επανάληψη
+    v = _embed_query(query)  # cached: ~1190ms -> ~0 σε επανάληψη
     sims = dm["matrix"][[pos[i] for i in ids_allowed]] @ v
     # kind="stable": οι ισοβαθμίες λύνονται ΠΑΝΤΑ με τη σειρά των allowed_ids.
     order = np.argsort(-sims, kind="stable")[:top_n]
     return [ids_allowed[j] for j in order]
+
+
 _sparse_lock = threading.Lock()
 _sparse_cache = {"version": None}
 _sparse_head = None
@@ -663,9 +704,9 @@ def _get_sparse_head():
     global _sparse_head
     if _sparse_head is None:
         from huggingface_hub import hf_hub_download
+
         transformer = sentence_transformer_ef._model[0]
-        state = torch.load(hf_hub_download("BAAI/bge-m3", "sparse_linear.pt"),
-                           map_location=DEVICE)
+        state = torch.load(hf_hub_download("BAAI/bge-m3", "sparse_linear.pt"), map_location=DEVICE)
         head = torch.nn.Linear(transformer.auto_model.config.hidden_size, 1)
         head.load_state_dict(state)
         head.to(DEVICE).eval()
@@ -679,8 +720,9 @@ def _sparse_encode(texts: list, batch: int = 8) -> list:
     special = set(tok.all_special_ids)
     out = []
     for i in range(0, len(texts), batch):
-        feats = tok(texts[i:i + batch], return_tensors="pt", truncation=True,
-                    max_length=512, padding=True).to(DEVICE)
+        feats = tok(
+            texts[i : i + batch], return_tensors="pt", truncation=True, max_length=512, padding=True
+        ).to(DEVICE)
         with torch.no_grad():
             w = torch.relu(head(auto(**feats).last_hidden_state)).squeeze(-1)
         for ids, ws, mask in zip(feats["input_ids"], w, feats["attention_mask"]):
@@ -707,7 +749,7 @@ def _get_sparse_index():
     with _sparse_lock:
         if _sparse_cache.get("version") == sig:
             return _sparse_cache
-        idx = _get_bm25_index()          # ids + texts, ήδη cached
+        idx = _get_bm25_index()  # ids + texts, ήδη cached
         stored = {}
         if os.path.exists(SPARSE_CACHE_PATH):
             try:
@@ -717,8 +759,9 @@ def _get_sparse_index():
                 logger.warning(f"Sparse cache μη αναγνώσιμο ({e}) -> ξαναχτίζεται.")
         missing = [i for i in idx["ids"] if i not in stored]
         if missing:
-            logger.info(f"Sparse weights: υπολογίζονται {len(missing)} νέα chunks "
-                        f"(από {len(idx['ids'])}).")
+            logger.info(
+                f"Sparse weights: υπολογίζονται {len(missing)} νέα chunks (από {len(idx['ids'])})."
+            )
             texts = [idx["texts"][idx["pos"][i]] for i in missing]
             for cid, d in zip(missing, _sparse_encode(texts)):
                 stored[cid] = d
@@ -754,9 +797,18 @@ def _bge_sparse_ids(sp: dict, query: str, allowed_ids: list, top_n: int = 30):
     return [cid for _s, cid in scored[:top_n]]
 
 
-def _rrf_fuse(dense_ids, sparse_ids, all_ids, all_texts, all_metadatas,
-                k: int = 60, top_n: int = 15, extra_ids=None, weights=None,
-                pos=None):
+def _rrf_fuse(
+    dense_ids,
+    sparse_ids,
+    all_ids,
+    all_texts,
+    all_metadatas,
+    k: int = 60,
+    top_n: int = 15,
+    extra_ids=None,
+    weights=None,
+    pos=None,
+):
     """Reciprocal Rank Fusion: ενώνει 2-3 rankings σε ΕΝΑ score χρησιμοποιώντας
     ΜΟΝΟ τη θέση (rank) στη λίστα — άρα δεν χρειάζεται κοινή κλίμακα ανάμεσα σε
     cosine similarity, BM25 και sparse dot product. Καθαρή (pure) συνάρτηση ->
@@ -785,12 +837,10 @@ def _rrf_fuse(dense_ids, sparse_ids, all_ids, all_texts, all_metadatas,
     # που αφορά μόνο 30-45 υποψήφια. Ο caller έχει ΗΔΗ αυτό το dict cached
     # (idx["pos"] του BM25 index, πάνω στα ΙΔΙΑ ids)· περνώντας το, το κόστος
     # μηδενίζεται. Προαιρετικό ώστε tests και probes να καλούν με 5 ορίσματα.
-    pos_by_id = pos if pos is not None else {
-        id_: i for i, id_ in enumerate(all_ids)}
+    pos_by_id = pos if pos is not None else {id_: i for i, id_ in enumerate(all_ids)}
     fused = []
     for doc_id in unique_ids:
-        rrf_score = sum(w / (k + rm.get(doc_id, 1000) + 1)
-                        for w, rm in zip(weights, rank_maps))
+        rrf_score = sum(w / (k + rm.get(doc_id, 1000) + 1) for w, rm in zip(weights, rank_maps))
         idx = pos_by_id[doc_id]
         fused.append((rrf_score, doc_id, all_texts[idx], all_metadatas[idx]))
     # Tie-break στο chunk id: χωρίς αυτό, chunks με ΙΔΙΟ rrf_score άλλαζαν σειρά
@@ -827,9 +877,11 @@ def _expand_to_pages(top_chunks, max_pages: int = 8, user_id: int | None = None)
         key = (meta.get("doc_id"), meta.get("page"), meta.get("file_name"))
         by_page.setdefault(key, []).append(float(score))
 
-    ranked = sorted(by_page.items(),
-                    key=lambda kv: sum(sorted(kv[1], reverse=True)[:PAGE_SCORE_TOP_K]),
-                    reverse=True)
+    ranked = sorted(
+        by_page.items(),
+        key=lambda kv: sum(sorted(kv[1], reverse=True)[:PAGE_SCORE_TOP_K]),
+        reverse=True,
+    )
 
     # Per-source cap: εμποδίζει ένα κυρίαρχο paper να καταλάβει όλες τις θέσεις,
     # ώστε να μείνει χώρος για δεύτερο έγγραφο (multi-hop).
@@ -853,14 +905,12 @@ def _expand_to_pages(top_chunks, max_pages: int = 8, user_id: int | None = None)
             # πρόσβασης, ίδιο με του _build_where.
             clauses = [{"file_name": file_name}, {"page": page}]
             if user_id is not None:
-                clauses.append({"$or": [{"user_id": user_id},
-                                        {"is_public": True}]})
+                clauses.append({"$or": [{"user_id": user_id}, {"is_public": True}]})
             where = {"$and": clauses}
         pg = collection.get(where=where)
         if not pg["ids"]:
             continue
-        ordered = sorted(zip(pg["ids"], pg["documents"]),
-                         key=lambda p: _chunk_idx_from_id(p[0]))
+        ordered = sorted(zip(pg["ids"], pg["documents"]), key=lambda p: _chunk_idx_from_id(p[0]))
         page_text = "\n".join(doc for _, doc in ordered)
         results.append((page_text, {"file_name": file_name, "page": page}))
     return results
@@ -879,8 +929,7 @@ def _build_where(target_filenames: list | None = None, user_id: int | None = Non
         if len(target_filenames) == 1:
             clauses.append({"file_name": target_filenames[0]})
         else:
-            clauses.append(
-                {"$or": [{"file_name": f} for f in target_filenames]})
+            clauses.append({"$or": [{"file_name": f} for f in target_filenames]})
 
     if not clauses:
         return None
@@ -909,8 +958,7 @@ _CORRECTIVE_PROMPT = (
 )
 
 
-async def _corrective_retry(query: str, first_best: float, allowed_ids: list,
-                            idx: dict, dm: dict):
+async def _corrective_retry(query: str, first_best: float, allowed_ids: list, idx: dict, dm: dict):
     """2ο pass μετά από κοπή του gate. Επιστρέφει sorted_final, ή None αν πρέπει
     να παραμείνει κομμένο. Best-effort: ΚΑΘΕ σφάλμα -> None (δηλαδή η σημερινή
     συμπεριφορά), ποτέ εξαίρεση προς τον χρήστη."""
@@ -919,9 +967,11 @@ async def _corrective_retry(query: str, first_best: float, allowed_ids: list,
         return None
     metrics.inc("rag_corrective_attempts_total")
     try:
-        new_query = (await gemini_rest.generate_once(
-            _CORRECTIVE_PROMPT.format(query=query),
-            model=GEMINI_MODEL, api_key=GEMINI_API_KEY)).strip(' "\'\n')
+        new_query = (
+            await gemini_rest.generate_once(
+                _CORRECTIVE_PROMPT.format(query=query), model=GEMINI_MODEL, api_key=GEMINI_API_KEY
+            )
+        ).strip(" \"'\n")
     except Exception as e:
         logger.warning(f"--- Corrective rewrite απέτυχε: {e} ---")
         metrics.inc("rag_corrective_skipped_total", {"reason": "rewrite_error"})
@@ -934,33 +984,45 @@ async def _corrective_retry(query: str, first_best: float, allowed_ids: list,
 
     logger.info(f"---> Corrective retry: '{query[:50]}' -> '{new_query}'")
     dense_ids = await asyncio.to_thread(
-        _dense_exact_ids, dm, new_query, allowed_ids,
-        min(DENSE_CANDIDATES, len(allowed_ids)))
+        _dense_exact_ids, dm, new_query, allowed_ids, min(DENSE_CANDIDATES, len(allowed_ids))
+    )
     sparse_ids = await asyncio.to_thread(
-        _bm25_sparse_ids, idx, new_query, allowed_ids, DENSE_CANDIDATES)
-    rrf_sorted = _rrf_fuse(dense_ids, sparse_ids, idx["ids"], idx["texts"],
-                           idx["metas"], k=60, top_n=RERANK_CANDIDATES,
-                           pos=idx["pos"])
+        _bm25_sparse_ids, idx, new_query, allowed_ids, DENSE_CANDIDATES
+    )
+    rrf_sorted = _rrf_fuse(
+        dense_ids,
+        sparse_ids,
+        idx["ids"],
+        idx["texts"],
+        idx["metas"],
+        k=60,
+        top_n=RERANK_CANDIDATES,
+        pos=idx["pos"],
+    )
     pairs = [[new_query, item[1]] for item in rrf_sorted]
     cross_scores = await asyncio.to_thread(
-        lambda: reranker.predict(pairs, batch_size=RERANK_BATCH_SIZE))
+        lambda: reranker.predict(pairs, batch_size=RERANK_BATCH_SIZE)
+    )
     sorted_final = sorted(
-        zip(cross_scores, [it[1] for it in rrf_sorted],
-            [it[2] for it in rrf_sorted]), key=lambda x: x[0], reverse=True)
+        zip(cross_scores, [it[1] for it in rrf_sorted], [it[2] for it in rrf_sorted]),
+        key=lambda x: x[0],
+        reverse=True,
+    )
 
     if sorted_final[0][0] < CORRECTIVE_MIN_SCORE:
         logger.info(
             f"Corrective gate: best={sorted_final[0][0]:.2f} < "
-            f"{CORRECTIVE_MIN_SCORE} -> παραμένει κομμένο")
+            f"{CORRECTIVE_MIN_SCORE} -> παραμένει κομμένο"
+        )
         return None
-    logger.info(
-        f"Corrective retry ΠΕΤΥΧΕ: {first_best:.2f} -> {sorted_final[0][0]:.2f}")
+    logger.info(f"Corrective retry ΠΕΤΥΧΕ: {first_best:.2f} -> {sorted_final[0][0]:.2f}")
     metrics.inc("rag_corrective_success_total")
     return sorted_final
 
 
-async def search_documents(raw_query: str, target_filenames: list | None = None,
-                           user_id: int | None = None):
+async def search_documents(
+    raw_query: str, target_filenames: list | None = None, user_id: int | None = None
+):
     # Αν ο χρήστης δεν έχει επιλέξει κανένα (έγκυρο) αρχείο, μη γυρνάς τυχαία
     # αποτελέσματα — απάντησε "τίποτα".
     if target_filenames is not None and len(target_filenames) == 0:
@@ -968,16 +1030,15 @@ async def search_documents(raw_query: str, target_filenames: list | None = None,
 
     metrics.inc("rag_queries_total")
 
-    # 0. Κρυφή μετάφραση/εμπλουτισμός (Gemini API)
-    query = await optimize_query(raw_query)
-
+    # ΣΕΙΡΑ: πρώτα authz + BM25 index, ΜΕΤΑ μετάφραση. Δύο λόγοι: (α) το glossary
+    # της μετάφρασης χτίζεται από τα metadata των in-scope αρχείων -> χρειάζεται το
+    # idx· (β) κενό scope -> γυρνάμε [] ΠΡΙΝ ξοδέψουμε κλήση μετάφρασης.
     where_filter = _build_where(target_filenames, user_id)
 
     # 1. Allowed ids (AUTHORIZATION single-source στη Chroma). include=[] ->
     # ΜΟΝΟ τα ids. Τα metadatas ζητούνταν για 418 chunks σε ΚΑΘΕ ερώτηση και
     # δεν διαβάζονταν ποτέ· τα κείμενα τα έχει ήδη το cached BM25 index.
-    allowed = await asyncio.to_thread(
-        lambda: collection.get(where=where_filter, include=[]))
+    allowed = await asyncio.to_thread(lambda: collection.get(where=where_filter, include=[]))
     allowed_ids = allowed["ids"]
     if not allowed_ids:
         return []
@@ -986,16 +1047,23 @@ async def search_documents(raw_query: str, target_filenames: list | None = None,
     idx = await asyncio.to_thread(_get_bm25_index)
     all_ids, all_texts, all_metadatas = idx["ids"], idx["texts"], idx["metas"]
 
+    # 0. Κρυφή μετάφραση με glossary/domain ΤΩΝ in-scope αρχείων (assembled από τα
+    # metadata που φόρτωσε ήδη το idx — μηδέν επιπλέον κλήση βάσης). Κενά (legacy
+    # chunks πριν το backfill) -> optimize_query πέφτει στα καθολικά.
+    scope_domain, scope_terms = corpus_glossary.assemble(allowed_ids, idx)
+    query = await optimize_query(raw_query, domain=scope_domain, terms=scope_terms)
+
     # 2. Dense Search — bge-m3 (8 → 4)
     # που έχουν ήδη περάσει το where φίλτρο. to_thread: CPU-bound embed + matmul.
     dm = await asyncio.to_thread(_get_dense_matrix)
     dense_ids = await asyncio.to_thread(
-        _dense_exact_ids, dm, query, allowed_ids,
-        min(DENSE_CANDIDATES, len(allowed_ids)))
+        _dense_exact_ids, dm, query, allowed_ids, min(DENSE_CANDIDATES, len(allowed_ids))
+    )
 
     # 3. Sparse Search (BM25 από το cache), περιορισμένο στα allowed_ids
     sparse_ids = await asyncio.to_thread(
-        _bm25_sparse_ids, idx, query, allowed_ids, DENSE_CANDIDATES)
+        _bm25_sparse_ids, idx, query, allowed_ids, DENSE_CANDIDATES
+    )
 
     # 3β. BGE-M3 sparse — ΤΡΙΤΟ σκέλος. Αποτυγχάνει σε ΑΛΛΕΣ ερωτήσεις απ' ό,τι
     # το BM25 (κερδίζει στα multi_hop, χάνει στα CLI flags), γι' αυτό προστίθεται
@@ -1003,45 +1071,55 @@ async def search_documents(raw_query: str, target_filenames: list | None = None,
     bge_ids = []
     if USE_BGE_SPARSE:
         sp = await asyncio.to_thread(_get_sparse_index)
-        bge_ids = await asyncio.to_thread(
-            _bge_sparse_ids, sp, query, allowed_ids, DENSE_CANDIDATES)
+        bge_ids = await asyncio.to_thread(_bge_sparse_ids, sp, query, allowed_ids, DENSE_CANDIDATES)
 
     # 4. Reciprocal Rank Fusion (RRF): ένωση των σκελών -> top-15
-        # Το συνολικό lexical βάρος (8 → 4)
+    # Το συνολικό lexical βάρος (8 → 4)
     # προσθήκη του BGE sparse να ΜΗΝ υποβαθμίζει το dense.
-    rrf_sorted = _rrf_fuse(dense_ids, sparse_ids, all_ids, all_texts,
-                           all_metadatas, k=60, top_n=RERANK_CANDIDATES,
-                           extra_ids=bge_ids,
-                           weights=[1.0, 0.5, 0.5] if bge_ids else None,
-                           pos=idx["pos"])
+    rrf_sorted = _rrf_fuse(
+        dense_ids,
+        sparse_ids,
+        all_ids,
+        all_texts,
+        all_metadatas,
+        k=60,
+        top_n=RERANK_CANDIDATES,
+        extra_ids=bge_ids,
+        weights=[1.0, 0.5, 0.5] if bge_ids else None,
+        pos=idx["pos"],
+    )
 
     # 5. Reranking με τον Cross-Encoder — το βαρύτερο CPU κομμάτι, σε thread
     pairs = [[query, item[1]] for item in rrf_sorted]
     cross_scores = await asyncio.to_thread(
-        lambda: reranker.predict(pairs, batch_size=RERANK_BATCH_SIZE))
+        lambda: reranker.predict(pairs, batch_size=RERANK_BATCH_SIZE)
+    )
 
-    final_combined = list(zip(cross_scores, [item[1] for item in rrf_sorted],
-                              [item[2] for item in rrf_sorted]))
+    final_combined = list(
+        zip(cross_scores, [item[1] for item in rrf_sorted], [item[2] for item in rrf_sorted])
+    )
     sorted_final = sorted(final_combined, key=lambda x: x[0], reverse=True)
 
     # --- Relevance gate (anti-hallucination) — κατώφλι/σκεπτικό: MIN_RERANK_SCORE ---
     if sorted_final[0][0] < MIN_RERANK_SCORE:
         logger.info(
             f"Relevance gate: best={sorted_final[0][0]:.2f} < {MIN_RERANK_SCORE} "
-            f"-> κανένα αρκετά σχετικό chunk")
+            f"-> κανένα αρκετά σχετικό chunk"
+        )
         metrics.inc("rag_gate_blocked_total")
         # Corrective 2ο pass: ΜΟΝΟ εδώ, δηλαδή μόνο όταν το σύστημα ήδη απέτυχε.
         # Το happy path (61/61 ερωτήσεις του golden set) δεν το βλέπει ποτέ.
-        sorted_final = await _corrective_retry(
-            query, sorted_final[0][0], allowed_ids, idx, dm)
+        sorted_final = await _corrective_retry(query, sorted_final[0][0], allowed_ids, idx, dm)
         if sorted_final is None:
             return []
 
     # Parent-document (page-level) expansion: επιστρέφουμε ΟΛΟΚΛΗΡΕΣ ΣΕΛΙΔΕΣ
     # (όχι μεμονωμένα chunks) από τα top reranked chunks -> καλύτερη πληρότητα
     # σε ερωτήσεις τύπου "λίστα όλων των X" (π.χ. όλα τα εμπόδια του cloud).
-    return await asyncio.to_thread(_expand_to_pages, sorted_final[:EXPAND_INPUT],
-                                   MAX_PAGES, user_id)
+    return await asyncio.to_thread(
+        _expand_to_pages, sorted_final[:EXPAND_INPUT], MAX_PAGES, user_id
+    )
+
 
 # Δεικτικό + ουσιαστικό οντότητας. Το ουσιαστικό είναι ΑΠΑΡΑΙΤΗΤΟ: σκέτο
 # «that» είναι και αναφορική αντωνυμία («the paper that describes…») και θα
@@ -1051,12 +1129,16 @@ _DEIC_EN = re.compile(
     r"\b(that|those|the other|the same|this particular|such)\s+"
     r"(\w+\s+){0,2}"
     r"(paper|system|implementation|work|approach|study|model|one|thing|"
-    r"technique|method|tool|service|experiment|result|author)s?\b", re.I)
+    r"technique|method|tool|service|experiment|result|author)s?\b",
+    re.I,
+)
 
 _DEIC_EL = re.compile(
     r"\b(εκειν|συγκεκριμεν|αυτ|αλλ)\w*\s+(τ\w+\s+)?"
     r"(υλοποιηση|paper|συστημα|εργασια|μελετη|μεθοδο|προσεγγιση|"
-    r"πειραμα|αποτελεσμα|εργαλειο)", re.I)
+    r"πειραμα|αποτελεσμα|εργαλειο)",
+    re.I,
+)
 
 
 def _has_dangling_referent(query: str) -> bool:
@@ -1067,8 +1149,9 @@ def _has_dangling_referent(query: str) -> bool:
     και θα την έκοβε άδικα. Εδώ το σύστημα ήδη αρνείται, οπότε αλλάζει μόνο η
     ΔΙΑΤΥΠΩΣΗ της άρνησης — δεν υπάρχει σωστή απάντηση να χαλάσει.
     """
-    flat = "".join(c for c in unicodedata.normalize("NFD", query)
-                   if unicodedata.category(c) != "Mn")
+    flat = "".join(
+        c for c in unicodedata.normalize("NFD", query) if unicodedata.category(c) != "Mn"
+    )
     return bool(_DEIC_EN.search(query) or _DEIC_EL.search(flat))
 
 
@@ -1104,8 +1187,9 @@ PERSONA_STYLES = {
 }
 
 
-async def ask_ai(question, target_filenames, history=None, user_id=None, persona="Researcher",
-                 precomputed=None):
+async def ask_ai(
+    question, target_filenames, history=None, user_id=None, persona="Researcher", precomputed=None
+):
     """precomputed: έτοιμο αποτέλεσμα ανάκτησης — χρησιμοποιείται ΜΟΝΟ από το eval
     ώστε να μη γίνει δεύτερη φορά η ίδια (ακριβή σε CPU) αναζήτηση. Η εφαρμογή δεν
     το περνά ποτέ, οπότε η συμπεριφορά της παραμένει αμετάβλητη."""
@@ -1119,9 +1203,11 @@ async def ask_ai(question, target_filenames, history=None, user_id=None, persona
 
     # --- MLOps: μέτρηση χρόνου φάσης ανάκτησης (retrieval) ---
     t_retrieval = time.perf_counter()
-    top_3_data = (precomputed if precomputed is not None
-                  else await search_documents(retrieval_query, target_filenames,
-                                              user_id=user_id))
+    top_3_data = (
+        precomputed
+        if precomputed is not None
+        else await search_documents(retrieval_query, target_filenames, user_id=user_id)
+    )
     retrieval_time = time.perf_counter() - t_retrieval
     metrics.observe("rag_retrieval_seconds", retrieval_time)
 
@@ -1136,38 +1222,45 @@ async def ask_ai(question, target_filenames, history=None, user_id=None, persona
         # ξεπερνούσε το rag_queries_total και το ambiguous_query δεν
         # εμφανιζόταν ΠΟΤΕ μόνο του. Τα outcomes είναι ΑΜΟΙΒΑΙΩΣ
         # ΑΠΟΚΛΕΙΟΜΕΝΑ -- μία απάντηση, μία ετικέτα.
-        metrics.inc("rag_answers_total",
-                    {"outcome": "ambiguous_query" if dangling else "no_context"})
+        metrics.inc(
+            "rag_answers_total", {"outcome": "ambiguous_query" if dangling else "no_context"}
+        )
         if _has_greek(question):
-            msg = ("Η ερώτηση αναφέρεται σε κάτι που δεν ονομάζει. "
-                   "Σε ποιο σύστημα ή paper αναφέρεσαι;" if dangling
-                   else "Δεν βρέθηκε απάντηση στα επιλεγμένα έγγραφα.")
+            msg = (
+                "Η ερώτηση αναφέρεται σε κάτι που δεν ονομάζει. Σε ποιο σύστημα ή paper αναφέρεσαι;"
+                if dangling
+                else "Δεν βρέθηκε απάντηση στα επιλεγμένα έγγραφα."
+            )
         else:
-            msg = ("The question refers to something it does not name. "
-                   "Which system or paper do you mean?" if dangling
-                   else "The selected documents do not contain an answer to this question.")
+            msg = (
+                "The question refers to something it does not name. "
+                "Which system or paper do you mean?"
+                if dangling
+                else "The selected documents do not contain an answer to this question."
+            )
         yield {"type": "text", "data": msg}
         return
     context_text = ""
     sources_list = []
 
     for i, (text, meta) in enumerate(top_3_data, 1):
-        file_n = meta.get('file_name', 'Unknown File')
-        page_n = meta.get('page', '?')
+        file_n = meta.get("file_name", "Unknown File")
+        page_n = meta.get("page", "?")
         header = SOURCE_HEADER.format(i=i, file=file_n, page=page_n)
         context_text += f"\n{header}\n{text}\n"
         # Πλούσιο αντικείμενο αντί για string: το UI δείχνει και απόσπασμα
         # του chunk -> ο χρήστης ΕΠΑΛΗΘΕΥΕΙ από πού βγήκε η απάντηση.
-        sources_list.append({
-            # Η ετικέτα ταξιδεύει ΜΕ το αντικείμενο, δεν ξαναϋπολογίζεται στο
-            # UI: το dedup παρακάτω αλλάζει την αρίθμηση, οπότε ένα enumerate()
-            # στο frontend θα έδειχνε [2] για μια απάντηση που λέει [S3].
-            "label": f"S{i}",
-            "file": file_n,
-            "page": page_n,
-            "preview": text[:400] + ("…" if len(text) > 400 else ""),
-        })
-        
+        sources_list.append(
+            {
+                # Η ετικέτα ταξιδεύει ΜΕ το αντικείμενο, δεν ξαναϋπολογίζεται στο
+                # UI: το dedup παρακάτω αλλάζει την αρίθμηση, οπότε ένα enumerate()
+                # στο frontend θα έδειχνε [2] για μια απάντηση που λέει [S3].
+                "label": f"S{i}",
+                "file": file_n,
+                "page": page_n,
+                "preview": text[:400] + ("…" if len(text) > 400 else ""),
+            }
+        )
 
     history_text = ""
     if history:
@@ -1178,7 +1271,7 @@ async def ask_ai(question, target_filenames, history=None, user_id=None, persona
         history_text += "---------------------------\n\n"
 
     # --- SYSTEM PROMPT: γλώσσα + persona-στυλ + κανόνας μη-ψευδαίσθησης ---
-        # --- SYSTEM PROMPT: γλώσσα + persona-στυλ + κανόνας μη-ψευδαίσθησης ---
+    # --- SYSTEM PROMPT: γλώσσα + persona-στυλ + κανόνας μη-ψευδαίσθησης ---
     persona_style = PERSONA_STYLES.get(persona, PERSONA_STYLES["Researcher"])
     citation_rule = f"\n    6. CITATIONS: {CITATION_RULE}" if CITATION_RULE else ""
     system_prompt = f"""You are an expert Research Assistant. Provide precise, evidence-based answers using ONLY the provided SOURCE TEXT.
@@ -1196,8 +1289,8 @@ async def ask_ai(question, target_filenames, history=None, user_id=None, persona
     # από ελληνικό/αγγλικό ιστορικό (π.χ. αγγλική ερώτηση σε ελληνικό chat).
     lang_rule = (
         "ΑΠΑΝΤΗΣΕ ΑΠΟΚΛΕΙΣΤΙΚΑ ΣΤΑ ΕΛΛΗΝΙΚΑ — ανεξάρτητα από τη γλώσσα του ιστορικού."
-        if _has_greek(question) else
-        "ANSWER EXCLUSIVELY IN ENGLISH — regardless of the conversation history language."
+        if _has_greek(question)
+        else "ANSWER EXCLUSIVELY IN ENGLISH — regardless of the conversation history language."
     )
     full_prompt = (
         f"{system_prompt}\n\n"
@@ -1208,7 +1301,7 @@ async def ask_ai(question, target_filenames, history=None, user_id=None, persona
         f"ANSWER:"
     )
 
-         # Dedup ανά (αρχείο, σελίδα) (8 → 4)
+    # Dedup ανά (αρχείο, σελίδα) (8 → 4)
     seen, unique_sources = set(), []
     for s in sources_list:
         key = (s["file"], s["page"])
@@ -1231,16 +1324,18 @@ async def ask_ai(question, target_filenames, history=None, user_id=None, persona
             # parts έρχονται σημαδεμένα με "thought": true και φιλτράρονται ρητά
             # μέσα στο gemini_rest — όχι με heuristic πάνω σε exception.
             async for kind, data in gemini_rest.stream_generate(
-                    full_prompt, model=GEMINI_MODEL, api_key=GEMINI_API_KEY,
-                    temperature=GENERATION_CONFIG.temperature,
-                    max_output_tokens=GENERATION_CONFIG.max_output_tokens,
-                    thinking_budget=THINKING_BUDGET):
+                full_prompt,
+                model=GEMINI_MODEL,
+                api_key=GEMINI_API_KEY,
+                temperature=GENERATION_CONFIG.temperature,
+                max_output_tokens=GENERATION_CONFIG.max_output_tokens,
+                thinking_budget=THINKING_BUDGET,
+            ):
                 if kind == "text":
                     produced_text = True
                     yield {"type": "text", "data": data}
                 else:
-                    prompt_tokens, out_tokens, thinking_tokens = (
-                        gemini_rest.usage_tokens(data))
+                    prompt_tokens, out_tokens, thinking_tokens = gemini_rest.usage_tokens(data)
         else:
             response = await _gemini_generate(full_prompt, stream=True)
 
@@ -1261,51 +1356,65 @@ async def ask_ai(question, target_filenames, history=None, user_id=None, persona
         if not produced_text:
             logger.warning("Gemini: κενή απάντηση (thinking-only, finish_reason=STOP).")
             outcome = "empty_answer"
-            yield {"type": "text",
-                   "data": ("Δεν κατάφερα να συνθέσω απάντηση αυτή τη στιγμή — "
-                            "δοκίμασε ξανά την ερώτηση." if _has_greek(question)
-                            else "I couldn't compose an answer just now — "
-                                 "please try asking again.")}
+            yield {
+                "type": "text",
+                "data": (
+                    "Δεν κατάφερα να συνθέσω απάντηση αυτή τη στιγμή — δοκίμασε ξανά την ερώτηση."
+                    if _has_greek(question)
+                    else "I couldn't compose an answer just now — please try asking again."
+                ),
+            }
     except asyncio.CancelledError:
         logger.warning(
-            "Ο χρήστης έκλεισε τη σύνδεση (Client Disconnected). Διακοπή streaming από το Gemini για προστασία πόρων (FinOps)!")
+            "Ο χρήστης έκλεισε τη σύνδεση (Client Disconnected). Διακοπή streaming από το Gemini για προστασία πόρων (FinOps)!"
+        )
         raise  # Ενημερώνει το FastAPI να κλείσει το socket
     except Exception as e:
         # Π.χ. επίμονο rate limit (429): υποχωρούμε ομαλά αντί να κρασάρει το stream
         logger.error(f"Σφάλμα παραγωγής απάντησης από το Gemini: {e}")
         metrics.inc("rag_gemini_errors_total", {"type": type(e).__name__})
         outcome = "generation_error"
-        yield {"type": "text",
-               "data": ("⚠️ Προσωρινό πρόβλημα με το AI (πιθανόν όριο ρυθμού). "
-                        "Δοκίμασε ξανά σε λίγο." if _has_greek(question)
-                        else "⚠️ Temporary AI issue (possibly a rate limit). "
-                             "Please try again shortly.")}
+        yield {
+            "type": "text",
+            "data": (
+                "⚠️ Προσωρινό πρόβλημα με το AI (πιθανόν όριο ρυθμού). Δοκίμασε ξανά σε λίγο."
+                if _has_greek(question)
+                else "⚠️ Temporary AI issue (possibly a rate limit). Please try again shortly."
+            ),
+        }
 
-         # --- MLOps lite: latency ανά φάση (8 → 4)
+        # --- MLOps lite: latency ανά φάση (8 → 4)
     # Τα ΙΔΙΑ νούμερα πάνε και στα logs και στο UI: observability που δεν βλέπει
     # ο χρήστης είναι observability που κανείς δεν κοιτά.
     try:
         generation_time = time.perf_counter() - t_generation
         metrics.observe("rag_generation_seconds", generation_time)
         metrics.inc("rag_answers_total", {"outcome": outcome})
-        for kind, n in (("prompt", prompt_tokens), ("completion", out_tokens),
-                        ("thinking", thinking_tokens)):
+        for kind, n in (
+            ("prompt", prompt_tokens),
+            ("completion", out_tokens),
+            ("thinking", thinking_tokens),
+        ):
             if n:
                 metrics.inc("rag_tokens_total", {"kind": kind}, float(n))
         logger.info(
             f"RAG METRICS | retrieval={retrieval_time:.2f}s "
             f"generation={generation_time:.2f}s | "
             f"tokens(prompt={prompt_tokens or '?'}, completion={out_tokens or '?'}, "
-            f"thinking={thinking_tokens if thinking_tokens is not None else '?'})")
-        yield {"type": "metrics", "data": {
-            "retrieval_s": round(retrieval_time, 2),
-            "generation_s": round(generation_time, 2),
-            "pages": len(top_3_data),
-            "prompt_tokens": prompt_tokens,
-            "completion_tokens": out_tokens,
-            "thinking_tokens": thinking_tokens,
-        }}
-        
+            f"thinking={thinking_tokens if thinking_tokens is not None else '?'})"
+        )
+        yield {
+            "type": "metrics",
+            "data": {
+                "retrieval_s": round(retrieval_time, 2),
+                "generation_s": round(generation_time, 2),
+                "pages": len(top_3_data),
+                "prompt_tokens": prompt_tokens,
+                "completion_tokens": out_tokens,
+                "thinking_tokens": thinking_tokens,
+            },
+        }
+
     except Exception as e:
         # Ποτέ fatal: η απάντηση έχει ήδη σταλεί, τα metrics είναι bonus.
         logger.warning(f"--- Αποτυχία υπολογισμού metrics: {e} ---")
@@ -1331,15 +1440,16 @@ def _normalize_pdf_text(text: str) -> str:
     return re.sub(r"([a-zA-Zα-ωΑ-Ω])-\n([a-zα-ω])", r"\1\2", text)
 
 
-def ingest_pdf(file_path: str, filename: str, user_id: int,
-               is_public: bool = False, doc_id: int | None = None) -> bool:
+def ingest_pdf(
+    file_path: str, filename: str, user_id: int, is_public: bool = False, doc_id: int | None = None
+) -> bool:
     """Διαβάζει το PDF ανά σελίδα, το κόβει σε chunks και τα αποθηκεύει ΜΑΖΙΚΑ
     (batch) στη ChromaDB μαζί με τον ιδιοκτήτη (user_id) για authorization.
 
     Επιστρέφει True αν γράφτηκε ΕΣΤΩ ΕΝΑ chunk, False αν το PDF δεν παρήγαγε
     καθόλου κείμενο. Ο καλών αποφασίζει τι status θα δείξει στον χρήστη — εδώ
     δεν ξέρουμε αν πρόκειται για UI, batch reingest ή test."""
-        # chunk_size=1500: ΕΠΙΚΥΡΩΘΗΚΕ 11/8/2026, 2 σετ x 2 μέθοδοι βαθών
+    # chunk_size=1500: ΕΠΙΚΥΡΩΘΗΚΕ 11/8/2026, 2 σετ x 2 μέθοδοι βαθών
     # (runs/chunk_{main,hard}_{scaled,fixed}.csv). Control 1500: MRR 0.7928 /
     # nDCG 0.8070 / coverage 98.52% σε ΤΡΙΑ ανεξάρτητα τρεξίματα.
     # ΤΟ ΠΡΟΣΗΜΟ ΑΛΛΑΖΕΙ ΑΝΑΜΕΣΑ ΣΤΑ ΣΕΤ: στο κύριο σετ το 750 δίνει ΚΑΛΥΤΕΡΟ
@@ -1361,34 +1471,55 @@ def ingest_pdf(file_path: str, filename: str, user_id: int,
     # pymupdf: ενώνει σωστά τα text spans του PDF, ενώ το pypdf έβαζε κενά μέσα
     # στις λέξεις ("A WS", "distribu ted") -> λέξεις που δεν υπήρχαν πουθενά.
     with pymupdf.open(file_path) as doc:
-        for page_idx, page in enumerate(doc):
-            text = _normalize_pdf_text(page.get_text() or "")
-            if not text or not text.strip():
-                continue
-            for chunk_idx, chunk in enumerate(splitter.split_text(text)):
-                documents.append(chunk)
-                metadatas.append({
+        pages = [(i + 1, _normalize_pdf_text(page.get_text() or "")) for i, page in enumerate(doc)]
+    pages = [(page_no, text) for page_no, text in pages if text and text.strip()]
+
+    # Glossary ΤΟΥ ΕΓΓΡΑΦΟΥ (domain + terms): μία φορά, από ΟΛΑ τα chunks.
+    # Γράφεται σε ΚΑΘΕ chunk (όπως το doc_id/file_name) ώστε το query path να το
+    # διαβάζει από τα ίδια metadata (corpus_glossary.assemble), χωρίς δεύτερη πηγή
+    # αλήθειας. Default: ΣΤΑΤΙΣΤΙΚΟ (δωρεάν, ντετερμινιστικό, domain="" -> fallback
+    # στο καθολικό). use_llm=True = opt-in με σιωπηλό fallback στη στατιστική.
+    #
+    # ΓΙΑΤΙ CHUNKS ΚΑΙ ΟΧΙ ΣΕΛΙΔΕΣ — ΜΕΤΡΗΜΕΝΟ (evaluation/runs/granularity_probe.csv,
+    # n=20 in + 5 ooc): CD_chunks 95.0% · ooc 5/5 σιωπηλά ── CM_pages 95.0% · ooc
+    # 4/5 ΔΙΑΡΡΟΗ. Ίδιο coverage, αλλά η κοκκίωση σελίδας διαρρέει: το φίλτρο
+    # boilerplate κόβει ό,τι είναι σε >=90% των μονάδων· με λίγες μεγάλες μονάδες
+    # (σελίδες) αυτό πιάνει το ΘΕΜΑ. Έφυγε το «eruptions» -> ο μεταφραστής συνέθεσε
+    # «Vesuvius explosive activity» (-1.60, πάνω από την πύλη) αντί για «Vesuvius
+    # eruptions» (-3.46, κάτω). Σπάμε ΠΡΩΤΑ σε chunks και τα ΙΔΙΑ chunks πάνε στο
+    # glossary ΚΑΙ στο index (ένα split_text ανά σελίδα).
+    page_chunks = [(page_no, splitter.split_text(text)) for page_no, text in pages]
+    _gloss = corpus_glossary.extract_glossary(
+        [c for _pno, chunks in page_chunks for c in chunks]
+    )
+    doc_terms, doc_domain = _gloss["terms"], _gloss["domain"]
+
+    for page_no, chunks in page_chunks:
+        for chunk_idx, chunk in enumerate(chunks):
+            documents.append(chunk)
+            metadatas.append(
+                {
                     "file_name": filename,
-                    "page": page_idx + 1,
+                    "page": page_no,
                     "user_id": user_id,
                     "is_public": is_public,
                     "doc_id": doc_id if doc_id is not None else -1,
-                })
-                ids.append(
-                    f"{filename}_p{page_idx}_c{chunk_idx}_{uuid.uuid4().hex[:8]}")
+                    "terms": doc_terms,
+                    "domain": doc_domain,
+                }
+            )
+            ids.append(f"{filename}_p{page_no - 1}_c{chunk_idx}_{uuid.uuid4().hex[:8]}")
 
     if not documents:
         # ΔΕΝ είναι σφάλμα: το PDF είναι έγκυρο, απλώς δεν έχει ΚΕΙΜΕΝΟ (σαρωμένες
         # εικόνες χωρίς OCR layer). Το False το ξεχωρίζει από την επιτυχία —
         # αλλιώς το έγγραφο έμενε "ready" με ΜΗΔΕΝ chunks και ο χρήστης ρωτούσε
         # ένα αρχείο που δεν υπάρχει καθόλου στο ευρετήριο.
-        logger.warning(
-            f"---> Το '{filename}' δεν παρήγαγε κείμενο (πιθανώς σκαναρισμένο PDF).")
+        logger.warning(f"---> Το '{filename}' δεν παρήγαγε κείμενο (πιθανώς σκαναρισμένο PDF).")
         return False
 
     # Ένα batch insert αντί για ένα-ένα: δραματικά γρηγορότερο.
     collection.add(documents=documents, metadatas=metadatas, ids=ids)
     _bump_corpus_version()  # invalidate το BM25 cache (νέα chunks)
-    logger.success(
-        f"---> Ingest '{filename}': {len(documents)} chunks (user={user_id}).")
+    logger.success(f"---> Ingest '{filename}': {len(documents)} chunks (user={user_id}).")
     return True

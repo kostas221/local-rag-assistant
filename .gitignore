@@ -23,3 +23,6 @@ backend/C*/
 # δημόσια, επιμελημένη εκδοχή είναι το ENGINEERING_LOG.md.
 CLAUDE.md
 AGENTS.md
+
+# PDF δοκιμών (απομονωμένα stores των evaluation scripts) — αντίγραφα papers, ποτέ commit
+backend/evaluation/test_papers/

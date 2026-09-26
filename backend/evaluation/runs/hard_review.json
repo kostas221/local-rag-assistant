@@ -1,0 +1,48 @@
+{
+ "_doc": "Ανθρώπινος έλεγχος του golden_hard_new (build_hard_paraphrase.py), 25/9/2026, ΠΡΙΝ τρέξει το σύστημα. drop = ΜΟΝΟ για εγκυρότητα (άλλαξε/χάθηκε νόημα, δείχνει αλλού, δεν στέκεται μόνη της). Όσες ονομάζουν σύστημα/paper ΔΕΝ πετιούνται — σημαδεύονται (names_entity) και αναφέρονται χωριστά.",
+ "drop": {
+  "p004": "«Three new resource aspects?» — νέες σε σχέση με τι; Χωρίς τη γονική δεν καταλαβαίνεις τι ρωτάει (ίδια κλάση με το «Three new aspects?» που έκοψε η μηχανή)",
+  "p007": "«the older paper» — δεν προσδιορίζεται: το MapReduce (2004) είναι παλιότερο από το paper του 2009 που εννοεί",
+  "p027": "έφυγε το «AWS και Google»: γίνεται γενική ερώτηση για παραδείγματα serverless, και το 1706 (Baldini) απαριθμεί ΑΛΛΕΣ προσφορές (Azure, OpenWhisk) — δείχνει και αλλού",
+  "p033": "ΛΑΘΟΣ PAPER: «το κείμενο για την απλοποιημένη επεξεργασία δεδομένων σε μεγάλα συμπλέγματα» = ο τίτλος του MapReduce, ενώ η γονική ρωτάει για το PyWren. Ο ελεγκτής το πέρασε",
+  "p039": "«Γιατί 'πληρώνεις ό,τι χρησιμοποιείς' καλύτερο;» — καλύτερο από τι; Το ζητούμενο είναι η σύγκριση με το «CapEx to OpEx», και χάθηκε",
+  "p044": "«Παράδειγμα κόστους λογισμικού και σύγκριση;» — σύγκριση τίνος; Χάθηκε το μισό ερώτημα (Windows στο EC2 έναντι ανοιχτού κώδικα)",
+  "p059": "ζητά ΜΟΝΟ τις εφεδρικές εργασίες· χάθηκαν οι αστοχίες μηχανημάτων. Ίδιος λόγος με το p014 που έκοψε ο ελεγκτής («ζητά λιγότερα»)",
+  "p074": "«those two cloud function systems» — ποια δύο; Ίδια κλάση με τα p062/p066/p070 που έκοψε ο ελεγκτής"
+ },
+ "notes": {
+  "p009": "η ΓΟΝΙΚΗ είναι ήδη διφορούμενη («the paper»): περιορισμούς serverless απαριθμούν και το 1902 και το 1812. Ίδια ιδιότητα με τη γονική, κρατιέται",
+  "p017": "«the papers» στον πληθυντικό: ταιριάζει καλύτερα στα 10 εμπόδια του 2009, αλλά «προκλήσεις» έχει και το 1902. Αν αποτύχει, κοίτα ΠΡΩΤΑ αν ήρθε το 1902",
+  "p032": "«πλατφόρμα που περιγράφεται ως ανοιχτή»: το «ανοιχτή» δείχνει OpenWhisk, αλλά το ίδιο paper έχει και ΓΕΝΙΚΟ διάγραμμα αρχιτεκτονικής serverless. Πιθανή σύγχυση",
+  "p040": "η σύνταξη «δείχνει καλύτερα το κέρδος από το να μην αγοράζεις» διαβάζεται και ως σύγκριση και ως αιτία. Κρατιέται — η reference απαντά και στις δύο αναγνώσεις",
+  "p056": "σχεδόν ίδια με τη γονική (λέει ExCamera και «four»): αναμένεται εύκολη"
+ },
+ "keywords": {
+  "_doc": "Σφίξιμο 25/9/2026, ΠΡΙΝ τρέξει το σύστημα. Αφορμή: random_coverage_baseline στο ΑΠΟΜΟΝΩΜΕΝΟ store (122 σελ.) -> 9 γονικές / 14 ερωτήσεις με πάτωμα τύχης >= 50%. Κανόνας: ίδια σελίδα-στόχος, όροι που υπάρχουν ΑΥΤΟΥΣΙΟΙ στην απάντηση-αναφορά ή στην πρόταση της σελίδας που την περιέχει (όχι οι προτάσεις του suggest_keywords.py — ήταν σπάνιες αλλά άσχετες, π.χ. «craigslist»). Αλλάζει ΜΟΝΟ εδώ· το golden_set_50 μένει ως έχει.",
+  "_raw": "ΔΙΟΡΘΩΣΗ 25/9 μετά το 1ο τρέξιμο: οι φράσεις είχαν ελεγχθεί με ΕΝΩΜΕΝΕΣ γραμμές, ενώ η αξιολόγηση ψάχνει το κείμενο ΟΠΩΣ ΕΙΝΑΙ (αλλαγή γραμμής μέσα στη φράση = δεν βρίσκεται). «next decade» -> 0 σελίδες. Ξαναελέγχθηκαν ΟΛΕΣ με raw κείμενο (scratch kw_raw.py): άλλαξαν q001, q008, q009, q018. Το q009 διευρύνθηκε γιατί το h111 έφερε ΣΩΣΤΗ σελίδα (1902 σ.6) που οι 3 στενές λέξεις δεν είχαν.",
+  "q001": ["delivered as services", "software as a service", "saas"],
+  "q002": ["infinite computing resources", "up-front commitment", "short-term basis"],
+  "q004": ["economies", "5 to 7", "electricity"],
+  "q006": ["mobile interactive", "parallel batch", "compute-intensive"],
+  "q008": ["fine-grained operations", "fine-grained coordination", "communication pattern"],
+  "q009": ["reserve", "allocated", "only for"],
+  "q010": ["2015", "widespread"],
+  "q016": ["administration", "security patch", "logging"],
+  "q018": ["default computing paradigm", "cloud era", "dominate"],
+  "_why": {
+   "q001": "EECS σ.3/6: «applications delivered as services over the Internet … Software as a Service (SaaS)» = ο ορισμός αυτούσιος. datacenter 86% / utility 73% -> 13% / 13%. («systems software» βγήκε: στη σ.6 σπάει σε δύο γραμμές)",
+   "q002": "EECS σ.3/6 + 1902 σ.3: οι τρεις πτυχές ΛΕΞΗ ΠΡΟΣ ΛΕΞΗ. provisioning 84% / demand 89% -> 19% ×3",
+   "q004": "EECS σ.3/21: «factors of 5 to 7 decrease in cost of electricity, network bandwidth…». bandwidth 91% / multiplexing 51% -> 13% / 29%",
+   "q006": "EECS σ.9: οι τρεις ευκαιρίες όπως τις γράφει το paper. mapreduce 92% / batch 69% -> 7% / 7% / 13%",
+   "q008": "1902 σ.12-13: τίτλοι των περιορισμών §3.1-3.3 (storage / coordination / communication = 1-προς-1 με τα παλιά). ΠΡΟΣΟΧΗ: και οι τρεις υπάρχουν στον ΠΙΝΑΚΑ ΠΕΡΙΕΧΟΜΕΝΩΝ (σ.1) — αν έρθει μόνο η σ.1, κάλυψη 100% από τίτλους. storage 100% / communication 90% -> 13% / 13% / 24%",
+   "q009": "ΠΟΛΛΕΣ σωστές σελίδες -> μία λέξη σε ΚΑΘΕ μία: reserve = 1902 σ.7/8/9 («not for the resources reserved», «per reserved resources», «what they reserve») · allocated = 1902 σ.6 («resources used instead of for resources allocated») · only for = 1706 σ.5 («pay only for the time»), 1812 σ.1, 1902 σ.9. execution 98% -> 47% / 29% / 39% (πάτωμα 38%: υψηλό ΕΠΕΙΔΗ η απάντηση είναι σε 6 σελίδες — ίδια λογική με το h006). Οι πρώτες στενές (reserved / 100 ms / pay only) μετρούσαν λάθος το h111",
+   "q010": "1902 σ.4: «Amazon in 2015 called the AWS Lambda service … drew widespread attention». lambda 97% -> widespread 13%",
+   "q016": "1902 σ.4/5: «scaling, deployment, fault tolerance, monitoring, logging, security patches». provisioning 84% / scaling 95% -> 19% / 29%· το administration (34%) μένει",
+   "q018": "1902 σ.22 (συμπέρασμα): «will become the default computing paradigm of the Cloud Era» + σ.1: «will grow to dominate». serverless 100% / serverful 61% -> 7% / 7% / 29%. ΔΕΝ είναι η εξαίρεση του h006: το serverful είναι η αντίθεση, όχι η πρόβλεψη. («next decade» βγήκε: σπάει σε δύο γραμμές -> 0 σελίδες)"
+  }
+ },
+ "post_hoc": {
+  "_doc": "Σφάλματα ΣΕΤ που βρέθηκαν ΜΕΤΑ το 1ο τρέξιμο, με το μάτι (inspect_hard_failures.py). ΔΕΝ πετιούνται — μένουν στο σετ και αναφέρονται ΚΑΙ με ΚΑΙ χωρίς αυτά (κανόνας Φάσης 0.1, όπως η n048).",
+  "p009": "ΔΥΟ ΣΩΣΤΕΣ ΑΠΑΝΤΗΣΕΙΣ: «Main serverless platform problems?» έχασε το «στο paper». Το σύστημα έφερε 8 σελίδες του 1706 (Baldini) με το κεφάλαιο Open Problems (cold start, security, accounting) = έγκυρη απάντηση στην ερώτηση όπως γράφτηκε. Ο ελεγκτής είχε πει unique=yes"
+ }
+}

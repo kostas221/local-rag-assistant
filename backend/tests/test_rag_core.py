@@ -1,12 +1,14 @@
 """Unit tests για τον RAG πυρήνα (ai_core): καθαρές συναρτήσεις + where-building.
 ΣΗΜ: το import του ai_core φορτώνει τα μοντέλα μία φορά (~1 λεπτό, cached) επειδή
 γίνονται load σε επίπεδο module — τα ίδια τα tests μετά είναι ακαριαία."""
+
 import asyncio
 
 import ai_core
 from ai_core import _build_where, _has_greek, el_tokenize
 
 # --- el_tokenize: Greek-aware tokenization για το BM25 ---
+
 
 def test_tokenize_strips_accents_and_lowercases():
     assert el_tokenize("Ελληνικά Κείμενα") == ["ελληνικα", "κειμενα"]
@@ -23,12 +25,14 @@ def test_tokenize_splits_on_punctuation():
 
 # --- _has_greek: ανίχνευση γλώσσας για το translate-then-retrieve ---
 
+
 def test_has_greek_detection():
     assert _has_greek("Τι είναι το cloud;") is True
     assert _has_greek("What is cloud computing?") is False
 
 
 # --- _build_where: φίλτρα πρόσβασης & επιλογής αρχείων της ChromaDB ---
+
 
 def test_where_empty_when_no_filters():
     assert _build_where(None, None) is None
@@ -46,6 +50,7 @@ def test_where_user_and_files_combined_with_and():
 
 
 # --- delete_file_from_db: REGRESSION TEST για το duplicate-delete bug ---
+
 
 class _FakeCollection:
     """Ψεύτικη collection: καταγράφει με τι where κλήθηκε το delete.
@@ -77,13 +82,14 @@ def test_delete_falls_back_to_filename_and_user(monkeypatch):
 
 # --- _rrf_fuse: Reciprocal Rank Fusion (καθαρή λογική, χωρίς DB/μοντέλα) ---
 
+
 def test_rrf_doc_in_both_lists_ranks_first():
     """Doc που εμφανίζεται ΚΑΙ στο dense ΚΑΙ στο sparse top πρέπει να νικά
     ένα doc που είναι μόνο σε μία λίστα (η ουσία του RRF)."""
     all_ids = ["a", "b", "c"]
     all_texts = ["text-a", "text-b", "text-c"]
     all_metas = [{"file_name": "f.pdf"}] * 3
-    dense_ids = ["a", "b"]   # 'a' #1 στο dense
+    dense_ids = ["a", "b"]  # 'a' #1 στο dense
     sparse_ids = ["a", "c"]  # 'a' #1 και στο sparse -> πρέπει να βγει πρώτο
     fused = ai_core._rrf_fuse(dense_ids, sparse_ids, all_ids, all_texts, all_metas)
     assert fused[0][1] == "text-a"
@@ -115,6 +121,7 @@ def test_rrf_is_deterministic():
 
 # --- Relevance gate: anti-hallucination (stub reranker/collection, χωρίς API) ---
 
+
 class _StubCollection:
     """Ελάχιστο stub της ChromaDB collection ώστε να τρέξει το search_documents
     χωρίς πραγματική DB/embeddings: get() γυρνά όλο το corpus, query() γυρνά τα
@@ -124,14 +131,14 @@ class _StubCollection:
         self._ids, self._texts, self._metas = ids, texts, metas
 
     def get(self, where=None, include=None):
-        out = {"ids": self._ids, "documents": self._texts,
-               "metadatas": self._metas}
+        out = {"ids": self._ids, "documents": self._texts, "metadatas": self._metas}
         # Το exact dense σκέλος (_get_dense_matrix) ζητά embeddings. Δίνουμε
         # ορθοκανονική βάση — κάθε chunk "δείχνει" σε άλλη διάσταση, άρα η
         # κατάταξη είναι προβλέψιμη χωρίς πραγματικό μοντέλο.
         if include and "embeddings" in include:
-            out["embeddings"] = [[1.0 if j == i else 0.0 for j in range(8)]
-                                 for i in range(len(self._ids))]
+            out["embeddings"] = [
+                [1.0 if j == i else 0.0 for j in range(8)] for i in range(len(self._ids))
+            ]
         return out
 
     def query(self, query_texts=None, n_results=10, where=None):
@@ -160,21 +167,23 @@ def _patch_search(monkeypatch, rerank_score):
     # ένα stale index από προηγούμενο test/run θα χρησιμοποιούνταν).
     monkeypatch.setattr(ai_core, "_bm25_cache", {"version": None})
     monkeypatch.setattr(ai_core, "_dense_cache", {"version": None})
-        # ΑΠΟΜΟΝΩΣΗ ΑΠΟ ΤΟ ΠΑΡΑΓΩΓΙΚΟ CACHE: χωρίς αυτό το _embed_query αποθηκεύει τα
+    # ΑΠΟΜΟΝΩΣΗ ΑΠΟ ΤΟ ΠΑΡΑΓΩΓΙΚΟ CACHE: χωρίς αυτό το _embed_query αποθηκεύει τα
     # stubbed 8-διάστατα διανύσματα στο πραγματικό .npz του volume, και μια
     # παραγωγική ερώτηση με το ίδιο κείμενο σκάει στο matmul. Συνέβη.
     monkeypatch.setattr(ai_core, "_query_emb_cache", {})
     monkeypatch.setattr(ai_core, "_save_query_emb_cache", lambda: None)
     # Το exact dense σκέλος κάνει embed την ΕΡΩΤΗΣΗ. Χωρίς πραγματικό μοντέλο:
     # διάνυσμα που δείχνει στο chunk 0, ίδιας διάστασης με το stub corpus.
-    monkeypatch.setattr(ai_core, "sentence_transformer_ef",
-                        lambda texts: [[1.0] + [0.0] * 7 for _ in texts])
+    monkeypatch.setattr(
+        ai_core, "sentence_transformer_ef", lambda texts: [[1.0] + [0.0] * 7 for _ in texts]
+    )
     # BGE-M3 sparse εκτός: θα φόρτωνε το sparse head και θα έκανε forward pass
     # — άσχετο με το gate που δοκιμάζεται εδώ, και αργό.
     monkeypatch.setattr(ai_core, "USE_BGE_SPARSE", False)
 
-    async def _no_translate(q):  # καμία κλήση Gemini μέσα στα tests
+    async def _no_translate(q, **kwargs):  # καμία κλήση Gemini μέσα στα tests
         return q
+
     monkeypatch.setattr(ai_core, "optimize_query", _no_translate)
     # Corrective retry ΕΚΤΟΣ: αυτά τα tests μετρούν ΤΟ GATE. Με τον agent
     # αναμμένο, η κοπή θα καλούσε το Gemini — τα tests περνούσαν μόνο επειδή η

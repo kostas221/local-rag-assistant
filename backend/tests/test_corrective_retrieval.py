@@ -11,6 +11,7 @@ reranker έχει ήδη πει «τίποτα δεν ταιριάζει». Δύ
 Καμία κλήση δικτύου: το rewrite είναι stubbed. Ο μετρητής κλήσεων είναι το
 ουσιώδες — «δεν καλέστηκε» είναι ισχυρότερος ισχυρισμός από «γύρισε []».
 """
+
 import asyncio
 
 import ai_core
@@ -28,11 +29,11 @@ class _StubCollection:
         self._ids, self._texts, self._metas = ids, texts, metas
 
     def get(self, where=None, include=None):
-        out = {"ids": self._ids, "documents": self._texts,
-               "metadatas": self._metas}
+        out = {"ids": self._ids, "documents": self._texts, "metadatas": self._metas}
         if include and "embeddings" in include:
-            out["embeddings"] = [[1.0 if j == i else 0.0 for j in range(8)]
-                                 for i in range(len(self._ids))]
+            out["embeddings"] = [
+                [1.0 if j == i else 0.0 for j in range(8)] for i in range(len(self._ids))
+            ]
         return out
 
     def query(self, query_texts=None, n_results=10, where=None):
@@ -55,16 +56,15 @@ class _QueryAwareReranker:
         return [score] * len(pairs)
 
 
-def _patch(monkeypatch, first_score, rewritten_score=None, rewrite=None,
-           enabled=True):
+def _patch(monkeypatch, first_score, rewritten_score=None, rewrite=None, enabled=True):
     """Στήνει corpus + stubs. Επιστρέφει (reranker, counter) ώστε τα tests να
     ελέγχουν ΠΟΣΕΣ φορές έτρεξε καθένα — όχι μόνο το τελικό αποτέλεσμα."""
     ids = ["id0", "id1", "id2"]
     texts = ["chunk zero", "chunk one", "chunk two"]
     metas = [{"file_name": "a.pdf", "page": i + 1} for i in range(3)]
-    rr = _QueryAwareReranker(first_score,
-                             first_score if rewritten_score is None
-                             else rewritten_score)
+    rr = _QueryAwareReranker(
+        first_score, first_score if rewritten_score is None else rewritten_score
+    )
     monkeypatch.setattr(ai_core, "collection", _StubCollection(ids, texts, metas))
     monkeypatch.setattr(ai_core, "reranker", rr)
     monkeypatch.setattr(ai_core, "_bm25_cache", {"version": None})
@@ -73,13 +73,15 @@ def _patch(monkeypatch, first_score, rewritten_score=None, rewrite=None,
     # και θα έσπαγαν μια πραγματική ερώτηση με το ίδιο κείμενο.
     monkeypatch.setattr(ai_core, "_query_emb_cache", {})
     monkeypatch.setattr(ai_core, "_save_query_emb_cache", lambda: None)
-    monkeypatch.setattr(ai_core, "sentence_transformer_ef",
-                        lambda texts: [[1.0] + [0.0] * 7 for _ in texts])
+    monkeypatch.setattr(
+        ai_core, "sentence_transformer_ef", lambda texts: [[1.0] + [0.0] * 7 for _ in texts]
+    )
     monkeypatch.setattr(ai_core, "USE_BGE_SPARSE", False)
     monkeypatch.setattr(ai_core, "ENABLE_CORRECTIVE", enabled)
 
-    async def _no_translate(q):
+    async def _no_translate(q, **kwargs):
         return q
+
     monkeypatch.setattr(ai_core, "optimize_query", _no_translate)
 
     calls = {"n": 0}
@@ -89,6 +91,7 @@ def _patch(monkeypatch, first_score, rewritten_score=None, rewrite=None,
         if callable(rewrite):
             return rewrite(prompt)
         return rewrite if rewrite is not None else f"{MARK} storage terminology"
+
     monkeypatch.setattr(gemini_rest, "generate_once", _fake_rewrite)
     return rr, calls
 
@@ -110,9 +113,11 @@ def test_no_retry_when_gate_passes(monkeypatch):
 def test_retry_saves_question_when_rewrite_scores_high(monkeypatch):
     """Το σενάριο h005: 1ο pass κόβει, το rewrite φέρνει σκορ πάνω από το
     αυστηρότερο κατώφλι -> το σύστημα απαντά αντί να σιωπήσει."""
-    rr, calls = _patch(monkeypatch,
-                       first_score=ai_core.MIN_RERANK_SCORE - 1.0,
-                       rewritten_score=ai_core.CORRECTIVE_MIN_SCORE + 1.0)
+    rr, calls = _patch(
+        monkeypatch,
+        first_score=ai_core.MIN_RERANK_SCORE - 1.0,
+        rewritten_score=ai_core.CORRECTIVE_MIN_SCORE + 1.0,
+    )
     result = _search()
     assert len(result) > 0
     text, meta = result[0]
@@ -126,14 +131,14 @@ def test_retry_respects_stricter_threshold(monkeypatch):
     ΟΧΙ το αυστηρότερο του retry -> πρέπει να μείνει κομμένο. Χωρίς αυτόν τον
     έλεγχο, το keyword-stuffing του rewrite περνά το gate με λάθος υλικό
     (μετρήθηκε 2 φορές: h015 στο 0.95, h016 στο -1.76)."""
-        # Το rewrite ανεβάζει τη βαθμολογία αλλά ΟΧΙ ως το κατώφλι του retry: πρέπει
+    # Το rewrite ανεβάζει τη βαθμολογία αλλά ΟΧΙ ως το κατώφλι του retry: πρέπει
     # να μείνει κομμένο. (Πριν το -3.8 το "between" ήταν ανάμεσα στα δύο
     # κατώφλια· τώρα που το retry είναι χαμηλότερα, το σενάριο εκφράζεται
     # απευθείας — λίγο κάτω από το κατώφλι που πραγματικά κρίνει.)
     below = ai_core.CORRECTIVE_MIN_SCORE - 0.5
-    _, calls = _patch(monkeypatch,
-                      first_score=ai_core.MIN_RERANK_SCORE - 1.0,
-                      rewritten_score=below)
+    _, calls = _patch(
+        monkeypatch, first_score=ai_core.MIN_RERANK_SCORE - 1.0, rewritten_score=below
+    )
     assert _search() == []
     assert calls["n"] == 1, "το rewrite έπρεπε να δοκιμαστεί μία φορά"
 
@@ -142,10 +147,12 @@ def test_disabled_agent_falls_back_to_old_behaviour(monkeypatch):
     """ENABLE_CORRECTIVE=0 -> ακριβώς η συμπεριφορά πριν τον agent. Ο διακόπτης
     πρέπει να δουλεύει: κάθε μέτρηση συγκρίνει on/off, και αν το off δεν είναι
     πραγματικά off, η σύγκριση έχει δύο μεταβλητές."""
-    _, calls = _patch(monkeypatch,
-                      first_score=ai_core.MIN_RERANK_SCORE - 1.0,
-                      rewritten_score=ai_core.CORRECTIVE_MIN_SCORE + 5.0,
-                      enabled=False)
+    _, calls = _patch(
+        monkeypatch,
+        first_score=ai_core.MIN_RERANK_SCORE - 1.0,
+        rewritten_score=ai_core.CORRECTIVE_MIN_SCORE + 5.0,
+        enabled=False,
+    )
     assert _search() == []
     assert calls["n"] == 0, "ο σβηστός agent δεν πρέπει να καλεί το API"
 
@@ -153,10 +160,16 @@ def test_disabled_agent_falls_back_to_old_behaviour(monkeypatch):
 def test_rewrite_failure_degrades_to_silence(monkeypatch):
     """Σφάλμα/rate-limit στο Gemini -> [] (η παλιά συμπεριφορά), ΠΟΤΕ εξαίρεση
     προς τον χρήστη. Το quota τελείωσε ήδη μία φορά μέσα σε μέτρηση."""
+
     def _boom(_prompt):
         raise RuntimeError("429 quota exhausted")
-    _patch(monkeypatch, first_score=ai_core.MIN_RERANK_SCORE - 1.0,
-           rewritten_score=ai_core.CORRECTIVE_MIN_SCORE + 5.0, rewrite=_boom)
+
+    _patch(
+        monkeypatch,
+        first_score=ai_core.MIN_RERANK_SCORE - 1.0,
+        rewritten_score=ai_core.CORRECTIVE_MIN_SCORE + 5.0,
+        rewrite=_boom,
+    )
     assert _search() == []
 
 
@@ -164,8 +177,9 @@ def test_identical_rewrite_skips_second_retrieval(monkeypatch):
     """Αν το rewrite γυρίσει το ΙΔΙΟ ερώτημα (συμβαίνει σκόπιμα στα εκτός
     θέματος — q020/q049 μετρήθηκαν έτσι), το 2ο pass θα έδινε ταυτόσημο
     αποτέλεσμα. Μη σπαταλάς 450ms CPU για να το επιβεβαιώσεις."""
-    rr, calls = _patch(monkeypatch, first_score=ai_core.MIN_RERANK_SCORE - 1.0,
-                       rewrite="what is cloud computing")
+    rr, calls = _patch(
+        monkeypatch, first_score=ai_core.MIN_RERANK_SCORE - 1.0, rewrite="what is cloud computing"
+    )
     assert _search() == []
     assert calls["n"] == 1
     assert rr.calls == 1, "δεν πρέπει να γίνει δεύτερο rerank για ίδιο ερώτημα"
@@ -173,8 +187,7 @@ def test_identical_rewrite_skips_second_retrieval(monkeypatch):
 
 def test_empty_rewrite_is_treated_as_no_change(monkeypatch):
     """Κενή απάντηση από το μοντέλο -> κομμένο, χωρίς δεύτερη ανάκτηση."""
-    rr, _ = _patch(monkeypatch, first_score=ai_core.MIN_RERANK_SCORE - 1.0,
-                   rewrite="")
+    rr, _ = _patch(monkeypatch, first_score=ai_core.MIN_RERANK_SCORE - 1.0, rewrite="")
     assert _search() == []
     assert rr.calls == 1
 
