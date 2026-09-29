@@ -175,7 +175,10 @@ logger.info("---> Φόρτωση του Reranker (Αξιολογητή)...")
 # βαθμολογεί ψηλά τα out_of_corpus -> το κατώφλι που τα κόβει σκοτώνει τα σωστά.
 # ΠΡΟΣΟΧΗ: δίνει ΩΜΑ LOGITS (~[-11,+11]), ΟΧΙ sigmoid -> βλ. MIN_RERANK_SCORE.
 RERANKER_MODEL = os.getenv("RERANKER_MODEL", "cross-encoder/ms-marco-MiniLM-L-12-v2")
-reranker = CrossEncoder(RERANKER_MODEL, device=DEVICE)
+# ΡΗΤΑ ωμά logits: ο φύλακας (-2.6) και ο corrective (-3.8) είναι σε αυτή την κλίμακα. Το MiniLM
+# τα δίνει ήδη από μόνο του (300 ζευγάρια, max|Δ| = 0.0)· το gte-reranker-modernbert θα έδινε
+# sigmoid [0,1] -> με σκέτο RERANKER_MODEL=... ο φύλακας θα άφηνε να περάσουν ΟΛΑ (29/9/2026).
+reranker = CrossEncoder(RERANKER_MODEL, device=DEVICE, activation_fn=torch.nn.Identity())
 #   bge-reranker-v2-m3       sigmoid [0,1]         in-min  0.069 / out-max  0.013
 #   ms-marco-MiniLM-L-6-v2   ωμά logits ~[-11,+11] in-min -1.80  / out-max -2.69
 #   ms-marco-MiniLM-L-12-v2  ωμά logits ~[-11,+11] in-min -2.08  / out-max -3.12
@@ -460,6 +463,23 @@ def _load_corpus_descriptor():
 
 
 _CORPUS_DOMAIN, _CORPUS_TERMS = _load_corpus_descriptor()
+
+
+def _load_descriptor_files():
+    """Τα αρχεία που ΠΕΡΙΓΡΑΦΕΙ ο descriptor (κλειδί "files")· None αν λείπει -> ο
+    descriptor ισχύει για όλα, όπως πριν. ΓΙΑΤΙ (probe_vesuvius_domain.py, 28/9/2026):
+    ένα ανεβασμένο PDF καρδιολογίας μεταφραζόταν με «The corpus is about: Cloud
+    Computing…» -> η «Πότε εξερράγη ο Βεζούβιος;» περνούσε τον φύλακα 5/5 πάνω σε
+    σελίδες για το Στρόμπολι (με γενικό πεδίο: 1/5)."""
+    try:
+        with open(_DESCRIPTOR_PATH, encoding="utf-8") as f:
+            files = json.load(f).get("files")
+        return set(files) if files else None
+    except Exception:
+        return None
+
+
+_CORPUS_FILES = _load_descriptor_files()
 
 
 async def optimize_query(query: str, domain: str | None = None, terms: str | None = None):
@@ -1051,6 +1071,14 @@ async def search_documents(
     # metadata που φόρτωσε ήδη το idx — μηδέν επιπλέον κλήση βάσης). Κενά (legacy
     # chunks πριν το backfill) -> optimize_query πέφτει στα καθολικά.
     scope_domain, scope_terms = corpus_glossary.assemble(allowed_ids, idx)
+    # Ο descriptor περιγράφει ΣΥΓΚΕΚΡΙΜΕΝΑ αρχεία (_CORPUS_FILES). Scope χωρίς ΚΑΝΕΝΑ
+    # από αυτά -> γενικό πεδίο αντί για το δικό του. Μικτό scope -> όπως πριν (δεν μετρήθηκε).
+    if (
+        not scope_domain
+        and _CORPUS_FILES is not None
+        and not corpus_glossary.scope_has_files(allowed_ids, idx, _CORPUS_FILES)
+    ):
+        scope_domain = _FALLBACK_DOMAIN
     query = await optimize_query(raw_query, domain=scope_domain, terms=scope_terms)
 
     # 2. Dense Search — bge-m3 (8 → 4)
@@ -1489,9 +1517,7 @@ def ingest_pdf(
     # eruptions» (-3.46, κάτω). Σπάμε ΠΡΩΤΑ σε chunks και τα ΙΔΙΑ chunks πάνε στο
     # glossary ΚΑΙ στο index (ένα split_text ανά σελίδα).
     page_chunks = [(page_no, splitter.split_text(text)) for page_no, text in pages]
-    _gloss = corpus_glossary.extract_glossary(
-        [c for _pno, chunks in page_chunks for c in chunks]
-    )
+    _gloss = corpus_glossary.extract_glossary([c for _pno, chunks in page_chunks for c in chunks])
     doc_terms, doc_domain = _gloss["terms"], _gloss["domain"]
 
     for page_no, chunks in page_chunks:

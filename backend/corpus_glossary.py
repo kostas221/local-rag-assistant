@@ -222,9 +222,27 @@ def assemble(allowed_ids: list[str], idx: dict) -> tuple[str, str]:
         t = (m.get("terms") or "").strip()
         if t:
             term_items.extend(x.strip() for x in t.split(",") if x.strip())
-    domain = "; ".join(dict.fromkeys(domains))
+        domain = "; ".join(dict.fromkeys(domains))
     terms = ", ".join(dict.fromkeys(term_items))
     return domain, terms
+
+
+def scope_has_files(allowed_ids: list[str], idx: dict, files: set) -> bool:
+    """True αν ΕΣΤΩ ΕΝΑ in-scope chunk ανήκει σε αρχείο του `files`.
+
+    Για τον ΚΑΘΟΛΙΚΟ descriptor (corpus_descriptor.json): περιγράφει ΣΥΓΚΕΚΡΙΜΕΝΑ
+    αρχεία, και το πεδίο του είναι ΛΑΘΟΣ πληροφορία για scope χωρίς κανένα από αυτά
+    (ανεβασμένο PDF καρδιολογίας -> «The corpus is about: Cloud Computing»). Ίδια
+    χαρτογράφηση id -> metadata με το assemble, μηδέν κλήση βάσης. Σταματά στο πρώτο
+    ταίρι -> στο cloud scope κοστίζει ένα lookup.
+    """
+    pos = idx.get("pos") or {}
+    metas = idx.get("metas") or []
+    for cid in allowed_ids:
+        p = pos.get(cid)
+        if p is not None and p < len(metas) and (metas[p] or {}).get("file_name") in files:
+            return True
+    return False
 
 
 def _normalize(text: str) -> str:

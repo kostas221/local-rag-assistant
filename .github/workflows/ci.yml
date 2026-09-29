@@ -56,10 +56,15 @@ jobs:
         # αρκετές φορές ώστε να ενεργοποιηθεί, δηλαδή επιβεβαιώνουν μόνο ότι δεν
         # σκάει. Και ότι η αύξηση γίνεται ΜΕΣΑ στη βάση: αν ξαναγραφτεί ως
         # read-modify-write σε Python, το race επανέρχεται ΣΙΩΠΗΛΑ.
+        #
+        # Το test_scope_domain.py ομοίως: το corpus_glossary είναι leaf module (μόνο re/
+        # unicodedata/collections). Ελέγχει ότι ο καθολικός descriptor ισχύει ΜΟΝΟ για τα
+        # αρχεία που περιγράφει (PDF άλλου θέματος -> γενικό πεδίο, 28/9/2026).
         run: |
           pytest tests/test_schemas.py tests/test_security.py \
                  tests/test_gemini_rest.py tests/test_api_endpoints.py \
-                 tests/test_metrics.py tests/test_rate_limit.py -v
+                 tests/test_metrics.py tests/test_rate_limit.py \
+                 tests/test_scope_domain.py -v
 
   core-tests:
     # Τα tests του RAG πυρήνα: el_tokenize, _has_greek, _build_where, _rrf_fuse

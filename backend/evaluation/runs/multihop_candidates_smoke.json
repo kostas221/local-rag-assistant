@@ -1,0 +1,182 @@
+[
+ {
+  "type": "claim_evidence",
+  "lang": "el",
+  "question": "Το 'Occupy the Cloud' υποστηρίζει ότι η αποθήκευση αντικειμένων όπως το S3 μπορεί να υποστηρίξει αποτελεσματικά τον διαμοιρασμό δεδομένων σε συστήματα χωρίς διακομιστή. Ποια εμπειρική μέτρηση χρησιμοποιεί η κριτική του CIDR για να αντικρούσει αυτόν τον ισχυρισμό, υποδεικνύοντας ένα σημαντικό σημείο συμφόρησης;",
+  "question_en": "Occupy the Cloud argues that object storage like S3 can efficiently support data shuffles in serverless systems. What empirical measurement does the CIDR critique use to contradict this claim, indicating a significant bottleneck?",
+  "reference_answer": "Το 'Occupy the Cloud' υποστηρίζει ότι το S3 παρέχει άφθονο εύρος ζώνης I/O και το χρησιμοποιεί για shuffle δεδομένων, επιτυγχάνοντας ταξινόμηση 1TB σε 3.4 λεπτά. Αντίθετα, η κριτική του CIDR αναφέρει ότι η επικοινωνία μέσω αποθήκευσης στο cloud, όπως το S3, είναι τουλάχιστον μια τάξη μεγέθους πολύ αργή, με μια λειτουργία write+read 1KB από Lambda σε S3 να διαρκεί 108ms, καθιστώντας την μη λογική αντικατάσταση για απευθείας δικτύωση.",
+  "reference_answer_en": "Occupy the Cloud argues that S3 provides abundant I/O bandwidth and uses it for data shuffles, achieving a 1TB sort in 3.4 minutes. In contrast, the CIDR critique reports that communicating via cloud storage, such as S3, is at least an order of magnitude too slow, with a 1KB write+read operation from Lambda to S3 taking 108ms, making it an unreasonable replacement for directly-addressed networking.",
+  "evidence": [
+   {
+    "file": "1702.04024.pdf",
+    "page": 5,
+    "quote": "While S3 does provide abundant I/O bandwidth to Lambda, it falls short on sustaining high request throughput.",
+    "keywords": [
+     "I/O bandwidth",
+     "request throughput"
+    ]
+   },
+   {
+    "file": "1812.03651.pdf",
+    "page": 5,
+    "quote": "In sum, communicating via cloud storage is not a reasonable replacement for directly-addressed networking, even with direct I/O—it is at leaste one order of magnitude too slow.",
+    "keywords": [
+     "cloud storage",
+     "order of magnitude"
+    ]
+   }
+  ],
+  "pair": [
+   "1702.04024.pdf",
+   "1812.03651.pdf"
+  ],
+  "cid": "m001",
+  "round": 1,
+  "kw_dropped": [],
+  "sides": [
+   {
+    "file": "1702.04024.pdf",
+    "page": 5,
+    "quote": "While S3 does provide abundant I/O bandwidth to Lambda, it falls short on sustaining high request throughput.",
+    "keywords": [
+     "i/o bandwidth",
+     "request throughput"
+    ]
+   },
+   {
+    "file": "1812.03651.pdf",
+    "page": 5,
+    "quote": "In sum, communicating via cloud storage is not a reasonable replacement for directly-addressed networking, even with direct I/O—it is at leaste one order of magnitude too slow.",
+    "keywords": [
+     "cloud storage",
+     "order of magnitude"
+    ]
+   }
+  ],
+  "mech": "ok",
+  "verdict": {
+   "id": "m001",
+   "single": "no",
+   "single_file": "",
+   "correct": "partly",
+   "self_contained": "yes",
+   "no_hint": "yes",
+   "note": "The question requires information from two different papers for comparison, so a single paper cannot answer it. The reference answer misrepresents the role of S3 in the 1TB sort in 'Occupy the Cloud', as that paper states Redis was used for intermediate shuffle data due to S3's limitations, not S3 itself for the entire shuffle."
+  },
+  "decision": "drop",
+  "reason": "απάντηση: partly"
+ },
+ {
+  "type": "compare",
+  "lang": "en",
+  "question": "What is the maximum execution time allowed for a function invocation in AWS Lambda according to the PyWren paper, and how does the CIDR critique's later assessment of Lambda's limitations describe this same constraint?",
+  "question_en": "What is the maximum execution time allowed for a function invocation in AWS Lambda according to the PyWren paper, and how does the CIDR critique's later assessment of Lambda's limitations describe this same constraint?",
+  "reference_answer": "The PyWren paper states that AWS Lambda provides a containerized runtime with a maximum 300 seconds of execution time. The CIDR critique, in its later assessment, describes this as a 'Limited Lifetimes' constraint, noting that function invocations are shut down by the Lambda infrastructure after 15 minutes.",
+  "reference_answer_en": "The PyWren paper states that AWS Lambda provides a containerized runtime with a maximum 300 seconds of execution time. The CIDR critique, in its later assessment, describes this as a 'Limited Lifetimes' constraint, noting that function invocations are shut down by the Lambda infrastructure after 15 minutes.",
+  "evidence": [
+   {
+    "file": "1702.04024.pdf",
+    "page": 3,
+    "quote": "Currently AWS Lambda provides a very restricted containerized runtime with a maximum 300 seconds of execution time, 1.5 GB of RAM, 512 MB of local storage and no root access, but we believe these limits will be increased as AWS Lambda is used for more general purpose applications.",
+    "keywords": [
+     "300 seconds",
+     "execution time"
+    ]
+   },
+   {
+    "file": "1812.03651.pdf",
+    "page": 3,
+    "quote": "After 15 minutes, function invocations are shut down by the Lambda infrastructure.",
+    "keywords": [
+     "15 minutes",
+     "shut down"
+    ]
+   }
+  ],
+  "pair": [
+   "1702.04024.pdf",
+   "1812.03651.pdf"
+  ],
+  "cid": "m002",
+  "round": 1,
+  "mech": "1702.04024.pdf: το απόσπασμα ΔΕΝ βρέθηκε αυτούσιο",
+  "verdict": {},
+  "decision": "drop",
+  "reason": "1702.04024.pdf: το απόσπασμα ΔΕΝ βρέθηκε αυτούσιο"
+ },
+ {
+  "type": "claim_evidence",
+  "lang": "el",
+  "question": "Το 'Berkeley View on Serverless Computing' του 2019 αναφέρει ότι οι πλατφόρμες serverless αντιμετωπίζουν προκλήσεις στην προβλέψιμη απόδοση λόγω της μεταβλητότητας των υποκείμενων πόρων υλικού. Πώς υποστηρίζει το PyWren αυτήν την παρατήρηση, αναφέροντας συγκεκριμένα την απόδοση των SIMD εντολών;",
+  "question_en": "The 'Berkeley View on Serverless Computing' 2019 states that serverless platforms face challenges in predictable performance due to variability in underlying hardware resources. How does PyWren support this observation, specifically regarding SIMD instruction performance?",
+  "reference_answer": "Το 'Berkeley View on Serverless Computing' του 2019 επισημαίνει ότι η μεταβλητότητα των πόρων υλικού, όπως η χρήση διαφορετικών γενεών CPU, συμβάλλει στην απρόβλεπτη απόδοση των serverless λειτουργιών. Το PyWren, παρόλο που δεν αναφέρει τη μεταβλητότητα των CPU, σημειώνει ότι η απόδοση των SIMD εντολών μπορεί να διαφέρει σημαντικά μεταξύ διαφορετικών μικροεπεξεργαστών x86, με τους πιο πρόσφατους, όπως ο Intel Skylake με 512-bit SIMD, να είναι πολύ ταχύτεροι από τους παλαιότερους, όπως ο Intel Broadwell με 128-bit SIMD, χωρίς οι χρήστες να μπορούν να επιλέξουν το ταχύτερο υλικό.",
+  "reference_answer_en": "The 'Berkeley View on Serverless Computing' 2019 notes that variability in hardware resources, such as receiving CPUs from different hardware generations, contributes to unpredictable performance for serverless functions. PyWren, while not explicitly mentioning CPU generation variability, states that SIMD instruction performance can differ significantly between different x86 microprocessors, with newer ones like Intel Skylake with 512-bit SIMD being much faster than older ones like Intel Broadwell with 128-bit SIMD, without users having a way to indicate they want the faster hardware.",
+  "evidence": [
+   {
+    "file": "1902.03383v1.pdf",
+    "page": 15,
+    "quote": "Another obstacle to predictable performance is the variability in the hardware resources that results from giving the cloud provider flexibility to choose the underlying server.",
+    "keywords": [
+     "predictable performance",
+     "hardware resources"
+    ]
+   },
+   {
+    "file": "1902.03383v1.pdf",
+    "page": 20,
+    "quote": "For programs that use SIMD instructions, running on a recent Intel Skylake microprocessor with 512-bit wide SIMD instructions can be much faster than running on the older Intel Broadwell microprocessor with 128-bit wide SIMD instructions.",
+    "keywords": [
+     "SIMD instructions",
+     "Intel Skylake"
+    ]
+   }
+  ],
+  "pair": [
+   "1702.04024.pdf",
+   "1902.03383v1.pdf"
+  ],
+  "cid": "m003",
+  "round": 1,
+  "mech": "δεν έχει ΕΝΑ απόσπασμα ανά paper",
+  "verdict": {},
+  "decision": "drop",
+  "reason": "δεν έχει ΕΝΑ απόσπασμα ανά paper"
+ },
+ {
+  "type": "compare",
+  "lang": "en",
+  "question": "How do the PyWren paper and the 2019 Berkeley View on Serverless Computing characterize the performance of S3 for read/write operations?",
+  "question_en": "How do the PyWren paper and the 2019 Berkeley View on Serverless Computing characterize the performance of S3 for read/write operations?",
+  "reference_answer": "The PyWren paper reports that S3 can achieve around 30-40 MB/s write and read performance per core, scaling to 60-80 GB/s across 2800 simultaneous functions, matching the per-core performance of a single local SSD. In contrast, the 2019 Berkeley View on Serverless Computing characterizes S3 as having high access costs and high access latencies, taking at least 10 milliseconds to read or write small objects.",
+  "evidence": [
+   {
+    "file": "1702.04024.pdf",
+    "page": 1,
+    "quote": "We find that we can achieve around 30-40 MB/s write and read performance per core to a remote bulk object store (S3), matching the per-core performance of a single local SSD on typical EC2 nodes.",
+    "keywords": [
+     "30-40 MB/s",
+     "S3"
+    ]
+   },
+   {
+    "file": "1902.03383v1.pdf",
+    "page": 12,
+    "quote": "Object storage services such as AWS S3, Azure Blob Storage, and Google Cloud Storage are highly scalable and provide inexpensive long-term object storage, but exhibit high access costs and high access latencies.",
+    "keywords": [
+     "high access latencies",
+     "S3"
+    ]
+   }
+  ],
+  "pair": [
+   "1702.04024.pdf",
+   "1902.03383v1.pdf"
+  ],
+  "cid": "m004",
+  "round": 1,
+  "mech": "κακή μορφή (κενό πεδίο)",
+  "verdict": {},
+  "decision": "drop",
+  "reason": "κακή μορφή (κενό πεδίο)"
+ }
+]

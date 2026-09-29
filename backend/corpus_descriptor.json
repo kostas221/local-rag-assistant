@@ -1,4 +1,13 @@
 {
   "domain": "Cloud Computing and Distributed Systems",
-  "terms": "distributed computing, serverless computing, cloud computing, map-reduce, stateless functions, virtual machine, container technologies, autoscaling, Function as a Service, edge computing, Content Delivery Network, statistical multiplexing, Software as a Service, utility computing, high-performance computing, grid computing, multitenant, elasticity, cloud functions, message-passing interface"
+  "terms": "distributed computing, serverless computing, cloud computing, map-reduce, stateless functions, virtual machine, container technologies, autoscaling, Function as a Service, edge computing, Content Delivery Network, statistical multiplexing, Software as a Service, utility computing, high-performance computing, grid computing, multitenant, elasticity, cloud functions, message-passing interface",
+  "files": [
+    "1702.04024.pdf",
+    "1706.03178.pdf",
+    "1812.03651.pdf",
+    "1902.03383v1.pdf",
+    "EECS-2009-28.pdf",
+    "excamera-nsdi17.pdf",
+    "mapreduce-osdi04.pdf"
+  ]
 }

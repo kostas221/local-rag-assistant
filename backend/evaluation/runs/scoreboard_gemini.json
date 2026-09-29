@@ -1,0 +1,887 @@
+{
+ "a8e09523b9d5abb85bb73a533f02e2b5a05c025c853c1d5770ff829fc993002c": {
+  "tail": " already present in the question - never drop or generalize one. Output ONLY a concise English search query with the key terms. No quotes, no extra text.\n\nUser question: Τι είναι το utility computing;",
+  "out": "What is utility computing"
+ },
+ "95cdcd3a7679ab1efbc0289b0289ef12c6c41e4004ae40ee170d65f6b49d6b62": {
+  "tail": "op or generalize one. Output ONLY a concise English search query with the key terms. No quotes, no extra text.\n\nUser question: Ποια είναι τα 10 κύρια εμπόδια του cloud computing που αναφέρει το paper;",
+  "out": "What are the 10 main obstacles of cloud computing mentioned in the paper"
+ },
+ "12c1ca8a85f5ab4a8ecd9eae8f53edd7e975248dcb31cf41ebb2b34be2403ca0": {
+  "tail": "ver drop or generalize one. Output ONLY a concise English search query with the key terms. No quotes, no extra text.\n\nUser question: Πώς βοηθά η ελαστικότητα στη μεταφορά του ρίσκου πρόβλεψης ζήτησης;",
+  "out": "How does elasticity help in shifting demand forecasting risk"
+ },
+ "951da2366f31db34b0b72e2f1b9bd3b8b3650dfd37c64c71d812222b92e14b14": {
+  "tail": "n the question - never drop or generalize one. Output ONLY a concise English search query with the key terms. No quotes, no extra text.\n\nUser question: Τι είναι το cold start στο serverless computing;",
+  "out": "cold start serverless computing"
+ },
+ "dd409ca609e3e70b447340e5f059b466a10327fd95d39ea4968f9c4ccd6a374b": {
+  "tail": "ion - never drop or generalize one. Output ONLY a concise English search query with the key terms. No quotes, no extra text.\n\nUser question: Γιατί το serverless απλοποιεί τον προγραμματισμό στο cloud;",
+  "out": "Why serverless simplifies programming in the cloud"
+ },
+ "7f75bd862f25dee8b453d82bb6aa2f1add71a35f7df1fc8748606c9f6d41602c": {
+  "tail": "e question - never drop or generalize one. Output ONLY a concise English search query with the key terms. No quotes, no extra text.\n\nUser question: Τι αναφέρει το paper για το reputation fate sharing;",
+  "out": "reputation fate sharing"
+ },
+ "5152f0aa5f169461a706bc6504a437c1bf126ebb30e71ddba60bc73f9235f43e": {
+  "tail": "n - never drop or generalize one. Output ONLY a concise English search query with the key terms. No quotes, no extra text.\n\nUser question: Τι προβλέπει το paper για το μέλλον του serverless computing;",
+  "out": "serverless computing future"
+ },
+ "c7dda4e6ef36be1aeda70a388ffd21c071f01cef97a13eb0fb62506a7f902136": {
+  "tail": "ic OUTSIDE that field, return it unchanged.\n\nOutput ONLY the rewritten query. No quotes, no extra text.\n\nOriginal query: What do the documents say about quantum computing performance?\nRewritten query:",
+  "out": "Quantum computing performance analysis"
+ },
+ "88d588792df5d92c7ea9fdc5702bd6d245ff446697297747e9178e015c4aad6f": {
+  "tail": "e question - never drop or generalize one. Output ONLY a concise English search query with the key terms. No quotes, no extra text.\n\nUser question: Ποια είναι η τιμή του Bitcoin σύμφωνα με τα έγγραφα;",
+  "out": "Bitcoin cost"
+ },
+ "f486316dff1fa91904be702194beff76f85d2b6c0353b35d7f165e2294a46466": {
+  "tail": " original question. If the question is about a topic OUTSIDE that field, return it unchanged.\n\nOutput ONLY the rewritten query. No quotes, no extra text.\n\nOriginal query: Bitcoin cost\nRewritten query:",
+  "out": "Bitcoin transaction fees"
+ },
+ "eda8d3065dfe7989c7c52e70da25c5f9d5670c497089ec1d3e6839ca8484c1de": {
+  "tail": "rop or generalize one. Output ONLY a concise English search query with the key terms. No quotes, no extra text.\n\nUser question: Ποια είναι τα κύρια αρχιτεκτονικά στοιχεία της πλατφόρμας IBM OpenWhisk;",
+  "out": "IBM OpenWhisk platform architectural elements"
+ },
+ "91f09b7ec388aa3bad58900f559455911d313ed1ac269b08ba5e9deab84b9514": {
+  "tail": " Output ONLY a concise English search query with the key terms. No quotes, no extra text.\n\nUser question: Ποιες τιμές ηλεκτρικού ρεύματος ανά κιλοβατώρα αναφέρει το paper και για ποιον λόγο διαφέρουν;",
+  "out": "What cost per kilowatt-hour does the paper report and why do they differ?",
+  "note": "28/9: αντικαταστάθηκε το κουτσουρεμένο «cost per» (1ο τρέξιμο) με τη συνηθισμένη μετάφραση (5/5 το πρωί, probe_translation_prompt). Το 1ο τρέξιμο: scoreboard/baseline_draw1.json"
+ },
+ "55054ba7369039ce2b28c7c0944c92ea9037a507793f4271e82a9adc711e7f0d": {
+  "tail": " or generalize one. Output ONLY a concise English search query with the key terms. No quotes, no extra text.\n\nUser question: Πώς εγγυάται το MapReduce το ίδιο αποτέλεσμα παρά τις αστοχίες μηχανημάτων;",
+  "out": "How does MapReduce guarantee the same output despite machines failures?"
+ },
+ "9d8d0833bfb88b3531f2ba0e4a21a338d6c5fe4816dcf70ec202485a8be5f66b": {
+  "tail": "ise English search query with the key terms. No quotes, no extra text.\n\nUser question: Γιατί το paper υποστηρίζει ότι η φράση pay as you go αποδίδει καλύτερα το οικονομικό όφελος από το CapEx to OpEx;",
+  "out": "Why does the paper argue that pay as you go better describes the cost benefit than CapEx to OpEx?"
+ },
+ "50ad6a0d6c644719335e2278a0982220a8867cb58cd4f7034b3843856056401b": {
+  "tail": "th the key terms. No quotes, no extra text.\n\nUser question: Ποιο παράδειγμα κόστους αδειοδότησης λογισμικού δίνει το paper και πώς συγκρίνεται η τιμή του Windows στο EC2 με την έκδοση ανοιχτού κώδικα;",
+  "out": "software licensing cost example Windows EC2 open source version price comparison"
+ },
+ "2ed29d1be3801dbe3b0773139a4c8ada1a49084aa49281d626bfbe043b0e7d96": {
+  "tail": "nglish search query with the key terms. No quotes, no extra text.\n\nUser question: Πώς απαντά το paper στον ισχυρισμό ότι οι cloud functions δεν μπορούν να εξυπηρετήσουν εφαρμογές χαμηλής καθυστέρησης;",
+  "out": "cloud functions low-latency applications"
+ },
+ "f75e13a838144bd664bc415f5b45ebc29d65ff06a255d00edba021255abeeef2": {
+  "tail": "Output ONLY a concise English search query with the key terms. No quotes, no extra text.\n\nUser question: Τι αναφέρει το κείμενο για την επέκταση του serverless πέρα από τα παραδοσιακά cloud platforms;",
+  "out": "serverless beyond traditional cloud platforms"
+ },
+ "81a1c09705efa5b836ea29a92b671fbe9a8e12c9b4afb4fa783576486709873c": {
+  "tail": "uestion - never drop or generalize one. Output ONLY a concise English search query with the key terms. No quotes, no extra text.\n\nUser question: Πώς λειτουργεί ο μηχανισμός των counters στο MapReduce;",
+  "out": "How do counters work in MapReduce"
+ },
+ "65487af3ccb12e2b5a5560f504e80700e0ab7161e3a405b28facaba06dce194b": {
+  "tail": " one. Output ONLY a concise English search query with the key terms. No quotes, no extra text.\n\nUser question: Πόσο επηρεάζουν οι backup tasks και οι αστοχίες μηχανημάτων τον χρόνο εκτέλεσης του sort;",
+  "out": "How do backup tasks and machine failures affect sort execution time?"
+ },
+ "37042d60f50591d8a73abbf918ad0c0f310bfb0145fe1fef55ed5d812e227dc5": {
+  "tail": "ut ONLY a concise English search query with the key terms. No quotes, no extra text.\n\nUser question: Πώς περιγράφουν το πρόβλημα της αποθήκευσης στο serverless το Berkeley view και η κριτική του CIDR;",
+  "out": "Berkeley view CIDR serverless storage problem"
+ },
+ "8dfcb4a3e405d1627d557fd2868ead55f14a47a92a1f055702a115e1ad2b44e9": {
+  "tail": "arch query with the key terms. No quotes, no extra text.\n\nUser question: Ποια στοιχεία προσθέτει η αρχιτεκτονική του OpenWhisk σε σχέση με το γενικό serverless επίπεδο που περιγράφει το Berkeley view;",
+  "out": "OpenWhisk architecture serverless platform Berkeley view"
+ },
+ "63ca7af82656c76ef3adf4a2e5d42501e280edba7da9d2695f4219851ab43252": {
+  "tail": "ld, return it unchanged.\n\nOutput ONLY the rewritten query. No quotes, no extra text.\n\nOriginal query: What do the documents say about GDPR compliance requirements for cloud providers?\nRewritten query:",
+  "out": "GDPR compliance obligations cloud service providers"
+ },
+ "2b088215db6abe5efaea4fe2abd41c0018ac36e5a6895cac531c9701ab4e84b8": {
+  "tail": "ion - never drop or generalize one. Output ONLY a concise English search query with the key terms. No quotes, no extra text.\n\nUser question: Ποια αποτελέσματα κλινικών δοκιμών αναφέρονται στα έγγραφα;",
+  "out": "clinical trial results"
+ },
+ "17d6709d108b9722ca716526a0feb4b097905f0c892e2acbc90f181cef2489db": {
+  "tail": "question. If the question is about a topic OUTSIDE that field, return it unchanged.\n\nOutput ONLY the rewritten query. No quotes, no extra text.\n\nOriginal query: clinical trial results\nRewritten query:",
+  "out": "clinical trial results"
+ },
+ "578b73be4492c993975bfd88010eb82a9b0def1f6a89cfa44255d8b524f13f1a": {
+  "tail": "that field, return it unchanged.\n\nOutput ONLY the rewritten query. No quotes, no extra text.\n\nOriginal query: What benchmark results for GPU tensor cores are reported in these papers?\nRewritten query:",
+  "out": "GPU tensor core benchmarks"
+ },
+ "bb6952bac0dcb1402f6923cffa4de949d65b73bd12e787e284ab2f1183b05150": {
+  "tail": "louds' (2009) θεμελιώνει την ελαστικότητα του νέφους στο statistical multiplexing και στο cost associativity. Πώς αξιοποιεί την ίδια αρχή το serverless Berkeley view (2019) για την εφήμερη αποθήκευση;",
+  "out": "Above the Clouds (2009) establishes cloud elasticity in statistical multiplexing and cost associativity. How does serverless Berkeley view (2019) leverage the same principle for ephemeral storage"
+ },
+ "0dc619093d2f7b856ae039fb05daa9ccceab22a81161ef58e0520069e200871c": {
+  "tail": ". No quotes, no extra text.\n\nUser question: Το Berkeley view (2019) ορίζει serverless = FaaS + BaaS. Τι προειδοποιεί ο Baldini et al. για την εξάρτηση από το ecosystem των BaaS υπηρεσιών ενός παρόχου;",
+  "out": "Baldini et al. BaaS services provider ecosystem dependency"
+ },
+ "62261784e12799c2f8c52a80d38bb613234ef8534a9dc4073485293a5790f699": {
+  "tail": " topic OUTSIDE that field, return it unchanged.\n\nOutput ONLY the rewritten query. No quotes, no extra text.\n\nOriginal query: Baldini et al. BaaS services provider ecosystem dependency\nRewritten query:",
+  "out": "Baldini et al. Backend as a Service provider ecosystem interdependencies"
+ },
+ "d3c0f7cf5db9d18618ce4536531c46cd31218fe28e97e3c4aac70a6fc61d16a1": {
+  "tail": "παναπροσδιορισμένη εργασία λόγω αποτυχίας εργάτη σε σχέση με την έξοδο των εργασιών Map και Reduce, και πώς χειρίζεται το ExCamera την επαναπροσδιορισμένη εργασία στην περίπτωση μιας αποτυχίας εργάτη;",
+  "out": "How does MapReduce handle re-assigned tasks due to worker failure in relation to Map and Reduce tasks output, and how does ExCamera handle re-assigned tasks in the case of a worker failure?"
+ },
+ "a42dfe9bf7be29e11b184e7484b03994869f3df4f0bd9d56698504d378b0d561": {
+  "tail": "ιο είναι το μέγιστο όριο χρόνου εκτέλεσης για τις λειτουργίες Lambda που αναφέρεται στην εργασία PyWren, και πώς περιγράφει η Baldini et al. τις επιπτώσεις των ορίων πόρων στις λειτουργίες serverless;",
+  "out": "What is the maximum execution time limit for Lambda functions mentioned in the PyWren paper, and how do Baldini et al. describe the impact of resource limits on serverless functions?"
+ },
+ "22e79833f3df544335d0232c8bfface48a94750d4fb3bbf1f9b30c2dfcb9d7ad": {
+  "tail": "σία PyWren τις επιπτώσεις των stragglers κατά την ταξινόμηση δεδομένων, και τι προβλέπει η Baldini et al. σχετικά με την ανάγκη για διαφορετικές σημασιολογίες ανάκτησης για τις λειτουργίες serverless;",
+  "out": "PyWren stragglers data sorting Baldini et al. retrieval semantics serverless functions"
+ },
+ "4cf94d26fe958ffa06dfed4b1ec4143888d3788da247a2e5db9e49835a527dd0": {
+  "tail": " Πόσο χρόνο αναφέρει ότι μπορεί να διαρκέσει μια κλήση συνάρτησης και πώς το CIDR critique περιγράφει τη σχέση μεταξύ της διάρκειας ζωής των συναρτήσεων και της ικανότητάς τους να διατηρούν κατάσταση;",
+  "out": "PyWren recognizes startup latencies as a significant drawback of its current implementation. How long does it report a function call can take and how does the CIDR critique describe the relationship between the lifetime of functions and their ability to maintain state?"
+ },
+ "89a1b67256176f936dfccf0deef2ff5674dec12ee0f937e146b6fbd5d68760bb": {
+  "tail": "ή σφαλμάτων για τις stateless συναρτήσεις, και πώς συγκρίνεται αυτό με τον τρόπο που το 'Above the Clouds' περιγράφει την ελαστικότητα ως ένα οικονομικό όφελος, ειδικά όσον αφορά τη μεταφορά κινδύνου;",
+  "out": "PyWren stateless functions fault tolerance vs. Above the Clouds elasticity economic benefit risk transfer"
+ },
+ "72a6a81e2729cac88a7e54606e674dfa259178629f8f534a7b42bbf998e69004": {
+  "tail": "είναι η τιμή ανά GB-ώρα εκτέλεσης της Lambda που αναφέρει η εργασία του PyWren, και πώς συγκρίνεται αυτό με το κόστος ανά ώρα για μια x86 ISA «φέτα» EC2 που αναφέρεται στο 'Above the Clouds' του 2009;",
+  "out": "Lambda cost per GB-hour, PyWren, EC2 cost per hour"
+ },
+ "aa05cec0cae9d9915e31a87251de9577b5c52316ae5232c265e42d1762dd3c01": {
+  "tail": "ext.\n\nUser question: Ποιο είναι το μέγιστο όριο χρόνου εκτέλεσης για τις συναρτήσεις AWS Lambda που αναφέρει η PyWren, και πώς συγκρίνεται αυτό με το όριο που αναφέρει η ExCamera για τους workers της;",
+  "out": "AWS Lambda functions PyWren ExCamera workers"
+ },
+ "dd55ec60cc7b65b253a1ae82053f442e4403b373b3bc8ab327540c392e20006a": {
+  "tail": "ήσεις λεπτών. Ποια είναι η εκτιμώμενη καθυστέρηση εκκίνησης που αναφέρει η PyWren χωρίς caching, και πόσες εκκινήσεις worker καθυστερούν πάνω από ένα λεπτό στην περίπτωση κρύας εκκίνησης της ExCamera;",
+  "out": "PyWren reports startup delays for its functions, while ExCamera recognizes that cold starts can introduce minute delays. What is the estimated startup delay reported by PyWren without caching, and how many worker starts are delayed over one minute in the case of an ExCamera cold start?"
+ },
+ "24ef6e9c1596b105628d676c1afd8839c3bca755c8a6ad530774973e891a753a": {
+  "tail": "ος που αναφέρει η εργασία του MapReduce από την περιορισμένη αρχιτεκτονική προγραμματισμού της, και πώς το PyWren χρησιμοποιεί μια παρόμοια προσέγγιση για να απλοποιήσει την ανάπτυξη για τους χρήστες;",
+  "out": "MapReduce programming architecture PyWren users"
+ },
+ "78b70a7698a1499e7edc9b45b3f9511af321a2f639c2b534ea536cf9d1801816": {
+  "tail": "' (2009) την οικονομική ωφέλεια του μοντέλου πληρωμής ανά χρήση του cloud computing, και τι αναγνωρίζει η εργασία Baldini et al. (2017) ως βασικό διαχωριστικό χαρακτηριστικό των serverless πλατφορμών;",
+  "out": "How does the report 'Above the Clouds' (2009) characterize the cost benefit of the pay-per-use model of cloud computing, and what does the work Baldini et al. (2017) recognize as a key distinguishing characteristic of serverless platforms?"
+ },
+ "815420ce84391f4d378923e467eac7fcef5ee3c3a7b2643148682e5c48652f43": {
+  "tail": ": Ποια είναι η κύρια προσέγγιση για την ανοχή σε σφάλματα εργαζομένων που περιγράφεται στο MapReduce, και πώς αντιμετωπίζει η εργασία του Baldini et al. το θέμα της ανάκτησης σε serverless πλατφόρμες;",
+  "out": "MapReduce worker fault tolerance approach Baldini et al. serverless platform recovery"
+ },
+ "bf835b2f9ef5e0749728bd204e33c323c0663d6ea52bdc54a3c415dc92b1f1ad": {
+  "tail": "aS που επισημαίνουν οι Hellerstein et al. σχετικά με την επεξεργασία δεδομένων, και πώς οι Jonas et al. αντιμετωπίζουν την πρόκληση της ανεπαρκούς αποθήκευσης για λειτουργίες λεπτομερούς κοκκοποίησης;",
+  "out": "FaaS platforms data processing storage functions"
+ },
+ "0779f9720c892c9f240b37bf2c415025875bd3d07e94b1b841bbe5846a2c2134": {
+  "tail": "rstein et al. για τη διαθεσιμότητα εξειδικευμένου υλικού στις σημερινές προσφορές FaaS, και ποιες λύσεις προτείνουν οι Jonas et al. για να υποστηρίξουν την ετερογένεια υλικού στο serverless computing;",
+  "out": "Hellerstein et al. FaaS offerings hardware serverless computing Jonas et al."
+ },
+ "fd3259d36031700bf964d9cc0a3692656cbd1fb87977052e3b23cae5eaf8cc8e": {
+  "tail": "ελαστικότητας του cloud computing, και πώς το 'Serverless Computing: One Step Forward, Two Steps Back' (2019) αντιπαραβάλλει το κόστος των FaaS σε σενάρια όπως η εκπαίδευση μοντέλων μηχανικής μάθησης;",
+  "out": "How does the report 'Above the Clouds' (2009) characterize the economic value of cloud computing elasticity, and how does 'Serverless Computing: One Step Forward, Two Steps Back' (2019) contrast the cost of FaaS in scenarios such as machine learning model training?"
+ },
+ "902388d49e7de0f4dc3013446535a89ff9588bea1957de96deb1ccfa480010d3": {
+  "tail": "βασικό εμπόδιο στην ανάπτυξη του Cloud Computing όσον αφορά την απόδοση, και πώς οι Hellerstein et al. (2019) περιγράφουν τις επιδόσεις του δικτύου για τις λειτουργίες FaaS, ειδικά υπό φόρτο εργασίας;",
+  "out": "'Above the Clouds' (2009) Cloud Computing performance Hellerstein et al. (2019) network performance FaaS functions workload"
+ },
+ "69de0f76ab1b7a95cae370a22f009094a949ebf2b9b35c5384baa998ca472323": {
+  "tail": "τική του CIDR την έλλειψη εξειδικευμένου υλικού στις σημερινές προσφορές FaaS και πώς το ExCamera αξιοποιεί τις λειτουργίες cloud για να επιτύχει υψηλή υπολογιστική ισχύ παρά αυτούς τους περιορισμούς;",
+  "out": "How does CIDR's critique characterize the lack of specialized hardware in today's FaaS offerings and how does ExCamera leverage cloud functions to achieve high computing performance despite these limitations?"
+ },
+ "691215097e1672f02a7539887aafe56ddd7fbb1909080581d5cb100d1d766183": {
+  "tail": " (2009) το μοντέλο χρέωσης «pay-as-you-go» και πώς το 'Cloud Programming Simplified: A Berkeley View on Serverless Computing' (2019) περιγράφει τη μονάδα λογιστικής για τις serverless cloud functions;",
+  "out": "How does 'Above the Clouds' (2009) define the \"pay-as-you-go\" model and how does 'Cloud Programming Simplified: A Berkeley View on Serverless Computing' (2019) describe the accounting unit for serverless cloud functions?"
+ },
+ "c142d1772181c0a303a70de76ffe42f105256d3790126043082e43c5393c15f8": {
+  "tail": " ποια είναι μια πρόκληση που αντιμετωπίζουν οι serverless cloud functions λόγω της ανεπαρκούς αποθήκευσης, σύμφωνα με το 'Cloud Programming Simplified: A Berkeley View on Serverless Computing' (2019);",
+  "out": "What is a key problem with I/O sharing between virtual machines mentioned in 'Above the Clouds' (2009) as a barrier to predictable performance, and what is a challenge faced by serverless cloud functions due to insufficient storage, according to 'Cloud Programming Simplified: A Berkeley View on Serverless Computing' (2019)?"
+ },
+ "baf7f05f56e3cb8eca8c8d63f86d03bcc14c22664337f7b5e02702bff5698152": {
+  "tail": ", and what is a challenge faced by serverless cloud functions due to insufficient storage, according to 'Cloud Programming Simplified: A Berkeley View on Serverless Computing' (2019)?\nRewritten query:",
+  "out": "Virtual machine I/O contention; performance predictability; serverless function storage limitations; cold start problem; resource provisioning"
+ },
+ "099a78c1aedb54353b3aee2b8f138788d58699857326c68eb032cb802a1105bf": {
+  "tail": "την κωδικοποίηση βίντεο χωρίς να θυσιάζει την αποδοτικότητα συμπίεσης, και τι αναγνωρίζει η προβολή του Berkeley (2019) ως πρόκληση για τις τυπικές λειτουργίες επικοινωνίας στις serverless πλατφόρμες;",
+  "out": "ExCamera fine-grained parallelism video encoding compression efficiency Berkeley view (2019) communication functions serverless platforms"
+ },
+ "20c4a86d2e3bebdfe5679e78e3bd0d83f7e5887c053c883bde62f4f5ad5df9b6": {
+  "tail": "να με την προβολή του Berkeley (2019), και πώς αυτό συγκρίνεται με το κόστος που αναφέρει το ExCamera για την κωδικοποίηση μιας 15λεπτης ταινίας Sintel χρησιμοποιώντας τον κωδικοποιητή ExCamera[6,16];",
+  "out": "What is the cost per unit of AWS Lambda functions according to the Berkeley (2019) view, and how does this compare to the cost reported by ExCamera for encoding a 15-minute Sintel video using the ExCamera encoder[6,16]?"
+ },
+ "9a42b79ecd3eb8a59ba1ea42478b3dd75a8c92a008cd4a1a57cd170a1bdfa75a": {
+  "tail": "ο είναι το κύριο πρόβλημα που εντοπίζει το 'Above the Clouds' όσον αφορά την απρόβλεπτη απόδοση, και πώς το MapReduce αντιμετωπίζει το ζήτημα των 'stragglers' που επιβραδύνουν την ολοκλήρωση εργασιών;",
+  "out": "'Above the Clouds' unpredictable performance MapReduce stragglers tasks"
+ },
+ "01647117187e979311c813b48c7e26d6ce69a783514308bba8841dacd9ebca27": {
+  "tail": "extra text.\n\nUser question: Ποιο είναι το πρωτεύον μέσο επικοινωνίας μεταξύ των workers που χρησιμοποιεί το MapReduce, και πώς χειρίζεται το πλαίσιο mu του ExCamera την επικοινωνία μεταξύ των threads;",
+  "out": "MapReduce workers communication ExCamera mu threads communication"
+ },
+ "04781ba599608929edaf9c8faf0d6beaf0a078e912e56513d30a95ba88f30b7d": {
+  "tail": "n - never drop or generalize one. Output ONLY a concise English search query with the key terms. No quotes, no extra text.\n\nUser question: Τι λένε για τα νομικά ζητήματα εμπιστευτικότητας και ελέγχου;",
+  "out": "confidentiality and control legal issues"
+ },
+ "05fd29b57adb9a39495e287f10b04ce79aca4468beca7b332372de1da0748fcd": {
+  "tail": "uestion is about a topic OUTSIDE that field, return it unchanged.\n\nOutput ONLY the rewritten query. No quotes, no extra text.\n\nOriginal query: confidentiality and control legal issues\nRewritten query:",
+  "out": "Confidentiality legal issues cloud computing distributed systems serverless computing data privacy access control regulatory compliance data governance"
+ },
+ "cce23249f8f14099269f2b052acf3b6c9fa4a9bac48a27000f1f739adbebd5bf": {
+  "tail": "er drop or generalize one. Output ONLY a concise English search query with the key terms. No quotes, no extra text.\n\nUser question: Ποια είναι η διαφορά ανάμεσα στα δύο είδη υπηρεσιών που περιγράφουν;",
+  "out": "What is the difference between the two types of services they describe"
+ },
+ "e354c6beb17809d4d37f96ab817e69274985a0b601132ed639b70e6de228459e": {
+  "tail": "DE that field, return it unchanged.\n\nOutput ONLY the rewritten query. No quotes, no extra text.\n\nOriginal query: What is the difference between the two types of services they describe\nRewritten query:",
+  "out": "Distinction between service models"
+ },
+ "2e916e285f9833404d55c9be1ff6d4735d6b6ccbe355cfb929dee9dc8d9fe0ed": {
+  "tail": "e question - never drop or generalize one. Output ONLY a concise English search query with the key terms. No quotes, no extra text.\n\nUser question: Γιατί συμφέρει να μην αγοράζεις μηχανήματα από πριν;",
+  "out": "Why serverless is cost-effective"
+ },
+ "c11fa436d7b3b945696a2bd15d947c345cbd777e0700b4008a90595a601b0420": {
+  "tail": " field, return it unchanged.\n\nOutput ONLY the rewritten query. No quotes, no extra text.\n\nOriginal query: Why does the same thing end up costing different amounts in different places?\nRewritten query:",
+  "out": "Cloud resource pricing variability across regions"
+ },
+ "b0d317a93d2d7d0214859335797aa1d017201200226b2b0cb5fe62208a16c749": {
+  "tail": "that field, return it unchanged.\n\nOutput ONLY the rewritten query. No quotes, no extra text.\n\nOriginal query: What do the authors of that system paper themselves say they contributed?\nRewritten query:",
+  "out": "Author contributions system paper"
+ },
+ "7529002e2d3edef8a481a0c6f79742bbb90919131e8f75f748c06954355b9d82": {
+  "tail": "lready present in the question - never drop or generalize one. Output ONLY a concise English search query with the key terms. No quotes, no extra text.\n\nUser question: Τι παράδειγμα δίνουν για κινητά;",
+  "out": "What example for mobile?"
+ },
+ "863aa42d7fee8a635862f3670f970bae2e013d373ed07401d4e90355b0c4ccb2": {
+  "tail": " Output ONLY a concise English search query with the key terms. No quotes, no extra text.\n\nUser question: Τι προσθέτει η συγκεκριμένη υλοποίηση σε σχέση με τη γενική περιγραφή που δίνει το άλλο paper;",
+  "out": "What does this implementation add compared to the general description given by the other paper?"
+ },
+ "1b8879545390a423fc77a525a29a305d0e6a9d669d0a3fd0a53daa192cd8aefc": {
+  "tail": "unchanged.\n\nOutput ONLY the rewritten query. No quotes, no extra text.\n\nOriginal query: What does this implementation add compared to the general description given by the other paper?\nRewritten query:",
+  "out": "Implementation-specific enhancements versus generalized architectural description"
+ },
+ "296a09c7fa2c3b627aedbccd6d630980629a0bf2915511b768b411b925d12a3d": {
+  "tail": " field, return it unchanged.\n\nOutput ONLY the rewritten query. No quotes, no extra text.\n\nOriginal query: Is it still worth keeping the data right next to the machines doing the work?\nRewritten query:",
+  "out": "Data locality optimization distributed systems cloud computing serverless architectures performance implications data proximity compute nodes storage tiering latency bandwidth cost-benefit analysis"
+ },
+ "61308a82dabada0008f6444f77b27016450f31d53ad717328619a240a65d4e39": {
+  "tail": "bout a topic OUTSIDE that field, return it unchanged.\n\nOutput ONLY the rewritten query. No quotes, no extra text.\n\nOriginal query: Why do they bring up that older system as a warning?\nRewritten query:",
+  "out": "Cloud computing historical failures cautionary tales"
+ },
+ "d8c481b0905aa4204a132c330c52ba4abb2bae60428ce16fe5ddd9a3fcfebf42": {
+  "tail": "lize one. Output ONLY a concise English search query with the key terms. No quotes, no extra text.\n\nUser question: Γιατί οι μεγάλες εγκαταστάσεις υπολογιστών μπορούν να προσφέρουν υπηρεσίες πιο φθηνά;",
+  "out": "Why large computing instances can offer services cheaper"
+ },
+ "5fdf1ad383ff4c4b497fc28b58ea12dda40ee9bfd4810c83b4b68e2454522eba": {
+  "tail": "ize one. Output ONLY a concise English search query with the key terms. No quotes, no extra text.\n\nUser question: Ποια είναι τα βασικά προβλήματα των σημερινών πλατφορμών χωρίς δικούς σου διακομιστές;",
+  "out": "What are the key problems of today's serverless platforms?"
+ },
+ "cdfe31600077327237f2a5997cf9aaa7e90ba8dab465652945c03a2b9b26eed5": {
+  "tail": "\n\nOutput ONLY the rewritten query. No quotes, no extra text.\n\nOriginal query: What's the difference in how you pay for the newer kind of internet computing compared to the older kind?\nRewritten query:",
+  "out": "Serverless computing cost model vs. virtual machine pricing"
+ },
+ "60bb1e7a61f467a10cc68f3fbc8672fb1eaa5eba796a0ed302d56c49a4de826e": {
+  "tail": "ey terms. No quotes, no extra text.\n\nUser question: Γιατί το μοντέλο υπολογισμών που εκτελεί κώδικα χωρίς να χρειάζεται να διαχειρίζεσαι υποδομή, κάνει ευκολότερη την ανάπτυξη εφαρμογών στο διαδίκτυο;",
+  "out": "Why serverless computing model makes online application development easier"
+ },
+ "b0ee573b0335783068e44886726b8846e19da1f338f333c3a56ed3395fc73393": {
+  "tail": "ncise English search query with the key terms. No quotes, no extra text.\n\nUser question: Πώς βοηθάει τους προγραμματιστές η προσέγγιση που δεν απαιτεί διαχείριση μηχανημάτων, όταν φτιάχνουν εφαρμογές;",
+  "out": "How serverless helps developers building applications"
+ },
+ "f3b5bd949ae27747a86b43d56ff2888eb10e89caa726d3a835c4c0a8f084df66": {
+  "tail": " with the key terms. No quotes, no extra text.\n\nUser question: Τι πιστεύουν οι συγγραφείς ότι θα γίνει με την τεχνολογία που τρέχει κώδικα χωρίς να χρειάζεται να ασχολείσαι με υπολογιστές, στο μέλλον;",
+  "out": "serverless computing future"
+ },
+ "4a650faa9827dfe082e2dce09cb271a073d0469992f15bb968b9b709b853388b": {
+  "tail": "oncise English search query with the key terms. No quotes, no extra text.\n\nUser question: Τι προβλέπει το κείμενο για την εξέλιξη της αρχιτεκτονικής όπου οι προγραμματιστές δεν διαχειρίζονται υποδομή;",
+  "out": "What does the text predict for the evolution of the architecture where developers do not manage serverless?"
+ },
+ "98fff5b96796c24cd514641661afe7e49f5dad0a109d90a6040e1daf32b97f8a": {
+  "tail": "text.\n\nUser question: Ποιες υπηρεσίες της Amazon και της Google δίνονται ως παραδείγματα αυτών των προσφορών από το κείμενο που αναλύει την πρόοδο και τις προκλήσεις των υπολογισμών χωρίς διακομιστές;",
+  "out": "Amazon and Google services as examples of serverless offerings"
+ },
+ "2a3ffa263bea392e754fec1430ef0af9522848c295e67ee68829f19799eaa242": {
+  "tail": "dy present in the question - never drop or generalize one. Output ONLY a concise English search query with the key terms. No quotes, no extra text.\n\nUser question: Πέντε εφαρμογές που πιέζουν τα όρια;",
+  "out": "Five applications pushing the limits"
+ },
+ "da3c299495444f008ebe37b31ceaf7a0f3e276837b1d00ca3ce89e6754918bd4": {
+  "tail": "terms. No quotes, no extra text.\n\nUser question: Ποιες πέντε εφαρμογές εξετάζει λεπτομερώς το κείμενο, ως περιπτώσεις που δυσκολεύουν τη σημερινή τεχνολογία όπου τρέχει κώδικας χωρίς δική σου υποδομή;",
+  "out": "What five applications does the text examine in detail, as cases that challenge today's serverless technology?"
+ },
+ "6347415db505f9f1288704eb92041cec4b8fa9efa5df80bb5f23e1dc150d5727": {
+  "tail": "LY a concise English search query with the key terms. No quotes, no extra text.\n\nUser question: Ποια είναι τα βασικά μέρη της αρχιτεκτονικής του συστήματος της IBM που εκτελεί κώδικα με βάση γεγονότα;",
+  "out": "IBM system architecture event-driven code"
+ },
+ "e1579ab7a443d755d3c85ef3247e9d0b1807241a3d0b4c61f7d266de4fee7acd": {
+  "tail": "English search query with the key terms. No quotes, no extra text.\n\nUser question: Ποια είναι τα κύρια δομικά στοιχεία της πλατφόρμας που περιγράφεται ως ανοιχτή και εκτελεί λειτουργίες κατ' απαίτηση;",
+  "out": "What are the main building blocks of the platform described as open and performing functions on demand?"
+ },
+ "8783ce9d9af2d066b8c4f7becdf61c7586dd7ddbb3c8761387171a39b3ee55ae": {
+  "tail": "d.\n\nOutput ONLY the rewritten query. No quotes, no extra text.\n\nOriginal query: What are the main building blocks of the platform described as open and performing functions on demand?\nRewritten query:",
+  "out": "Serverless computing architecture components open-source on-demand function execution platform building blocks"
+ },
+ "1f961f14f07a4a3bdba9645ed037d74058976164b65c2657416eb3311f4db522": {
+  "tail": "ady present in the question - never drop or generalize one. Output ONLY a concise English search query with the key terms. No quotes, no extra text.\n\nUser question: Επιστημονικές εφαρμογές του PyWren;",
+  "out": "PyWren scientific applications"
+ },
+ "caae25d3676d137387bb80cefb51550f54c35d75687b5fa048ff091b7ba9df93": {
+  "tail": "terms. No quotes, no extra text.\n\nUser question: Γιατί η αποθήκευση αρχείων όπως το S3 δεν είναι κατάλληλη για να μοιράζονται δεδομένα γρήγορα οι μικρές λειτουργίες που τρέχουν χωρίς δική σου υποδομή;",
+  "out": "Why file storage like S3 is not suitable for fast data sharing by small serverless functions?"
+ },
+ "bc04f5f39a95b5e018812391622d55a23cdaa164dd9a0f16b5a8c0ab8ef699d6": {
+  "tail": "tes, no extra text.\n\nUser question: Γιατί οι υπηρεσίες αποθήκευσης αντικειμένων δεν επαρκούν για τη γρήγορη ανταλλαγή μικρών δεδομένων μεταξύ των λειτουργιών που εκτελούνται χωρίς διαχείριση υποδομής;",
+  "out": "Why storage services are not sufficient for fast exchange of small data between serverless functions?"
+ },
+ "ac7a405ffe7539a2fbd816c90cfafab6a3fe95268bc00297a5a1d050ffdd8fc8": {
+  "tail": "with the key terms. No quotes, no extra text.\n\nUser question: Πώς εξασφαλίζει η μέθοδος επεξεργασίας δεδομένων σε μεγάλα συμπλέγματα το ίδιο τελικό αποτέλεσμα, ακόμα κι αν κάποια μηχανήματα αποτύχουν;",
+  "out": "How does distributed data processing ensure the same output, even if some machines fail?"
+ },
+ "c31f4c88eb2772568ca9ba4c907aa877af0d31201d6978d2d0b1e1958136dd06": {
+  "tail": "xtra text.\n\nUser question: Πώς εγγυώνται οι συγγραφείς του κειμένου για την απλοποιημένη επεξεργασία δεδομένων σε μεγάλα συμπλέγματα, την ορθότητα του αποτελέσματος παρά τα προβλήματα των μηχανημάτων;",
+  "out": "How do the authors of the text guarantee simplified data processing in large clusters, the correctness of the output despite machine problems?"
+ },
+ "bcf0bf28b72fba76d1a81b98cd857deed89b39e743ac5bf49e6cb37958dc37bd": {
+  "tail": "with the key terms. No quotes, no extra text.\n\nUser question: Γιατί το κείμενο λέει ότι η φράση «πληρώνεις για ό,τι καταναλώνεις» δείχνει καλύτερα το κέρδος από το να μην αγοράζεις δικό σου εξοπλισμό;",
+  "out": "Why does the text say that the phrase \"pay-per-use\" better shows the profit from not buying your own equipment?"
+ },
+ "e0a29e358926af73cbf15104ec68cd9003a8f10f6adfd9f5820fb8dcc8177d08": {
+  "tail": "rewritten query. No quotes, no extra text.\n\nOriginal query: What solutions does the document suggest for the challenges of rapidly increasing system size and how software is paid for?\nRewritten query:",
+  "out": "Scalability challenges software monetization solutions"
+ },
+ "c61743628dfd9390e1a552516c487737332ac7ee5f528c18bc61e2a171e4c442": {
+  "tail": "utput ONLY the rewritten query. No quotes, no extra text.\n\nOriginal query: What does this paper say could help with the problems of making things bigger fast and how software is sold?\nRewritten query:",
+  "out": "Scalability challenges, rapid provisioning, software monetization, licensing models, business models"
+ },
+ "fea02887526d3d5beecec17ba913d309d1ca1c07106b6f3b962dc972c9afd11e": {
+  "tail": " no extra text.\n\nUser question: Ποια λανθασμένη αντίληψη για την μεταφορά εφαρμογών που τρέχουν σε μικρές λειτουργίες αναγνωρίζει η μελέτη, και ποιο έργο αναφέρει ως βήμα προς την ευκολότερη μεταφορά;",
+  "out": "misconception about porting applications running on small functions does the study identify, and what project does it mention as a step toward easier porting"
+ },
+ "6ebc2156739dbcc40c0edd36be5a5ee77ab6d64ed2f61eb4a980128b11df33a4": {
+  "tail": "y: What wrong idea about moving small, on-demand programs between different providers does the paper point out, and which initiative is mentioned as a step towards making this easier?\nRewritten query:",
+  "out": "Misconception regarding serverless function portability across cloud providers and initiatives for cross-platform interoperability"
+ },
+ "55fb9716feb4c07c319e33b671f40b12badc719842e0160bef16cdee85742a7d": {
+  "tail": "ent in the question - never drop or generalize one. Output ONLY a concise English search query with the key terms. No quotes, no extra text.\n\nUser question: Επέκταση μικρών λειτουργιών πέρα από cloud;",
+  "out": "Extend small functions beyond cloud?"
+ },
+ "28c5f05502b8aaf6aafe148845308f7d510bc58b7581afdf683e37acb850075c": {
+  "tail": "Y a concise English search query with the key terms. No quotes, no extra text.\n\nUser question: Τι αναφέρει το κείμενο για την εξάπλωση των μικρών λειτουργιών έξω από τις συνηθισμένες πλατφόρμες cloud;",
+  "out": "What does the text say about the spread of small functions outside of usual cloud platforms?"
+ },
+ "941f916f18c4c7ed0d4406ddaccde9fac80e029823b4d21601a8ff1bd921a4e3": {
+  "tail": "esent in the question - never drop or generalize one. Output ONLY a concise English search query with the key terms. No quotes, no extra text.\n\nUser question: Ευέλικτη τοποθέτηση κώδικα και δεδομένων;",
+  "out": "Flexible code and data placement"
+ },
+ "10a26f0810195477f03894d43c8e230b53491842cd9e8e7fd257f8afecae6836": {
+  "tail": "or generalize one. Output ONLY a concise English search query with the key terms. No quotes, no extra text.\n\nUser question: Πώς αξιολογήθηκε το σύστημα ExCamera και ποιο ήταν το βασικό του αποτέλεσμα;",
+  "out": "ExCamera system performance and key output"
+ },
+ "7bef2b5a02bb76ff1d2fbd25fa00b46100b45d56bc814f48e8144b5ba564be7f": {
+  "tail": "ield, return it unchanged.\n\nOutput ONLY the rewritten query. No quotes, no extra text.\n\nOriginal query: How do the counting mechanisms work in the data processing framework described?\nRewritten query:",
+  "out": "Data processing framework counting mechanisms"
+ },
+ "b713c8446733d0defa17acf2e376f68351808ac213d33ff435aef32aa001565f": {
+  "tail": "hanged.\n\nOutput ONLY the rewritten query. No quotes, no extra text.\n\nOriginal query: How do the authors describe the operation of the counting feature in their data processing system?\nRewritten query:",
+  "out": "Counting mechanism operation data processing system"
+ },
+ "73ce80eb0068328388395d9aa756495f035ac06bc8f60c7554195bf155753ac4": {
+  "tail": "English search query with the key terms. No quotes, no extra text.\n\nUser question: Πώς επηρεάζουν οι εφεδρικές εργασίες και οι βλάβες υπολογιστών τον χρόνο που χρειάζεται για την ταξινόμηση δεδομένων;",
+  "out": "How do speculative tasks and machine failures affect data sorting time"
+ },
+ "1e57c9bc8dc0e1bc4769d7a7b04c9b32353c4bbfb6c7e1d6444b47e5f0f066fa": {
+  "tail": "ch query with the key terms. No quotes, no extra text.\n\nUser question: Πώς βλέπουν το ζήτημα της αποθήκευσης δεδομένων σε συστήματα χωρίς servers η άποψη του Berkeley και η κριτική του συνεδρίου CIDR;",
+  "out": "Berkeley's view and CIDR conference's criticism on data storage in serverless systems"
+ },
+ "f547c8c93b351dcb736b593074d4aaee7e9270d97ce54c4b76025e5bebda0bd8": {
+  "tail": "question: Πώς αντιδρά το πλαίσιο mu της ExCamera αν σταματήσει ένας υπολογιστής στη μέση μιας εργασίας, και πώς το μοντέλο του PyWren, που δεν κρατάει κατάσταση, χειρίζεται διαφορετικά την ίδια βλάβη;",
+  "out": "How does the ExCamera mu platform react if a machine stops in the middle of a task, and how does the PyWren stateless model handle the same failure differently?"
+ },
+ "07eb25d829aaa2717a69ee1bb8a214f32f8998382fb90bfbb82e7546e9178503": {
+  "tail": "estion: Το 'Above the Clouds' (2009) μιλάει για την ευελιξία του νέφους. Πώς χρησιμοποιεί την ίδια ιδέα η άποψη του Berkeley (2019) για τα συστήματα χωρίς servers, όσον αφορά την προσωρινή αποθήκευση;",
+  "out": "Berkeley's view on serverless systems and temporary storage"
+ },
+ "95f3747091a8b7728067bd104b5b0bd0c0308012187664bb4f7b6f60c07cacf6": {
+  "tail": " υπολογιστές, αλλά με διαφορετικό τρόπο. Ποια είναι η μικρότερη μονάδα παράλληλης εργασίας για το καθένα, και γιατί δεν μπορεί να χωριστεί ένας τυπικός κωδικοποιητής βίντεο με τον τρόπο του MapReduce;",
+  "out": "MapReduce and ExCamera distribute tasks across multiple machines, but in a different way. What is the smallest unit of parallel work for each, and why can't a typical video encoder be split in the MapReduce way?"
+ },
+ "93d219e1728bbd4da7bf23578554e16bc1128f05b68cb5d87d51ea958da70f50": {
+  "tail": " one. Output ONLY a concise English search query with the key terms. No quotes, no extra text.\n\nUser question: Πώς συγκρίνεται το OpenFaaS με το OpenWhisk όσον αφορά την ανάπτυξη serverless εφαρμογών;",
+  "out": "OpenFaaS OpenWhisk serverless application development"
+ },
+ "e216d03546227f7feb7ddd80cea23ed73d4a21f03458bc9e04127efedebc5f66": {
+  "tail": " - never drop or generalize one. Output ONLY a concise English search query with the key terms. No quotes, no extra text.\n\nUser question: Ποια είναι η τρέχουσα υιοθέτηση του Knative στις επιχειρήσεις;",
+  "out": "Knative enterprise adoption"
+ },
+ "ed37f608b71e01c3302752ffdf524847d1a643733815acc6f9fddc4d9d76de1a": {
+  "tail": "eneralize one. Output ONLY a concise English search query with the key terms. No quotes, no extra text.\n\nUser question: Ποιο είναι το μέσο κόστος ανά εκτέλεση για μια λειτουργία Azure με 128MB μνήμης;",
+  "out": "What is the average cost per execution for an Azure function with 128MB memory"
+ },
+ "9d4dfbe9e842cb384c1e5e5a017c3149d4cd644bc727b07e75c7e69f25103baf": {
+  "tail": "se English search query with the key terms. No quotes, no extra text.\n\nUser question: Πώς έχουν αντιμετωπιστεί οι προκλήσεις της διαχείρισης δεδομένων σε distributed serverless συστήματα μετά το 2019;",
+  "out": "data management challenges distributed serverless systems after 2019"
+ },
+ "b2b08544ee36dd3dd986073768a12b40ccab95916dc3490d77c41e6e78056a06": {
+  "tail": "se English search query with the key terms. No quotes, no extra text.\n\nUser question: Πώς επηρεάζει η επιλογή της γλώσσας προγραμματισμού την autoscaling συμπεριφορά των serverless εφαρμογών στην AWS;",
+  "out": "How does the choice of programming language affect the autoscaling behavior of serverless applications on AWS"
+ },
+ "0d31c60f072c6ea245d0eca21f3e994eed904a64ad8245c2c29239b1c4fcbd87": {
+  "tail": "es, no extra text.\n\nOriginal query: What is the average latency improvement observed when using edge computing for real-time video processing compared to traditional cloud approaches?\nRewritten query:",
+  "out": "Edge computing latency real-time video processing cloud computing performance comparison"
+ },
+ "7cccd6094a10c31e1e337398b747a4f0d056ea0adbc68c449dddf889007ec8d7": {
+  "tail": " a concise English search query with the key terms. No quotes, no extra text.\n\nUser question: Ποιο είναι το μέσο κόστος ανά GB για αποθήκευση αντικειμένων σε μια υβριδική αρχιτεκτονική νέφους το 2023;",
+  "out": "What is the average cost per GB for object storage in a hybrid cloud architecture in 2023?"
+ },
+ "f2a02cc6e16c787d80ce556215ab1da050245a8de422ac66421133522c52a279": {
+  "tail": "ize one. Output ONLY a concise English search query with the key terms. No quotes, no extra text.\n\nUser question: Ποιες νέες προκλήσεις προέκυψαν στην ασφάλεια των λειτουργιών serverless μετά το 2020;",
+  "out": "Serverless functions security challenges post-2020"
+ },
+ "447cffb0c25d69fa598c622b2e58639040c1a3f4d472e3481314ef52f8c17f21": {
+  "tail": "that field, return it unchanged.\n\nOutput ONLY the rewritten query. No quotes, no extra text.\n\nOriginal query: What are the core principles behind the OpenStack cloud operating system?\nRewritten query:",
+  "out": "OpenStack architecture principles"
+ },
+ "ace7b593a85aaff1d34f463e0382206c8a4e4b4c0634f28635d62ab0b6616c39": {
+  "tail": "ry with the key terms. No quotes, no extra text.\n\nUser question: Ποιες είναι οι κύριες προκλήσεις που αντιμετωπίζουν οι οργανισμοί στη διαχείριση της ασφάλειας σε περιβάλλοντα πολλαπλών cloud το 2024;",
+  "out": "multi-cloud security challenges organizations 2024"
+ },
+ "a81d6e688b8477aa2c608cc3e080a108e2d828b7a16818a0ec4ff4936c73c8c1": {
+  "tail": "concise English search query with the key terms. No quotes, no extra text.\n\nUser question: Ποια είναι η επίδοση του Google Cloud Video Intelligence API σε σύγκριση με τις προσεγγίσεις που συζητούνται;",
+  "out": "Google Cloud Video Intelligence API performance compared to discussed approaches"
+ },
+ "27ce428701574377b541e73613692a1bd6fd70492c4c68dd0e2015fbdf134ee1": {
+  "tail": " the key terms. No quotes, no extra text.\n\nUser question: Ποιο είναι το μέγιστο μέγεθος αρχείου βίντεο που μπορεί να επεξεργαστεί αποτελεσματικά το ExCamera με καθυστέρηση κάτω του ενός δευτερολέπτου;",
+  "out": "ExCamera video file processing performance"
+ },
+ "dbb34584ab5d6c5d5945bcf72ec44eedc171c0db550f94c35117b88d1a61c50d": {
+  "tail": "query with the key terms. No quotes, no extra text.\n\nUser question: Πώς έχουν εξελιχθεί οι προσεγγίσεις για την διαχείριση της κατάστασης σε serverless συναρτήσεις για επεξεργασία βίντεο μετά το 2019;",
+  "out": "Evolution of state management approaches in serverless functions for video processing after 2019"
+ },
+ "292de1b2fa714e32ae69feea58216b41ad12ffd0a72b44ac8c157208c1436b9e": {
+  "tail": "o extra text.\n\nUser question: Πώς επηρεάζει η επιλογή διαφορετικών παρόχων cloud (π.χ. Google Cloud Functions έναντι AWS Lambda) την απόδοση του συστήματος ExCamera για μεγάλα σύνολα δεδομένων βίντεο;",
+  "out": "How does the choice of different cloud providers (e.g. Google Cloud Functions versus AWS Lambda) affect the performance of the ExCamera system for large video data sets?"
+ },
+ "b6ebf76977d722616e570a01db89e4e8ce5175897c95e115c944fb4658b4db42": {
+  "tail": "oncise English search query with the key terms. No quotes, no extra text.\n\nUser question: Ποια είναι τα κύρια χαρακτηριστικά της πλατφόρμας Vercel Edge Functions για την ανάπτυξη serverless εφαρμογών;",
+  "out": "Vercel Edge Functions platform serverless applications"
+ },
+ "3c0448373c6eecb6f986e18842a08a6a8aee2239a9991cb6bafb85d1fd658441": {
+  "tail": "ze one. Output ONLY a concise English search query with the key terms. No quotes, no extra text.\n\nUser question: Ποια είναι η κύρια λειτουργία του Red Hat OpenShift στην ανάπτυξη εφαρμογών serverless;",
+  "out": "Red Hat OpenShift serverless application development functions"
+ },
+ "c325e42b81e489af95279c1e6b133a8de5e19fecc2e2fee43723459bc9d40413": {
+  "tail": " a concise English search query with the key terms. No quotes, no extra text.\n\nUser question: Ποιο είναι το μέσο κόστος ανά GB-μήνα για την αποθήκευση δεδομένων σε AWS S3 Glacier Deep Archive το 2024;",
+  "out": "What is the average cost per GB-month for data storage in AWS S3 Glacier Deep Archive in 2024"
+ },
+ "9d3d2dbce09a2fff61b0638c895a581b78470fb1427e7c5898f36d62655c44c3": {
+  "tail": "h search query with the key terms. No quotes, no extra text.\n\nUser question: Ποιες εξελίξεις έχουν σημειωθεί στη βελτιστοποίηση της κατανάλωσης ενέργειας για λειτουργίες χωρίς διακομιστή μετά το 2021;",
+  "out": "Energy consumption optimization in serverless functions post-2021"
+ },
+ "f2bb44215c260fa8ddfc85249c39e75e45ac72bfde812ed280b86e20b40650f0": {
+  "tail": "OUTSIDE that field, return it unchanged.\n\nOutput ONLY the rewritten query. No quotes, no extra text.\n\nOriginal query: Energy consumption optimization in serverless functions post-2021\nRewritten query:",
+  "out": "Serverless function energy efficiency optimization post-2021"
+ },
+ "2ce471818036d4d60396fb4a382b1e9df29718a360d4903b8772f5048c834457": {
+  "tail": " concise English search query with the key terms. No quotes, no extra text.\n\nUser question: Ποια είναι η μέση καθυστέρηση δικτύου για την επικοινωνία μεταξύ λειτουργιών σε διαφορετικές περιοχές cloud;",
+  "out": "What is the average network latency for communication between functions in different cloud regions"
+ },
+ "e6397a5eb24b2e9c2de2c2f248ddb3bc42f4ac8a613e01f39c43dd04c987391c": {
+  "tail": ". Output ONLY a concise English search query with the key terms. No quotes, no extra text.\n\nUser question: Πώς έχουν εξελιχθεί οι πολιτικές αποθήκευσης δεδομένων για serverless εφαρμογές μετά το 2021;",
+  "out": "How have data storage policies for serverless applications evolved after 2021"
+ },
+ "fd746cbf0bfb2732071ea44a2eb5bc56688b2767aa5b0aa28211b157f1b29ce5": {
+  "tail": "ver drop or generalize one. Output ONLY a concise English search query with the key terms. No quotes, no extra text.\n\nUser question: Ποια είναι η βασική αρχή λειτουργίας του Open Container Initiative;",
+  "out": "Open Container Initiative operating principle"
+ },
+ "becf095201110c7b7e831adcbee66fea2c3c18f9bad72db025bf038e34d5ced9": {
+  "tail": "on is about a topic OUTSIDE that field, return it unchanged.\n\nOutput ONLY the rewritten query. No quotes, no extra text.\n\nOriginal query: Open Container Initiative operating principle\nRewritten query:",
+  "out": "Open Container Initiative principles of operation"
+ },
+ "e9a04b02249388b3a0f929c97b8ded3ec5dc73b7a3fe3bc695306ed7fe666540": {
+  "tail": "a concise English search query with the key terms. No quotes, no extra text.\n\nUser question: Ποιο είναι το μέσο κόστος ανά gigabyte-ώρα για αποθήκευση δεδομένων σε serverless βάσεις δεδομένων το 2023;",
+  "out": "What is the average cost per gigabyte-hour for data storage in serverless databases in 2023"
+ },
+ "b9f4ac6d62b191730fdf619d6afa94c4bc8cfd56e8a4aba0b0b0a50b2c3f5208": {
+  "tail": "lish search query with the key terms. No quotes, no extra text.\n\nUser question: Πώς έχει εξελιχθεί η υποστήριξη για μη-σχεσιακές βάσεις δεδομένων ως πηγές εισόδου/εξόδου για το MapReduce μετά το 2019;",
+  "out": "MapReduce non-relational databases input output"
+ },
+ "bf33587c7812fbf92733bc02bdfdeaa18d0f531b07dc59e2678c6d790a8d58aa": {
+  "tail": "ributed systems, scaling quickly, reputation fate sharing and software licensing.\n\nFollow-up question: And the one about moving data around — what workaround do they suggest?\n\nStandalone search query:",
+  "out": "Data transfer bottlenecks workaround"
+ },
+ "ed75963ec3b9266f1f551b8edc42155cf22b8c0c8fc68f28d3564044ce9f030b": {
+  "tail": "rs, plus Backend as a Service, the specialised managed services those functions rely on.\n\nFollow-up question: What is the difference between the two parts of that definition?\n\nStandalone search query:",
+  "out": "Difference between Functions as a Service and Backend as a Service in serverless computing"
+ },
+ "c958207c845ded2465d384038d748558dba5bf301be607a07d19196f3c7deb7c": {
+  "tail": "rformance for standard communication patterns, and predictable performance issues such as cold starts.\n\nFollow-up question: Which applications actually run into those limits?\n\nStandalone search query:",
+  "out": "Which applications actually run into inadequate storage for fine-grained operations, lack of coordination between functions, poor performance for standard communication patterns, and predictable performance issues such as cold starts?"
+ },
+ "36df29c0a33cafce37a470798620d98e11f6ed8763abd0bab15c1f386d5af96a": {
+  "tail": "ν πάροχο, χωρίς να διαχειρίζεται ο ίδιος διακομιστές. Ο πάροχος αναλαμβάνει την κατανομή πόρων και την κλιμάκωση.\n\nFollow-up question: Και γιατί απλοποιεί τον προγραμματισμό;\n\nStandalone search query:",
+  "out": "Γιατί το serverless computing απλοποιεί τον προγραμματισμό;"
+ },
+ "bb5d1fdf9a8477347fea377763940611e32506736128df07965bea78d34e7e95": {
+  "tail": "ion - never drop or generalize one. Output ONLY a concise English search query with the key terms. No quotes, no extra text.\n\nUser question: Γιατί το serverless computing απλοποιεί τον προγραμματισμό;",
+  "out": "Why serverless computing simplifies programming"
+ },
+ "c85ed255a398a0dc4558484b565213ca96eb4db07a5ee1cd4b219da272b0e553": {
+  "tail": "στος, καθώς διαφέρουν οι τιμές ενέργειας, η διαθεσιμότητα δικτύου και το εργατικό κόστος ανά περιοχή.\n\nFollow-up question: Τι τιμές αναφέρει για το ρεύμα και γιατί διαφέρουν;\n\nStandalone search query:",
+  "out": "Τι τιμές αναφέρει η τοποθεσία ενός datacenter για το ρεύμα και γιατί διαφέρουν;"
+ },
+ "265990a4ce3867df40ea252309535a5ebb8dd6b5f132dff9f32765cccd3a3367": {
+  "tail": "generalize one. Output ONLY a concise English search query with the key terms. No quotes, no extra text.\n\nUser question: Τι τιμές αναφέρει η τοποθεσία ενός datacenter για το ρεύμα και γιατί διαφέρουν;",
+  "out": "What cost reports a cloud for the power and why differ?"
+ },
+ "28a197d4a44622ca08db428a1cff0f98ae46fe5b7e25a29a537f699e3841fdd1": {
+  "tail": " storage in a table, contrasting them on latency, cost and how well they suit short-lived serverless functions.\n\nFollow-up question: What mean latency does each of them have?\n\nStandalone search query:",
+  "out": "Berkeley view cloud storage options mean latency"
+ },
+ "fc9ac9511a21f43494056196aef01cb32b0092b5f443c79203d66ea9a3dba0f6": {
+  "tail": "d function invocations running in parallel, using its own mu framework to coordinate the workers.\n\nFollow-up question: What do the authors list as its two main contributions?\n\nStandalone search query:",
+  "out": "ExCamera authors list two main contributions"
+ },
+ "0a9fb0fd7c045793c9097513155c2236618b1c20a8e47ae67d866b81be26871e": {
+  "tail": " first, which sharply reduces the tail latency caused by stragglers.\n\nFollow-up question: PyWren reports the same problem on its 1TB sort — where do its stragglers come from?\n\nStandalone search query:",
+  "out": "PyWren 1TB sort stragglers origin"
+ },
+ "79363194123af5fe5f06534392f5582d4edf391753212d00b661db6eb326e26a": {
+  "tail": "ntiality and the ability to audit what happens to data once it lives outside the company's own datacenter.\n\nFollow-up question: Which specific regulations do they name there?\n\nStandalone search query:",
+  "out": "Which specific regulations do the authors name in the paper regarding data confidentiality and the ability to audit what happens to data once it lives outside the company's own datacenter?"
+ },
+ "8c1fc18312b4e559d39a28e10d610aed503554275cf9fb1d997358f738f6d282": {
+  "tail": " specific regulations do the authors name in the paper regarding data confidentiality and the ability to audit what happens to data once it lives outside the company's own datacenter?\nRewritten query:",
+  "out": "Data privacy regulations, data protection laws, compliance frameworks, auditability, data provenance, data governance, cloud data security, third-party data processing, regulatory compliance, external data storage, data confidentiality, data integrity, accountability"
+ },
+ "98c17682571b7010c52d9dba4c4e7e1a6ac9e99ae67597d3bf24d38b55c7f3a0": {
+  "tail": "ίμακας των μεγάλων datacenters, το pay-as-you-go μοντέλο και τη μεταφορά του ρίσκου υπερ-προμήθειας πόρων στον πάροχο.\n\nFollow-up question: Και ποια είναι η τιμή του Bitcoin;\n\nStandalone search query:",
+  "out": "Τιμή Bitcoin"
+ },
+ "7d9bb83baf0b378ff6302902fa25af445b020ddbf4d55315a67b1184136da973": {
+  "tail": " every domain term already present in the question - never drop or generalize one. Output ONLY a concise English search query with the key terms. No quotes, no extra text.\n\nUser question: Τιμή Bitcoin",
+  "out": "Bitcoin cost"
+ },
+ "7af14b56bd58b98b54f0ac7fd18c10b85c450a883c68482320cd4a3de09e925a": {
+  "tail": " latency measurements for its benchmarks, including aggregate compute across thousands of parallel workers.\n\nFollow-up question: And what about quantum computing performance?\n\nStandalone search query:",
+  "out": "Quantum computing performance results reported in the paper"
+ },
+ "b9d9371b34a8812703644777a790e2866c9c037c6de251b6917b3cb23dc7bbbf": {
+  "tail": "topic OUTSIDE that field, return it unchanged.\n\nOutput ONLY the rewritten query. No quotes, no extra text.\n\nOriginal query: Quantum computing performance results reported in the paper\nRewritten query:",
+  "out": "Quantum computing performance evaluation metrics reported in the paper"
+ },
+ "1ed603956e3a584a7a2f8c2682b420b9e192ba03cb9e36d970f710a5450690d0": {
+  "tail": "ο cluster, καταγράφοντας τον ρυθμό ανάγνωσης και εγγραφής δεδομένων στις διάφορες φάσεις.\n\nFollow-up question: Πόσο το επηρεάζουν τα backup tasks και οι αστοχίες μηχανημάτων;\n\nStandalone search query:",
+  "out": "Πόσο επηρεάζουν τα backup tasks και οι αστοχίες μηχανημάτων το sort benchmark;"
+ },
+ "902a06f8637875b2b28db23af2952260970d5ea5cc8deb4c06d1db8be35e2a38": {
+  "tail": " generalize one. Output ONLY a concise English search query with the key terms. No quotes, no extra text.\n\nUser question: Πόσο επηρεάζουν τα backup tasks και οι αστοχίες μηχανημάτων το sort benchmark;",
+  "out": "How do backup tasks and machine failures affect the sort benchmark?"
+ },
+ "01469210f769a9548d8aa2e8157b2f07ea0d45d45ce17f99c227a084a6ea98aa": {
+  "tail": "that field, return it unchanged.\n\nOutput ONLY the rewritten query. No quotes, no extra text.\n\nOriginal query: What cost per kilowatt-hour does the paper report and why do they differ?\nRewritten query:",
+  "out": "What is the reported energy cost per unit of power consumption and what factors contribute to the observed variations?"
+ },
+ "b0c1a4aa5e8a7d6f880e1cb0f876da2c6a7b3c0c5ce51c4eb0d99131837718e6": {
+  "tail": " the PyWren paper describe the impact of stragglers on data sorting, and what does Baldini et al. predict regarding the need for different recovery semantics for serverless functions?\nRewritten query:",
+  "out": "PyWren stragglers data sorting impact Baldini et al. serverless functions recovery semantics"
+ },
+ "60ac08f47c9c8d9611d4e4548316bd84e8fdf0fa35f1b22756f6aea87f62b6f2": {
+  "tail": "tion - never drop or generalize one. Output ONLY a concise English search query with the key terms. No quotes, no extra text.\n\nUser question: Πόσοι άνθρωποι πάσχουν από καρδιακή ανεπάρκεια παγκοσμίως;",
+  "out": "How many patients suffer from cardiac failure globally?"
+ },
+ "b5ef364dedee5c2e2a66428010137b4a6cb56fc150f28a1b045165d34c4b2517": {
+  "tail": "- never drop or generalize one. Output ONLY a concise English search query with the key terms. No quotes, no extra text.\n\nUser question: Πώς ορίζεται η καρδιακή ανεπάρκεια με μειωμένο κλάσμα εξώθησης;",
+  "out": "How is heart failure with reduced ejection fraction defined?"
+ },
+ "3bde74005a425ce56a80d7da08a90f3c92cfda1cfa3e7b1fbe9a614009989e18": {
+  "tail": "alize one. Output ONLY a concise English search query with the key terms. No quotes, no extra text.\n\nUser question: Ποια κατηγορία αντιδιαβητικών φαρμάκων αποδείχθηκε ωφέλιμη στην καρδιακή ανεπάρκεια;",
+  "out": "Antidiabetic drugs beneficial cardiac failure"
+ },
+ "11211b51546151dada2792b3a814053b28f5e100f571c7153f93e55781e8d95e": {
+  "tail": "t in the question - never drop or generalize one. Output ONLY a concise English search query with the key terms. No quotes, no extra text.\n\nUser question: Τι συνδυάζει το φάρμακο sacubitril/valsartan;",
+  "out": "sacubitril/valsartan therapies"
+ },
+ "da1c01dd307d7d7302b19c7a5f1630dd2f4770e61505c78f5e8c3fe594762bc2": {
+  "tail": "ze one. Output ONLY a concise English search query with the key terms. No quotes, no extra text.\n\nUser question: Ποια κλινική δοκιμή έδειξε την υπεροχή του sacubitril/valsartan έναντι της εναλαπρίλης;",
+  "out": "sacubitril/valsartan vs enalapril clinical trial"
+ },
+ "a9b698ec965ee31280b2f8bccddb87c7db7b169af9df1d75add0db372bc88249": {
+  "tail": "n the question - never drop or generalize one. Output ONLY a concise English search query with the key terms. No quotes, no extra text.\n\nUser question: Τι είναι η θεραπεία καρδιακού επανασυγχρονισμού;",
+  "out": "cardiac resynchronization therapy"
+ },
+ "96174a095f916b5b6a538f224ff092d41b709d72ee5fa89325a7df1aeffd9b66": {
+  "tail": "rop or generalize one. Output ONLY a concise English search query with the key terms. No quotes, no extra text.\n\nUser question: Ποιοι τύποι βλαστοκυττάρων μελετώνται για την αναγέννηση του μυοκαρδίου;",
+  "out": "stem cell types myocardial regeneration"
+ },
+ "8f02c1a5ab8b895e96575c4ae79ffdeacbc40749dd39160e0f34d57feb3300cc": {
+  "tail": " the question - never drop or generalize one. Output ONLY a concise English search query with the key terms. No quotes, no extra text.\n\nUser question: Ποιος είναι ο μηχανισμός δράσης της ιβαμπραδίνης;",
+  "out": "Mechanism of action of ivabradine"
+ },
+ "833fa6925b49d61814999c3b36990009287dde24b7450a665ae9f8857de7da9d": {
+  "tail": "ize one. Output ONLY a concise English search query with the key terms. No quotes, no extra text.\n\nUser question: Ποιοι βιοδείκτες είναι υποσχόμενοι για την πρώιμη ανίχνευση της καρδιακής ανεπάρκειας;",
+  "out": "biomarkers promising early detection cardiac failure"
+ },
+ "29b5771f5f1fbd9ecaf06842cb84afb505f8b011a2672c0f4765e8e9324e2329": {
+  "tail": "ever drop or generalize one. Output ONLY a concise English search query with the key terms. No quotes, no extra text.\n\nUser question: Τι είναι οι συσκευές υποβοήθησης κοιλίας και πώς χρησιμοποιούνται;",
+  "out": "Ventricular assist devices and their use"
+ },
+ "f7688dcaa71facf2b0a3fd6909b0c57450e771428eeaab1aeecaae90285324f2": {
+  "tail": "tion - never drop or generalize one. Output ONLY a concise English search query with the key terms. No quotes, no extra text.\n\nUser question: Ποιες εκχυτικές εκρήξεις του Στρόμπολι συγκρίνει η μελέτη;",
+  "out": "effusive eruptions Stromboli"
+ },
+ "e7b62bc88c4a2c889c145ee5068d8cbb8d08e478b49e7710054a4a23c1dcd075": {
+  "tail": "ion - never drop or generalize one. Output ONLY a concise English search query with the key terms. No quotes, no extra text.\n\nUser question: Με τι συσχετίζονται γραμμικά οι όγκοι της εκχυθείσας λάβας;",
+  "out": "lava volume linear correlation"
+ },
+ "ad0580da4addf960a8c3b050823671f1b4e8fe00c6106ef162000fa99b5df2a4": {
+  "tail": "ion - never drop or generalize one. Output ONLY a concise English search query with the key terms. No quotes, no extra text.\n\nUser question: Ποιο μοντέλο προτείνουν για να εξηγήσουν τη γραμμική σχέση;",
+  "out": "Which model do they propose to explain the linear relationship?"
+ },
+ "beee93c21f29fbbf4e5ffd769dcab590e15f25176c27fefe94f1f1d2b9b5ee05": {
+  "tail": "c OUTSIDE that field, return it unchanged.\n\nOutput ONLY the rewritten query. No quotes, no extra text.\n\nOriginal query: Which model do they propose to explain the linear relationship?\nRewritten query:",
+  "out": "Proposed model linear relationship"
+ },
+ "3e0bb83927262c502d5e03f9faec0e2eaa395911af585ee5edb6e4968a4b04b3": {
+  "tail": " or generalize one. Output ONLY a concise English search query with the key terms. No quotes, no extra text.\n\nUser question: Ποιος είναι ο σταθερός ρυθμός τροφοδοσίας μάγματος από τον βαθύ ταμιευτήρα;",
+  "out": "What is the steady rate of magma supply from the deep reservoir?"
+ },
+ "63928b771cb6083e888e59577f349e2a25adfbd2cc77a9ce7c0280cb7a4ddc27": {
+  "tail": "n - never drop or generalize one. Output ONLY a concise English search query with the key terms. No quotes, no extra text.\n\nUser question: Ποιο κατώφλι όγκου λάβας πυροδοτεί τις παροξυσμικές εκρήξεις;",
+  "out": "What volume threshold triggers paroxysmal eruptions?"
+ },
+ "4396a2e7edc0fadf34bcb1b0e87b19241def5d9c62f7d90c40557a6e6a7f38d9": {
+  "tail": "generalize one. Output ONLY a concise English search query with the key terms. No quotes, no extra text.\n\nUser question: Ποιοι ρυθμοί αποσυμπίεσης υπολογίστηκαν για τις εκρήξεις του 2003 και του 2007;",
+  "out": "What decompression rates were calculated for the 2003 and 2007 eruptions?"
+ },
+ "37d93bcbb6ccace8fcb36caec39b9e213cbdb6546969fb093a09a84648f8acc6": {
+  "tail": "op or generalize one. Output ONLY a concise English search query with the key terms. No quotes, no extra text.\n\nUser question: Ποιο δορυφορικό όργανο χρησιμοποιήθηκε για τη μέτρηση των ρυθμών έκχυσης;",
+  "out": "Which satellite instrument was used to measure effusion rates?"
+ },
+ "301865c1898ad36a8f97b8efeb5b182392d1a59afee9fea1d296da758b934917": {
+  "tail": " generalize one. Output ONLY a concise English search query with the key terms. No quotes, no extra text.\n\nUser question: Τι ποσοστό του μάγματος αποστραγγίζεται από τον ταμιευτήρα στις πρώτες ημέρες;",
+  "out": "What rate of the magma drains from the reservoir in the first days?"
+ },
+ "bed8678f5dab7c1fa50697cb9f2877454149f9ac877345925cc501e8ba7c9725": {
+  "tail": "p or generalize one. Output ONLY a concise English search query with the key terms. No quotes, no extra text.\n\nUser question: Ποια όργανα ανίχνευσαν την κάθιση του εδάφους κατά την έναρξη της έκχυσης;",
+  "out": "Which instruments detected ground subsidence at the onset of the effusion?"
+ },
+ "6ab49126c7fe8f606a4114462cb3d6db002e3a31fedd823891e7059722c1a9e3": {
+  "tail": "p or generalize one. Output ONLY a concise English search query with the key terms. No quotes, no extra text.\n\nUser question: Με ποιον τύπο ροής μοντελοποιείται ο ρυθμός έκχυσης κατά μήκος του αγωγού;",
+  "out": "What type of flow models the effusion rate along the vent?"
+ },
+ "4957a868a8a0f55b40a075b5e54910c2f7dbfec683ab9b2b5d6f1e5af801468f": {
+  "tail": "y present in the question - never drop or generalize one. Output ONLY a concise English search query with the key terms. No quotes, no extra text.\n\nUser question: Ποια είναι η τιμή του Bitcoin σήμερα;",
+  "out": "What is the price of Bitcoin today?"
+ },
+ "8457505433fbb749e10ce9e733b76ec5b181df836cba67a4beb69c69b6a04b43": {
+  "tail": "the question is about a topic OUTSIDE that field, return it unchanged.\n\nOutput ONLY the rewritten query. No quotes, no extra text.\n\nOriginal query: What is the price of Bitcoin today?\nRewritten query:",
+  "out": "What is the price of Bitcoin today?"
+ },
+ "f82ed298a92c401659f47e276e0357fdeb43c30ec846e80d743aaac0c1809c6d": {
+  "tail": "sent in the question - never drop or generalize one. Output ONLY a concise English search query with the key terms. No quotes, no extra text.\n\nUser question: Πώς λειτουργεί ένας κβαντικός υπολογιστής;",
+  "out": "How does a quantum computer work?"
+ },
+ "1a6e4779073a3747848fbbcd401bcef15d2fed59060fe1afb4d9b0130f6ed616": {
+  "tail": "f the question is about a topic OUTSIDE that field, return it unchanged.\n\nOutput ONLY the rewritten query. No quotes, no extra text.\n\nOriginal query: How does a quantum computer work?\nRewritten query:",
+  "out": "How does a quantum computer work?"
+ },
+ "385757d24382958453a4de933226be0f9e912d23b4f0058acc80be34ac032187": {
+  "tail": " generalize one. Output ONLY a concise English search query with the key terms. No quotes, no extra text.\n\nUser question: Ποια είναι η συνιστώμενη δοσολογία ασπιρίνης μετά από έμφραγμα του μυοκαρδίου;",
+  "out": "aspirin dosage myocardial infarction"
+ },
+ "96fcd3b5155b9bcaf12b48040bfcb29c28c95e87558d9631b553f0ef9a74f6f0": {
+  "tail": "he question is about a topic OUTSIDE that field, return it unchanged.\n\nOutput ONLY the rewritten query. No quotes, no extra text.\n\nOriginal query: aspirin dosage myocardial infarction\nRewritten query:",
+  "out": "aspirin dosage myocardial infarction"
+ },
+ "6daa5aa710efa5291a0f98a413489b4bd9e06a41ebc9cf0ee7b81c56201499bd": {
+  "tail": "t in the question - never drop or generalize one. Output ONLY a concise English search query with the key terms. No quotes, no extra text.\n\nUser question: Πότε εξερράγη για τελευταία φορά ο Βεζούβιος;",
+  "out": "Vesuvius eruption last time"
+ },
+ "39fbaa9e05590bb4d93e327c23ead52c37e8ca59d407ba695f2fc1ddaef8c0be": {
+  "tail": "he question - never drop or generalize one. Output ONLY a concise English search query with the key terms. No quotes, no extra text.\n\nUser question: Ποιες στατίνες μειώνουν περισσότερο τη χοληστερόλη;",
+  "out": "Which statins lower cholesterol the most?"
+ },
+ "e2b68530c1e98dd2e358afd41069e3ff01de889ff1fa6b98ef31c6bf5e3c5f91": {
+  "tail": "estion is about a topic OUTSIDE that field, return it unchanged.\n\nOutput ONLY the rewritten query. No quotes, no extra text.\n\nOriginal query: Which statins lower cholesterol the most?\nRewritten query:",
+  "out": "Which statins lower cholesterol the most?"
+ },
+ "bdafa213b8337f24669d41fac7bf32e9582b5a21d785ccf6198267a69efdc0f3": {
+  "tail": "tion - never drop or generalize one. Output ONLY a concise English search query with the key terms. No quotes, no extra text.\n\nUser question: Πόσοι άνθρωποι πάσχουν από καρδιακή ανεπάρκεια παγκοσμίως;",
+  "out": "global prevalence of cardiac failure"
+ },
+ "1504a789c6f1dbcea00cfce19beb1211c6f87a1391e545353450b4de8b555bbf": {
+  "tail": "- never drop or generalize one. Output ONLY a concise English search query with the key terms. No quotes, no extra text.\n\nUser question: Πώς ορίζεται η καρδιακή ανεπάρκεια με μειωμένο κλάσμα εξώθησης;",
+  "out": "How is heart failure with reduced ejection fraction defined?"
+ },
+ "73046067865bbba530ce723fa6765a29f25f6cd5398739ab7596127870746f4c": {
+  "tail": "alize one. Output ONLY a concise English search query with the key terms. No quotes, no extra text.\n\nUser question: Ποια κατηγορία αντιδιαβητικών φαρμάκων αποδείχθηκε ωφέλιμη στην καρδιακή ανεπάρκεια;",
+  "out": "Antidiabetic drugs beneficial in cardiac failure"
+ },
+ "6f9cf54dfbc4aad084fc1568ba74a024e1f779ecf1e158f1417104c942d287e5": {
+  "tail": "t in the question - never drop or generalize one. Output ONLY a concise English search query with the key terms. No quotes, no extra text.\n\nUser question: Τι συνδυάζει το φάρμακο sacubitril/valsartan;",
+  "out": "sacubitril/valsartan therapies"
+ },
+ "33219e99968aa7520bf76708067837d48e91980bd16affe25e2111c814dd78e4": {
+  "tail": "ze one. Output ONLY a concise English search query with the key terms. No quotes, no extra text.\n\nUser question: Ποια κλινική δοκιμή έδειξε την υπεροχή του sacubitril/valsartan έναντι της εναλαπρίλης;",
+  "out": "sacubitril/valsartan versus enalapril clinical trial"
+ },
+ "0504ad7e0a1d7349dd436c7c684d92983e5187713dc162a6a269380cda50dde0": {
+  "tail": "n the question - never drop or generalize one. Output ONLY a concise English search query with the key terms. No quotes, no extra text.\n\nUser question: Τι είναι η θεραπεία καρδιακού επανασυγχρονισμού;",
+  "out": "cardiac resynchronization therapy"
+ },
+ "83ffe30d3ab432b76be7fe996d4318b288278744332e6cd3e3929b245bfb501d": {
+  "tail": "rop or generalize one. Output ONLY a concise English search query with the key terms. No quotes, no extra text.\n\nUser question: Ποιοι τύποι βλαστοκυττάρων μελετώνται για την αναγέννηση του μυοκαρδίου;",
+  "out": "What types of stem cells are being studied for myocardial regeneration?"
+ },
+ "e2d2f34fc75e44b81d4cd503418a49d2ccaafda0d158eb799a2b1dbef6fe507e": {
+  "tail": " the question - never drop or generalize one. Output ONLY a concise English search query with the key terms. No quotes, no extra text.\n\nUser question: Ποιος είναι ο μηχανισμός δράσης της ιβαμπραδίνης;",
+  "out": "Mechanism of action of ivabradine"
+ },
+ "5077c3e40a223cbe480c037346930a74d41e2e3641e3107af25e24c2c7c76985": {
+  "tail": "ize one. Output ONLY a concise English search query with the key terms. No quotes, no extra text.\n\nUser question: Ποιοι βιοδείκτες είναι υποσχόμενοι για την πρώιμη ανίχνευση της καρδιακής ανεπάρκειας;",
+  "out": "biomarkers promising early detection cardiac failure"
+ },
+ "f6e83f8f48b691b9d975e6797686b8f0bfbffd657d787cc144b2e9a40ee8da32": {
+  "tail": "ever drop or generalize one. Output ONLY a concise English search query with the key terms. No quotes, no extra text.\n\nUser question: Τι είναι οι συσκευές υποβοήθησης κοιλίας και πώς χρησιμοποιούνται;",
+  "out": "ventricular assist devices and their use"
+ },
+ "7da33bef7f50a3b2edc43a8b6b5c245e2b512342c5bdd03d774a3f6735ff7a5f": {
+  "tail": "tion - never drop or generalize one. Output ONLY a concise English search query with the key terms. No quotes, no extra text.\n\nUser question: Ποιες εκχυτικές εκρήξεις του Στρόμπολι συγκρίνει η μελέτη;",
+  "out": "Stromboli effusive eruptions"
+ },
+ "e270e3b709254f0733f8f1b5ad2fcf723d3a15d9d9bc35f1e7d5778e39e5a74b": {
+  "tail": "ion - never drop or generalize one. Output ONLY a concise English search query with the key terms. No quotes, no extra text.\n\nUser question: Με τι συσχετίζονται γραμμικά οι όγκοι της εκχυθείσας λάβας;",
+  "out": "effusion volume lava"
+ },
+ "956f7e7d0e97382e06bf1f1efd0adc59279fe949ba8b74d6792727fd79fcc79b": {
+  "tail": "ion - never drop or generalize one. Output ONLY a concise English search query with the key terms. No quotes, no extra text.\n\nUser question: Ποιο μοντέλο προτείνουν για να εξηγήσουν τη γραμμική σχέση;",
+  "out": "model proposed to explain linear relationship"
+ },
+ "d9280411272a8c908781ea0eaa7a4ed700605a85edeedd2e80b2e9033d956aba": {
+  "tail": "on is about a topic OUTSIDE that field, return it unchanged.\n\nOutput ONLY the rewritten query. No quotes, no extra text.\n\nOriginal query: model proposed to explain linear relationship\nRewritten query:",
+  "out": "linear relationship explanation model"
+ },
+ "00e63080c7f0c08dcdba6f432bbccdf5beae4b01dc9bedc0ecb0c4677f0b06d1": {
+  "tail": " or generalize one. Output ONLY a concise English search query with the key terms. No quotes, no extra text.\n\nUser question: Ποιος είναι ο σταθερός ρυθμός τροφοδοσίας μάγματος από τον βαθύ ταμιευτήρα;",
+  "out": "What is the steady rate of magma supply from the deep reservoir?"
+ },
+ "e1109ed7d33e75a77f9e6d71059a735fa217b3b1592475932c099e4e9f66a3ac": {
+  "tail": "n - never drop or generalize one. Output ONLY a concise English search query with the key terms. No quotes, no extra text.\n\nUser question: Ποιο κατώφλι όγκου λάβας πυροδοτεί τις παροξυσμικές εκρήξεις;",
+  "out": "What volume threshold triggers effusive eruptions?"
+ },
+ "db01d7bcd32695c6e54a3b926c45211ef5bc3b164bbde1e22a47125daea5e772": {
+  "tail": "generalize one. Output ONLY a concise English search query with the key terms. No quotes, no extra text.\n\nUser question: Ποιοι ρυθμοί αποσυμπίεσης υπολογίστηκαν για τις εκρήξεις του 2003 και του 2007;",
+  "out": "What decompression rates were calculated for the 2003 and 2007 eruptions?"
+ },
+ "a2e0ec76cd115b9be82963e1637cb68f50264745062641009ad7c939740e1954": {
+  "tail": "op or generalize one. Output ONLY a concise English search query with the key terms. No quotes, no extra text.\n\nUser question: Ποιο δορυφορικό όργανο χρησιμοποιήθηκε για τη μέτρηση των ρυθμών έκχυσης;",
+  "out": "satellite instrument used for measuring effusion rates"
+ },
+ "3fb2b718dc2163cd10511787df2fdddbf9efde9ccc7c2257a9836eaad32fe729": {
+  "tail": " generalize one. Output ONLY a concise English search query with the key terms. No quotes, no extra text.\n\nUser question: Τι ποσοστό του μάγματος αποστραγγίζεται από τον ταμιευτήρα στις πρώτες ημέρες;",
+  "out": "magma reservoir decompression rate"
+ },
+ "91e42a3ad7622f57a59bce5110f24eb0f633e0be6d75a78e0d18025436fdb7b7": {
+  "tail": "p or generalize one. Output ONLY a concise English search query with the key terms. No quotes, no extra text.\n\nUser question: Ποια όργανα ανίχνευσαν την κάθιση του εδάφους κατά την έναρξη της έκχυσης;",
+  "out": "Which instruments detected ground decompression at the onset of the effusion?"
+ },
+ "be0cab5e56fb18d6f7068dbac826cd9e55f16cd44fbec874423826da009456bb": {
+  "tail": "p or generalize one. Output ONLY a concise English search query with the key terms. No quotes, no extra text.\n\nUser question: Με ποιον τύπο ροής μοντελοποιείται ο ρυθμός έκχυσης κατά μήκος του αγωγού;",
+  "out": "effusion rate vent"
+ },
+ "dd313fc1b44cc14e0b2493b519ac3d947103578639b9c84787a9fd610df0e9da": {
+  "tail": "y present in the question - never drop or generalize one. Output ONLY a concise English search query with the key terms. No quotes, no extra text.\n\nUser question: Ποια είναι η τιμή του Bitcoin σήμερα;",
+  "out": "What is the price of Bitcoin today?"
+ },
+ "24c17565b72652ad4f476a3790108f15dbe444d61655f2b7b83aec5ecfa1f00c": {
+  "tail": "sent in the question - never drop or generalize one. Output ONLY a concise English search query with the key terms. No quotes, no extra text.\n\nUser question: Πώς λειτουργεί ένας κβαντικός υπολογιστής;",
+  "out": "How does a quantum computer work?"
+ },
+ "ff9843415f0dafd98ad652d102faf5abd7dc4f6a82b31a2ebe3012910d85a5e7": {
+  "tail": " generalize one. Output ONLY a concise English search query with the key terms. No quotes, no extra text.\n\nUser question: Ποια είναι η συνιστώμενη δοσολογία ασπιρίνης μετά από έμφραγμα του μυοκαρδίου;",
+  "out": "aspirin dosage myocardial infarction"
+ },
+ "67e16491a5e3d015197600412ce05950e32847f2e8482018360657e05f5d6047": {
+  "tail": "t in the question - never drop or generalize one. Output ONLY a concise English search query with the key terms. No quotes, no extra text.\n\nUser question: Πότε εξερράγη για τελευταία φορά ο Βεζούβιος;",
+  "out": "Vesuvius eruptions"
+ },
+ "77ea878f318e2d63aebea9641d74a725227c81cc6c9161d17c08cf93ff6d944a": {
+  "tail": "nal question. If the question is about a topic OUTSIDE that field, return it unchanged.\n\nOutput ONLY the rewritten query. No quotes, no extra text.\n\nOriginal query: Vesuvius eruptions\nRewritten query:",
+  "out": "Vesuvius eruptions"
+ },
+ "a9445dc73f6601154aa1d66dfd9d92ee1fd07dda1cc4b6122c47770e73a79203": {
+  "tail": "he question - never drop or generalize one. Output ONLY a concise English search query with the key terms. No quotes, no extra text.\n\nUser question: Ποιες στατίνες μειώνουν περισσότερο τη χοληστερόλη;",
+  "out": "Which statins reduce cholesterol the most?"
+ },
+ "906908e3f47ce9845a04f5c7f59505ec256f6446eb24ba1b27118bec20779dec": {
+  "tail": "stion is about a topic OUTSIDE that field, return it unchanged.\n\nOutput ONLY the rewritten query. No quotes, no extra text.\n\nOriginal query: Which statins reduce cholesterol the most?\nRewritten query:",
+  "out": "Which statins reduce cholesterol the most?"
+ },
+ "f8d9962e33ee1a100abe34a07face029a8d6c6479bec0e938cd0960e8ab70a9d": {
+  "tail": "ce minute delays. What is the estimated startup delay reported by PyWren without caching, and how many worker starts are delayed over one minute in the case of an ExCamera cold start?\nRewritten query:",
+  "out": "PyWren function startup latency without caching; ExCamera cold start worker initialization delay over one minute"
+ },
+ "81299b2756f5bca92b36cf6249c31e03b3bed1c7cde4b922bb2ca533a680b243": {
+  "tail": "nged.\n\nOutput ONLY the rewritten query. No quotes, no extra text.\n\nOriginal query: How is paying for computing without always-on machines different from paying for dedicated machines?\nRewritten query:",
+  "out": "Serverless computing cost model vs. dedicated instance pricing"
+ },
+ "12732a846eecaa3683c11a7be89c2ae5957f18bc27c9c0294518fc68ccb007a9": {
+  "tail": "it unchanged.\n\nOutput ONLY the rewritten query. No quotes, no extra text.\n\nOriginal query: What are the big problems that the papers say make using internet-based computing difficult?\nRewritten query:",
+  "out": "Challenges in cloud computing adoption, distributed systems complexity, serverless architecture limitations, internet-scale computing obstacles, distributed ledger technology issues"
+ },
+ "5aa6a970f0ab5da74ac5c67e9a91aba513087177c5b775429f56ee6ce5ff8ffc": {
+  "tail": "at field, return it unchanged.\n\nOutput ONLY the rewritten query. No quotes, no extra text.\n\nOriginal query: Which ten major challenges of internet-based computing does the paper list?\nRewritten query:",
+  "out": "Cloud computing challenges, distributed systems challenges, internet-scale computing challenges, serverless computing challenges"
+ },
+ "35995bd375e829152c95f3f3bfc0a07a12d676bc3fcf4e5df2d34078f8cb022d": {
+  "tail": "estion is about a topic OUTSIDE that field, return it unchanged.\n\nOutput ONLY the rewritten query. No quotes, no extra text.\n\nOriginal query: IBM system architecture event-driven code\nRewritten query:",
+  "out": "IBM cloud architecture event-driven programming serverless computing"
+ },
+ "044a3982cba24148e643df342e42042df583dc2def92bef510327c7f3e1a4358": {
+  "tail": "Y the rewritten query. No quotes, no extra text.\n\nOriginal query: Why does this document claim that using small, event-driven programs slows down new ideas for special computer parts?\nRewritten query:",
+  "out": "Impact of serverless computing on hardware innovation"
+ },
+ "0ece2ab1bda8e00ddad053695c1fdd62736baa2b5deb9c71ec8dd86df21fca79": {
+  "tail": "uery: What happens when a computer stops working during a task in the video processing framework, and how do the authors of the PyWren paper say their method handles this differently?\nRewritten query:",
+  "out": "Fault tolerance in distributed video processing frameworks, PyWren's approach to worker failure and task recovery"
+ },
+ "604f9ac01d372d9123afde00692519c489771ed9c4098eff5f7401c5402eea5c": {
+  "tail": "ion. If the question is about a topic OUTSIDE that field, return it unchanged.\n\nOutput ONLY the rewritten query. No quotes, no extra text.\n\nOriginal query: Knative enterprise adoption\nRewritten query:",
+  "out": "Knative enterprise adoption challenges benefits case studies production deployments"
+ },
+ "1fd119900db60cc219dcd9129f92dd68fd86e7fcf80d91d1d44afb672c91104e": {
+  "tail": "n it unchanged.\n\nOutput ONLY the rewritten query. No quotes, no extra text.\n\nOriginal query: What is the average cost per GB for object storage in a hybrid cloud architecture in 2023?\nRewritten query:",
+  "out": "Hybrid cloud object storage pricing 2023 cost per GB"
+ },
+ "49b03f9af4f4e90d3e79d0e61f59c83ac07b410e6f1a7c2286c1eb3d6be98425": {
+  "tail": " about a topic OUTSIDE that field, return it unchanged.\n\nOutput ONLY the rewritten query. No quotes, no extra text.\n\nOriginal query: multi-cloud security challenges organizations 2024\nRewritten query:",
+  "out": "Multi-cloud security challenges organizations 2024"
+ },
+ "c9a7ac73a796d7e7a59bd3c3fd1418a7e778519a790a3be4125ea206a2ae4bd2": {
+  "tail": "eld, return it unchanged.\n\nOutput ONLY the rewritten query. No quotes, no extra text.\n\nOriginal query: Google Cloud Video Intelligence API performance compared to discussed approaches\nRewritten query:",
+  "out": "Google Cloud Video Intelligence API performance comparison with distributed video analysis architectures"
+ },
+ "7615358fd622d42b833644550b4254c9619227587c01909b1958444108ea0b9c": {
+  "tail": "nchanged.\n\nOutput ONLY the rewritten query. No quotes, no extra text.\n\nOriginal query: Evolution of state management approaches in serverless functions for video processing after 2019\nRewritten query:",
+  "out": "Serverless computing state management evolution video processing functions post-2019"
+ },
+ "34009f2b072944bd3f8160927cfeb89643dc9cba24a3eeaf13d0ef8c89e4004b": {
+  "tail": "\nOutput ONLY the rewritten query. No quotes, no extra text.\n\nOriginal query: What are the core features of Apache Flink for stream processing compared to MapReduce's batch processing?\nRewritten query:",
+  "out": "Apache Flink stream processing features vs. MapReduce batch processing characteristics"
+ },
+ "cc2197754567ebad979e8fefa8e2a7f671332db0fda6fc19b851cd21a8b4d0f9": {
+  "tail": "written query. No quotes, no extra text.\n\nOriginal query: What advancements have been made in distributed storage systems to better support serverless function cold starts since 2019?\nRewritten query:",
+  "out": "Distributed storage systems advancements serverless function cold start optimization 2019"
+ },
+ "a6c428a3f39d47cf3aa0008627adb51451e165bb334f1eab144579fb35be7f19": {
+  "tail": "changed.\n\nOutput ONLY the rewritten query. No quotes, no extra text.\n\nOriginal query: How have serverless platforms improved support for long-running batch processing jobs since 2020?\nRewritten query:",
+  "out": "Serverless architectures long-running batch processing job orchestration workflow management performance optimization cost efficiency since 2020"
+ },
+ "1ea0fe70d5af4bd8a5de9d2b886273cbd85939105f854eb543c3b5b41d47d41d": {
+  "tail": "unchanged.\n\nOutput ONLY the rewritten query. No quotes, no extra text.\n\nOriginal query: What new serverless orchestration patterns have emerged since 2020 to manage complex workflows?\nRewritten query:",
+  "out": "Serverless workflow orchestration patterns post-2020 complex distributed systems"
+ },
+ "e30325679dfcb3950e0b5e914768854530f804a57b101242adb0ac3b4765808e": {
+  "tail": "DE that field, return it unchanged.\n\nOutput ONLY the rewritten query. No quotes, no extra text.\n\nOriginal query: What is the primary function of the Cloud Native Computing Foundation?\nRewritten query:",
+  "out": "Cloud Native Computing Foundation primary function"
+ },
+ "6fb55790c6a7d0f7a12d5b4b0e4b3496b4c2912ae4a768f0fa0a7812b6843fc4": {
+  "tail": " it unchanged.\n\nOutput ONLY the rewritten query. No quotes, no extra text.\n\nOriginal query: What is the average cost per gigabyte-hour for data storage in serverless databases in 2023\nRewritten query:",
+  "out": "Serverless database storage cost per gigabyte-hour 2023"
+ },
+ "eff3260b4944a6b10b7e5b4b2da25ae729ec15b30977635ca091e9ac95071624": {
+  "tail": "Output ONLY the rewritten query. No quotes, no extra text.\n\nOriginal query: How have MapReduce implementations adapted to utilize containerization technologies like Docker since 2019?\nRewritten query:",
+  "out": "MapReduce containerization Docker Kubernetes serverless distributed systems resource management scheduling elasticity fault tolerance performance optimization"
+ },
+ "efb4dfa27643e1b6a72f3fadb4e0b4117611b787844b45867f6e5d5f17744c6b": {
+  "tail": "ra text.\n\nOriginal query: How does the choice of programming language for MapReduce functions influence the overall performance and resource utilization in a hybrid cloud environment?\nRewritten query:",
+  "out": "MapReduce programming language performance resource utilization hybrid cloud environment"
+ },
+ "52e1705e85fd329e84dffbb52a6deda25f11eb1885674429128cd596631c506d": {
+  "tail": "t a topic OUTSIDE that field, return it unchanged.\n\nOutput ONLY the rewritten query. No quotes, no extra text.\n\nOriginal query: What cost reports a cloud for the power and why differ?\nRewritten query:",
+  "out": "Cloud computing power consumption cost analysis and variance factors"
+ }
+}
