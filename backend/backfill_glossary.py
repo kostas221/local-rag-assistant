@@ -72,9 +72,8 @@ import argparse
 import re
 import sys
 
-import corpus_glossary
-
 import ai_core
+import corpus_glossary
 
 # Το chunk id είναι "{filename}_p{page-1}_c{chunk_idx}_{uuid}". Χρειαζόμαστε το
 # chunk_idx για να ξαναφτιάξουμε τη ΣΕΙΡΑ μέσα στη σελίδα — το Chroma δεν εγγυάται

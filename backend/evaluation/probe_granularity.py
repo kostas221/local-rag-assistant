@@ -39,13 +39,13 @@ import shutil
 # Η ΣΕΙΡΑ ΜΕΤΡΑΕΙ: το probe_domain_glossary κάνει sys.path.insert(0, "/app") στη
 # γραμμή 60 του, ΣΤΟ IMPORT TIME. Χωρίς αυτό πρώτο, τα modules του backend root
 # (corpus_glossary, ai_core, backfill_glossary) δεν βρίσκονται.
-import probe_domain_glossary as P  # noqa: I001  isort: skip
+import probe_domain_glossary as P  # isort: skip
 
-import chromadb  # noqa: E402
-import corpus_glossary as cg  # noqa: E402
+import chromadb
 
-import ai_core  # noqa: E402
-import backfill_glossary as bf  # noqa: E402
+import ai_core
+import backfill_glossary as bf
+import corpus_glossary as cg
 
 PAPERS = ["evaluation/test_papers/cureus-0015-00000046486.pdf",
           "evaluation/test_papers/s41598-017-03833-3.pdf"]

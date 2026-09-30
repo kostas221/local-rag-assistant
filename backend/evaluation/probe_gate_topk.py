@@ -24,13 +24,13 @@ chunks να είναι πάνω από το κατώφλι, η τυχαία μο
 """
 import probe_domain_glossary as P  # noqa: I001  πρώτο: κάνει sys.path.insert("/app")
 
-import asyncio  # noqa: E402
-import csv  # noqa: E402
-import os  # noqa: E402
+import asyncio
+import csv
+import os
 
-import chromadb  # noqa: E402
+import chromadb
 
-import ai_core  # noqa: E402
+import ai_core
 
 CSV_IN = "evaluation/runs/granularity_probe.csv"
 GOLDEN = "evaluation/golden_test_domains.jsonl"
