@@ -2,17 +2,107 @@
 
 [![tests](https://github.com/kostas221/local-rag-assistant/actions/workflows/ci.yml/badge.svg)](https://github.com/kostas221/local-rag-assistant/actions/workflows/ci.yml)
 
-A local-first **RAG (Retrieval-Augmented Generation) platform** for scientific documents: upload PDFs, ask questions in natural language (Greek or English), and get evidence-based answers with page-level citations — powered by a fully local retrieval stack and Gemini for generation.
+A **RAG system for scientific papers**: upload PDFs, ask in Greek or English, get answers with page-level citations — and a plain *"not found"* when the papers don't contain the answer. Retrieval runs locally on CPU (bge-m3 + BM25 + cross-encoder); Gemini 2.5 Flash writes the answer.
 
-Built as a diploma thesis project focusing on **cross-lingual retrieval quality** and **measurable, reproducible evaluation**.
+Built as a diploma thesis, then pushed further under one rule: **no change without a measurement on this project's own data** — including changes that the literature says should work.
 
-> 📊 **Headline results** (89 questions across 4 golden sets, deterministic): LLM-judge **5.00 / 4.98 / 5.00 / 5.00** on accuracy, completeness, relevance & faithfulness · RAGAS faithfulness **0.992** from an *independent* judge · **zero hallucinations** — all 5 out-of-corpus probes correctly refused · keyword coverage **98.5%** against a measured random-chance floor of **33.5%** · warm retrieval **725 ms**, time-to-first-token **2.78 s** — [details below](#evaluation-results)
+> **Head-to-head on the same 137 questions, with the same LLM, graded by two judges from two vendors:**
+>
+> | | **This system** | Naive RAG | LlamaIndex (defaults) |
+> |---|---|---|---|
+> | Standard questions answered correctly (45) | **42** | 34 | 26 |
+> | Two-paper questions, **both** halves right (29) | **18** | 3 | 2 |
+> | Near-miss questions correctly declined (42) | 40 | 41 | 41 |
+> | Generation cost per question | 0.47¢ | 0.19¢ | 0.17¢ |
+>
+> GPT-4.1 judging against reference answers; a Gemini judge gives the same ranking (agreement κ = 0.91). It wins where retrieval is hard, ties where the model's own caution decides, and costs ~2.5× more — [evidence below](#head-to-head-same-questions-same-llm-same-judges).
 
 ## Demo
 
 ![Z-AI Platform — anti-hallucination gate + bilingual Q&A](docs/demo.gif)
 
 > Upload a PDF, ask in Greek or English, and get grounded answers with page-level citations — plus a clear *"not found"* when the answer isn't in the documents.
+
+## Head-to-head: same questions, same LLM, same judges
+
+Three systems answered the same **137 questions** over the same 7 papers, all with **Gemini 2.5 Flash** writing the answer, so the difference measures the retrieval pipeline — not the model.
+
+| System | What it is |
+|---|---|
+| **This system** | translate → bge-m3 + BM25 → RRF → cross-encoder → relevance gate → corrective retry → whole pages → per-document search for two-paper questions |
+| **Naive RAG** | the tutorial recipe: bge-m3, top-4 chunks. **Same prompt, same chunks, same LLM** as this system — only retrieval differs |
+| **LlamaIndex 0.14.25, defaults** | `SimpleDirectoryReader` → `VectorStoreIndex` → `as_query_engine()` — its own chunking, top-2, its own prompt. Only the embedder (bge-m3; the default needs OpenAI) and the LLM are shared |
+
+| | This system | Naive RAG | LlamaIndex |
+|---|---|---|---|
+| **Standard (45)** — correct, judge 2 (GPT-4.1, vs reference) | **42** | 34 | 26 |
+| Standard — 5/5/5/5, judge 1 (Gemini)¹ | **42** | 34 | 30 |
+| Standard — "not found" although the answer exists | **1** | 2 | 5 |
+| Standard — off-topic questions declined (5) | 5 | 5 | 5 |
+| **Two papers (29)** — correct halves, judge 2 | **45/58** | 18/58 | 17/58 |
+| Two papers — both halves correct, judge 2 / judge 1 | **18 / 17** | 3 / 3 | 2 / 2 |
+| **Near-miss (42)** — correctly declined, judge 2 / judge 1 | 40 / 40 | 41 / 42 | 41 / 41 |
+| **Tables (16)** — fully correct · exact values (69) | **16 · 69** | 15 · 63 | 13 · 57 |
+| Greek question → Greek answer (18) | 18 | 18 | 16 |
+| Generation cost per question (median) | 0.47¢ | 0.19¢ | **0.17¢** |
+
+Per question, paired against this system: **standard 11/3 and 17/1** (wins/losses vs naive and LlamaIndex; p = 0.06 and < 0.001) · **two-paper halves 28/1 and 28/0** · near-miss 1/2 and 0/1 (noise).
+
+**How to read it:**
+
+- **The value of the pipeline is finding the right pages.** On questions that need two papers, the naive and default pipelines answer both halves 2–3 times out of 29; this one 18.
+- **Declining is a tie — and not because of the pipeline.** All three decline 40–42 of 42 near-miss questions. With LlamaIndex's generic prompt it is still 41/42, so the caution comes mostly from the model. This system's two misses come from giving the model *more* relevant material (8 pages vs 2–4 chunks); "all PDFs in the prompt" shows the same pattern below.
+- **It costs 2.5× more** per question, for the same reason: 8 pages of context. Still under half a cent.
+
+**Fairness notes.** LlamaIndex ran with its **defaults** — a tuned LlamaIndex (hybrid search, a reranker, more context) would close part of the gap, and that tuning is exactly the work being measured. Versions are pinned in [`requirements_compare.txt`](backend/evaluation/requirements_compare.txt); every answer and every judgement is committed under [`runs/compare/`](backend/evaluation/runs/compare).
+
+**Two judges.** Judge 1 is Gemini (as in the rest of the project); judge 2 is GPT-4.1, grading **against the reference answer only**. They agree on 95% of two-paper halves (κ = 0.91) and 99% of near-miss verdicts (κ = 0.85), and rank the systems identically — so the result is not one model grading its own family.
+
+```bash
+# answers + judge 1 (in Docker), LlamaIndex in a throwaway container, judge 2 on the host
+docker compose run --rm --no-deps backend python -u evaluation/compare_systems.py --system naive
+docker compose run --rm --no-deps -u root backend sh -c "pip install -q -r evaluation/requirements_compare.txt && python -u evaluation/compare_llamaindex.py"
+docker compose run --rm --no-deps backend python -u evaluation/compare_systems.py --system llamaindex
+python backend/evaluation/compare_judge2.py
+docker compose run --rm --no-deps backend python evaluation/compare_systems.py --table   # the table above, zero API calls
+```
+
+### The judge was rewarding failed retrieval
+
+¹ The first comparison ran with the answer judge this project had used since v1 — and it gave **5/5/5/5 to *"the provided context does not contain this information"*** on questions whose answer *is* in the papers, whenever retrieval had missed the page. Its criteria are relative to the retrieved context, so a failed search followed by an honest refusal looks perfect. Seven such answers (five LlamaIndex, two naive) were scored perfect; raw perfect counts were 42 / 36 / 35.
+
+The rule was corrected (a refusal on an answerable question is not a perfect answer), and the reference-only second judge was added to check the correction. Of the 17 answers that only judge 1 called perfect, **16 belonged to the two baselines** — refusals and half-answers. A context-relative judge is fine for comparing configurations of *one* retriever; across retrievers it rewards the worse one.
+
+### And against "just put all the PDFs in the prompt"
+
+The 7 papers are ~132k tokens and fit in Gemini's context window, so the obvious question is why retrieve at all. The same `ask_ai` was run with all 122 pages instead of 8:
+
+| | RAG (8 pages) | All 122 pages |
+|---|---|---|
+| Quality (keyword proxy, 3 sets) | equal | equal |
+| Near-miss correctly declined | 40/42 | 41/42 |
+| Tokens per question | ~10,000 | ~132,000 |
+| Cost per question | 0.48¢ | 1.20¢ with 98% served from Gemini's cache (~8.6× without) |
+| Time to first token (median / p90) | 3.2 s + ~0.8 s retrieval | 3.9 s / 10.7 s |
+
+**At 7 papers, RAG does not win on quality.** It wins on what long context cannot offer: corpora beyond ~1M tokens, cost that doesn't depend on a cache hit, per-user isolation (one prompt per user means no shared cache), and a gate that stays silent before generating anything. Measured with a keyword proxy on both sides, since an LLM judge would have to read all 132k tokens per verdict.
+
+## Questions that need two papers
+
+The biggest gap found in v2: on 29 questions that name two papers, the page holding the evidence for each half arrived only **30 of 58** times — and when it didn't, the half was answered correctly 6 of 28 times. The answer was being lost in retrieval, not in generation.
+
+The fix is deliberately small. When a question **names at least two papers** (an alias list per paper), the same query is re-run inside each named paper and up to 4 pages are added. No LLM call, and the gate is untouched.
+
+| Two-paper questions (29) | Before | After |
+|---|---|---|
+| Correct halves | 33/58 | **44/58** (Δ +11, 95% CI [+5, +17]) |
+| Both halves correct | 7 | **17** |
+| Unsupported halves | 4 | 2 |
+| Faithfulness | 4.52 | 4.75 |
+
+Across all 235 scoreboard questions, pages changed **only** in the 41 routed ones; the gate and corrective agent decided identically in 235/235. The routing rule fires on **0 of 170** questions that don't name two papers.
+
+The path there is documented, including the rejected route: an LLM router that decides whether to split a question splits 35 of 50 *standard* questions too — an extra call and ~3 extra pages on almost every question, for the gain a name match gets for free.
 
 ## What each pipeline stage actually buys
 
@@ -25,7 +115,7 @@ Every component is justified by an ablation on the **same 45 in-corpus questions
 | \+ cross-encoder rerank | 0.793 | 0/5 |
 | \+ **relevance gate** | 0.793 | **5/5** |
 
-**The gate improves no ranking metric — and is the single most important component.** Without it the system answers *every* question, including the five it has no material for. All the hybrid machinery buys **+8.5% MRR**; one calibrated threshold buys 100% of the trustworthiness.
+**The gate improves no ranking metric — and is the single most important component.** Without it the system answers *every* question, including the five it has no material for. All the hybrid machinery buys **+8.5% MRR**; one calibrated threshold buys the refusals.
 
 This is only visible because the golden set contains questions with **no answer in the corpus**. Most golden sets don't, which is why they cannot measure the anti-hallucination defence at all.
 
@@ -37,17 +127,17 @@ docker compose exec backend python evaluation/ablation_ladder.py
 
 - **Hybrid retrieval** — dense semantic search (BAAI/bge-m3, 1024-dim, cosine) fused with lexical BM25 via Reciprocal Rank Fusion (RRF)
 - **Exact vector search** — brute-force cosine over the full index instead of ANN. Measured: identical top-30 to HNSW (30/30, same order) with no speed cost at this corpus size, and *deterministic* across processes
-- **Cross-encoder reranking** — `ms-marco-MiniLM-L-12-v2` reorders fused candidates. English-only by design: the pipeline translates before retrieval, so a multilingual reranker paid for capability it never used
-- **Anti-hallucination relevance gate** — if even the best chunk scores below a *measured* threshold, the system answers "not found" instead of feeding irrelevant context to the LLM. Calibrated from the score gap between in-corpus and out-of-corpus questions, not guessed
-- **Corrective retrieval agent (CRAG)** — when the gate fires, the query is rewritten and a full second retrieval pass runs against a *stricter* threshold. Zero cost on the happy path; recovers questions phrased without domain jargon
-- **Cross-lingual QA** — Greek questions are translated for retrieval over English papers (translate-then-retrieve, permanently cached, domain-aware); answers come back in the user's language
-- **Conversational rewriting** — follow-up questions are rewritten into self-contained queries using history. Measured at **90% coverage vs a 41.2% random floor**; leak tests confirm an off-topic follow-up is still refused
-- **Greek-aware BM25** — accent-stripping tokenizer so unaccented queries still match
-- **Robust PDF extraction** — PyMuPDF with Unicode NFKC normalization and de-hyphenation. Fixes broken intra-word spacing (`A WS` → `AWS`), ligatures, and line-break hyphens that silently break both lexical and semantic matching
-- **Built-in evaluation framework** — retrieval metrics, LLM-as-judge scoring, RAGAS cross-validation, per-stage query tracing, random-chance baselines, and a determinism checker. CI runs lint plus 80 tests on every push; the retrieval evaluation runs locally, since the corpus is not committed
-- **Prometheus metrics** — `/metrics` in text exposition format, **zero dependencies, zero extra containers**: gate block rate, corrective success rate, token counts (FinOps), latency per phase
-- **Feedback capture** — 👍/👎 on every answer with an optional comment, upserted per message in Postgres — ground truth for error analysis
-- **Multi-user** — JWT auth, per-user document ownership, public/private sharing, and rate limiting **shared across processes** via Postgres
+- **Cross-encoder reranking** — `ms-marco-MiniLM-L-12-v2` reorders fused candidates. English-only by design: the pipeline translates before retrieval
+- **Anti-hallucination relevance gate** — if even the best chunk scores below a *measured* threshold, the system answers "not found" instead of feeding irrelevant context to the LLM
+- **Corrective retrieval agent (CRAG)** — when the gate fires, the query is rewritten and a full second pass runs with its own calibrated threshold. Zero cost on the happy path
+- **Per-document search for two-paper questions** — questions that name two papers are searched inside each one; no LLM call ([details](#questions-that-need-two-papers))
+- **Cross-lingual QA** — Greek questions are translated for retrieval (translate-then-retrieve, domain- and glossary-aware, cached); answers come back in the user's language
+- **Inline citations** — `[S3]` markers resolved server-side to (file, page), so the model is never asked to copy a page number — the step that used to go wrong
+- **Conversational rewriting** — follow-ups are rewritten into self-contained queries; leak tests confirm an off-topic follow-up is still refused
+- **Robust PDF extraction** — PyMuPDF with Unicode NFKC normalization and de-hyphenation (`A WS` → `AWS`, ligatures, line-break hyphens)
+- **Evaluation framework** — 8 golden sets in one frozen scoreboard, two LLM judges, paired bootstrap, chance floors, per-stage tracing, determinism checks, head-to-head comparisons
+- **Prometheus metrics** — `/metrics` with zero dependencies: gate block rate, corrective success rate, tokens, latency per phase
+- **Multi-user** — JWT auth, per-user document isolation enforced in the vector store, rate limiting shared across processes via Postgres
 
 ## Architecture
 
@@ -69,66 +159,53 @@ docker compose exec backend python evaluation/ablation_ladder.py
 
 ### RAG pipeline (per question)
 
-1. **Query optimization** — Greek questions translated to English search queries with a *domain-aware* prompt (permanently cached to disk, so the same question always yields the same retrieval)
-2. **Dense search** — bge-m3 embeddings, exact cosine over the whole index, top-30
+1. **Query optimization** — Greek questions translated to English search queries with a domain- and glossary-aware prompt (cached, so the same question always yields the same retrieval)
+2. **Dense search** — bge-m3, exact cosine over the whole index, top-30
 3. **Sparse search** — BM25 with Greek-aware tokenization, top-30
-4. **Fusion** — Reciprocal Rank Fusion (k=60) with deterministic tie-breaking, keep top-15
-5. **Rerank** — `ms-marco-MiniLM-L-12-v2` cross-encoder scores each (query, chunk) pair as **raw logits**
-6. **Relevance gate** — best score below −2.6 → "no relevant documents" (no hallucination)
-7. **Corrective retry** — *only if step 6 fired*: rewrite the query, run steps 2–5 again, accept only above a stricter +0.4
-8. **Page-level expansion** — top chunks map back to their source pages; whole pages (max 8) go to the LLM, so tables and lists arrive intact
-9. **Generation** — Gemini 2.5 Flash over the v1beta REST endpoint (thinking budget capped), streamed with source/page metadata
+4. **Fusion** — Reciprocal Rank Fusion (k=60), deterministic tie-breaking, top-15
+5. **Rerank** — `ms-marco-MiniLM-L-12-v2` cross-encoder, **raw logits**
+6. **Relevance gate** — best score below −2.6 → "not found"
+7. **Corrective retry** — *only if step 6 fired*: rewrite, re-run 2–5, accept above −3.8 (the rewrite produces noun phrases, whose scores sit lower on this model's scale — calibrated, not guessed)
+8. **Page-level expansion** — top chunks map back to whole pages (max 8), so tables and lists arrive intact
+9. **Per-document search** — *only if the question names ≥ 2 papers*: steps 2–5 inside each named paper, up to 4 extra pages
+10. **Generation** — Gemini 2.5 Flash over REST (thinking budget capped), streamed, with `[S#]` citations
 
-Design decisions and trade-offs behind each step: [`ARCHITECTURE.md`](ARCHITECTURE.md)
+Design decisions and trade-offs behind each step: [`ARCHITECTURE.md`](ARCHITECTURE.md) · the experiment log: [`ENGINEERING_LOG.md`](ENGINEERING_LOG.md)
 
-## Evaluation results
+## Evaluation
 
-Four golden sets, **89 questions total**, over 7 open-access cloud/serverless papers (122 pages, 418 chunks). They are kept separate on purpose — each one measures something the others cannot.
+Eight golden sets, **235 questions**, over 7 open-access cloud/serverless papers (122 pages, 418 chunks), run as one frozen **scoreboard**: every Gemini call (translations, rewrites) is cached by its full prompt, so two runs differ only if the *system* changed, and every change is reported per question.
 
-| Set | n | Purpose |
+| Set | n | What it measures |
 |---|---|---|
-| `golden_set_50` | 45 + 5 out-of-corpus | The stable baseline |
-| `golden_multihop_new` | 11 | Cross-document reasoning |
-| `golden_hard_paraphrase` | 16 | **Deliberately badly-worded** paraphrases — a stress test, not a baseline |
-| `golden_conversations` | 12 | Multi-turn, incl. 2 topic-leak probes |
+| `golden_set_50` | 45 + 5 off-topic | the stable baseline |
+| `golden_multihop_new` / `_v2` | 11 / 29 | cross-document questions; v2 names two papers and marks the evidence page for each |
+| `golden_hard_paraphrase` / `golden_hard_new` | 16 / 59 | deliberately badly-worded and hard questions — stress tests, not baselines |
+| `golden_near_ooc` | 42 | **near-miss**: related material exists, the specific answer doesn't |
+| `golden_conversations` | 12 | multi-turn, incl. 2 topic-leak probes |
+| `golden_tables` | 16 | 69 exact values read from tables |
 
-Every number is **reproducible**: the same question yields the same retrieval on every run (see [determinism](#determinism)).
+The PDFs are not redistributed here; all seven are open-access (arXiv, USENIX, UC Berkeley, Google Research). Two more sets probe transfer: `golden_test_domains` (25 questions on two non-CS papers — does the gate calibrated on cloud papers transfer?) and `golden_dangling` (14 questions with the paper's name removed).
 
-### Answer quality (LLM-as-judge)
+```bash
+docker compose exec backend python evaluation/scoreboard.py --label mytest --compare evaluation/runs/scoreboard/baseline.json
+docker compose exec backend python evaluation/scoreboard_answers.py --set main     # answers + judge
+```
 
-| Metric | Typical use (n=46) | All questions (n=50) |
-|---|---|---|
-| Accuracy | **5.00 / 5** | 4.94 / 5 |
-| Completeness | **4.98 / 5** | 4.90 / 5 |
-| Relevance | **5.00 / 5** | 4.96 / 5 |
-| Faithfulness (no hallucinations) | **5.00 / 5** | 4.94 / 5 |
+### Answer quality
 
-**48 of 50 questions already score 5/5/5/5.** This is stated plainly because it has a consequence: a judge run can no longer demonstrate *improvement* — it is purely a non-regression check. That fact is exploited to halve evaluation cost, since a perfect score on the new configuration cannot be hiding a drop.
-
-### RAGAS cross-validation (independent judge, n=45)
-
-| Metric | Score |
+| Set | Result |
 |---|---|
-| Faithfulness | **0.9920** |
-| Context recall | **1.0000** |
-| Answer relevancy | 0.8552 |
-| Context precision | 0.7826 |
+| Standard (45 + 5) | **42/45 correct** (judge 2) · judge 1 means 4.90 / 4.80 / 4.92 / 4.96 (accuracy / completeness / relevance / faithfulness) · off-topic **5/5 declined** |
+| Two papers (29) | **44/58 halves** correct (judge 1; 45/58 judge 2) · 2/58 unsupported |
+| Near-miss (42) | **40/42**: 38 answered "not in the papers", 2 silenced by the gate · 1 soft leak · 1 leak ([limitations](#known-limitations)) |
+| Tables (16) | **16/16**, 69/69 exact values |
 
-Two independent judges agree on faithfulness, so **self-preference bias did not materialise**. `context_precision 0.783` is the measured price of page-level expansion: precision fell 0.800 → 0.783 while recall rose 0.944 → **1.000**. A deliberate trade, with no illusions about it.
-
-### Retrieval
-
-| Metric | In-corpus (n=45) | Random-chance floor |
-|---|---|---|
-| Keyword coverage | **98.5%** | 33.5% |
-| MRR | **0.793** | 0.149 |
-| nDCG | 0.807 | — |
-
-Per category: `direct_fact` 0.869 · `enumeration` 0.751 · `reasoning` 0.831 · `multi_hop` 0.541.
+A single judge run is one draw: the judge itself is not deterministic (2 of 9 identical answers moved by one point between two runs). A label change on one question is not a finding; the per-question comparisons above use paired tests for that reason.
 
 ### Every percentage is read against its chance floor
 
-Coverage scores are meaningless without knowing what a *random* retriever would score. Computed analytically (hypergeometric, zero simulation) rather than estimated:
+Coverage scores are meaningless without knowing what a *random* retriever would score. Computed analytically (hypergeometric, zero simulation):
 
 | Set | Chance floor | Observed | Margin |
 |---|---|---|---|
@@ -136,11 +213,7 @@ Coverage scores are meaningless without knowing what a *random* retriever would 
 | `golden_set_50` | 33.5% | 98.5% | **+65.0** |
 | `golden_conversations` | 41.2% | 90.0% | **+48.8** |
 
-This exercise also **found bugs in the evaluation itself**: 31 keywords in the main set are found on >60% of pages by chance (`serverless` appears on 65 of 122 pages — 99.8% random hit rate), and one verification tool had been silently crashing on the conversations set, so that set had never been checked at all.
-
-```bash
-docker compose exec backend python evaluation/random_coverage_baseline.py
-```
+This exercise also **found bugs in the evaluation itself**: 31 keywords in the main set are found on >60% of pages by chance (`serverless` appears on 65 of 122 pages), and one verification tool had been silently crashing on the conversations set, so that set had never been checked at all.
 
 ### The relevance gate, measured
 
@@ -149,18 +222,11 @@ docker compose exec backend python evaluation/random_coverage_baseline.py
 | MiniLM-L-6 | −1.80 | 4.15 | −2.69 | 0.89 |
 | **MiniLM-L-12** | −2.08 | 4.62 | −3.12 | **1.04** |
 
-The threshold **−2.6** is the midpoint of the entire range `[−3.12, −2.08]` that scores 61/61, maximising the *worst-case* margin on both sides. The old −2.0 would have broken under L-12: it would have refused a correct answer scoring −2.08.
+The threshold **−2.6** is the midpoint of the range that separated all 61 calibration questions, maximising the *worst-case* margin on both sides. In the current scoreboard two answerable questions are refused on the first pass (`q025`, `q059`); `q025` traces to translation variance upstream of the gate — see [the third finding](#the-third-finding-anything-upstream-of-the-gate-changes-the-gate).
 
 ### Determinism
 
-Retrieval is bit-for-bit reproducible across processes. This was not free — two sources of non-determinism were found and fixed:
-
-- `list(set(...))` in the fusion step made iteration order depend on `PYTHONHASHSEED`, which is randomised per process. With **15 tied RRF scores out of 51 candidates**, ties broke differently on every run and changed which chunks survived the top-15 cut.
-- ChromaDB's in-memory HNSW graph is rebuilt from the write-ahead log on every process start and did not always produce the same top-30.
-
-Before the fix, the *same code* produced in-corpus MRR of both 0.764 and 0.755. Every measurement in this README was taken after it.
-
-One measurement is **explicitly not reproducible** and is labelled as such: corrective-agent verification depends on a Gemini rewrite with no seed, so two runs of the same code recovered 2 and 1 questions respectively. That is documented rather than averaged away.
+Retrieval is bit-for-bit reproducible across processes. Two sources of non-determinism were found and fixed: `list(set(...))` in the fusion step (iteration order depended on `PYTHONHASHSEED`, with 15 tied RRF scores out of 51 candidates), and ChromaDB's HNSW graph, which was rebuilt from the WAL on every start and did not always return the same top-30. Before the fix, the *same code* produced MRR 0.764 and 0.755.
 
 ```bash
 docker compose exec backend python evaluation/check_determinism.py
@@ -168,7 +234,7 @@ docker compose exec backend python evaluation/check_determinism.py
 
 ### Confidence intervals — and what they disqualify
 
-Determinism guarantees the same *run* twice. It says nothing about whether a difference between two *configurations* is real. For most of this project that question was answered by a rule of thumb ("don't believe a delta under 0.01"). A **paired bootstrap** — resampling questions rather than runs, since both configurations saw identical questions — replaces the rule of thumb with a measurement:
+A **paired bootstrap** (resampling questions, since both configurations saw the same ones) replaced the rule of thumb "don't believe a delta under 0.01":
 
 | L-6 → L-12, same 45 questions | Δ | 95% CI | Verdict |
 |---|---|---|---|
@@ -176,11 +242,7 @@ Determinism guarantees the same *run* twice. It says nothing about whether a dif
 | nDCG 0.786 → 0.807 | +0.021 | [−0.009, +0.052] | **not proven** |
 | Coverage 98.52 → 98.52 | 0.000 | [0.000, 0.000] | **identical in 45/45** |
 
-The noise floor at n=45 is **±0.04, not ±0.01** — the rule of thumb was four times too lenient. The honest consequence is uncomfortable and is stated anyway: **most decisions in this project were made in a region where the statistics cannot adjudicate.** That is an inherent limit of 122 pages and 45 questions, not a flaw in the method.
-
-So the reranker upgrade is kept as a **defensible decision, not a proven one**. It rests on four converging indications — hard set 10/16 → 12/16 (n=16), gate gap 0.89 → 1.04 (n=61), corrective hallucinations 2 → 0, correct chunk at rank 1 36 → 40/56 — **none of which is individually significant at its own sample size**, for a measured +9% end-to-end cost. Distinguishing an indication from a proof is worth more than claiming certainty.
-
-A zero-width interval is also worth reading correctly: it is **not** maximum uncertainty but the opposite — every resample returned 0, because the difference is 0 on every single question. Calling that "noise" would bury the strongest result the test can produce.
+The noise floor at n=45 is **±0.04, not ±0.01**: most decisions in this project were made in a region where the statistics cannot adjudicate. The reranker upgrade is therefore kept as a **defensible decision, not a proven one** — four converging indications, none significant at its own sample size.
 
 ```bash
 docker compose exec backend python evaluation/bootstrap_ci.py \
@@ -189,43 +251,26 @@ docker compose exec backend python evaluation/bootstrap_ci.py \
 
 ### Performance
 
+Measured on a Ryzen 7 5700X, CPU only (container: 8 cores).
+
 | | Value |
 |---|---|
 | Warm retrieval | **725 ms** (rerank 706 = 97.3%, dense 0.5, BM25 1.4, expand 7.9) |
 | End-to-end | 2.8–4.3 s · TTFT 2.78 s |
-| Prompt size | ~9,800 tokens (438 pages of context) |
 | Throughput | 1.65 req/s, saturating at **4 concurrent users** |
 
-Concurrency, re-measured after the reranker upgrade:
-
-| Users | p50 | p95 | Throughput |
-|---|---|---|---|
-| 1 | 0.61 s | 0.62 s | 1.65 req/s |
-| 2 | 1.27 s | 1.38 s | 1.55 req/s |
-| 4 | 2.30 s | 2.67 s | 1.67 req/s ← saturation |
-| 8 | 7.02 s | 7.25 s | 1.12 req/s ← collapse |
-
-The L-6 → L-12 upgrade cost **−35% throughput**, which is *exactly* the predicted ceiling (rerank got 1.61× heavier → 1/1.61 = 62%; measured 65%). The agreement matters more than the number: it proves there is **no hidden contention** — only the reranker's CPU cost. The saturation point did not move.
+Past saturation the throughput plateaus (~1.0 req/s up to 32 users) and latency grows linearly — Little's law, a queue that works, not a collapse. Per-document search adds two BM25+rerank passes **only** on routed questions; its latency has not been measured on this machine yet.
 
 ### Cost
-
-Latency and quality are measured exhaustively in most RAG write-ups; cost usually isn't, even though every improvement to one is paid for by the other two. Here is the third axis, measured on the real retrieval path with **zero generation calls**:
 
 | Per 1,000 questions | |
 |---|---|
 | Gemini input (9,693 tokens/q) | $2.91 |
 | Gemini output (1,112 tokens/q) | $2.78 |
 | Embeddings, reranking, BM25 | **$0.00** — local, CPU |
-| **Total** | **$5.69** (€5.27) |
+| **Total** | **$5.69** |
 
-Running it for a month at that volume costs **€10.27** all-in: €5 for a CPU-only VPS plus €5.27 of API. Generation is 51% of the bill; the rest is fixed and does not scale with usage. A GPU-hosted equivalent cannot make that claim — here embedding and reranking are free per call precisely because they run locally.
-
-Two things fall out of the breakdown that are worth stating:
-
-- **Output tokens cost 8.3× more than input tokens.** 1,112 output tokens cost nearly as much as 10,885 input tokens. So every context-size decision in this project (rejecting `EXPAND_INPUT=15`, rejecting decomposition at +4,640 tokens/question) was pulling the *cheap* lever. The expensive lever is answer length — and that is deliberately not touched, because the "Researcher" persona requires completeness.
-- **`THINKING_BUDGET=512` is 21% of the total bill** — $1.28 per 1,000 questions for reasoning the user never sees. That is not waste, it is a *price*: setting it to 0 was measured and dropped one multi-hop answer's faithfulness from 5.0 to **2.0**. The cost/quality trade is quantified rather than assumed.
-
-Token counts are estimated as characters ÷ 4.53, a ratio calibrated against a real `promptTokenCount`; the estimate lands at 9,693 against a measured ~9,800, a 1% error. Prices are parameters with documented defaults, not hard-coded assumptions.
+A month at that volume costs about **€10**: €5 for a CPU-only VPS plus ~€5 of API. Output tokens cost 8.3× more than input tokens, so the context-size decisions were pulling the *cheap* lever; `THINKING_BUDGET=512` is 21% of the bill — setting it to 0 was measured and dropped one multi-hop answer's faithfulness from 5.0 to **2.0**.
 
 ```bash
 docker compose exec backend python evaluation/measure_cost.py --ratio 4.53
@@ -233,63 +278,48 @@ docker compose exec backend python evaluation/measure_cost.py --ratio 4.53
 
 ## Technical decisions
 
-What was measured, kept, and — more often — **rejected**. Each row is a real experiment, not an opinion.
+What was measured, kept, and — more often — **rejected**. Each row is a real experiment.
 
 ### Kept
 
 | Change | Measured effect |
 |---|---|
+| **Per-document search** for questions naming two papers | Two-paper halves **33 → 44/58** (CI [+5, +17]), both halves **7 → 17/29**; 0/170 false triggers; gate identical 235/235; 0 LLM calls |
 | **PyMuPDF + NFKC** instead of pypdf | Broken tokens 3.7% → 2.5%; 721 ligatures and 941 hyphenations eliminated. MRR +0.026 |
-| **English reranker** (568M → 22M params) | The pipeline translates to English *before* retrieval, so the cross-encoder always sees English↔English. Latency 15,048 ms → **693 ms (21.7×)**, and answer accuracy went *up* (4.96 → 5.00) |
-| **MiniLM-L-6 → MiniLM-L-12** (22M → 33M) + recalibrating both thresholds | Hard set **10/16 → 12/16** · gate gap 0.89 → **1.04** · correct chunk at rank 1 **36 → 40 / 56** · corrective-pass hallucinations **2 → 0 at every threshold**. Unchanged: coverage (identical in all 45), 61/61 gate, 5/5 refusals, judge. Cost: **+275 ms (+9% e2e)**. Kept as a *defensible* decision, not a proven one — see [confidence intervals](#confidence-intervals--and-what-they-disqualify) |
-| **Exact search** instead of HNSW | Identical top-30 (30/30, same order), no speed cost at 418 vectors, and deterministic. Also reads vectors from the store rather than the graph, so a partially-built index cannot hide |
-| **Deterministic fusion** | `dict.fromkeys` + tie-break on chunk id. Made every subsequent measurement trustworthy |
-| **CPU thread count** | PyTorch picked 4 threads via a physical-core heuristic that comes out conservative under WSL2, while the container had 8. Rerank 667 ms → **479 ms (1.39×)**; retrieval scores bit-identical, since only the parallelism of the same computation changed |
-| **Reranker `batch_size` 32 → 4** | At the default, all 15 candidates land in one batch and every pair is padded to the longest one. Smaller batches group similar lengths: 479 ms → **434 ms (1.15×)**, Pearson ρ **1.0000**, **0** top-1 changes |
-| **Capped thinking budget** (REST) | The 2.5-flash model spent ~900–1700 hidden "thinking" tokens before the first visible character — 94% of the wait on a blank screen, billed in full. Capping it at 512 cut TTFT 3.90 s → **2.78 s** with judge scores unchanged |
-| **Domain-aware translation prompt** | Without domain context the translator produced everyday English, not field terminology: Greek *«μηχανήματα»* → `machinery` (industrial!) instead of `servers`. Two questions gained **+7.74** and **+4.14** logits. Control: 30 English questions, max \|Δ\| = **0.000** |
-| **Corrective retrieval agent** | 4 questions went from silence to a correct answer with **0 hallucinations**, out-of-corpus still 5/5, main set 61/61 untouched. Latency cost only on questions that were *already* being refused |
-| **Stricter corrective threshold** than the gate | Without it, 2 questions passed the gate **without correct material** — the agent was bypassing the defence via keyword stuffing in its own rewrite |
-| **Rate limiting moved to Postgres** | Atomic `INSERT … ON CONFLICT DO UPDATE … RETURNING`, so the counter increments *inside the database*. Shared across processes, survives restart, **zero new containers** |
-| **`/metrics` endpoint** | The per-request numbers already existed in logs and the UI; the *aggregates* did not. "How often does the gate fire in real use" had never been measurable |
+| **English reranker** (568M → 22M params) | The pipeline translates *before* retrieval, so the cross-encoder always sees English. Latency 15,048 ms → **693 ms (21.7×)**, accuracy 4.96 → 5.00 |
+| **MiniLM-L-6 → L-12** + recalibrating both thresholds | Hard set **10/16 → 12/16** · gate gap 0.89 → **1.04** · correct chunk at rank 1 **36 → 40/56** · corrective hallucinations **2 → 0**. Cost **+9% e2e**. Defensible, not proven |
+| **Exact search** instead of HNSW | Identical top-30, no speed cost at 418 vectors, deterministic |
+| **Deterministic fusion** | `dict.fromkeys` + tie-break on chunk id. Made every later measurement trustworthy |
+| **Reranker threads and `batch_size`** | 667 → **434 ms** with bit-identical scores (thread heuristic under WSL2; padding in one large batch) |
+| **Capped thinking budget** (REST) | TTFT 3.90 s → **2.78 s**, judge scores unchanged |
+| **Domain-aware translation** | Greek *«μηχανήματα»* had become `machinery` instead of `servers`; two questions gained +7.74 / +4.14 logits; 30 English controls: max \|Δ\| = 0.000 |
+| **Corrective agent** + its own threshold | Silence → correct answer on the questions it targets, **0 hallucinations**, off-topic still 5/5 |
+| **Server-side citation labels** (`[S3]` instead of `[file, p.12]`) | With labels written by the model, 10/97 page numbers were wrong — it copied the page number *printed* in the PDF. The labels themselves were right 97/97. What you don't ask the model to produce cannot come out wrong |
+| **Rate limiting in Postgres**, **`/metrics`** | Shared across processes, zero new containers |
 
 ### Rejected, with numbers
 
 | Change | Result | Why it failed |
 |---|---|---|
-| **Query enrichment with domain terms** (3 variants) | Best variant fixed the single known hallucination (coverage 0% → 100%) and pushed 4 more questions to 100% — **and leaked one out-of-corpus question** through the gate | The finding is architectural, not a bug: enrichment helps retrieval **only when the reranker also sees the added words** — and that is exactly when the gate is misled. An asymmetric variant (enriched query for search, original for judging) protected the gate perfectly but netted **+1/−1 = zero**. You cannot have one without the other |
-| **`bge-reranker-v2-m3` (568M)** | 12/16 on the hard set — but against the 33M model: **+1 real answer AND +1 hallucination** = net zero, for 17× the parameters and ~15 s/question | Also *more* willing to answer without material. The first rejection (2025) had been recorded as "a tie" on a golden set that later proved to have survivorship bias — re-tested, and the right reason found |
-| **`bge-reranker-base` (278M)** | **Worse than the 22M model**: 3/16 hard *and* 6/10 normal | Not a "smaller v2-m3": it scores out-of-corpus chunks *high*, so any threshold that refuses them also kills the correct ones. **Discriminability does not scale with size** |
-| **Cascade reranking** (cheap model filters, expensive model judges) | Rejected by arithmetic, without running: L-6×15 (434 ms) + L-12×6 (282 ms) = **716 ms > 706 ms** | Cascades need a first stage 10–100× cheaper; here the ratio is **1.63×** |
-| **`chunk_size` 750 / 1000** | Re-measured on the current system with a reproducing control. 750: −0.077 MRR *and* +25% latency. 1000 at fixed depths: **MRR +0.029 while coverage −5.2pp** | The keyword-proxy MRR rises *mechanically* with smaller chunks (higher keyword density per chunk) while coverage shows 2–3 questions **lost material**. Fifth confirmation that MRR is not the judge |
-| **`chunk_size` above 1500** | Closed by construction: the cross-encoder truncates **silently** at 512 tokens. Budget = 493 tokens × 4.53 chars/token ≈ **2,230 characters** | Today only 3.6% of chunks are clipped (0.5% of the corpus — negligible), but chunk-length variance is 2×, so 2000 would clip ~25%. We would have measured truncation and called it chunking |
-| **`RERANK_CANDIDATES` 15 → 12 / 10** | Every summary metric came out **identical** — best logit, gate gap, keyword@1, 56/56. Apparently 250 ms for free | **False.** Comparing the *pages that actually reach the LLM* showed N=12 changes the prompt in **42/56** questions — a bigger change than the model swap itself. The reranker **reorders**: a chunk at RRF rank 14 can rise to rank 3 |
-| PyTorch dynamic INT8 (fbgemm) | **1.37× faster**, Pearson ρ **0.9970** — and rejected anyway | It shifts the worst in-corpus score below the gate: a question answered correctly today would be silently refused. Separation between relevant and irrelevant narrows by **43%**, so recalibrating only moves the problem. **ρ=0.997 with a broken gate is the lesson**: score correlation is the wrong metric for a reranker |
-| Thinking budget 0 (fully disabled) | 2.73× faster TTFT, then **faithfulness 5.0 → 2.0** on a multi-hop question | Keyword coverage showed *zero* loss — a saturated metric that missed it entirely. All regressions were multi-hop, and all returned to 5.0 at budget=512 |
-| Query decomposition for multi-hop | Three merge strategies, n=15. Best design scored +2.3% — which is **35 → 36 keywords out of 45. One.** | Costs +1.5–2.3 s on *every* question plus a mandatory Gemini call, because routing must run even to decide "don't split". Multi-hop questions already score 5.00/5.00/5.00/5.00 — there was no quality problem to solve |
-| Page score = sum of top-K chunk scores | MRR +0.0006; one question collapsed 1.000 → 0.389 | Structurally biased toward text-dense pages, which produce more chunks regardless of relevance |
-| BGE-M3 native sparse as a 3rd RRF branch | 0.799 → 0.779 (equal weights), → 0.791 (weighted) | Finds more but ranks worse: each extra branch dilutes the dense signal, the strongest one |
-| Context volume 8 → 6 pages | nDCG **identical**, coverage 97.0% → **94.8%** | ~25% fewer prompt tokens is real, but −2.2pp coverage is real lost content |
-| Langfuse for tracing | 6 containers for ~50 traces; the project runs 3 | Rejected on operational cost, not capability — the same trade later applied to Redis for rate limiting |
-| Postgres/pgvector migration | Zero product improvement | The scaling benchmark settled it: **BM25 breaks first**, not the vector store |
-| Contextual compression | Solves no measured problem (faithfulness 0.992, recall 1.000) | Criterion if ever revisited: recall must stay 1.000 **and** faithfulness ≥ 0.99 |
-| HyDE / ColBERT / Docling | not attempted, with reasons | Late interaction needs multi-vector storage the pinned store lacks; layout-aware extraction was abandoned after diagnosis showed the failing questions fail at the *reranker*, with the keywords present in the extracted text all along |
+| **`gte-reranker-modernbert-base`** (150M) | The project's first **proven** ranking gain: MRR 0.785 → **0.874**, CI [+0.025, +0.160] | Rerank **5.5× slower** on CPU (0.59 → 3.26 s), and its compressed score scale weakens the "not here" signal: an off-domain question (volcanology) passed the gate, two hard questions passed with **zero** relevant material. Better ranking, worse refusal |
+| **Qwen3-Embedding-0.6B** | Dense top-30 clearly better (both papers present 12 → 17/29) | After fusion and rerank the gain evaporated (7 → 9); every CI crossed zero; pages changed in 221/260 questions — and **two new leaks** at margins of 0.08 and 0.13 logits. Same reranker + same threshold is *not* the same gate |
+| **Contextual chunk prefixes** (Anthropic-style Contextual Retrieval / doc2query) | Direction probe, n=33: in-corpus scores **fell** (median −0.85 logits, 22 → 18 above the gate) while an out-of-corpus question rose **+2.72** and crossed it | The direction was wrong on both sides, so the full re-ingest was not run. A technique reported to cut retrieval failures by 49–67% elsewhere, measured here first |
+| **Query enrichment with domain terms** (3 variants) | Fixed one hallucination — and **leaked one out-of-corpus question** | Enrichment helps retrieval only when the reranker also sees the added words — exactly when the gate is misled. Architectural, not a bug |
+| **LLM router / query decomposition** (Aug and Sep) | Aug: +1 keyword of 45. Sep: decomposition solved the two-paper problem, but the router split **35/50** standard questions too | An extra call and ~3 pages on almost every question. The name-based router keeps the gain with 0 false triggers and no LLM |
+| **"Which paper do you mean?" agent** | 12/14 questions stripped of the paper's name were answered normally anyway | On the 2 that needed it, restricting the search to the right paper was *still* refused: restriction removes competitors, it does not raise the gate score |
+| **Figure ingestion** (multimodal) | Audit of all 33 figures: **3** (7 generously) carry a fact absent from the text | Below the pre-registered threshold of 10. The authors state each figure's message and numbers in the text; vector diagrams already yield their labels |
+| **`bge-reranker-v2-m3` (568M)** | +1 real answer **and** +1 hallucination = net zero, ~15 s/question | More willing to answer without material |
+| **`bge-reranker-base` (278M)** | **Worse than the 22M model**: 3/16 hard | Scores out-of-corpus chunks high — discriminability does not scale with size |
+| **`RERANK_CANDIDATES` 15 → 12 / 10** | Every summary metric identical | **False economy**: N=12 changed the pages reaching the LLM in **42/56** questions |
+| **PyTorch dynamic INT8** | 1.37× faster, Pearson ρ **0.997** | Shifts a correct answer below the gate. **ρ = 0.997 with a broken gate** — correlation is the wrong metric for a reranker |
+| **Thinking budget 0** | 2.73× faster TTFT | Faithfulness **5.0 → 2.0** on a multi-hop answer, invisible to keyword coverage |
+| **`chunk_size` 750 / 1000** | Main set better, hard set worse — **the sign flips between sets** | The main set is at its coverage ceiling and cannot show the loss |
+| **Cascade reranking** | Rejected by arithmetic: 434 + 282 ms > 706 ms | Needs a first stage 10–100× cheaper; here 1.63× |
+| **Langfuse**, **pgvector**, **contextual compression**, **BGE-M3 sparse** | Operational cost with no product gain, or no measured problem to solve | Criteria to revisit each are recorded in the log |
 
 ### The finding that mattered most
 
-Retrieval MRR turned out to be **decoupled from answer quality** in this system:
-
-```
-reasoning questions   MRR 0.823  →  5.00 / 5.00 / 5.00 / 5.00
-11 new multi-hop      MRR 0.493  →  5.00 / 5.00 / 5.00 / 5.00
-one question          MRR 1.000  →  accuracy 4, completeness 4
-reranker upgrade      MRR 0.500 → 1.000  →  accuracy 5 → 4, with
-                                            provably identical material
-```
-
-With coverage above 97%, the correct material already reaches the model — MRR only measures whether it arrives *first*, and "lost in the middle" did not materialise at ~9,800 tokens with Gemini 2.5 Flash.
-
-**And the converse: no intermediate metric predicts the final prompt.** The reranker upgrade produced *identical* coverage in 45/45 questions — and **35 of 56** questions received different pages. `RERANK_CANDIDATES=10` produced identical best-logit, gate gap and keyword@1 — and changed the pages in **52 of 56**. Coverage measures keywords, best-logit measures the top-1; **the prompt is pages**. Only one tool looks at what actually reaches the LLM, and it costs nothing to run:
+With coverage above 97%, the correct material already reaches the model — **retrieval MRR is decoupled from answer quality** here, and **no intermediate metric predicts the final prompt**. The reranker upgrade left coverage identical in 45/45 questions while **35 of 56** received different pages; `RERANK_CANDIDATES=10` left best-logit, gate gap and keyword@1 identical while changing the pages in **52 of 56**. The prompt is pages, and only one tool looks at them:
 
 ```bash
 docker compose exec backend python evaluation/compare_pages_rerankers.py
@@ -297,17 +327,15 @@ docker compose exec backend python evaluation/compare_pages_rerankers.py
 
 ### The second finding: your golden set hides your failures, because you wrote it
 
-The gate scored a perfect **61/61** — and it was false. One question had been written naturally, was refused, and **was deleted from the set**. Sixteen deliberately badly-worded paraphrases of *existing* questions then exposed **11/16 wrong refusals**. A production user does not get the option to delete the question that breaks your system.
+The gate once scored a perfect **61/61** — and it was false. One question had been written naturally, was refused, and **was deleted from the set**. Sixteen deliberately badly-worded paraphrases then exposed **11/16 wrong refusals**. A production user does not get the option to delete the question that breaks your system. The near-miss set (42) and the hard set (59) exist because of this.
 
-Three lessons that generalise:
+### The third finding: anything upstream of the gate changes the gate
 
-1. **The reranker is lexical-driven.** The same question without the papers' terminology drops by up to **12 logits** — with the correct chunk still at rank 1.
-2. **Threshold tuning is a dead end when distributions overlap** (7.27 logits here). The fix belongs in the *query*, not the threshold.
-3. **A "better" prompt can destroy your ability to filter.** In one variant the hallucinations were the two *lowest* scores — filterable. In the "improved" one, the **highest** score was a hallucination — no threshold catches that.
+The gate judges the best score *among the candidates it is shown*. A different embedder (Qwen3), a different reranker scale (gte), or a different translation of the same Greek question (`q025`) changes the candidates — and borderline cases flip, in both directions, at margins of a tenth of a logit. Every upstream change is therefore re-tested against the refusal sets, not just the accuracy sets.
 
 ### Where a failure actually happens
 
-A per-stage tracer answers "at which step was this page lost?" — translation, dense, BM25, RRF, rerank, gate, or prompt. It settled the one remaining known hallucination: the page **is** retrieved by BM25 at rank 1 when the question contains the rare term `vpxenc`, and never retrieved when the same question says "encoder". Feeding the term in via query enrichment fixes retrieval but breaks the gate, and supplying it to BM25 alone lets the reranker bury the page again — so it is a **cross-encoder comprehension limit**, not a retrieval bug.
+A per-stage tracer answers "at which step was this page lost?" — translation, dense, BM25, RRF, rerank, gate, or prompt. It is how the two-paper problem was found: 21 of 28 lost evidence pages were lost *before* the reranker ever saw them.
 
 ```bash
 docker compose exec backend python evaluation/trace_query.py --id q028 --target excamera-nsdi17.pdf:15
@@ -315,17 +343,16 @@ docker compose exec backend python evaluation/trace_query.py --id q028 --target 
 
 ## Known limitations
 
-- **The corrective threshold rests on n=2.** After the reranker upgrade the L-12 model solved the easy cases on its own, so the calibration base *shrank* from 10 questions to 6, and the recovered ones from 4 to 2. A sweep shows the entire range `[−2.6, +0.8]` gives 2 correct / 0 hallucinations, so the chosen value is the midpoint — defensible, but **not optimised, and honestly not optimisable at this sample size**
-- **Corrective verification is not reproducible.** The rewrite is a Gemini call with no seed; two runs of identical code recovered 2 and 1 questions. Every other measurement in this project is deterministic — this one is not, and comparing two of its runs as if they were the same experiment is invalid
-- **4 of 16 hard questions remain unanswered — and 3 of them *should*.** They use bare demonstratives (*"that older system"*, *"the other paper"*) with no antecedent, across 7 papers. Without conversation history they have no objective answer, so refusing is correct behaviour, not failure
-- **One known hallucination** (h002): the gate passes it at +1.27 with zero keyword coverage, so the corrective agent never even runs. High confidence, wrong material — the defence catches "I don't know", not "I think I know"
-- **Golden sets are self-authored**, ~89 questions against an industry norm of ~100 and a statistical-confidence requirement closer to 250. Confidence intervals are not yet reported
-- **`google.generativeai` is deprecated** and `google-genai` cannot be adopted: it requires pydantic ≥2.12.5, incompatible with the pinned Pydantic V1 stack. Generation bypasses the SDK entirely via the v1beta REST endpoint — not a workaround but a requirement, since the 0.8.6 `GenerationConfig` has **no `thinking_config` field at all**
-- **Reranker dominates retrieval latency** — 706 ms of the 725 ms warm path (97.3%). Quantization breaks the gate, ONNX gains nothing, a smaller model loses accuracy, and a cascade is arithmetically impossible. **This is the CPU ceiling, not an unfinished optimisation**
-- **Throughput saturates at 4 concurrent users and collapses at 8.** One CPU-bound worker is the ceiling — past it, more users produce fewer answers rather than slower ones. Single worker is now a *capacity* decision, not a correctness one: the cache-invalidation bug that used to force it was fixed and verified
-- **The corpus is 418 chunks, and the design is tuned for that** — but the breaking points are measured rather than guessed. BM25 fails first (6.7× slower than brute-force dense at 50k chunks, with an 8 s rebuild per ingest); exact vector search stays the right call well past 100k
-- **`ai_core.py` is ~1,210 lines with 7 responsibilities.** A split is planned with a specific hazard identified: 8 files monkeypatch its module globals, so a facade with `import *` would break them **silently**
-- **Free-tier Gemini quota** (~20 requests/day) is enough for chatting but not for full evaluation runs
+- **Two near-miss leaks out of 42.** Asked how the programming language affects AWS autoscaling, the system concludes it doesn't — a synthesis of two facts no paper links (stable across draws). Asked about multi-cloud security "in 2024", it answers about cloud security without saying the specifics are missing (varies between draws). Both follow from giving the model 8 pages of related material; the naive baseline declines both. A claim-level grounding check (e.g. HHEM, MiniCheck) is the natural next experiment
+- **Text-layer PDFs only.** A scanned PDF is flagged in the UI as *"no extractable text (scanned PDF — needs OCR)"* instead of silently showing as ready; there is no OCR or layout model. Figures were audited instead of ingested
+- **Not measured:** questions about the whole corpus at once ("what do all seven papers say about cold starts?"), multi-step agentic retrieval, and prompt injection hidden in uploaded PDFs (uploads are private to their owner, so an injected document can only mislead its own uploader)
+- **Two-paper routing uses hand-written aliases** for the 7 papers; paraphrases ("the video-processing system") and pronouns are not caught. Automatic alias extraction at ingest is open
+- **7 papers.** The design is tuned to 418 chunks. Breaking points are measured (BM25 fails first, 6.7× slower than dense at 50k chunks), but quality at 50+ papers is not
+- **LLM judges.** Two vendors now agree, but both are LLMs; the golden sets are self-authored and hand-verified, not externally annotated
+- **Corrective verification is not reproducible** (a Gemini rewrite with no seed), and its threshold rests on a handful of questions — the midpoint of a range that behaves identically, not an optimum
+- **Throughput saturates at 4 concurrent users** on one CPU-bound worker
+- **Model availability:** new Gemini API keys no longer get `gemini-2.5-flash`; switching models means re-measuring the gate
+- **`google.generativeai` is deprecated** and `google-genai` needs Pydantic 2, incompatible with the pinned stack — generation uses the REST endpoint directly
 
 ## Quickstart
 
@@ -348,51 +375,29 @@ First start downloads the embedding + reranker models (~2.5 GB, cached in a volu
 
 | Variable | Purpose |
 |---|---|
-| `GEMINI_API_KEY` | Gemini API key (generation, translation, LLM-judge) |
-| `POSTGRES_PASSWORD` | Postgres password (compose wires the DSN) |
-| `SECRET_KEY` | JWT signing key — generate with `openssl rand -hex 32` |
-| `RERANKER_MODEL` | Cross-encoder for reranking. **Changing this requires recalibrating `MIN_RERANK_SCORE`** — score scales differ between models |
-| `MIN_RERANK_SCORE` | Relevance gate threshold, in **raw logits**. Measure with `evaluation/measure_gate_margin.py` |
-| `ENABLE_CORRECTIVE`, `CORRECTIVE_MIN_SCORE` | Corrective agent on/off and its stricter acceptance threshold |
-| `DENSE_CANDIDATES`, `RERANK_CANDIDATES`, `EXPAND_INPUT`, `MAX_PAGES` | Pipeline depths, tunable without rebuild |
+| `GEMINI_API_KEY` | Gemini API key (generation, translation, judge 1) |
+| `OPENAI_API_KEY` | only for the second judge (`compare_judge2.py`) |
+| `POSTGRES_PASSWORD` | Postgres password |
+| `SECRET_KEY` | JWT signing key — `openssl rand -hex 32` |
+| `RERANKER_MODEL` | Cross-encoder. **Changing it requires recalibrating `MIN_RERANK_SCORE`** |
+| `MIN_RERANK_SCORE` | Relevance gate, in **raw logits** (`evaluation/measure_gate_margin.py`) |
+| `ENABLE_CORRECTIVE`, `CORRECTIVE_MIN_SCORE` | Corrective agent and its threshold |
+| `ENABLE_PERDOC`, `PERDOC_EXTRA` | Per-document search for two-paper questions, and how many pages it may add |
+| `DENSE_CANDIDATES`, `RERANK_CANDIDATES`, `EXPAND_INPUT`, `MAX_PAGES` | Pipeline depths |
 
 ## Tests & evaluation
 
 ```bash
-# full suite: validators, security, fusion logic, relevance gate, corrective
-# agent, metrics, REST generation, and HTTP endpoints incl. authorization
-docker compose exec backend python -m pytest tests/ -q          # 80 tests
+docker compose exec backend python -m pytest tests/ -q     # 109 tests; 69 need neither models nor Postgres
 
-# the model-free ones — no 2.4GB download, no Postgres, ~1s (51 tests, fast CI job)
-
-# determinism — all stage signatures must be identical across runs
+docker compose exec backend python evaluation/scoreboard.py            # all 8 sets, frozen, per-question diff
 docker compose exec backend python evaluation/check_determinism.py
-
-# random-chance floor for every golden set (analytic, zero cost)
 docker compose exec backend python evaluation/random_coverage_baseline.py
-
-# what each pipeline stage contributes (zero cost)
 docker compose exec backend python evaluation/ablation_ladder.py
-
-# at which stage was a page lost? translate/dense/BM25/RRF/rerank/gate/prompt
 docker compose exec backend python evaluation/trace_query.py --id q028
-
-# does a change alter the pages that reach the LLM? — run BEFORE spending judge quota
 docker compose exec backend python evaluation/compare_pages_rerankers.py
-
-# gate calibration: best-logit distribution and the margin on both sides
 docker compose exec backend python evaluation/measure_gate_margin.py
-
-# retrieval only — no API quota, ~1 minute
-docker compose exec backend python run_eval.py evaluation/golden_set_50.jsonl --retrieval-only
-
-# where the time goes; where the design breaks; CPU contention
-docker compose exec backend python evaluation/measure_latency.py
-docker compose exec backend python evaluation/scaling_benchmark.py
-docker compose exec backend python evaluation/concurrency_benchmark.py
-
-# full answer-quality eval with LLM-judge (uses Gemini quota)
-docker compose exec backend python run_eval.py evaluation/golden_set_50.jsonl
+docker compose run --rm --no-deps backend python evaluation/compare_systems.py --table   # head-to-head, 0 API calls
 ```
 
 ## Project structure
@@ -400,35 +405,27 @@ docker compose exec backend python run_eval.py evaluation/golden_set_50.jsonl
 ```
 backend/
   ai_core.py            # RAG pipeline: ingest, hybrid search, rerank, gate, corrective, generation
-  gemini_rest.py        # streaming generation over v1beta REST — thinking budget control
-  rate_limit.py         # cross-process rate limiting, atomic upsert in Postgres
+  doc_routing.py        # which papers a question names -> per-document search
+  corpus_names.json     # aliases per paper (the measured list)
+  gemini_rest.py        # streaming generation over REST — thinking budget control
+  rate_limit.py         # cross-process rate limiting in Postgres
   metrics.py            # Prometheus text exposition, zero dependencies
-  main.py               # FastAPI app: auth, documents, conversations, chat streaming
-  models.py, schemas.py # SQLAlchemy models, Pydantic validators
-  reingest_corpus.py    # controlled full re-ingest with per-step verification
+  main.py               # FastAPI: auth, documents, conversations, chat streaming
   evaluation/
-    golden_set_50.jsonl          # the stable baseline, incl. 5 out-of-corpus
-    golden_multihop_new.jsonl    # 11 cross-document questions
-    golden_hard_paraphrase.jsonl # 16 deliberately badly-worded — stress test
-    golden_conversations.jsonl   # 12 multi-turn, incl. 2 leak probes
-    ablation_ladder.py           # what each stage contributes
-    random_coverage_baseline.py  # analytic chance floor per set
-    bootstrap_ci.py              # paired bootstrap: is a delta real at this n?
-    measure_cost.py              # $ per 1,000 questions, zero generation calls
-    trace_query.py               # per-stage tracer: where was the page lost?
-    compare_pages_rerankers.py   # do the pages reaching the LLM change?
-    measure_gate_margin.py       # gate calibration
-    verify_corrective.py         # corrective agent on the real search path
-    suggest_keywords.py          # proposes rare keywords, weighted by 1/df
-    scaling_benchmark.py         # 418 → 200k chunks
-    concurrency_benchmark.py     # latency vs throughput
-    runs/                        # CSVs from rejected experiments, kept as evidence
-  tests/                # 80 tests; 51 need neither models nor Postgres
+    golden_*.jsonl               # 8 scoreboard sets + domains + dangling
+    scoreboard.py                # all sets, one frozen run, per-question diff
+    scoreboard_answers.py        # answers + judges per set
+    compare_systems.py           # naive / LlamaIndex vs this system, paired tests
+    compare_llamaindex.py        # LlamaIndex with defaults (throwaway container)
+    compare_judge2.py            # second judge (OpenAI), agreement (κ)
+    probe_*.py                   # one experiment each — prediction and result in the docstring
+    runs/                        # every result, including the rejected ones
+  tests/                # 109 tests
 frontend/
   app_ui.py             # Streamlit chat UI
-docker-compose.yml      # postgres + backend + frontend, named volumes
+docker-compose.yml      # postgres + backend + frontend
 ```
 
 ## Tech stack
 
-FastAPI · Streamlit · ChromaDB · PostgreSQL · sentence-transformers (bge-m3, ms-marco-MiniLM) · rank-bm25 · PyMuPDF · Gemini 2.5 Flash · Docker Compose
+FastAPI · Streamlit · ChromaDB · PostgreSQL · sentence-transformers (bge-m3, ms-marco-MiniLM) · rank-bm25 · PyMuPDF · Gemini 2.5 Flash · Docker Compose · evaluated against LlamaIndex, with GPT-4.1 as a second judge
