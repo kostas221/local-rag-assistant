@@ -1,0 +1,947 @@
+{
+ "9ef1c363195225733daa8f62251427e83bf935552f26631e84cad28909f6e5a7": {
+  "id": "q052",
+  "model": "gemini-3.8-flash",
+  "query": "How does ExCamera's mu framework react when a worker fails in the middle of a task, and how does PyWren's stateless model handle the same failure differently?",
+  "out": "ExCamera mu framework worker failure handling task\nPyWren stateless model worker failure handling task",
+  "ms": 18118
+ },
+ "acf41b0c5f2c0a91f69fd743539c357aeb5ffcea30bf9e00d3d8463e239ff5f6": {
+  "id": "m004",
+  "model": "gemini-3.8-flash",
+  "query": "What are the maximum execution time limits for functions on AWS Lambda reported by PyWren and the CIDR critique?",
+  "out": "PyWren maximum execution time limit AWS Lambda\nCIDR critique AWS Lambda maximum execution time limit",
+  "ms": 4030
+ },
+ "163c4b70a8af79ff84a9f5a79c0950bf3b28e222a53335020d9a1fb783226f18": {
+  "id": "m006",
+  "model": "gemini-3.8-flash",
+  "query": "What is the reported cost per GB-hour for AWS Lambda execution in PyWren's paper, and how does this compare to the 2008 pricing for S3 storage per GB-month according to 'Above the Clouds'?",
+  "out": "AWS Lambda execution cost per GB-hour PyWren\nAmazon S3 storage pricing per GB-month 2008 Above the Clouds Berkeley View Cloud Computing",
+  "ms": 9500
+ },
+ "ad51a570a1e9b41213bcc4a4da6ff5dc1180f8fccab9e506c6a11b697ff3ef59": {
+  "id": "q051",
+  "model": "gemini-2.5-flash",
+  "query": "PyWren finds that S3 keeps pace with a single local SSD per core, yet the CIDR critique brands FaaS a data-shipping architecture crippled by storage I/O. What per-Lambda network bandwidth does the critique measure to justify the opposite conclusion?",
+  "out": "PyWren S3 performance\nFaaS network bandwidth measurements",
+  "ms": 1392
+ },
+ "5481da126d3685401e0b2fcb05c045cecdf7694acf376be46bff31a242739873": {
+  "id": "q052",
+  "model": "gemini-2.5-flash",
+  "query": "How does ExCamera's mu framework react when a worker fails in the middle of a task, and how does PyWren's stateless model handle the same failure differently?",
+  "out": "ExCamera mu framework worker failure\nPyWren stateless model worker failure",
+  "ms": 1060
+ },
+ "cca186b7827e8fe40659ee30f4ca0a38ab169937fb9bc2560995353e6289aab1": {
+  "id": "q053",
+  "model": "gemini-2.5-flash",
+  "query": "The CIDR critique argues Lambda functions cannot be network-addressed and must communicate through slow storage. What mechanism lets ExCamera's workers exchange data directly, and how much faster is direct messaging in the critique's own measurements?",
+  "out": "CIDR critique Lambda network addressing\nExCamera worker direct communication performance",
+  "ms": 944
+ },
+ "35532ae41500abac9744c2a332794deb59cb7b94273394f2c4ee7d3963938bae": {
+  "id": "q054",
+  "model": "gemini-2.5-flash",
+  "query": "Above the Clouds (2009) establishes cloud elasticity in statistical multiplexing and cost associativity. How does serverless Berkeley view (2019) leverage the same principle for ephemeral storage",
+  "out": "Cloud elasticity statistical multiplexing cost associativity\nServerless ephemeral storage",
+  "ms": 753
+ },
+ "63b6bb4609779801ec6e81a50fa9927016f7f37e763d523954a6cfed9ed54ca6": {
+  "id": "q055",
+  "model": "gemini-2.5-flash",
+  "query": "MapReduce mitigates slow 'straggler' tasks with a specific mechanism; PyWren also reports stragglers on its 1TB sort. What is MapReduce's mechanism, and where do PyWren's stragglers come from?",
+  "out": "MapReduce straggler mitigation\nPyWren stragglers",
+  "ms": 1355
+ },
+ "ff42012b06e5c9412300b55e8081489b1103d0c3f104adabcf739159ffdcd199": {
+  "id": "q056",
+  "model": "gemini-2.5-flash",
+  "query": "Both ExCamera and PyWren run compute-heavy parallel jobs on AWS Lambda, a service built for microservices. What floating-point benchmark does each use to show the raw compute it can extract, and what aggregate peak do they report?",
+  "out": "ExCamera floating point benchmark\nPyWren floating point benchmark",
+  "ms": 1072
+ },
+ "461822214f0fa96cf07a6e63e86118d462a61032e15c2fcf2a3eca0ddfae5839": {
+  "id": "q057",
+  "model": "gemini-2.5-flash",
+  "query": "The 2019 Berkeley serverless view highlights ExCamera as a case study for cloud functions that communicate. What technique does the ExCamera paper itself use to keep compression efficiency while splitting the encoding into thousands of tiny tasks?",
+  "out": "ExCamera compression efficiency\nExCamera distributed encoding",
+  "ms": 1350
+ },
+ "60de43b6c27e4138b7d9b3c0fd40ff9f1dcf2198be87d56e9fe67b5218c79490": {
+  "id": "q059",
+  "model": "gemini-2.5-flash",
+  "query": "Baldini et al. BaaS services provider ecosystem dependency",
+  "out": "BaaS services provider ecosystem\nBaaS services provider dependency",
+  "ms": 980
+ },
+ "740cfeafa8c1c21bab77fc2e881d8f6d9e7b56a5d52d2fe502c4ff351f0d7703": {
+  "id": "q060",
+  "model": "gemini-2.5-flash",
+  "query": "MapReduce and ExCamera both parallelize across many workers but split the work very differently. What is the granularity of parallelism each targets, and why can't a standard video encoder be split the MapReduce way?",
+  "out": "MapReduce granularity of parallelism\nExCamera granularity of parallelism\nVideo encoder MapReduce parallelism",
+  "ms": 1101
+ },
+ "efa5a596c491b2ac4891aeb94fa42a1c39ecddc7379fdf9d9c4f4fc57d01de7a": {
+  "id": "q061",
+  "model": "gemini-2.5-flash",
+  "query": "The Berkeley serverless view points to disaggregation of compute and storage as an enabling trend. How does the PyWren paper empirically justify that disaggregation is now viable?",
+  "out": "PyWren empirical justification disaggregation viability\nBerkeley serverless view disaggregation compute storage",
+  "ms": 1149
+ },
+ "a81b9b9ba36381caf630cedfb39d1a79b0cec72712be7035eabc78c7d778dd4b": {
+  "id": "q062",
+  "model": "gemini-2.5-flash",
+  "query": "Hellerstein et al. invoke MapReduce as a cautionary analogy for serverless. In what sense do they call MapReduce a limited success, and what does the original MapReduce paper claim as its central contribution?",
+  "out": "MapReduce limitations\nMapReduce central contribution",
+  "ms": 1171
+ },
+ "03c4855fc5d35711e437be17435259a82ffb6f6489248d006e0c19d02e535c5d": {
+  "id": "m004",
+  "model": "gemini-2.5-flash",
+  "query": "What are the maximum execution time limits for functions on AWS Lambda reported by PyWren and the CIDR critique?",
+  "out": "AWS Lambda maximum execution time limits\nPyWren AWS Lambda execution time limits\nCIDR critique AWS Lambda execution time limits",
+  "ms": 1263
+ },
+ "7793bab7b7893a797fd1c506a40c2e376768615deb7036008629ae2b43a95add": {
+  "id": "m006",
+  "model": "gemini-2.5-flash",
+  "query": "What is the reported cost per GB-hour for AWS Lambda execution in PyWren's paper, and how does this compare to the 2008 pricing for S3 storage per GB-month according to 'Above the Clouds'?",
+  "out": "AWS Lambda cost PyWren\nS3 storage cost 2008 \"Above the Clouds\"",
+  "ms": 1424
+ },
+ "49ece7c9bd56e98afd7ee1e5634bee273664d484f4705957849e92954f2b9b67": {
+  "id": "m010",
+  "model": "gemini-2.5-flash",
+  "query": "What is the primary mechanism for fault tolerance in the MapReduce programming model, and how does the PyWren paper describe its approach to fault tolerance for stateless functions?",
+  "out": "MapReduce fault tolerance\nPyWren fault tolerance stateless functions",
+  "ms": 1009
+ },
+ "842e2d42f360775474c66d45f573ac1c8a316f1c55563a61765b5b4612fb1475": {
+  "id": "m012",
+  "model": "gemini-2.5-flash",
+  "query": "What does Baldini et al. suggest about the suitability of serverless for I/O-bound functions, and how do Hellerstein et al.'s findings on network bandwidth and cost for model training relate to this suggestion?",
+  "out": "Baldini serverless I/O-bound functions\nHellerstein network bandwidth cost model training",
+  "ms": 1410
+ },
+ "d433ad56a054a42fc5fdd17ccb43701ea2f37e78e6a3c75c775a039832514e6b": {
+  "id": "m016",
+  "model": "gemini-2.5-flash",
+  "query": "What level of developer control over the cloud infrastructure does the Berkeley View of Cloud Computing (2009) associate with Amazon EC2, and how does the Baldini et al. paper characterize the developer's control in a serverless model compared to IaaS?",
+  "out": "Berkeley View of Cloud Computing Amazon EC2 developer control\nBaldini et al. serverless developer control IaaS",
+  "ms": 1196
+ },
+ "c1200c87949925de187f79715042572dfd87362375c56680e61bf9738f1b0da4": {
+  "id": "m022",
+  "model": "gemini-2.5-flash",
+  "query": "Regarding the cost-effectiveness of serverless computing, what do Hellerstein et al. conclude from their machine learning model training case study, and how does the Berkeley View on Serverless Computing paper respond to the general perception that serverless is more expensive?",
+  "out": "Cost-effectiveness of serverless computing Hellerstein et al. machine learning model training\nBerkeley View on Serverless Computing serverless cost perception",
+  "ms": 1237
+ },
+ "d92141fd1fd9daf3122deb46a7cb007be207b9bf80880dbfd61c68ca10c77ba2": {
+  "id": "m024",
+  "model": "gemini-2.5-flash",
+  "query": "How does 'Above the Clouds' (2009) characterize the economic benefit of cloud computing's pay-as-you-go model, and what does 'Serverless Computing: One Step Forward, Two Steps Back' (2019) identify as the primary economic driver for current serverless adoption?",
+  "out": "Economic benefit cloud computing pay-as-you-go model\nEconomic driver serverless adoption",
+  "ms": 1715
+ },
+ "b760234aa4774cb47aae441c2a801b6e4a4f1af0c03a17bbab836b925837fe24": {
+  "id": "m037",
+  "model": "gemini-2.5-flash",
+  "query": "How does MapReduce handle re-assigned tasks due to worker failure in relation to Map and Reduce tasks output, and how does ExCamera handle re-assigned tasks in the case of a worker failure?",
+  "out": "MapReduce worker failure task reassignment\nExCamera worker failure task reassignment",
+  "ms": 916
+ },
+ "633f525782ed3ca40b0794512c200b858cc527784f445be35b7b9f1d9ff23f31": {
+  "id": "m039",
+  "model": "gemini-2.5-flash",
+  "query": "What is the maximum execution time limit for Lambda functions mentioned in the PyWren paper, and how do Baldini et al. describe the impact of resource limits on serverless functions?",
+  "out": "PyWren Lambda function execution time limit\nBaldini et al. serverless function resource limits",
+  "ms": 1065
+ },
+ "61c1a5cd58da1e784c2891ce97de34b0d3bc6a7d1d306c11b6aec85fcbc0140e": {
+  "id": "m040",
+  "model": "gemini-2.5-flash",
+  "query": "PyWren stragglers data sorting Baldini et al. retrieval semantics serverless functions",
+  "out": "PyWren stragglers data sorting\nBaldini et al. retrieval semantics serverless functions",
+  "ms": 1064
+ },
+ "28f76a918a22f809dc985461b9786aa1a79cb7ddb1a1fae2619a7e1934452ae2": {
+  "id": "m042",
+  "model": "gemini-2.5-flash",
+  "query": "PyWren recognizes startup latencies as a significant drawback of its current implementation. How long does it report a function call can take and how does the CIDR critique describe the relationship between the lifetime of functions and their ability to maintain state?",
+  "out": "PyWren startup latencies\nCIDR critique function lifetime state",
+  "ms": 1066
+ },
+ "05dcc69a50bf9bf249d65180216a41e545541e5a2d3863f40ac8b807410d8807": {
+  "id": "m045",
+  "model": "gemini-2.5-flash",
+  "query": "PyWren stateless functions fault tolerance vs. Above the Clouds elasticity economic benefit risk transfer",
+  "out": "PyWren stateless functions fault tolerance\nAbove the Clouds elasticity economic benefit risk transfer",
+  "ms": 1170
+ },
+ "3c00c516294848bc74f8aa538d38ccdc7a323ada0005df44b8a6402f45de269c": {
+  "id": "m046",
+  "model": "gemini-2.5-flash",
+  "query": "Lambda cost per GB-hour, PyWren, EC2 cost per hour",
+  "out": "AWS Lambda cost per GB-hour\nPyWren\nAmazon EC2 cost per hour",
+  "ms": 1048
+ },
+ "6b8a1aeb7c428f073c0c9261b3e9d4382757c3756bd0c591a6f90e191ac3d7d9": {
+  "id": "m047",
+  "model": "gemini-2.5-flash",
+  "query": "AWS Lambda functions PyWren ExCamera workers",
+  "out": "AWS Lambda functions\nPyWren ExCamera workers",
+  "ms": 1055
+ },
+ "d436b1f70fff928e9daaff1d116b72bde4514a9cf610eff8686faf60765e0607": {
+  "id": "m048",
+  "model": "gemini-2.5-flash",
+  "query": "PyWren reports startup delays for its functions, while ExCamera recognizes that cold starts can introduce minute delays. What is the estimated startup delay reported by PyWren without caching, and how many worker starts are delayed over one minute in the case of an ExCamera cold start?",
+  "out": "PyWren startup delay without caching\nExCamera cold start worker delays over one minute",
+  "ms": 1043
+ },
+ "fdbcc5198b9543f8fc838c052f9e147c7e84ed182b56675a20fb2173b7c916a5": {
+  "id": "m049",
+  "model": "gemini-2.5-flash",
+  "query": "MapReduce programming architecture PyWren users",
+  "out": "MapReduce programming architecture\nPyWren users",
+  "ms": 906
+ },
+ "e470f9ab4d4cf3108e57184df654c906aaf2702a767381c5f9304b2ed8087031": {
+  "id": "m055",
+  "model": "gemini-2.5-flash",
+  "query": "How does the report 'Above the Clouds' (2009) characterize the cost benefit of the pay-per-use model of cloud computing, and what does the work Baldini et al. (2017) recognize as a key distinguishing characteristic of serverless platforms?",
+  "out": "\"Above the Clouds\" 2009 cost benefit pay-per-use cloud computing\nBaldini et al. 2017 distinguishing characteristic serverless platforms",
+  "ms": 1109
+ },
+ "f48db279d7fb069864a9f4fad69c6068496734b3ce8241e67d9ac2ce9942a0bb": {
+  "id": "m060",
+  "model": "gemini-2.5-flash",
+  "query": "MapReduce worker fault tolerance approach Baldini et al. serverless platform recovery",
+  "out": "MapReduce worker fault tolerance\nserverless platform recovery",
+  "ms": 1443
+ },
+ "d6a495aeae9d76d031ef5a0816d7a18897a07354ae9be0951096a5255b9c7d35": {
+  "id": "m061",
+  "model": "gemini-2.5-flash",
+  "query": "FaaS platforms data processing storage functions",
+  "out": "FaaS platforms data processing\nFaaS platforms storage functions",
+  "ms": 1647
+ },
+ "6507e65b77683e62f19d128f86939db48f9a3e77f3394a35885ed10491d1b2af": {
+  "id": "m062",
+  "model": "gemini-2.5-flash",
+  "query": "Hellerstein et al. FaaS offerings hardware serverless computing Jonas et al.",
+  "out": "Hellerstein et al. FaaS offerings hardware\nJonas et al. serverless computing",
+  "ms": 1064
+ },
+ "64895e207bf32c1b0841cad819a6cccb0d9bd3e0519ca8ac9ee01a98c14224a8": {
+  "id": "m063",
+  "model": "gemini-2.5-flash",
+  "query": "How does the report 'Above the Clouds' (2009) characterize the economic value of cloud computing elasticity, and how does 'Serverless Computing: One Step Forward, Two Steps Back' (2019) contrast the cost of FaaS in scenarios such as machine learning model training?",
+  "out": "Economic value of cloud computing elasticity\nCost of FaaS in machine learning model training",
+  "ms": 1382
+ },
+ "5946c9bd80f0293ebef2f6f2c3efc73831d81f794d0c01f4079db826ead963d9": {
+  "id": "m064",
+  "model": "gemini-2.5-flash",
+  "query": "Above the Clouds' (2009) Cloud Computing performance Hellerstein et al. (2019) network performance FaaS functions workload",
+  "out": "Cloud computing performance\nServerless functions network performance workload",
+  "ms": 962
+ },
+ "4fb4a24dec902e2e6b1d4fd7cf1dcb6fe9decda0bdf3bc195f3bed2bb0247773": {
+  "id": "m065",
+  "model": "gemini-2.5-flash",
+  "query": "How does CIDR's critique characterize the lack of specialized hardware in today's FaaS offerings and how does ExCamera leverage cloud functions to achieve high computing performance despite these limitations?",
+  "out": "CIDR critique FaaS specialized hardware\nExCamera cloud functions high performance",
+  "ms": 827
+ },
+ "bef3d8d9390e60f52905503879aab9fee249a4ddfa21e29d00099f88028bb924": {
+  "id": "m069",
+  "model": "gemini-2.5-flash",
+  "query": "How does 'Above the Clouds' (2009) define the \"pay-as-you-go\" model and how does 'Cloud Programming Simplified: A Berkeley View on Serverless Computing' (2019) describe the accounting unit for serverless cloud functions?",
+  "out": "\"Above the Clouds\" (2009) \"pay-as-you-go\" model definition\n\"Cloud Programming Simplified: A Berkeley View on Serverless Computing\" (2019) serverless cloud functions accounting unit",
+  "ms": 1111
+ },
+ "885f6a8bd452e7fdaf45c13dde770d48d2e0363ccfeabdff57a38d6b45c656ba": {
+  "id": "m070",
+  "model": "gemini-2.5-flash",
+  "query": "What is a key problem with I/O sharing between virtual machines mentioned in 'Above the Clouds' (2009) as a barrier to predictable performance, and what is a challenge faced by serverless cloud functions due to insufficient storage, according to 'Cloud Programming Simplified: A Berkeley View on Serverless Computing' (2019)?",
+  "out": "I/O sharing virtual machines predictable performance\nServerless cloud functions insufficient storage",
+  "ms": 1134
+ },
+ "d02a6aad2ddfc7f5836b602fefe729903bb289d6cf9e9f106b0033b17763b82e": {
+  "id": "m071",
+  "model": "gemini-2.5-flash",
+  "query": "ExCamera fine-grained parallelism video encoding compression efficiency Berkeley view (2019) communication functions serverless platforms",
+  "out": "ExCamera fine-grained parallelism video encoding compression efficiency\nServerless platforms communication functions",
+  "ms": 814
+ },
+ "2bd2d54183c37386c278105bd5b206e3bbaeba2ac8cdbb2b02162cea0725c9f5": {
+  "id": "m072",
+  "model": "gemini-2.5-flash",
+  "query": "What is the cost per unit of AWS Lambda functions according to the Berkeley (2019) view, and how does this compare to the cost reported by ExCamera for encoding a 15-minute Sintel video using the ExCamera encoder[6,16]?",
+  "out": "AWS Lambda cost model Berkeley 2019\nExCamera video encoding cost Sintel 15-minute",
+  "ms": 1421
+ },
+ "f8062277af3704009eaa67ab92dfcf963a4e778d38b16bc750ac45a58ef92e5c": {
+  "id": "m078",
+  "model": "gemini-2.5-flash",
+  "query": "Above the Clouds' unpredictable performance MapReduce stragglers tasks",
+  "out": "Cloud computing unpredictable performance\nMapReduce stragglers",
+  "ms": 1085
+ },
+ "1b62ebe1d8aea4be7dff2c7b50bf5b2c63f78a55631fc75b04e4cec4c8295c6d": {
+  "id": "m079",
+  "model": "gemini-2.5-flash",
+  "query": "MapReduce workers communication ExCamera mu threads communication",
+  "out": "MapReduce worker communication\nExCamera mu threads communication",
+  "ms": 1062
+ },
+ "f61a464d67a83b100318f00ca0baa3dced640cd81816e76d6ee7e32f62040f4e": {
+  "id": "q001",
+  "model": "gemini-2.5-flash",
+  "query": "What is the definition of cloud computing given in the paper?",
+  "out": "Cloud computing definition",
+  "ms": 2546
+ },
+ "d74046ce33962942ef77d777c8944d8d62af1fe0b56e39f2b49b4eb5d124d835": {
+  "id": "q002",
+  "model": "gemini-2.5-flash",
+  "query": "What are the three new aspects of cloud computing from a hardware provisioning point of view?",
+  "out": "Cloud computing hardware provisioning\nCloud computing resource allocation",
+  "ms": 1059
+ },
+ "eb3f68aa2b1fac743f1e110990db29330a95b11e1fb4fb12b9af92c240bbf5c1": {
+  "id": "q003",
+  "model": "gemini-2.5-flash",
+  "query": "What is the data transfer bottleneck obstacle and a suggested workaround?",
+  "out": "Data transfer bottleneck\nData transfer workaround",
+  "ms": 1045
+ },
+ "32f5a62d8676825c2c2a73e26b80b8f93b16a1d9d1c46fb53a9dc5a1800cc37d": {
+  "id": "n002",
+  "model": "gemini-2.5-flash",
+  "query": "OpenFaaS OpenWhisk serverless application development",
+  "out": "OpenFaaS serverless application development\nOpenWhisk serverless application development",
+  "ms": 776
+ },
+ "3e9c22e927c3964d36a93dfce6665d021108f5c3c25f4a6c3aa1f3a2c83c77f4": {
+  "id": "n003",
+  "model": "gemini-2.5-flash",
+  "query": "What is the typical cold start latency for a Python function on Google Cloud Functions?",
+  "out": "Google Cloud Functions cold start latency Python\nGoogle Cloud Functions Python function cold start",
+  "ms": 803
+ },
+ "df0200b076da17a0896168c79c0892f2395aa221ee42e3424300ad55eca73d4a": {
+  "id": "n010",
+  "model": "gemini-2.5-flash",
+  "query": "Knative enterprise adoption",
+  "out": "Knative enterprise adoption",
+  "ms": 861
+ },
+ "d6a31f0a9a3aefb8f4c67204acac798b30947cea212b9e629b287298cbaddd82": {
+  "id": "q004",
+  "model": "gemini-2.5-flash",
+  "query": "Why can cloud computing datacenters achieve economies of scale?",
+  "out": "Cloud computing economies of scale\nCloud computing datacenters",
+  "ms": 1820
+ },
+ "d6d673143dc96c844962c12a161f2756e9a256cd1b8bf35928d5d80c78688e8b": {
+  "id": "q005",
+  "model": "gemini-2.5-flash",
+  "query": "What are the obstacles related to data confidentiality and auditability?",
+  "out": "Data confidentiality obstacles\nData auditability obstacles",
+  "ms": 901
+ },
+ "2474ca1165d3e3c8220480cbe5d6ba04bd29e8935a825a25f2f60e9bb5b8f40b": {
+  "id": "q006",
+  "model": "gemini-2.5-flash",
+  "query": "What new application opportunities does cloud computing enable according to the 2009 paper?",
+  "out": "Cloud computing application opportunities 2009",
+  "ms": 888
+ },
+ "789d90cd799bbc1f18529cfa98d54b9cb47116901a4ea936b3cc16161d502f4d": {
+  "id": "q007",
+  "model": "gemini-2.5-flash",
+  "query": "What is the difference between BaaS and FaaS?",
+  "out": "BaaS\nFaaS",
+  "ms": 1104
+ },
+ "ea1d10953782cfba240c6e035e4eefc057235dd26ac599f03b113bd71d1ca80d": {
+  "id": "q008",
+  "model": "gemini-2.5-flash",
+  "query": "What are the main limitations of current serverless platforms discussed in the paper?",
+  "out": "Serverless computing limitations",
+  "ms": 900
+ },
+ "d1b08c8ccf9f627f15cb918b63a5770f566ace8918219195d6b3606b34af32be": {
+  "id": "q009",
+  "model": "gemini-2.5-flash",
+  "query": "How does serverless billing differ from traditional serverful cloud billing?",
+  "out": "Serverless billing models\nServerful cloud billing models",
+  "ms": 1107
+ },
+ "8e0ba438eb431946c4f8250ead040995f2bacc981d5858b65696df9a6c5cc58d": {
+  "id": "q010",
+  "model": "gemini-2.5-flash",
+  "query": "When did serverless computing attract widespread attention and with which service?",
+  "out": "Serverless computing adoption\nAWS Lambda launch date",
+  "ms": 758
+ },
+ "a9f9725a57757d432860eb8626af053312b130400ea5a27ac840dec12836ad0d": {
+  "id": "q011",
+  "model": "gemini-2.5-flash",
+  "query": "Which applications stretch the limits of today's serverless platforms according to the paper?",
+  "out": "Serverless computing limitations\nServerless computing applications",
+  "ms": 944
+ },
+ "9bef4e80d9cfb8fcb3ff605f9350577dccb88b012db71df8decf47e64aff8b61": {
+  "id": "q012",
+  "model": "gemini-2.5-flash",
+  "query": "What is utility computing",
+  "out": "Utility computing",
+  "ms": 802
+ },
+ "c06f697acc20088a1d28d9844e8110fc23cbac6719cb2f179b8b7862553b45fe": {
+  "id": "q013",
+  "model": "gemini-2.5-flash",
+  "query": "What are the 10 main obstacles of cloud computing mentioned in the paper",
+  "out": "Cloud computing obstacles",
+  "ms": 768
+ },
+ "2ab018bac41ca77765f94dcd91661dd67a73837ab20121d9c155b52b2c1dc993": {
+  "id": "q014",
+  "model": "gemini-2.5-flash",
+  "query": "How does elasticity help in shifting demand forecasting risk",
+  "out": "Cloud elasticity\nDemand forecasting risk",
+  "ms": 885
+ },
+ "943dfa0090f9309c9afda479afb345c41376a69dab47bd47653e1cabfc6eff08": {
+  "id": "q015",
+  "model": "gemini-2.5-flash",
+  "query": "cold start serverless computing",
+  "out": "cold start serverless computing",
+  "ms": 823
+ },
+ "06266649cebc57b50c3ba75dfa73cc164a8a1e94789d3ebac19ff67d13d11582": {
+  "id": "q016",
+  "model": "gemini-2.5-flash",
+  "query": "Why serverless simplifies programming in the cloud",
+  "out": "Serverless programming simplification\nCloud programming simplification",
+  "ms": 725
+ },
+ "5dceb894f2ee2666f7df2968d354d072eb976eae67bd6f1ff8cc0a25e6af2dc1": {
+  "id": "q017",
+  "model": "gemini-2.5-flash",
+  "query": "reputation fate sharing",
+  "out": "reputation systems\nfault tolerance distributed systems",
+  "ms": 894
+ },
+ "9f9b73985af80101296c5366dc1e3c8c6889a3ebc5d4231974b6cb3ff24bb82e": {
+  "id": "q018",
+  "model": "gemini-2.5-flash",
+  "query": "serverless computing future",
+  "out": "Serverless computing future",
+  "ms": 3199
+ },
+ "d83368bfb250653e9e657834bd5518354cb635a01130bbb94584e732b30ab426": {
+  "id": "q019",
+  "model": "gemini-2.5-flash",
+  "query": "What do the documents say about quantum computing performance?",
+  "out": "Quantum computing performance",
+  "ms": 941
+ },
+ "a96cff97c03df4d611f363ba4ae51b3fe3ba6da3e8bd860e0a656d8b66357278": {
+  "id": "q020",
+  "model": "gemini-2.5-flash",
+  "query": "Bitcoin cost",
+  "out": "Bitcoin cost",
+  "ms": 876
+ },
+ "244a470e3d5a7265cc86d8927a6b8efd64ed9d9d9bfb8c268253a044ab691083": {
+  "id": "q021",
+  "model": "gemini-2.5-flash",
+  "query": "Which specific AWS and Google Cloud services does the paper give as examples of serverless offerings?",
+  "out": "AWS serverless services\nGoogle Cloud serverless services",
+  "ms": 810
+ },
+ "c7be92eac996b04856df6aa1ce9c189a1ebe80712894575aa5c3a2476edff162": {
+  "id": "q022",
+  "model": "gemini-2.5-flash",
+  "query": "Which five applications does the paper analyze in depth as stretching today's serverless computing?",
+  "out": "Serverless computing applications\nServerless computing limitations",
+  "ms": 929
+ },
+ "71e52c7ea9ce580b0787dcaa47080ae324663d613f73b9ebe49d0a7a58cb64f1": {
+  "id": "q023",
+  "model": "gemini-2.5-flash",
+  "query": "IBM OpenWhisk platform architectural elements",
+  "out": "IBM OpenWhisk architecture\nOpenWhisk platform elements",
+  "ms": 851
+ },
+ "5575d07d1b22f0234b5b8e925fa2b6963b5c3fa9d64c1efdd98d355865991ef1": {
+  "id": "q024",
+  "model": "gemini-2.5-flash",
+  "query": "What scientific applications has PyWren been used for according to the paper?",
+  "out": "PyWren scientific applications",
+  "ms": 783
+ },
+ "20057984114e51c697b3a7e13157f6de87fdb484b07fd3168c2d468af6f48a92": {
+  "id": "q025",
+  "model": "gemini-2.5-flash",
+  "query": "What cost per kilowatt-hour does the paper report and why do they differ?",
+  "out": "Cost per kilowatt-hour\nCloud computing cost models",
+  "ms": 837
+ },
+ "d22c6a6ad08f62bf3aa178ab7acbdc4b6c6b89a6430983851428c15d60129250": {
+  "id": "q026",
+  "model": "gemini-2.5-flash",
+  "query": "Why is object storage such as S3 inadequate for fine-grained state sharing between serverless functions?",
+  "out": "Object storage serverless functions\nFine-grained state sharing serverless functions",
+  "ms": 1958
+ },
+ "01880bd9403d68bf4b072e6300f83114a41fc3d9b507fe1dfa1262261644658b": {
+  "id": "q027",
+  "model": "gemini-2.5-flash",
+  "query": "Which storage categories does the paper compare in its storage table, and what mean latency does each have?",
+  "out": "Storage categories comparison\nMean latency storage",
+  "ms": 14446
+ },
+ "411d0af358723d2141f0a5d4a4f9891df132c95eeee1e5be503d62f688856ce1": {
+  "id": "q028",
+  "model": "gemini-2.5-flash",
+  "query": "Which specific vpxenc command-line flags does the ExCamera appendix list for its encoding runs?",
+  "out": "vpxenc command-line flags\nExCamera encoding",
+  "ms": 802
+ },
+ "1393ed86a9fd3b7acb70feac80dfd436eb8fb76c3fd6edd597b679e1b18e6c7d": {
+  "id": "q029",
+  "model": "gemini-2.5-flash",
+  "query": "How does MapReduce guarantee the same output despite machines failures?",
+  "out": "MapReduce fault tolerance\nMapReduce consistency",
+  "ms": 1003
+ },
+ "3b4575a9bbdd475a5fcbb535b6b04f8cfb7620b2fd13a5f14dc9bdf6b8ad41f0": {
+  "id": "q030",
+  "model": "gemini-2.5-flash",
+  "query": "Why does the paper argue that pay as you go better describes the cost benefit than CapEx to OpEx?",
+  "out": "Cloud computing cost models\nPay-as-you-go cloud computing",
+  "ms": 1890
+ },
+ "db99c7bb3848a269aa6acef3181402e206805671bf9227281513bbc93c92b5c1": {
+  "id": "q031",
+  "model": "gemini-2.5-flash",
+  "query": "What does the paper say about the two major contributions of ExCamera?",
+  "out": "ExCamera contributions\nExCamera",
+  "ms": 854
+ },
+ "3cc8049e5617147609dc4ae72b26651742300c769e0d9e041bcb3103e4d8ab23": {
+  "id": "q032",
+  "model": "gemini-2.5-flash",
+  "query": "What opportunities does the paper pair with the obstacles of scaling quickly and software licensing?",
+  "out": "Scaling challenges\nSoftware licensing challenges",
+  "ms": 991
+ },
+ "39e7b0ee11bc080ea2a12d3f37aceb2274c4ef5ae18b4abf94149f39bda6c221": {
+  "id": "q033",
+  "model": "gemini-2.5-flash",
+  "query": "software licensing cost example Windows EC2 open source version price comparison",
+  "out": "Windows EC2 licensing cost\nopen source cloud computing pricing",
+  "ms": 1121
+ },
+ "cc210762055b4795a5dff5838109907e5dda5275125eb4767238af1bb3ca3760": {
+  "id": "q034",
+  "model": "gemini-2.5-flash",
+  "query": "What fallacy about porting serverless applications does the paper identify, and which project does it cite as a step toward portability?",
+  "out": "Serverless application portability fallacies\nServerless application portability projects",
+  "ms": 871
+ },
+ "97a4337b6e3f2e4fcc46e4bb5d80ce0e24dc2adf005eca1df22acdccb2b3c47a": {
+  "id": "q035",
+  "model": "gemini-2.5-flash",
+  "query": "cloud functions low-latency applications",
+  "out": "Cloud functions low-latency applications",
+  "ms": 875
+ },
+ "12cb9efd9c11620332d39aeba398ddab0028933f5e0648c12cfc990ef8b60aca": {
+  "id": "q036",
+  "model": "gemini-2.5-flash",
+  "query": "What example of offloading API calls from a mobile app to the backend does the paper give?",
+  "out": "Mobile application offloading API calls\nBackend offloading API calls",
+  "ms": 995
+ },
+ "28fce908676edd62f88a54ded41bf25eabcf1d44088fd05386a6d8c3d18b365f": {
+  "id": "q037",
+  "model": "gemini-2.5-flash",
+  "query": "serverless beyond traditional cloud platforms",
+  "out": "Serverless computing beyond cloud platforms\nServerless computing non-cloud platforms",
+  "ms": 866
+ },
+ "9a262cb7a2cc225dc391e8449d2a484922995040dc86c139c8c90976c28af6f6": {
+  "id": "q038",
+  "model": "gemini-2.5-flash",
+  "query": "Why does the CIDR paper argue that FaaS stymies hardware-accelerated software innovation?",
+  "out": "FaaS hardware acceleration\nCIDR FaaS hardware innovation",
+  "ms": 956
+ },
+ "3d40e237358e111f224a9a5f089a791c795b6dd84d84753e89c128e2314d35b5": {
+  "id": "q039",
+  "model": "gemini-2.5-flash",
+  "query": "What does the CIDR paper mean by fluid code and data placement?",
+  "out": "CIDR fluid code placement\nCIDR fluid data placement",
+  "ms": 1066
+ },
+ "56b0cdbf39805e73b0691c2ed44e776cf12a5d72dc16fad58eb743e3d7794fa2": {
+  "id": "q040",
+  "model": "gemini-2.5-flash",
+  "query": "On which four metrics was ExCamera evaluated and what was the headline result?",
+  "out": "ExCamera evaluation metrics\nExCamera headline result",
+  "ms": 1145
+ },
+ "cf2d5bf53c0086384bf0b9ad01eb5d3cdda80014648745b01132cc1d04dbd4a2": {
+  "id": "q041",
+  "model": "gemini-2.5-flash",
+  "query": "How do counters work in MapReduce",
+  "out": "MapReduce counters",
+  "ms": 790
+ },
+ "a6461b2226d624a0b13f432e8da60630bcda541eed5337c6f84492ebd2cbdd84": {
+  "id": "q042",
+  "model": "gemini-2.5-flash",
+  "query": "How do backup tasks and machine failures affect sort execution time?",
+  "out": "Sort execution time and backup tasks\nSort execution time and machine failures",
+  "ms": 940
+ },
+ "b7d37ce8bc40c759c5cb83859819aafeef889b24d58c46f8b4dfa2c37e046ddc": {
+  "id": "q043",
+  "model": "gemini-2.5-flash",
+  "query": "How does PyWren package and execute a user's Python function on AWS Lambda?",
+  "out": "PyWren AWS Lambda function execution\nPyWren function packaging",
+  "ms": 901
+ },
+ "9f386a16e3cc95cb08e4e1a392b04aea2dcf62ac85a12249dd9fcf11324b5924": {
+  "id": "q044",
+  "model": "gemini-2.5-flash",
+  "query": "The Berkeley view names ExCamera as an application that stretches serverless computing — what speedup does the ExCamera paper itself report?",
+  "out": "ExCamera serverless computing\nExCamera performance speedup",
+  "ms": 1077
+ },
+ "9e177d47133897a07999e306bd6c7db524d9e69b1d0d417ae737fef7d826d41b": {
+  "id": "q045",
+  "model": "gemini-2.5-flash",
+  "query": "Berkeley view CIDR serverless storage problem",
+  "out": "Berkeley view CIDR serverless storage\nBerkeley view CIDR serverless problem",
+  "ms": 1384
+ },
+ "dc9699c94724a9f3b3d2e372211163ea8d72767460c8931653dbfce6364c5b6c": {
+  "id": "q046",
+  "model": "gemini-2.5-flash",
+  "query": "How does MapReduce handle worker failures, and how does PyWren instead delegate that to the cloud provider?",
+  "out": "MapReduce fault tolerance\nPyWren fault tolerance",
+  "ms": 866
+ },
+ "c802a8c06da0f44f8bd431f0617a9bf6969a7cb08987a85583ddd29501a907a8": {
+  "id": "q047",
+  "model": "gemini-2.5-flash",
+  "query": "OpenWhisk architecture serverless platform Berkeley view",
+  "out": "OpenWhisk architecture\nServerless platform Berkeley view",
+  "ms": 1207
+ },
+ "6f6d6e9ed7263d45915e6d2a38d9fac417b3d1bc795ea3a2d1c08196673cb874": {
+  "id": "q048",
+  "model": "gemini-2.5-flash",
+  "query": "What do the documents say about GDPR compliance requirements for cloud providers?",
+  "out": "GDPR compliance cloud providers",
+  "ms": 886
+ },
+ "6e0cb3b3f70ddf25dcb81a69ab9e38c0745f4f8255501045433ff901c8a57c44": {
+  "id": "q049",
+  "model": "gemini-2.5-flash",
+  "query": "clinical trial results",
+  "out": "This question is out of scope for the specified corpus (computer science papers on cloud computing, serverless computing, and distributed systems). It does not relate to any of the topics. Therefore, no relevant search queries can be generated.",
+  "ms": 1139
+ },
+ "57597062ec3734c48c71ceab73b06c6fc3290b3820ff917bd9e23e854aa8075d": {
+  "id": "q050",
+  "model": "gemini-2.5-flash",
+  "query": "What benchmark results for GPU tensor cores are reported in these papers?",
+  "out": "GPU tensor core benchmarks",
+  "ms": 970
+ },
+ "9ae3ca599403c94e54b1a961e70d78c892347b789ea25d20999a6acd6326f095": {
+  "id": "n012",
+  "model": "gemini-2.5-flash",
+  "query": "What is the average cost per execution for an Azure function with 128MB memory",
+  "out": "Azure Functions cost 128MB memory\nAzure Functions average cost per execution",
+  "ms": 941
+ },
+ "fb0d0b3ad708318ba5274848a8bfb02350380194fcef6648e6fcd5c86ad62998": {
+  "id": "n017",
+  "model": "gemini-2.5-flash",
+  "query": "What is the primary appeal of using Google Cloud Run for serverless deployments compared to AWS Lambda?",
+  "out": "Google Cloud Run serverless deployments\nAWS Lambda serverless deployments",
+  "ms": 865
+ },
+ "f0c80111389bf9e5a87cdd5d41372eac7972ea5db9df1d2d5e53fb1af8868bf2": {
+  "id": "n019",
+  "model": "gemini-2.5-flash",
+  "query": "What is the average cold start latency for a Python 3.9 Lambda function with 256MB of memory?",
+  "out": "AWS Lambda cold start latency Python\nAWS Lambda cold start latency memory",
+  "ms": 871
+ },
+ "2340ca358791fb503bce9247f6ed935689a8d3c3f440613ec81a0ff78c951559": {
+  "id": "n022",
+  "model": "gemini-2.5-flash",
+  "query": "data management challenges distributed serverless systems after 2019",
+  "out": "Data management challenges distributed serverless systems\nDistributed serverless systems after 2019",
+  "ms": 826
+ },
+ "c5a7e681a2a8a8cd3cd96929735ad0addea6b5c0b6faca128a6a83d96952841c": {
+  "id": "n024",
+  "model": "gemini-2.5-flash",
+  "query": "How does the choice of programming language affect the autoscaling behavior of serverless applications on AWS",
+  "out": "Serverless autoscaling AWS\nProgramming language serverless performance",
+  "ms": 1756
+ },
+ "e775ff4cfbccafeef3fe3691d862adbe269e1fcb6745a1fcea35ed0db614a7cf": {
+  "id": "n027",
+  "model": "gemini-2.5-flash",
+  "query": "What is the average latency improvement observed when using edge computing for real-time video processing compared to traditional cloud approaches?",
+  "out": "Edge computing real-time video processing latency\nCloud computing real-time video processing latency",
+  "ms": 1111
+ },
+ "27635ead61629fab6252020c831f6b7d587eab66d0a025e774b81496e514f113": {
+  "id": "n028",
+  "model": "gemini-2.5-flash",
+  "query": "What is the average cost per GB for object storage in a hybrid cloud architecture in 2023?",
+  "out": "Hybrid cloud object storage cost\nObject storage cost per GB 2023",
+  "ms": 809
+ },
+ "6101fe9d6949d447e9a7e73719b9180cdfa5096bcee386bbff2a3cb130f60818": {
+  "id": "n029",
+  "model": "gemini-2.5-flash",
+  "query": "How have serverless offerings evolved to support stateful applications more effectively since 2019?",
+  "out": "Serverless stateful applications evolution since 2019\nServerless offerings evolution since 2019",
+  "ms": 987
+ },
+ "5bc9a180b137a8bfc8cd88e44d267560cf9594d7de4b0a316021c5305ef248c2": {
+  "id": "n030",
+  "model": "gemini-2.5-flash",
+  "query": "Serverless functions security challenges post-2020",
+  "out": "Serverless functions security challenges\nServerless computing security challenges post-2020",
+  "ms": 869
+ },
+ "11d7292366811836f335faa9e82da93581b09987a30ecea6a896697f4acbb8fe": {
+  "id": "n033",
+  "model": "gemini-2.5-flash",
+  "query": "What are the core principles behind the OpenStack cloud operating system?",
+  "out": "OpenStack core principles",
+  "ms": 1036
+ },
+ "925ab07ef1aad582d2f1164c401f233f33b83fe2234a9e4dcf4f2c41ebc567e1": {
+  "id": "n038",
+  "model": "gemini-2.5-flash",
+  "query": "multi-cloud security challenges organizations 2024",
+  "out": "Multi-cloud security challenges\nMulti-cloud organizations",
+  "ms": 777
+ },
+ "ea3bfe10b5fb8b01bee746a0734077785f8b64944e560f006df09744ae50442e": {
+  "id": "n041",
+  "model": "gemini-2.5-flash",
+  "query": "How does the Azure Media Services platform compare to ExCamera for video processing latency?",
+  "out": "Azure Media Services video processing latency\nExCamera video processing latency",
+  "ms": 1048
+ },
+ "7952d568202bdb01ba8803705c26132cc5674ed23a357a799bf364a89ec34b8d": {
+  "id": "n042",
+  "model": "gemini-2.5-flash",
+  "query": "Google Cloud Video Intelligence API performance compared to discussed approaches",
+  "out": "Google Cloud Video Intelligence API performance\nVideo analysis approaches performance",
+  "ms": 1027
+ },
+ "b4b29d1fb41e0eea548cbaf8ce14773b65f65bee1baf603fd85f0c14ab37c275": {
+  "id": "n043",
+  "model": "gemini-2.5-flash",
+  "query": "What is the average cost per hour for processing 8K VR video using a serverless architecture today?",
+  "out": "Serverless video processing cost\n8K VR video processing cost",
+  "ms": 818
+ },
+ "0d3e9a8ca162a5ba98b43df5a2e20986485aa1b0d8b64de0e0178b1902ed3992": {
+  "id": "n044",
+  "model": "gemini-2.5-flash",
+  "query": "ExCamera video file processing performance",
+  "out": "ExCamera video file processing performance",
+  "ms": 934
+ },
+ "db11c80ee4ba9eee7007322d307ea05a029a3db98cb0b030e6f3cbd0891163ce": {
+  "id": "n046",
+  "model": "gemini-2.5-flash",
+  "query": "Evolution of state management approaches in serverless functions for video processing after 2019",
+  "out": "Serverless state management video processing after 2019\nServerless functions video processing after 2019",
+  "ms": 826
+ },
+ "2a908f9b381f7f3f525c759642f20ede205707be72bcbaff942fac729e6f3f18": {
+  "id": "n047",
+  "model": "gemini-2.5-flash",
+  "query": "How does the use of Redis for inter-function communication impact the cold start times of AWS Lambda for video processing applications?",
+  "out": "AWS Lambda cold start times video processing\nRedis inter-function communication serverless",
+  "ms": 821
+ },
+ "59011daa3aa389b8bc010b365ffda0cbae0674ba846567f9860ad9e33f34569a": {
+  "id": "n048",
+  "model": "gemini-2.5-flash",
+  "query": "How does the choice of different cloud providers (e.g. Google Cloud Functions versus AWS Lambda) affect the performance of the ExCamera system for large video data sets?",
+  "out": "ExCamera system performance large video data sets\nCloud provider performance serverless computing",
+  "ms": 908
+ },
+ "b33932b6bd78cfe7c6caf826b527f3b2057880ff724491264ae93f27a95021b2": {
+  "id": "n049",
+  "model": "gemini-2.5-flash",
+  "query": "What are the core features of Apache Flink for stream processing compared to MapReduce's batch processing?",
+  "out": "Apache Flink stream processing features\nMapReduce batch processing features",
+  "ms": 803
+ },
+ "d7e92944461259e037d5dad7ef4d593f894400034f41ab1e75b340e3220390a9": {
+  "id": "n053",
+  "model": "gemini-2.5-flash",
+  "query": "What advancements have been made in distributed storage systems to better support serverless function cold starts since 2019?",
+  "out": "Distributed storage systems cold start\nServerless function cold start",
+  "ms": 998
+ },
+ "0e1ac6e52a42ba10dea8340270a64260fd8d11231159f57751b5e72b0eafd5b3": {
+  "id": "n058",
+  "model": "gemini-2.5-flash",
+  "query": "Vercel Edge Functions platform serverless applications",
+  "out": "Vercel Edge Functions\nserverless applications",
+  "ms": 922
+ },
+ "4002887f8e0ef97e20580e7e66bbf84779860b14f5332e469b36ac4c20af462e": {
+  "id": "n059",
+  "model": "gemini-2.5-flash",
+  "query": "What is the typical network latency between AWS Lambda and Google Cloud Storage in a multi-cloud serverless application?",
+  "out": "AWS Lambda network latency\nGoogle Cloud Storage network latency",
+  "ms": 922
+ },
+ "0a7a7d74ac9666d95622210934097d08cdf9c48362a6aacf2721f006f08a058d": {
+  "id": "n066",
+  "model": "gemini-2.5-flash",
+  "query": "Red Hat OpenShift serverless application development functions",
+  "out": "Red Hat OpenShift serverless application development\nServerless functions",
+  "ms": 917
+ },
+ "6a52db0c117b99ff862f6d2c6b072848c351232af0b4d384f70b17b37a2d96e1": {
+  "id": "n075",
+  "model": "gemini-2.5-flash",
+  "query": "What is the typical cold start time for a Rust-based serverless function on AWS Lambda in 2023?",
+  "out": "Rust serverless cold start AWS Lambda\nServerless cold start AWS Lambda 2023",
+  "ms": 815
+ },
+ "a0387a19c5933fe5e912da66117346d553336f3f2b3f85275fcbb6cfa04fbf7b": {
+  "id": "n076",
+  "model": "gemini-2.5-flash",
+  "query": "What is the average cost per GB-month for data storage in AWS S3 Glacier Deep Archive in 2024",
+  "out": "AWS S3 Glacier Deep Archive pricing\nAWS S3 Glacier Deep Archive cost per GB-month",
+  "ms": 892
+ },
+ "5a1f1655e10bec92283286e3465ef6a54dc3c550bdefb450ba5fa022a9387941": {
+  "id": "n077",
+  "model": "gemini-2.5-flash",
+  "query": "How have serverless platforms improved support for long-running batch processing jobs since 2020?",
+  "out": "Serverless platforms long-running batch processing jobs since 2020\nServerless computing batch processing improvements since 2020",
+  "ms": 914
+ },
+ "21ac506702ba792f483cf0c2438caa0275c16e1013d993ead375a4eb557ff6f5": {
+  "id": "n078",
+  "model": "gemini-2.5-flash",
+  "query": "Energy consumption optimization in serverless functions post-2021",
+  "out": "Energy consumption optimization serverless functions\nServerless computing energy efficiency post-2021",
+  "ms": 1095
+ },
+ "de26a87014a8a081d004c94e29708ec0daa539c7cbdfa9b0650f3626dcddb279": {
+  "id": "n083",
+  "model": "gemini-2.5-flash",
+  "query": "What is the typical memory footprint of a Java-based serverless function compared to a Node.js function?",
+  "out": "Java serverless function memory footprint\nNode.js serverless function memory footprint",
+  "ms": 848
+ },
+ "da57850aa0bdef1987c9f16763911f84cbb4f3450310dd9a2b2de22eb4ffbb0d": {
+  "id": "n084",
+  "model": "gemini-2.5-flash",
+  "query": "What is the average network latency for communication between functions in different cloud regions",
+  "out": "Serverless function inter-region latency\nCloud region network latency",
+  "ms": 786
+ },
+ "c8cf613008946a985f4859664013f3d26729a30e1af28f7ed87fc76136a27fa6": {
+  "id": "n085",
+  "model": "gemini-2.5-flash",
+  "query": "What new serverless orchestration patterns have emerged since 2020 to manage complex workflows?",
+  "out": "Serverless orchestration patterns since 2020\nServerless workflow management since 2020",
+  "ms": 1137
+ },
+ "2cc3e7c18c00088800ba996a7a0140a19dfacebf08669b43eca3ce588e74e4b3": {
+  "id": "n086",
+  "model": "gemini-2.5-flash",
+  "query": "How have data storage policies for serverless applications evolved after 2021",
+  "out": "Data storage policies serverless computing 2021\nServerless computing data storage evolution",
+  "ms": 991
+ },
+ "a352eb3153fd45ee66cf0bb1cf23387dbd4ba2668c06f9f826b01fc7847f036a": {
+  "id": "n089",
+  "model": "gemini-2.5-flash",
+  "query": "What is the primary function of the Cloud Native Computing Foundation?",
+  "out": "Cloud Native Computing Foundation primary function",
+  "ms": 919
+ },
+ "a77997ba45ec119fbc1b67e4940459b926f52f7c047e8b34dd36e10db1eeb13e": {
+  "id": "n090",
+  "model": "gemini-2.5-flash",
+  "query": "Open Container Initiative operating principle",
+  "out": "Open Container Initiative operating principle",
+  "ms": 890
+ },
+ "84dcaee6571daedb0ab2ab8c8453cc7a95c352ae0641c65f1cbbd5810246915e": {
+  "id": "n093",
+  "model": "gemini-2.5-flash",
+  "query": "What new trends in serverless cold start optimization have emerged since 2021?",
+  "out": "Serverless cold start optimization trends since 2021",
+  "ms": 870
+ },
+ "25c0a21b09c47e961cbce95e4bca99c62f6d2ed272d91f8fa1298677d80ed0e8": {
+  "id": "n100",
+  "model": "gemini-2.5-flash",
+  "query": "What is the average cost per gigabyte-hour for data storage in serverless databases in 2023",
+  "out": "Serverless database storage cost\nServerless database pricing 2023",
+  "ms": 782
+ },
+ "3a181c4ddefa8d0e3c242b9641547f3741be5fe00d769f7225deee225943a259": {
+  "id": "n107",
+  "model": "gemini-2.5-flash",
+  "query": "What is the typical energy consumption (in kWh) for a MapReduce job processing 1 terabyte of data?",
+  "out": "MapReduce energy consumption\nMapReduce terabyte data processing",
+  "ms": 874
+ },
+ "dace476a2c199ba7deaa70ee1bc683cdea5599ed0cb52f1e6b1137f2a59abd49": {
+  "id": "n109",
+  "model": "gemini-2.5-flash",
+  "query": "How have MapReduce implementations adapted to utilize containerization technologies like Docker since 2019?",
+  "out": "MapReduce containerization\nMapReduce Docker",
+  "ms": 852
+ },
+ "0680ebf43b94e11b1510b5075d011031d2fc72d691019b3eca1c319612174838": {
+  "id": "n110",
+  "model": "gemini-2.5-flash",
+  "query": "MapReduce non-relational databases input output",
+  "out": "MapReduce non-relational databases\nMapReduce input output",
+  "ms": 794
+ },
+ "b5b939d9fdf34452f5a11223a60550bbb1762a14b55c512a89a7f89783b62dd7": {
+  "id": "n111",
+  "model": "gemini-2.5-flash",
+  "query": "How does the choice of programming language for MapReduce functions influence the overall performance and resource utilization in a hybrid cloud environment?",
+  "out": "MapReduce programming language performance\nMapReduce hybrid cloud resource utilization",
+  "ms": 793
+ }
+}

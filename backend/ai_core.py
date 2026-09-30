@@ -20,6 +20,7 @@ from rank_bm25 import BM25Okapi
 from sentence_transformers import CrossEncoder
 
 import corpus_glossary
+import doc_routing
 import gemini_rest
 import metrics
 from genai_compat import genai  # deprecated SDK, τεκμηριωμένο: βλ. genai_compat.py
@@ -225,6 +226,15 @@ MIN_RERANK_SCORE = float(os.getenv("MIN_RERANK_SCORE", "-2.6"))
 # Αν μεγαλώσει το golden set, ΞΑΝΑΜΕΤΡΑ.
 ENABLE_CORRECTIVE = os.getenv("ENABLE_CORRECTIVE", "1") not in ("0", "false", "False")
 CORRECTIVE_MIN_SCORE = float(os.getenv("CORRECTIVE_MIN_SCORE", "-3.8"))
+
+# Ερωτήσεις ΔΥΟ ΕΓΓΡΑΦΩΝ (Φάση 2, 30/9/2026 — βλ. doc_routing.py): αν η ερώτηση ΟΝΟΜΑΖΕΙ ≥ 2
+# έγγραφα, η ίδια ερώτηση ψάχνεται και μέσα σε κάθε έγγραφο και προστίθενται έως PERDOC_EXTRA
+# σελίδες. 0 κλήσεις Gemini. ΜΕΤΡΗΜΕΝΟ στον πραγματικό κώδικα (scoreboard.py --label perdoc +
+# scoreboard_answers.py): 29 ερωτήσεις δύο εγγράφων -> σωστά μισά απαντήσεων 33 -> 44/58
+# (CI +5..+17), «και τα δύο σωστά» 7 -> 17, «χωρίς στήριξη» 4 -> 2· στα υπόλοιπα 7 σετ ΜΗΔΕΝ
+# αλλαγές σελίδων, φύλακας ίδιος παντού. "0" -> η προηγούμενη συμπεριφορά.
+ENABLE_PERDOC = os.getenv("ENABLE_PERDOC", "1") not in ("0", "false", "False")
+PERDOC_EXTRA = int(os.getenv("PERDOC_EXTRA", "4"))
 
 # Πόσα candidates (από το RRF) περνάνε στον reranker — ο ΑΚΡΙΒΟΣ βήμα στη CPU.
 RERANK_CANDIDATES = int(os.getenv("RERANK_CANDIDATES", "15"))
@@ -480,6 +490,7 @@ def _load_descriptor_files():
 
 
 _CORPUS_FILES = _load_descriptor_files()
+_CORPUS_NAMES = doc_routing.load_names(os.path.join(os.path.dirname(__file__), "corpus_names.json"))
 
 
 async def optimize_query(query: str, domain: str | None = None, terms: str | None = None):
@@ -1040,6 +1051,47 @@ async def _corrective_retry(query: str, first_best: float, allowed_ids: list, id
     return sorted_final
 
 
+async def _add_perdoc_pages(raw_query, query, pages, allowed_ids, idx, dm, user_id):
+    """Ερώτηση που ΟΝΟΜΑΖΕΙ ≥ 2 έγγραφα (doc_routing): η ΙΔΙΑ ερώτηση ψάχνεται και μέσα σε κάθε
+    έγγραφο — ίδια dense + BM25 + RRF + κριτής, άλλη λίστα επιτρεπτών — και προστίθενται έως
+    PERDOC_EXTRA σελίδες που δεν έχει ήδη η βάση. Μέσα σε ένα έγγραφο ανταγωνίζονται μόνο οι δικές
+    του σελίδες, άρα το ένα θέμα δεν πιάνει τις θέσεις του άλλου (probe_route_perdoc: 30 -> 42/58).
+    Ίδιο ερώτημα -> το διάνυσμά του είναι ήδη στο cache· κόστος 2 BM25 + 2 rerank, 0 κλήσεις."""
+    allowed = set(allowed_ids)
+    by_doc = {}
+    # Σειρά του BM25 index (όχι της Chroma): ίδια σειρά -> ίδιες ισοβαθμίες με τη μέτρηση.
+    for cid, meta in zip(idx["ids"], idx["metas"]):
+        if cid in allowed:
+            by_doc.setdefault(meta.get("file_name"), []).append(cid)
+    docs = doc_routing.named_docs(f"{raw_query} || {query}", _CORPUS_NAMES, by_doc)
+    if len(docs) < 2:
+        return pages
+    metrics.inc("rag_perdoc_total")
+    legs = []
+    for doc in docs:
+        ids = by_doc[doc]
+        dense_ids = await asyncio.to_thread(
+            _dense_exact_ids, dm, query, ids, min(DENSE_CANDIDATES, len(ids))
+        )
+        sparse_ids = await asyncio.to_thread(_bm25_sparse_ids, idx, query, ids, DENSE_CANDIDATES)
+        rrf_sorted = _rrf_fuse(
+            dense_ids, sparse_ids, idx["ids"], idx["texts"], idx["metas"],
+            k=60, top_n=RERANK_CANDIDATES, pos=idx["pos"],
+        )
+        cross_scores = await asyncio.to_thread(
+            reranker.predict, [[query, it[1]] for it in rrf_sorted], batch_size=RERANK_BATCH_SIZE
+        )
+        ranked = sorted(
+            zip(cross_scores, [it[1] for it in rrf_sorted], [it[2] for it in rrf_sorted]),
+            key=lambda x: x[0], reverse=True,
+        )
+        legs.append(
+            await asyncio.to_thread(_expand_to_pages, ranked[:EXPAND_INPUT], MAX_PAGES, user_id)
+        )
+    logger.info(f"---> Ανά έγγραφο: {docs}")
+    return pages + doc_routing.extra_pages(pages, legs, PERDOC_EXTRA)
+
+
 async def search_documents(
     raw_query: str, target_filenames: list | None = None, user_id: int | None = None
 ):
@@ -1127,6 +1179,9 @@ async def search_documents(
         zip(cross_scores, [item[1] for item in rrf_sorted], [item[2] for item in rrf_sorted])
     )
     sorted_final = sorted(final_combined, key=lambda x: x[0], reverse=True)
+    # Η αναζήτηση ανά έγγραφο ΜΟΝΟ αν πέρασε το 1ο πέρασμα: ο φύλακας κρίνει την ερώτηση όπως
+    # σήμερα, άρα ό,τι κόβεται μένει κομμένο — καμία νέα διαρροή.
+    first_pass_ok = sorted_final[0][0] >= MIN_RERANK_SCORE
 
     # --- Relevance gate (anti-hallucination) — κατώφλι/σκεπτικό: MIN_RERANK_SCORE ---
     if sorted_final[0][0] < MIN_RERANK_SCORE:
@@ -1144,9 +1199,12 @@ async def search_documents(
     # Parent-document (page-level) expansion: επιστρέφουμε ΟΛΟΚΛΗΡΕΣ ΣΕΛΙΔΕΣ
     # (όχι μεμονωμένα chunks) από τα top reranked chunks -> καλύτερη πληρότητα
     # σε ερωτήσεις τύπου "λίστα όλων των X" (π.χ. όλα τα εμπόδια του cloud).
-    return await asyncio.to_thread(
+    pages = await asyncio.to_thread(
         _expand_to_pages, sorted_final[:EXPAND_INPUT], MAX_PAGES, user_id
     )
+    if ENABLE_PERDOC and first_pass_ok and _CORPUS_NAMES:
+        pages = await _add_perdoc_pages(raw_query, query, pages, allowed_ids, idx, dm, user_id)
+    return pages
 
 
 # Δεικτικό + ουσιαστικό οντότητας. Το ουσιαστικό είναι ΑΠΑΡΑΙΤΗΤΟ: σκέτο

@@ -1,0 +1,12 @@
+{
+  "_why": "Ονόματα ανά έγγραφο για το doc_routing.py (ερωτήσεις δύο εγγράφων). ΑΚΡΙΒΩΣ η λίστα που μετρήθηκε (evaluation/scoreboard_answers.ALIASES, probe_route_names.py / probe_route_perdoc.py) — το tests/test_doc_routing.py σκάει αν αποκλίνουν. Χωριστό αρχείο από το corpus_descriptor.json: το build_corpus_descriptor.py ξαναγράφει εκείνο μόνο με domain/terms.",
+  "names": {
+    "1702.04024.pdf": ["pywren"],
+    "1706.03178.pdf": ["baldini"],
+    "1812.03651.pdf": ["cidr", "hellerstein", "one step forward"],
+    "1902.03383v1.pdf": ["view on serverless", "berkeley view (2019)", "jonas", "cloud programming simplified"],
+    "EECS-2009-28.pdf": ["above the clouds", "view of cloud computing"],
+    "excamera-nsdi17.pdf": ["excamera"],
+    "mapreduce-osdi04.pdf": ["mapreduce"]
+  }
+}
