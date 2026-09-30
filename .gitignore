@@ -26,3 +26,9 @@ AGENTS.md
 
 # PDF δοκιμών (απομονωμένα stores των evaluation scripts) — αντίγραφα papers, ποτέ commit
 backend/evaluation/test_papers/
+
+# Φάση 4: σελίδες papers ως εικόνες (probe_figures_inventory) — αντίγραφα papers, ποτέ commit
+backend/evaluation/runs/figures_png/
+
+# Φάση 3.2α: ευρετήριο του LlamaIndex (αντίγραφα papers) — χτίζεται από το compare_llamaindex.py
+backend/evaluation/runs/compare/llamaindex_store/

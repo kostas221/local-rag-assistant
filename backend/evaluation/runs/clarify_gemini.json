@@ -1,0 +1,26 @@
+{
+ "8a4828c2f559f1e38e1d27598be3f73b51e433ac19e0b60cf7c520ce397dfa95": {
+  "tail": "eneralize one. Output ONLY a concise English search query with the key terms. No quotes, no extra text.\n\nUser question: Πώς εγγυάται εκείνο το σύστημα το ίδιο αποτέλεσμα παρά τις αστοχίες μηχανημάτων;",
+  "out": "How does that system guarantee the same output despite machine failures?"
+ },
+ "64794e7ad32f957b3694eccb3bed01b78a53d717758e09fe2c3337bfb869678d": {
+  "tail": "ld, return it unchanged.\n\nOutput ONLY the rewritten query. No quotes, no extra text.\n\nOriginal query: On which four metrics was that system evaluated and what was the headline result?\nRewritten query:",
+  "out": "System evaluation metrics, key performance indicators, headline results"
+ },
+ "b5554c2f95d092c6894e19be9bcffa249740b4b057e3224b54db579b248d52af": {
+  "tail": " - never drop or generalize one. Output ONLY a concise English search query with the key terms. No quotes, no extra text.\n\nUser question: Πώς λειτουργεί ο μηχανισμός των counters σε εκείνο το σύστημα;",
+  "out": "How counters work in that system"
+ },
+ "aedf1050d5be07dbedf0df28456bb280d7605cc74c1568bf356de4044fc516f5": {
+  "tail": "in the question - never drop or generalize one. Output ONLY a concise English search query with the key terms. No quotes, no extra text.\n\nUser question: Επιστημονικές εφαρμογές εκείνου του συστήματος;",
+  "out": "Scientific applications of that system"
+ },
+ "bdcb0b152051d5d709370461f623cd84fead7c6f31c20365be9f171972dfc54b": {
+  "tail": "p or generalize one. Output ONLY a concise English search query with the key terms. No quotes, no extra text.\n\nUser question: Πώς αξιολογήθηκε εκείνο το σύστημα και ποιο ήταν το βασικό του αποτέλεσμα;",
+  "out": "How was that system evaluated and what was its key output"
+ },
+ "f6c257f6df3a285b98bbec568df78ef3eaf2091f9e53456f6073537b6479ac92": {
+  "tail": "ld, return it unchanged.\n\nOutput ONLY the rewritten query. No quotes, no extra text.\n\nOriginal query: What four factors were used to assess that system, and what was the main finding?\nRewritten query:",
+  "out": "Evaluation criteria, performance metrics, key findings, primary conclusions"
+ }
+}

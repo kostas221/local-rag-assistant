@@ -1,0 +1,819 @@
+[
+ {
+  "paper": "1702.04024.pdf",
+  "page": 3,
+  "kind": "figure",
+  "no": 1,
+  "caption": "Figure 1: System architecture for stateless functions",
+  "line_in_block": 0,
+  "images_on_page": 1,
+  "vector_paths_on_page": 28,
+  "refs": [
+   "While other proposals [4] have looked at imple- menting data processing systems on serverless infrastruc- ture, we propose a simple API that is tightly integrated with existing libraries and also study performance trade- offs of this approach by using our prototype implementa- tion on a number of workloads. 3.1 Systems Components The main components necessary for executing stateless functions include a low overhead execution runtime, a fast scheduler and high performance remote storage as shown "
+  ],
+  "n_refs": 1,
+  "png": "1702.04024_p03.png"
+ },
+ {
+  "paper": "1702.04024.pdf",
+  "page": 4,
+  "kind": "figure",
+  "no": 2,
+  "caption": "Figure 2: Running a matrix mul- tiplication benchmark inside each worker, we see a linear scalability of FLOPs across 3000 workers.",
+  "line_in_block": 0,
+  "images_on_page": 1,
+  "vector_paths_on_page": 454,
+  "refs": [
+   "Microbenchmarks: Using PyWren we ran a number of benchmarks(Figures 2,3,4) to determine the impact of solely using remote storage for IO, and how this scales with worker count."
+  ],
+  "n_refs": 1,
+  "png": "1702.04024_p04.png"
+ },
+ {
+  "paper": "1702.04024.pdf",
+  "page": 4,
+  "kind": "figure",
+  "no": 3,
+  "caption": "Figure 3: Remote storage on S3 lin- early scales with each worker get- ting around 30 MB/s bandwidth (in- set histogram).",
+  "line_in_block": 0,
+  "images_on_page": 1,
+  "vector_paths_on_page": 454,
+  "refs": [
+   "Microbenchmarks: Using PyWren we ran a number of benchmarks(Figures 2,3,4) to determine the impact of solely using remote storage for IO, and how this scales with worker count."
+  ],
+  "n_refs": 1,
+  "png": "1702.04024_p04.png"
+ },
+ {
+  "paper": "1702.04024.pdf",
+  "page": 4,
+  "kind": "figure",
+  "no": 4,
+  "caption": "Figure 4: Remote key-value opera- tions to Redis scales up to 1000 work- ers. Each worker gets around 700 synchronous transactions/sec.",
+  "line_in_block": 0,
+  "images_on_page": 1,
+  "vector_paths_on_page": 454,
+  "refs": [
+   "Microbenchmarks: Using PyWren we ran a number of benchmarks(Figures 2,3,4) to determine the impact of solely using remote storage for IO, and how this scales with worker count."
+  ],
+  "n_refs": 1,
+  "png": "1702.04024_p04.png"
+ },
+ {
+  "paper": "1702.04024.pdf",
+  "page": 4,
+  "kind": "figure",
+  "no": 5,
+  "caption": "Figure 5: Prorated cost and performance for running 1TB sort benchmark while varying the number of Lambda work- ers and Redis shards.",
+  "line_in_block": 1,
+  "images_on_page": 1,
+  "vector_paths_on_page": 454,
+  "refs": [
+   "Interestingly, adding more resources does not necessarily increase total cost due to the reduction in latency with scale (Figure 5).4 Supporting a larger sort, e.g., 100TB , does become quite challeng- 4Lambda bills in 100ms increments."
+  ],
+  "n_refs": 1,
+  "png": "1702.04024_p04.png"
+ },
+ {
+  "paper": "1702.04024.pdf",
+  "page": 4,
+  "kind": "figure",
+  "no": 6,
+  "caption": "Figure 6: Performance breakdown for sorting 1TB data by how task time is spent on average.",
+  "line_in_block": 0,
+  "images_on_page": 1,
+  "vector_paths_on_page": 454,
+  "refs": [
+   "Figure 6 shows the end-to-end performance with varying numbers of concurrent Lambda workers and Redis shards, with breakdown of task time."
+  ],
+  "n_refs": 1,
+  "png": "1702.04024_p04.png"
+ },
+ {
+  "paper": "1702.04024.pdf",
+  "page": 3,
+  "kind": "table",
+  "no": 1,
+  "caption": "Table 1: Comparison of single-machine write bandwidth to instance local SSD and remote storage in Amazon EC2. Remote storage is faster than single SSD on the standard c3.8xlarge instance and the storage-optimized i2.8xlarge instance.",
+  "line_in_block": 0,
+  "images_on_page": 1,
+  "vector_paths_on_page": 28,
+  "refs": [
+   "Our re- sults, in Table 1, show that currently that writing to re- mote storage is faster than a single SSD but using mul- tiple SSDs can yield better performance.",
+   "Assuming that 16 such Lambdas are as powerful as a single server, we ﬁnd that the performance from Lambda matches the S3 performance shown in Table 1."
+  ],
+  "n_refs": 2,
+  "png": ""
+ },
+ {
+  "paper": "1702.04024.pdf",
+  "page": 5,
+  "kind": "table",
+  "no": 2,
+  "caption": "Table 2: Time taken for featurization and classiﬁcation",
+  "line_in_block": 0,
+  "images_on_page": 0,
+  "vector_paths_on_page": 9,
+  "refs": [],
+  "n_refs": 0,
+  "png": ""
+ },
+ {
+  "paper": "1706.03178.pdf",
+  "page": 2,
+  "kind": "figure",
+  "no": 1,
+  "caption": "Fig. 1 Popularity of the term “serverless” as reported by Google Trends",
+  "line_in_block": 0,
+  "images_on_page": 1,
+  "vector_paths_on_page": 0,
+  "refs": [
+   "Figure 1 below shows the increasing popularity of the “serverless” search term over the last ﬁve years as reported by Google Trends."
+  ],
+  "n_refs": 1,
+  "png": "1706.03178_p02.png"
+ },
+ {
+  "paper": "1706.03178.pdf",
+  "page": 3,
+  "kind": "figure",
+  "no": 2,
+  "caption": "Fig. 2 Developer control and Serverless computing",
+  "line_in_block": 0,
+  "images_on_page": 0,
+  "vector_paths_on_page": 7,
+  "refs": [
+   "One way to explain serverless is to consider the varying levels of developer control over the cloud in- frastructure, as illustrated in Figure 2.",
+   "For this chapter, we will focus on the space in the middle of Figure 2."
+  ],
+  "n_refs": 2,
+  "png": "1706.03178_p03.png"
+ },
+ {
+  "paper": "1706.03178.pdf",
+  "page": 5,
+  "kind": "figure",
+  "no": 3,
+  "caption": "Fig. 3 Serverless platform architecture",
+  "line_in_block": 0,
+  "images_on_page": 0,
+  "vector_paths_on_page": 38,
+  "refs": [
+   "The core capability of a serverless platform is that of an event processing system, as depicted in Figure 3.",
+   "Compared to the generic architectural diagram in Figure 3, we can see there are additional components handling important requirements such as security, log- ging, and monitoring."
+  ],
+  "n_refs": 2,
+  "png": "1706.03178_p05.png"
+ },
+ {
+  "paper": "1706.03178.pdf",
+  "page": 7,
+  "kind": "figure",
+  "no": 4,
+  "caption": "Fig. 4 IBM OpenWhisk architecture",
+  "line_in_block": 0,
+  "images_on_page": 0,
+  "vector_paths_on_page": 54,
+  "refs": [],
+  "n_refs": 0,
+  "png": "1706.03178_p07.png"
+ },
+ {
+  "paper": "1706.03178.pdf",
+  "page": 11,
+  "kind": "figure",
+  "no": 5,
+  "caption": "Fig. 5 Image processing",
+  "line_in_block": 0,
+  "images_on_page": 0,
+  "vector_paths_on_page": 13,
+  "refs": [
+   "The ﬂow is depicted in Figure 5."
+  ],
+  "n_refs": 1,
+  "png": "1706.03178_p11.png"
+ },
+ {
+  "paper": "1706.03178.pdf",
+  "page": 12,
+  "kind": "figure",
+  "no": 6,
+  "caption": "Fig. 6 Ofﬂoading API calls and glue logic from mobile app to backend",
+  "line_in_block": 0,
+  "images_on_page": 0,
+  "vector_paths_on_page": 21,
+  "refs": [
+   "The glue code to invoke these APIs can be written in a short serverless function, as illustrated by the Python function in Figure 6."
+  ],
+  "n_refs": 1,
+  "png": "1706.03178_p12.png"
+ },
+ {
+  "paper": "1706.03178.pdf",
+  "page": 13,
+  "kind": "figure",
+  "no": 7,
+  "caption": "Fig. 7 Reducing the number of API calls required for a mobile client",
+  "line_in_block": 0,
+  "images_on_page": 3,
+  "vector_paths_on_page": 41,
+  "refs": [
+   "Figure 7 illustrates an alternative approach where three functions implement the aforementioned ﬂow to allow authenticated backups in an Open Stack instance."
+  ],
+  "n_refs": 1,
+  "png": "1706.03178_p13.png"
+ },
+ {
+  "paper": "1706.03178.pdf",
+  "page": 13,
+  "kind": "figure",
+  "no": 8,
+  "caption": "Fig. 8 Batched invocation for issue tracking",
+  "line_in_block": 0,
+  "images_on_page": 3,
+  "vector_paths_on_page": 41,
+  "refs": [],
+  "n_refs": 0,
+  "png": "1706.03178_p13.png"
+ },
+ {
+  "paper": "1706.03178.pdf",
+  "page": 16,
+  "kind": "figure",
+  "no": 9,
+  "caption": "Fig. 9 The ﬁgure is showing relation between time-to-live (x-axis) and ease-of-scaling (y-axis). Server-aware compute (bare metal, VMs, IaaS) has long time to live and take longer to scale (time to provision new resources); server-less compute (FaaS, MBaaS, PaaS, SaaS) is optimized to work on multiple servers and hide server details.",
+  "line_in_block": 0,
+  "images_on_page": 1,
+  "vector_paths_on_page": 0,
+  "refs": [
+   "Serverless Computing: Current Trends and Open Problems 17 As serverless is gaining popularity the boundaries between different types of ”as- a-Service” may be disappearing (see Figure 9)."
+  ],
+  "n_refs": 1,
+  "png": "1706.03178_p16.png"
+ },
+ {
+  "paper": "1812.03651.pdf",
+  "page": 2,
+  "kind": "figure",
+  "no": 1,
+  "caption": "Figure 1: Google Trends for “Serverless” and “Map Reduce” from 2004 to time of publication.",
+  "line_in_block": 0,
+  "images_on_page": 1,
+  "vector_paths_on_page": 1,
+  "refs": [
+   "Google search trends show that queries for the term “serverless” recently matched the historic peak of popularity of the phrase “Map Reduce” or “MapReduce” (Figure 1)."
+  ],
+  "n_refs": 1,
+  "png": "1812.03651_p02.png"
+ },
+ {
+  "paper": "1812.03651.pdf",
+  "page": 5,
+  "kind": "table",
+  "no": 1,
+  "caption": "Table 1: Latencies. We compare the latency of “communicating” 1KB in various ways. To model pure functional event-driven communication, we show the cost of invoking a no-op Lambda function on a 1KB argument, averaged over 1,000 calls. We then show the cost of two explicit 1KB I/Os (write+read) from Python Lambda function and an EC2 instance to S3 and DynamoDB, averaged across 5k trials. Finally we",
+  "line_in_block": 26,
+  "images_on_page": 0,
+  "vector_paths_on_page": 37,
+  "refs": [
+   "This would have at best modest effects on our results in Table 1; it is still orders of magnitude slower than traditional network messaging. took 16.7 seconds."
+  ],
+  "n_refs": 1,
+  "png": ""
+ },
+ {
+  "paper": "1902.03383v1.pdf",
+  "page": 6,
+  "kind": "figure",
+  "no": 1,
+  "caption": "Figure 1: Architecture of the serverless cloud. The serverless layer sits between applications and the base cloud platform, simplifying cloud programming. Cloud functions (i.e., FaaS) provide general compute and are complemented by an ecosystem of specialized Backend as a Service (BaaS) oﬀerings such as object storage, databases, or messaging. Speciﬁcally, a serverless application on AWS might use",
+  "line_in_block": 0,
+  "images_on_page": 0,
+  "vector_paths_on_page": 65,
+  "refs": [
+   "Characteristic AWS Serverless Cloud AWS Serverful Cloud PROGRAMMER When the program is run On event selected by Cloud user Continuously until explicitly stopped Programming Language JavaScript, Python, Java, Go, C#, etc.4 Any Program State Kept in storage (stateless) Anywhere (stateful or stateless) Maximum Memory Size 0.125 - 3 GiB (Cloud user selects) 0.5 - 1952 GiB (Cloud user selects) Maximum Local Storage 0.5 GiB 0 - 3600 GiB (Cloud user selects) Maximum Run Time 900 seconds None Minimum Ac"
+  ],
+  "n_refs": 1,
+  "png": "1902.03383v1_p06.png"
+ },
+ {
+  "paper": "1902.03383v1.pdf",
+  "page": 14,
+  "kind": "figure",
+  "no": 2,
+  "caption": "Figure 2: Three common communication patterns for distributed applications: broadcast, aggre- gation, and shuﬄe. (a) Shows these communication patterns for VM instances where each instance runs two functions/tasks. (b) Shows the same communication patterns for cloud function instances. Note the signiﬁcantly lower number of remote messages for the VM-based solutions. This is because VM instances oﬀ",
+  "line_in_block": 0,
+  "images_on_page": 0,
+  "vector_paths_on_page": 530,
+  "refs": [
+   "Figure 2 shows the communication patterns for these primitives for both VM-based and function-based solutions. 13A shared ﬁle system is integrated on Azure Functions, but not on other cloud functions platforms. 14File system capacity scales automatically on Azure, AWS, IBM, but not on Google.",
+   "This is particularly powerful for customer-agnostic tasks such as booting a VM with popular operating system and set of libraries, as a “warm pool” of such instances can be shared between tenants [13]. 17 4.3 Networking challenges As explained in Section 3 and as illustrated in Figure 2, cloud functions can impose signiﬁcant overhead on popular communication primitives such as broadcast, aggregation, and shuﬄe.",
+   "A more serious limitation is that existing cloud functions platforms cannot eﬃciently implement the broadcast communication pattern (Figure 2), employed by several popular algorithms such as QR decompo- sition.",
+   "Figure 2(a) illustrates this example for N = K = 2, by assuming each node has 2 cores, and each function uses a single core, and hence can run two functions. 31 8.4 Cirrus: Machine learning training Machine learning researchers have traditionally used clusters of VMs for diﬀerent tasks in ML workﬂows such as preprocessing, model training, and hyperparameter tuning.",
+   "As noted in the previous section and as Figure 2 illustrates, using cloud functions incurs a much higher communication overhead versus large VM instances."
+  ],
+  "n_refs": 5,
+  "png": "1902.03383v1_p14.png"
+ },
+ {
+  "paper": "1902.03383v1.pdf",
+  "page": 30,
+  "kind": "figure",
+  "no": 3,
+  "caption": "Figure 3: (a) Shuﬄe operation with M mappers and N receivers. Each transfer happens via external storage, which is shown by a large blue rectangle. The data corresponding to each transfer is shown by small squares. (b) Multi-stage shuﬄe with S stages.",
+  "line_in_block": 0,
+  "images_on_page": 0,
+  "vector_paths_on_page": 480,
+  "refs": [
+   "Fortunately, dividing the shuﬄe in stages (as in Figure 3(b)) reduces the needed amount of high performance storage signiﬁcantly."
+  ],
+  "n_refs": 1,
+  "png": "1902.03383v1_p30.png"
+ },
+ {
+  "paper": "1902.03383v1.pdf",
+  "page": 31,
+  "kind": "figure",
+  "no": 4,
+  "caption": "Figure 4: Theoretical proﬁle of task parallelism and working set size over time in a distributed Cholesky decomposition.",
+  "line_in_block": 0,
+  "images_on_page": 0,
+  "vector_paths_on_page": 115,
+  "refs": [
+   "Figure 4 shows the working set and the maximum degree of parallelism for Cholesky decomposition, one of the most popular methods for solving linear equation on a large matrix."
+  ],
+  "n_refs": 1,
+  "png": "1902.03383v1_p31.png"
+ },
+ {
+  "paper": "1902.03383v1.pdf",
+  "page": 4,
+  "kind": "table",
+  "no": 1,
+  "caption": "Table 1: Eight issues to be addressed in setting up an environment for cloud users. Some issues take many steps. For example, autoscaling requires determining the need to scale; picking the type and number of servers to use; requesting the servers; waiting for them to come online; conﬁguring them with the application; conﬁrming that no errors occurred; instrumenting them with monitoring tools; and",
+  "line_in_block": 0,
+  "images_on_page": 0,
+  "vector_paths_on_page": 0,
+  "refs": [
+   "Table 1 lists the issues that must be managed to operate an environment in the cloud."
+  ],
+  "n_refs": 1,
+  "png": ""
+ },
+ {
+  "paper": "1902.03383v1.pdf",
+  "page": 5,
+  "kind": "table",
+  "no": 2,
+  "caption": "Table 2: Characteristics of serverless cloud functions vs. serverful cloud VMs divided into program- ming and system administration categories. Speciﬁcations and prices correspond to AWS Lambda and to on-demand AWS EC2 instances.",
+  "line_in_block": 0,
+  "images_on_page": 0,
+  "vector_paths_on_page": 0,
+  "refs": [
+   "Table 2 summarizes the diﬀerences between serverless and the traditional approach, which we’ll call serverful cloud computing in this paper.",
+   "Given the existing resource constraints, a cloud function can process data blocks no larger than 3 GB, which is the largest memory capacity of a cloud function today (see Table 2).20 Hence, we need to partition the input into 33,000 blocks."
+  ],
+  "n_refs": 2,
+  "png": ""
+ },
+ {
+  "paper": "1902.03383v1.pdf",
+  "page": 8,
+  "kind": "table",
+  "no": 3,
+  "caption": "Table 3: Examples of serverless computing services and their corresponding programming interfaces and cost models. Note that for the serverless compute oﬀerings described here: BigQuery, Athena, and cloud functions, the user pays separately for storage (e.g., in Google Cloud Storage, AWS S3, or Azure Blob Storage).",
+  "line_in_block": 0,
+  "images_on_page": 0,
+  "vector_paths_on_page": 0,
+  "refs": [
+   "We summarize this view in Table 3 by comparing programming interfaces and cost models for several services.",
+   "Researchers have been attracted to serverless computing, and especially to cloud functions, because it is a new general purpose compute abstraction that promises to become the future of cloud computing, and because there are many opportunities for boosting the current performance and overcoming its current limitations. 3 Limitations of Today’s Serverless Computing Platforms Serverless cloud functions have been successfully employed for several classes of workloads10 includ- ing API serving, even"
+  ],
+  "n_refs": 2,
+  "png": ""
+ },
+ {
+  "paper": "1902.03383v1.pdf",
+  "page": 9,
+  "kind": "table",
+  "no": 4,
+  "caption": "Table 4: Popularity of serverless computing use cases according to a 2018 survey [22].",
+  "line_in_block": 0,
+  "images_on_page": 0,
+  "vector_paths_on_page": 0,
+  "refs": [
+   "Table 4 shows the most popular uses of serverless computing today."
+  ],
+  "n_refs": 1,
+  "png": ""
+ },
+ {
+  "paper": "1902.03383v1.pdf",
+  "page": 11,
+  "kind": "table",
+  "no": 5,
+  "caption": "Table 5: Summary of requirements for new application areas for serverless computing.",
+  "line_in_block": 0,
+  "images_on_page": 0,
+  "vector_paths_on_page": 0,
+  "refs": [
+   "Table 5 summarizes the ﬁve applications.",
+   "Table 5 summarizes the characteristics, challenges, and workarounds for these ﬁve applications, which we next use to identify four limits in the current state of serverless computing. 3.1 Inadequate storage for ﬁne-grained operations The stateless nature of serverless platforms makes it diﬃcult to support applications that have ﬁne-grained state sharing needs.",
+   "As can be seen in Table 5, applications built on serverless infrastructure require storage services with transparent provisioning, the storage equivalent of compute autoscaling.",
+   "Note that AWS Step Functions represents progress in this direction by providing a state machine language and API. 4.2 System challenges High-performance, aﬀordable, transparently provisioned storage: As discussed in Sec- tion 3 and Table 5, we see two distinct unaddressed storage needs: Serverless Ephemeral Storage and Serverless Durable Storage."
+  ],
+  "n_refs": 4,
+  "png": ""
+ },
+ {
+  "paper": "1902.03383v1.pdf",
+  "page": 13,
+  "kind": "table",
+  "no": 6,
+  "caption": "Table 6: Characteristics of storage services by cloud providers to the serverless ideal. Costs are monthly values for storing 1 GB (capacity), transferring 1 MB/s (throughput), and issuing 1 IOPS (or 2.4 million requests in 30 days). All values reﬂect a 50/50 read/write balance and a minimum transfer size of 4 KB. The color codings of entries are green for good, orange for medium, and red for poor",
+  "line_in_block": 0,
+  "images_on_page": 0,
+  "vector_paths_on_page": 0,
+  "refs": [
+   "Table 6 summarizes the properties of the existing cloud storage services."
+  ],
+  "n_refs": 1,
+  "png": ""
+ },
+ {
+  "paper": "EECS-2009-28.pdf",
+  "page": 7,
+  "kind": "figure",
+  "no": 1,
+  "caption": "Figure 1: Users and Providers of Cloud Computing. The beneﬁts of SaaS to both SaaS users and SaaS providers are well documented, so we focus on Cloud Computing’s effects on Cloud Providers and SaaS Providers/Cloud users. The top level can be recursive, in that SaaS providers can also be a SaaS users. For example, a mashup provider of rental maps might be a user of the Craigslist and Google maps se",
+  "line_in_block": 0,
+  "images_on_page": 1,
+  "vector_paths_on_page": 0,
+  "refs": [
+   "Figure 1 shows the roles of the people as users or providers of these layers of Cloud Computing, and we’ll use those terms to help make our arguments clear."
+  ],
+  "n_refs": 1,
+  "png": "EECS-2009-28_p07.png"
+ },
+ {
+  "paper": "EECS-2009-28.pdf",
+  "page": 13,
+  "kind": "figure",
+  "no": 2,
+  "caption": "Figure 2: (a) Even if peak load can be correctly anticipated, without elasticity we waste resources (shaded area) during nonpeak times. (b) Underprovisioning case 1: potential revenue from users not served (shaded area) is sacriﬁced. (c) Underprovisioning case 2: some users desert the site permanently after experiencing poor service; this attrition and possible negative press result in a permanent",
+  "line_in_block": 0,
+  "images_on_page": 3,
+  "vector_paths_on_page": 4,
+  "refs": [
+   "Assume our service has a predictable daily demand where the peak requires 500 servers at noon but the trough requires only 100 servers at midnight, as shown in Figure 2(a).",
+   "They may also underestimate the spike (Figure 2(b)), however, accidentally turning away excess users.",
+   "Figure 2(c) aims to capture this behavior: users will desert an underprovisioned service until the peak user 10 (a) Provisioning for peak load (b) Underprovisioning 1 (c) Underprovisioning 2 load equals the datacenter’s usable capacity, at which point users again receive acceptable service, but with fewer potential users."
+  ],
+  "n_refs": 3,
+  "png": "EECS-2009-28_p13.png"
+ },
+ {
+  "paper": "EECS-2009-28.pdf",
+  "page": 19,
+  "kind": "figure",
+  "no": 3,
+  "caption": "Figure 3: (a) Memory benchmark performance on 75 Virtual Machines running the STREAM benchmark on left and (b) Disk performance writing 1 GB ﬁles on 75 Virtual Machines on right.",
+  "line_in_block": 0,
+  "images_on_page": 0,
+  "vector_paths_on_page": 83,
+  "refs": [
+   "Figure 3(a) shows the average memory bandwidth for 75 EC2 instances running the STREAM memory benchmark [32].",
+   "Figure 3(b) shows the average disk bandwidth for 75 EC2 instances each writing 1 GB ﬁles to local disk.",
+   "The lack of interference that we see with semiconductor main memory in Figure 3(a) might extend to semiconductor storage as well, thereby increasing the number of applications that can run well on VMs and thus share a single computer."
+  ],
+  "n_refs": 3,
+  "png": "EECS-2009-28_p19.png"
+ },
+ {
+  "paper": "EECS-2009-28.pdf",
+  "page": 5,
+  "kind": "table",
+  "no": 1,
+  "caption": "Table 1: Quick Preview of Top 10 Obstacles to and Opportunities for Growth of Cloud Computing. Obstacle Opportunity 1 Availability of Service Use Multiple Cloud Providers; Use Elasticity to Prevent DDOS 2 Data Lock-In Standardize APIs; Compatible SW to enable Surge Computing 3 Data Conﬁdentiality and Auditability Deploy Encryption, VLANs, Firewalls; Geographical Data Storage 4 Data Transfer Bottle",
+  "line_in_block": 0,
+  "images_on_page": 0,
+  "vector_paths_on_page": 56,
+  "refs": [
+   "Table 1 below previews our ranked list of critical obstacles to growth of Cloud Computing in Section 7."
+  ],
+  "n_refs": 1,
+  "png": ""
+ },
+ {
+  "paper": "EECS-2009-28.pdf",
+  "page": 8,
+  "kind": "table",
+  "no": 2,
+  "caption": "Table 2: Economies of scale in 2006 for medium-sized datacenter (≈1000 servers) vs. very large datacenter (≈50,000 servers). [24]",
+  "line_in_block": 0,
+  "images_on_page": 0,
+  "vector_paths_on_page": 46,
+  "refs": [
+   "Although 10 cents per server-hour seems low, Table 2 summarizes James Hamilton’s estimates [23] that very large datacenters (tens of thousands of computers) can purchase hardware, network bandwidth, and power for 1/5 to 1/7 the prices offered to a medium-sized (hundreds or thousands of computers) datacenter."
+  ],
+  "n_refs": 1,
+  "png": ""
+ },
+ {
+  "paper": "EECS-2009-28.pdf",
+  "page": 8,
+  "kind": "table",
+  "no": 3,
+  "caption": "Table 3: Price of kilowatt-hours of electricity by region [7].",
+  "line_in_block": 0,
+  "images_on_page": 0,
+  "vector_paths_on_page": 46,
+  "refs": [
+   "Table 3 shows the cost of electricity in different locales [10]."
+  ],
+  "n_refs": 1,
+  "png": ""
+ },
+ {
+  "paper": "EECS-2009-28.pdf",
+  "page": 11,
+  "kind": "table",
+  "no": 4,
+  "caption": "Table 4: Examples of Cloud Computing vendors and how each provides virtualized resources (computation, storage, networking) and ensures scalability and high availability of the resources.",
+  "line_in_block": 0,
+  "images_on_page": 0,
+  "vector_paths_on_page": 25,
+  "refs": [
+   "Table 4 summarizes how these three classes virtualize computation, storage, and networking.",
+   "As Table 4 shows, there have been many attempts to answer this question, varying in the richness of the query and storage API’s, the performance guarantees offered, and the complexity of data structures that are directly supported by the storage system (e.g., schema-less blobs vs. column-oriented storage).14 The opportunity, which is still an open research problem, is to create a storage system would not only meet these needs but combine them with the cloud advantages of scaling arbitrarily up a"
+  ],
+  "n_refs": 2,
+  "png": ""
+ },
+ {
+  "paper": "EECS-2009-28.pdf",
+  "page": 15,
+  "kind": "table",
+  "no": 5,
+  "caption": "Table 5: We update Gray’s costs of computing resources from 2003 to 2008, normalize to what $1 could buy in 2003 vs. 2008, and compare to the cost of paying per use of $1 worth of resources on AWS at 2008 prices.",
+  "line_in_block": 0,
+  "images_on_page": 0,
+  "vector_paths_on_page": 66,
+  "refs": [
+   "Table 5 updates Gray’s 2003 cost data [21] to 2008, allowing us to track the rate of change of key technologies for Cloud Computing for the last 5 years.",
+   "Table 5 shows his numbers vs. 2008 and compares to EC2/S3 charges.",
+   "As disk capacity and cost-per-gigabyte are growing much faster than network cost-performance—10X vs. less than 3X in the last 5 years according to Table 5—the FedEx disk option for large data transfers will get more attractive each year.",
+   "What will Table 5, tracking the relative prices of different resources, look like?"
+  ],
+  "n_refs": 4,
+  "png": ""
+ },
+ {
+  "paper": "EECS-2009-28.pdf",
+  "page": 16,
+  "kind": "table",
+  "no": 6,
+  "caption": "Table 6: Top 10 Obstacles to and Opportunities for Adoption and Growth of Cloud Computing. Obstacle Opportunity 1 Availability of Service Use Multiple Cloud Providers to provide Business Continuity; Use Elasticity to Defend Against DDOS attacks 2 Data Lock-In Standardize APIs; Make compatible software available to enable Surge Computing 3 Data Conﬁdentiality and Auditability Deploy Encryption, VLA",
+  "line_in_block": 0,
+  "images_on_page": 0,
+  "vector_paths_on_page": 106,
+  "refs": [
+   "Table 6 summarizes our top ten obstacles and opportunities.",
+   "Although Cloud Computing providers may run afoul of the obstacles summarized in Table 6, we believe that over the long run providers will successfully navigate these challenges and set an example for others to follow, perhaps by successfully exploiting the opportunities that correspond to those obstacles."
+  ],
+  "n_refs": 2,
+  "png": ""
+ },
+ {
+  "paper": "EECS-2009-28.pdf",
+  "page": 16,
+  "kind": "table",
+  "no": 7,
+  "caption": "Table 7: Outages in AWS, AppEngine, and Gmail Service and Outage Duration Date S3 outage: authentication service overload leading to unavailability [39] 2 hours 2/15/08 S3 outage: Single bit error leading to gossip protocol blowup. [41] 6-8 hours 7/20/08 AppEngine partial outage: programming error [43] 5 hours 6/17/08 Gmail: site unavailable due to outage in contacts system [29] 1.5 hours 8/11/08",
+  "line_in_block": 0,
+  "images_on_page": 0,
+  "vector_paths_on_page": 106,
+  "refs": [
+   "Table 7 shows recorded outages for Amazon Simple Storage Service (S3), AppEngine and Gmail in 2008, and explanations for the outages."
+  ],
+  "n_refs": 1,
+  "png": ""
+ },
+ {
+  "paper": "EECS-2009-28.pdf",
+  "page": 23,
+  "kind": "table",
+  "no": 8,
+  "caption": "Table 8: Changes in price of AWS S3 storage and networking over time. Storage Cost of Data Stored per GB-Month Date < 50 TB 50-100 TB 100-500 TB > 500 TB 3/13/06 $0.15 $0.15 $0.15 $0.15 10/9/08 $0.15 $0.14 $0.13 $0.12 % Original Price 100% 93% 87% 80% Networking Cost per GB of Wide-Area Networking Trafﬁc Date In Out: < 10 TB Out: 10-50 TB Out: 50-150 TB Out: >150 TB 3/13/06 $0.20 $0.20 $0.20 $0.20",
+  "line_in_block": 0,
+  "images_on_page": 0,
+  "vector_paths_on_page": 124,
+  "refs": [],
+  "n_refs": 0,
+  "png": ""
+ },
+ {
+  "paper": "EECS-2009-28.pdf",
+  "page": 23,
+  "kind": "table",
+  "no": 9,
+  "caption": "Table 9: New AWS Services. Date New Service 3-Dec-08 Public Data Sets on AWS Now Available 18-Nov-08 Announcing Amazon CloudFront (Content Distribution Network) 23-Oct-08 Amazon EC2 Running Windows Server Now Available 23-Oct-08 Amazon EC2 Exits Beta and Now Offers a Service Level Agreement 22-Sep-08 Oracle Products Licensed for Amazon Web Services 20-Aug-08 Amazon Elastic Block Store Now Availabl",
+  "line_in_block": 0,
+  "images_on_page": 0,
+  "vector_paths_on_page": 124,
+  "refs": [
+   "Amazon AWS rounds up their billing to the nearest server-hour or gigabyte-month, but the associated dollar amounts are small enough (pennies) to make AWS a true pay-as-you-go service. 4The most common ﬁnancial models used in the US allow a capital expense to be depreciated (deducted from tax obligations) linearly over a 3-year period, so we use this ﬁgure as an estimate of equipment lifetime in our cost comparisons. 5According to statistics collected by Keynote Systems Inc. on Black Friday 2008 "
+  ],
+  "n_refs": 1,
+  "png": ""
+ },
+ {
+  "paper": "EECS-2009-28.pdf",
+  "page": 23,
+  "kind": "table",
+  "no": 10,
+  "caption": "Table 10: Diversity of EC2 instances over time. Date Type Cost/ Hour",
+  "line_in_block": 0,
+  "images_on_page": 0,
+  "vector_paths_on_page": 124,
+  "refs": [
+   "Table 10 shows the different types of AWS compute instances and the date each type was introduced."
+  ],
+  "n_refs": 1,
+  "png": ""
+ },
+ {
+  "paper": "excamera-nsdi17.pdf",
+  "page": 5,
+  "kind": "figure",
+  "no": 1,
+  "caption": "Figure 1: Characterization of cold vs. warm startup time. On a warm start, mu established 3,600 TLS connections to AWS Lambda, spawned 3,600 workers, and received inbound network connections from each worker, in under three seconds (§ 2.4). On a cold start, the delay was as long as two minutes.",
+  "line_in_block": 0,
+  "images_on_page": 0,
+  "vector_paths_on_page": 118,
+  "refs": [
+   "Figure 1 shows typical worker startup latency for cold and warm Lambda functions."
+  ],
+  "n_refs": 1,
+  "png": "excamera-nsdi17_p05.png"
+ },
+ {
+  "paper": "excamera-nsdi17.pdf",
+  "page": 6,
+  "kind": "figure",
+  "no": 2,
+  "caption": "Figure 2: Characterization of ﬂoating-point computational power for an embarrassingly parallel job (after PyWren [14]). mu starts 3,600 workers in less than 3 seconds. Each worker executes about 2.5 MFLOPS, for a total of 9 TFLOPS.",
+  "line_in_block": 0,
+  "images_on_page": 0,
+  "vector_paths_on_page": 23,
+  "refs": [
+   "Figure 2 shows ﬂoating-point computational power versus time for a typical (warm) execution of the LINPACK benchmark.",
+   "Our Figure 2 was inspired by a similar measurement in [14]."
+  ],
+  "n_refs": 2,
+  "png": "excamera-nsdi17_p06.png"
+ },
+ {
+  "paper": "excamera-nsdi17.pdf",
+  "page": 9,
+  "kind": "figure",
+  "no": 3,
+  "caption": "Figure 3: Structural similarity (SSIM) [28] correlates with per- ceived image quality.",
+  "line_in_block": 0,
+  "images_on_page": 1,
+  "vector_paths_on_page": 2,
+  "refs": [
+   "Figure 3 illustrates how SSIM corre- lates with perceived image quality. 5.2 Baselines We benchmarked a range of ExCamera[푁,푥] pipelines against two alternative VP8 encoding systems: 1. vpx (single-threaded): vpxenc, running in single- threaded mode on an Amazon EC2 c3.8xlarge in- stance with a 2.8 GHz Intel Xeon E5-2680 v2 CPU."
+  ],
+  "n_refs": 1,
+  "png": "excamera-nsdi17_p09.png"
+ },
+ {
+  "paper": "excamera-nsdi17.pdf",
+  "page": 10,
+  "kind": "figure",
+  "no": 4,
+  "caption": "Figure 4: Execution of the ExCamera[6,16] encoder (§ 4.4) for a typical 16-thread batch on a warm start. At two points in the computation, a thread may have to “wait” for state from the thread above. The “slow” work of searching for motion vectors and prediction modes (vpxenc and encode-given-state) runs in parallel. The “fast” rebasing step runs serially.",
+  "line_in_block": 0,
+  "images_on_page": 0,
+  "vector_paths_on_page": 150,
+  "refs": [
+   "Figure 4 shows the results of a typical batch. mu’s dependency-aware scheduler assigns the ﬁrst worker that AWS Lambda spawns to a task whose output will be con- sumed by later-spawning workers.",
+   "In a long chain of rebasing, later threads spend much of their time waiting on predecessors (Figure 4).",
+   "The microbenchmark of Figure 4 and other measurements suggest there is considerable room for op- timization in our encode-given-state routine (§ 4.4)."
+  ],
+  "n_refs": 3,
+  "png": "excamera-nsdi17_p10.png"
+ },
+ {
+  "paper": "excamera-nsdi17.pdf",
+  "page": 11,
+  "kind": "figure",
+  "no": 5,
+  "caption": "Figure 5: Quality vs. bitrate for four VP8 video encoders on the two 4K movies. ExCamera[6,16] achieves within 2% (Sintel) or 9% (Tears of Steel) of the performance of a state-of-the-art encoder (multi-threaded vpxenc) with a much higher degree of parallelism.",
+  "line_in_block": 0,
+  "images_on_page": 0,
+  "vector_paths_on_page": 43,
+  "refs": [
+   "Figure 5 shows the results."
+  ],
+  "n_refs": 1,
+  "png": "excamera-nsdi17_p11.png"
+ },
+ {
+  "paper": "excamera-nsdi17.pdf",
+  "page": 12,
+  "kind": "figure",
+  "no": 6,
+  "caption": "Figure 6: Bitrate vs. encoding speed, at constant quality relative to the original movie. ExCamera sweeps out a range of tradeoffs.",
+  "line_in_block": 0,
+  "images_on_page": 0,
+  "vector_paths_on_page": 44,
+  "refs": [
+   "Figure 6 shows the results.",
+   "Because YouTube does not encode 4K VP8 content, and does not have adjustable quality, these ﬁgures cannot be directly compared with those in Figure 6.",
+   "Figure 6 shows that if the application is simply encoding video into the VP8 format, with no expensive per-frame processing that would bene- ﬁt from ﬁne-grained parallelism, pipelines with coarser granularity and no rebasing (e.g."
+  ],
+  "n_refs": 3,
+  "png": "excamera-nsdi17_p12.png"
+ },
+ {
+  "paper": "mapreduce-osdi04.pdf",
+  "page": 3,
+  "kind": "figure",
+  "no": 1,
+  "caption": "Figure 1: Execution overview",
+  "line_in_block": 0,
+  "images_on_page": 0,
+  "vector_paths_on_page": 88,
+  "refs": [
+   "Figure 1 shows the overall ﬂow of a MapReduce op- eration in our implementation.",
+   "When the user program calls the MapReduce function, the following sequence of actions occurs (the numbered labels in Figure 1 corre- spond to the numbers in the list below): 1."
+  ],
+  "n_refs": 2,
+  "png": "mapreduce-osdi04_p03.png"
+ },
+ {
+  "paper": "mapreduce-osdi04.pdf",
+  "page": 8,
+  "kind": "figure",
+  "no": 2,
+  "caption": "Figure 2: Data transfer rate over time",
+  "line_in_block": 0,
+  "images_on_page": 0,
+  "vector_paths_on_page": 17,
+  "refs": [
+   "Figure 2 shows the progress of the computation over time."
+  ],
+  "n_refs": 1,
+  "png": "mapreduce-osdi04_p08.png"
+ },
+ {
+  "paper": "mapreduce-osdi04.pdf",
+  "page": 9,
+  "kind": "figure",
+  "no": 3,
+  "caption": "Figure 3: Data transfer rates over time for different executions of the sort program",
+  "line_in_block": 0,
+  "images_on_page": 0,
+  "vector_paths_on_page": 186,
+  "refs": [
+   "Figure 3 (a) shows the progress of a normal execution of the sort program.",
+   "To appear in OSDI 2004 9 5.4 Effect of Backup Tasks In Figure 3 (b), we show an execution of the sort pro- gram with backup tasks disabled.",
+   "The execution ﬂow is similar to that shown in Figure 3 (a), except that there is a very long tail where hardly any write activity occurs.",
+   "The entire computation takes 1283 seconds, an increase of 44% in elapsed time. 5.5 Machine Failures In Figure 3 (c), we show an execution of the sort program where we intentionally killed 200 out of 1746 worker processes several minutes into the computation."
+  ],
+  "n_refs": 4,
+  "png": "mapreduce-osdi04_p09.png"
+ },
+ {
+  "paper": "mapreduce-osdi04.pdf",
+  "page": 10,
+  "kind": "figure",
+  "no": 4,
+  "caption": "Figure 4: MapReduce instances over time",
+  "line_in_block": 0,
+  "images_on_page": 0,
+  "vector_paths_on_page": 40,
+  "refs": [
+   "Google Zeitgeist), • extraction of properties of web pages for new exper- iments and products (e.g. extraction of geographi- cal locations from a large corpus of web pages for localized search), and • large-scale graph computations. 2003/03 2003/06 2003/09 2003/12 2004/03 2004/06 2004/09 0 200 400 600 800 1000 Number of instances in source tree Number of jobs 29,423 Average job completion time 634 secs Machine days used 79,186 days Input data read 3,288 TB Intermediate data produced 758 TB Outpu"
+  ],
+  "n_refs": 1,
+  "png": "mapreduce-osdi04_p10.png"
+ },
+ {
+  "paper": "mapreduce-osdi04.pdf",
+  "page": 10,
+  "kind": "table",
+  "no": 1,
+  "caption": "Table 1: MapReduce jobs run in August 2004",
+  "line_in_block": 0,
+  "images_on_page": 0,
+  "vector_paths_on_page": 40,
+  "refs": [
+   "In Table 1, we show some statistics for a subset of MapReduce jobs run at Google in August 2004. 6.1 Large-Scale Indexing One of our most signiﬁcant uses of MapReduce to date has been a complete rewrite of the production index- To appear in OSDI 2004 10 ing system that produces the data structures used for the Google web search service."
+  ],
+  "n_refs": 1,
+  "png": ""
+ }
+]

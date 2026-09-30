@@ -1,0 +1,14 @@
+{"id": "d024", "parent_set": "main", "parent_id": "q024", "lang": "en", "doc": "1702.04024.pdf", "question": "What scientific applications has that system been used for according to the paper?"}
+{"id": "d028", "parent_set": "main", "parent_id": "q028", "lang": "en", "doc": "excamera-nsdi17.pdf", "question": "Which specific vpxenc command-line flags does that system's appendix list for its encoding runs?"}
+{"id": "d029", "parent_set": "main", "parent_id": "q029", "lang": "el", "doc": "mapreduce-osdi04.pdf", "question": "Πώς εγγυάται εκείνο το σύστημα το ίδιο αποτέλεσμα παρά τις αστοχίες μηχανημάτων;"}
+{"id": "d031", "parent_set": "main", "parent_id": "q031", "lang": "en", "doc": "excamera-nsdi17.pdf", "question": "What does the paper say about the two major contributions of that system?"}
+{"id": "d038", "parent_set": "main", "parent_id": "q038", "lang": "en", "doc": "1812.03651.pdf", "question": "Why does that paper argue that FaaS stymies hardware-accelerated software innovation?"}
+{"id": "d039", "parent_set": "main", "parent_id": "q039", "lang": "en", "doc": "1812.03651.pdf", "question": "What does that paper mean by fluid code and data placement?"}
+{"id": "d040", "parent_set": "main", "parent_id": "q040", "lang": "en", "doc": "excamera-nsdi17.pdf", "question": "On which four metrics was that system evaluated and what was the headline result?"}
+{"id": "d041", "parent_set": "main", "parent_id": "q041", "lang": "el", "doc": "mapreduce-osdi04.pdf", "question": "Πώς λειτουργεί ο μηχανισμός των counters σε εκείνο το σύστημα;"}
+{"id": "d043", "parent_set": "main", "parent_id": "q043", "lang": "en", "doc": "1702.04024.pdf", "question": "How does that system package and execute a user's Python function on AWS Lambda?"}
+{"id": "d134", "parent_set": "hard_new", "parent_id": "h134", "lang": "el", "doc": "1702.04024.pdf", "question": "Επιστημονικές εφαρμογές εκείνου του συστήματος;"}
+{"id": "d155", "parent_set": "hard_new", "parent_id": "h155", "lang": "el", "doc": "excamera-nsdi17.pdf", "question": "Πώς αξιολογήθηκε εκείνο το σύστημα και ποιο ήταν το βασικό του αποτέλεσμα;"}
+{"id": "d156", "parent_set": "hard_new", "parent_id": "h156", "lang": "en", "doc": "excamera-nsdi17.pdf", "question": "What four factors were used to assess that system, and what was the main finding?"}
+{"id": "d161", "parent_set": "hard_new", "parent_id": "h161", "lang": "en", "doc": "1702.04024.pdf", "question": "How does that system prepare and run a user's Python code on the cloud's processing units?"}
+{"id": "t005d", "parent_set": "tables", "parent_id": "t005", "lang": "en", "doc": "mapreduce-osdi04.pdf", "question": "How many jobs of that system were run in August 2004 and what was the average job completion time?"}

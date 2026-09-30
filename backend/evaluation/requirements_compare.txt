@@ -1,0 +1,6 @@
+# Φάση 3.2α: ΜΟΝΟ για το compare_llamaindex.py, σε μιας-χρήσης container (δεν μπαίνει στο image).
+# Εκδόσεις καρφωμένες: οι «προεπιλογές» του LlamaIndex αλλάζουν ανάμεσα σε εκδόσεις.
+llama-index-core==0.14.25
+llama-index-embeddings-huggingface==0.8.0
+llama-index-llms-google-genai==0.11.2
+llama-index-readers-file==0.7.0
