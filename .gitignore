@@ -19,11 +19,6 @@ ragas_env/
 # ΠΕΡΙΒΑΛΛΟΝΤΟΣ). Περιέχει μόνο ένα .whl.
 backend/C*/
 
-# Ιδιωτικό working file του εργαλείου AI (οδηγίες + πλήρεις σημειώσεις). Η
-# δημόσια, επιμελημένη εκδοχή είναι το ENGINEERING_LOG.md.
-CLAUDE.md
-AGENTS.md
-
 # PDF δοκιμών (απομονωμένα stores των evaluation scripts) — αντίγραφα papers, ποτέ commit
 backend/evaluation/test_papers/
 
