@@ -198,7 +198,7 @@ async def generate_once(
     model: str,
     api_key: str,
     temperature: float = 0.1,
-    max_output_tokens: int = 256,
+    max_output_tokens: int = 1024,
     thinking_budget: int | None = 0,
     retries: int = 5,
 ) -> str:
@@ -212,8 +212,10 @@ async def generate_once(
         query rewrite τρέχει σε ΚΑΘΕ follow-up ερώτηση (δεν είναι cached όπως οι
         μεταφράσεις). Με το SDK πλήρωνε ανεξέλεγκτα thinking tokens για να βγάλει
         μια γραμμή κειμένου.
-      • max_output_tokens=256 αντί για 4096 — καπάκι κόστους χωρίς κανένα ρίσκο
-        κοψίματος σε έξοδο αυτού του μεγέθους.
+         • max_output_tokens=1024 αντί για 4096 — καπάκι κόστους. ΗΤΑΝ 256 «χωρίς ρίσκο
+        κοψίματος» — ΛΑΘΟΣ για το gemini-3.8-flash (1/10/2026): σκέφτεται ΠΑΡΑ το
+        thinkingBudget=0 (0-262 tokens στο ίδιο prompt) και η σκέψη μετράει στο όριο
+        -> MAX_TOKENS σε 11/157 κλήσεις. Στο 2.5 αδιάφορο: σέβεται το 0, βγάζει ~10-30 tokens.
     """
     # ΜΙΣΗ ΑΠΑΝΤΗΣΗ = ΣΦΑΛΜΑ, ΟΧΙ ΑΠΟΤΕΛΕΣΜΑ (25/9/2026): η μετάφραση της q025
     # βγήκε «cost per» και ΚΛΕΙΔΩΘΗΚΕ στο cache (MRR 1.0 -> 0.33 σε κάθε τρέξιμο).

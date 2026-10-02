@@ -237,6 +237,60 @@ baseline.json κρατιέται αυτούσιο ως baseline_219.json.
       αλλάζει την είσοδό του — όπως η παλινδρόμηση μετάφρασης 16-18/8.
       Πρόβλεψη 13/15 — τα δύο λάθη ΗΤΑΝ οι διαρροές («ίδιος reranker -> ίδιος φύλακας»).
 
+8ο ΤΡΕΞΙΜΟ — gemini-3.8-flash στη θέση του gemini-2.5-flash (1/10/2026). ΑΦΟΡΜΗ: τα ΝΕΑ κλειδιά
+    Gemini δεν παίρνουν πια το 2.5-flash («no longer available to new users») -> όποιος κάνει clone με
+    καινούργιο κλειδί δεν μπορεί να τρέξει το σύστημα. Αλλάζει ΜΟΝΟ το μοντέλο του ΣΥΣΤΗΜΑΤΟΣ
+    (μετάφραση, αναδιατυπώσεις corrective/συνομιλίας, γέννηση)· ο ΚΡΙΤΗΣ μένει 2.5-flash (JUDGE_MODEL),
+    και το πάγωμα πάει σε ΔΙΚΟ του αρχείο (scoreboard_gemini_gemini-3.8-flash.json). Reranker, embedder,
+    κατώφλια, ENABLE_PERDOC ΙΔΙΑ. Δοκιμή 2 κλήσεων: δέχεται temperature 0.1 + thinkingBudget 0/512,
+    finishReason STOP, ίδια μετάφραση στο δείγμα. Τιμή: 0.75/3.75 $ ανά 1M (2.5: 0.30/2.50) ως 31/12,
+    1.50/7.50 από 1/1/2027 -> ~2.4× ανά ερώτηση σήμερα, ~5× από το 2027 (από την τιμή, όχι μετρημένο).
+    ΒΑΣΗ: perdoc.json (σημερινό σύστημα, 8 σετ)· άλλα πεδία από baseline.json (το perdoc δεν τα έτρεξε).
+    Απαντήσεις: answers_baseline_{main,near_ooc,tables} (σελίδες ΙΔΙΕΣ με perdoc εκτός q046) +
+    answers_perdoc_mh_new.
+
+    docker compose exec -e GEMINI_MODEL=gemini-3.8-flash backend python evaluation/scoreboard.py \\
+        --label g38 --compare evaluation/runs/scoreboard/perdoc.json
+    docker compose exec -e GEMINI_MODEL=gemini-3.8-flash backend python evaluation/scoreboard_answers.py \\
+        --set main --label g38 --compare evaluation/runs/scoreboard/answers_baseline_main.json
+    (ίδιο για --set mh_new [compare answers_perdoc_mh_new.json], near_ooc, tables)
+
+    ΠΡΟΒΛΕΨΗ (γραμμένη πριν):
+      μεταφράσεις διαφορετικές από του 2.5 σε 30-60% των ελληνικών · φύλακας 58-61/61 ·
+      ooc κύριου 5/5 σιωπηλές · leak tests 2/2 · άλλα πεδία ooc 4-5/5 · κοντινές κόβονται 0-3 ·
+      απαντήσεις: κύριο τέλειες 44-49/50 · πίνακες 66-69/69 τιμές · δύο papers «και τα δύο σωστά» 15-20 ·
+      κοντινές (γ) 0-2, (β) 0-3 · διάμεσος tokens εξόδου ±30% του 2.5.
+    ΚΡΙΤΗΡΙΟ για να γίνει το 3.8 ΠΡΟΕΠΙΛΟΓΗ (όλα μαζί):
+      (1) ασφάλεια: ooc κύριου 5/5 σιωπηλές · leak tests 2/2 · άλλα πεδία ooc 5/5 · κοντινές (γ) ≤ 1
+          και (β) ≤ 2 (βάση 1 / 1)
+      (2) φύλακας ≥ 59/61
+      (3) απαντήσεις: κύριο τέλειες ≥ 45/50 (βάση 47, θόρυβος κριτή ~2) και στήριξη μέσος ≥ 4.85 ·
+          πίνακες 69/69 · «και τα δύο σωστά» ≥ 15/28 (βάση 17)
+      Αν ΔΕΝ περάσει: προεπιλογή μένει το 2.5 (αυτό μετρήθηκε) και το README λέει στα νέα κλειδιά να
+      βάλουν GEMINI_MODEL=gemini-3.8-flash, μαζί με ΤΙ μετρήθηκε σε αυτό — όχι σιωπηλή αλλαγή.
+    ΑΠΟΤΕΛΕΣΜΑ (runs/scoreboard/g38.json, 168 κλήσεις 3.8): ΔΕΝ ΓΙΝΕΤΑΙ ΠΡΟΕΠΙΛΟΓΗ — κόβεται στο (1).
+      1ο τρέξιμο ΑΚΥΡΟ: 11/157 μεταφράσεις MAX_TOKENS. Αιτία (3 κλήσεις, ίδιο prompt): το 3.8 ΣΚΕΦΤΕΤΑΙ
+      ΠΑΡΑ το thinkingBudget=0, όχι σταθερά (0 / 95 / 195 / 262 tokens) και η σκέψη μετράει στο όριο 256
+      του generate_once -> 256 -> 1024 στο gemini_rest (στο 2.5 αδιάφορο: σέβεται το 0). 2ο τρέξιμο: 0
+      MAX_TOKENS· 1 σφάλμα, η v4 («ρυθμός τροφοδοσίας μάγματος») -> promptFeedback.blockReason=OTHER σε
+      2/2 κλήσεις: το 3.8 ΜΠΛΟΚΑΡΕΙ αθώα ερώτηση που το 2.5 μετέφραζε. Πραγματική συμπεριφορά -> το
+      τρέξιμο μετράει όπως είναι.
+      (1) ✗ ΔΥΟ ΔΙΑΡΡΟΕΣ: q050 (GPU tensor cores) μέσω corrective — η αναδιατύπωση του 3.8 είναι μακριά
+      και φορτωμένη με λεξιλόγιο του πεδίου («GPU Tensor Core benchmark performance evaluation
+      distributed systems cloud computing…») -> best2 −5.29 -> −0.25 (μηχανισμός του enrichment)·
+      o4 (Βεζούβιος) από τον φύλακα: «Vesuvius last eruption date» −3.46 -> −1.56.
+      (2) ✓ φύλακας 61/61, κενό −1.31 -> +1.04 (σωστή −2.08 · άσχετη −3.12 = ΑΚΡΙΒΩΣ το L-12 της 10/8):
+      η μετάφραση του 3.8 ΕΚΛΕΙΣΕ την παλινδρόμηση 16-18/8 (q025, q059 δεν κόβονται).
+      (3) δεν μετρήθηκε — η απόφαση κρίθηκε στο (1).
+      Αλλού: «και τα δύο papers» 18 -> 22/29 · κύριο MRR 0.785 -> 0.815 · δύσκολο νέο «χωρίς υλικό»
+      4 -> 9 (h121 h122 h126 h157 h172 χάνουν, h007 h138 κερδίζουν) · κοντινές κόβονται 2 -> 0/42.
+      bootstrap (10.000, seed 42): ΟΛΑ θόρυβος — MRR Δ +0.029 [−0.018, +0.087] · δύο papers Δ +0.138
+      [−0.034, +0.310] · δύσκολα «με υλικό» Δ −0.040 [−0.107, +0.027].
+      ΜΕΤΑΦΡΑΣΕΙΣ ίδιες με του 2.5: 3/122 — και ούτε το 3.8 δίνει ίδια μετάφραση δύο φορές (h138, m037
+      άλλαξαν μεταξύ κλήσεων με temperature 0.1): χωρίς πάγωμα η μέτρηση με 3.8 ΔΕΝ ΕΠΑΝΑΛΑΜΒΑΝΕΤΑΙ.
+      Πρόβλεψη 4/6 στο επίπεδο ανάκτησης: ✗ μεταφράσεις 30-60% διαφορετικές (97.5%) · ✗ ooc κύριου 5/5.
+      Τιμή ~2.4× (από τον τιμοκατάλογο, όχι μετρημένη).
+
 ΠΡΟΣΟΧΗ: το store (/tmp/eval_near_ooc_chroma) είναι ΚΟΙΝΟ με eval_near_ooc / eval_hard_new /
 gate_margin_isolated. Η κλειδαριά εδώ προστατεύει μόνο από 2ο scoreboard — μην τρέχεις
 κανένα από αυτά ταυτόχρονα (ΠΑΓΙΔΕΣ, 28/9).
@@ -274,7 +328,10 @@ import gemini_rest
 HERE = E.HERE
 RUNS = os.path.join(HERE, "runs")
 OUT_DIR = os.path.join(RUNS, "scoreboard")
-FROZEN_PATH = os.path.join(RUNS, "scoreboard_gemini.json")
+# Το κλειδί του παγώματος είναι το PROMPT, όχι το μοντέλο -> άλλο μοντέλο σε ΔΙΚΟ ΤΟΥ αρχείο,
+# αλλιώς ένα τρέξιμο με GEMINI_MODEL=gemini-3.8-flash θα διάβαζε τις μεταφράσεις του 2.5 (1/10/2026).
+FROZEN_PATH = os.path.join(RUNS, "scoreboard_gemini.json" if E.MODEL == E.DEFAULT_MODEL
+                           else f"scoreboard_gemini_{E.MODEL}.json")
 LOCK = "/tmp/scoreboard.lock"  # noqa: S108  εφήμερο, μέσα στο container
 EXPECTED_CHUNKS = 418
 OLD_TRANS = ["hard_translations.json", "near_ooc_translations.json", "gate_margin_translations.json"]

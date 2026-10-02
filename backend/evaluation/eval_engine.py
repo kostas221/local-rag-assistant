@@ -13,7 +13,8 @@ load_dotenv()
 
 # Ορίζουμε το μοντέλο που θα κάνει το "judging" με την επίσημη βιβλιοθήκη της Google
 genai.configure(api_key=os.getenv("GEMINI_API_KEY"))
-judge_model = genai.GenerativeModel(os.getenv("GEMINI_MODEL", "gemini-2.5-flash"))
+# JUDGE_MODEL, ΟΧΙ GEMINI_MODEL (1/10/2026): αλλαγή μοντέλου του συστήματος δεν αλλάζει τον κριτή
+judge_model = genai.GenerativeModel(os.getenv("JUDGE_MODEL", "gemini-2.5-flash"))
 
 # Καρφωμένο eval corpus: τυχόν ΑΛΛΑ έγγραφα στη βάση (π.χ. demo uploads) δεν
 # μολύνουν τη μέτρηση.

@@ -91,6 +91,11 @@ TRANS_PATH = os.path.join(HERE, "runs", "near_ooc_translations.json")
 TEST_DB = "/tmp/eval_near_ooc_chroma"  # noqa: S108  εφήμερο, μέσα στο container
 TEST_USER = 999_997          # εικονικός ιδιοκτήτης των test chunks (authz)
 MODEL = os.getenv("GEMINI_MODEL", "gemini-2.5-flash")
+# Ο ΚΡΙΤΗΣ ΜΕΝΕΙ ΣΤΑΘΕΡΟΣ όταν αλλάζει το μοντέλο του ΣΥΣΤΗΜΑΤΟΣ (1/10/2026): πριν διάβαζε κι
+# αυτός το GEMINI_MODEL -> με νέο μοντέλο θα άλλαζαν ΜΑΖΙ αυτός που απαντά και αυτός που
+# βαθμολογεί, και η διαφορά δεν θα αποδιδόταν σε κανέναν. Default = ο κριτής όλων των μετρήσεων.
+JUDGE_MODEL = os.getenv("JUDGE_MODEL", "gemini-2.5-flash")
+DEFAULT_MODEL = "gemini-2.5-flash"     # το μοντέλο πάνω στο οποίο μετρήθηκαν τα πάντα ως 30/9
 API_KEY = os.getenv("GEMINI_API_KEY")
 N_POS_CONTROLS = 5
 LABELS = ("correct", "soft_leak", "leak")
@@ -195,7 +200,7 @@ async def judge(row: dict) -> tuple[str, str, bool]:
     prompt = JUDGE_PROMPT.format(
         focus=row["focus"], note=row.get("review_note") or "", question=row["question"],
         question_en=row["question_en"], answer=row["answer"])
-    raw = await gemini_rest.generate_once(prompt, model=MODEL, api_key=API_KEY,
+    raw = await gemini_rest.generate_once(prompt, model=JUDGE_MODEL, api_key=API_KEY,
                                           temperature=0.0, max_output_tokens=4096,
                                           thinking_budget=1024)
     obj = parse_json_object(raw)

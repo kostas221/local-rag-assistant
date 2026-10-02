@@ -156,7 +156,11 @@ import scoreboard as S
 
 import gemini_rest
 
-ANS_PATH = os.path.join(S.RUNS, "scoreboard_answers.json")
+# Κλειδί του παγώματος = το prompt -> απαντήσεις άλλου μοντέλου (ή άλλου κριτή) σε ΔΙΚΟ τους
+# αρχείο: το prompt της γέννησης είναι ΙΔΙΟ για 2.5 και 3.8 όταν οι σελίδες είναι ίδιες (1/10/2026).
+ANS_PATH = os.path.join(
+    S.RUNS, "scoreboard_answers.json" if E.MODEL == E.JUDGE_MODEL == E.DEFAULT_MODEL
+    else f"scoreboard_answers_{E.MODEL}__judge_{E.JUDGE_MODEL}.json")
 MH_PATH = os.path.join(E.HERE, "golden_multihop_v2.jsonl")
 MAIN_PATH = os.path.join(E.HERE, "golden_set_50.jsonl")
 HISTORY_MAIN = os.path.join(S.RUNS, "judge_l12_full.csv")   # τελευταίο πλήρες judge, 11/8/2026
@@ -682,7 +686,7 @@ async def judge_near(cache, t, answer, real_once) -> dict:
     prompt = E.JUDGE_PROMPT.format(focus=t["focus"], note=t.get("review_note") or "",
                                    question=t["question"], question_en=t["question_en"],
                                    answer=answer)
-    raw = await cache.judge(prompt, lambda p: real_once(p, model=E.MODEL, api_key=E.API_KEY,
+    raw = await cache.judge(prompt, lambda p: real_once(p, model=E.JUDGE_MODEL, api_key=E.API_KEY,
                                                         **JUDGE_KW))
     return parse_near(raw, answer)
 
@@ -771,7 +775,7 @@ async def judge_mh(cache, t, row, pages, answer, ai_core, real_once) -> dict:
         reference=t["reference_answer"], kw1=", ".join(t["keywords_by_doc"][d1]),
         kw2=", ".join(t["keywords_by_doc"][d2]), context=context_of(ai_core, pages),
         answer=answer)
-    raw = await cache.judge(prompt, lambda p: real_once(p, model=E.MODEL, api_key=E.API_KEY,
+    raw = await cache.judge(prompt, lambda p: real_once(p, model=E.JUDGE_MODEL, api_key=E.API_KEY,
                                                         **JUDGE_KW))
     return parse_verdict(raw, answer)
 
@@ -995,12 +999,13 @@ async def run(args) -> int:
         return 1 if (cache.errors or frozen.errors) else 0
     frozen.save()
     out = os.path.join(S.OUT_DIR, f"answers_{args.label}_{args.set}")
-    judge_info = ({"model": E.MODEL, **JUDGE_KW} if mh or near else
+    judge_info = ({"model": E.JUDGE_MODEL, **JUDGE_KW} if mh or near else
                   {"none": "ακριβείς τιμές, eval_tables.check"} if tables else
-                  {"model": E.MODEL, "via": "eval_engine SDK", "temperature": 0.0})
+                  {"model": E.JUDGE_MODEL, "via": "eval_engine SDK", "temperature": 0.0})
     with open(out + ".json", "w", encoding="utf-8") as f:
         json.dump({"label": args.label, "set": args.set, "when": time.strftime("%Y-%m-%d %H:%M"),
-                   "judge": judge_info, "summary": summ, "rows": rows},
+                   "generator": ai_core.GEMINI_MODEL, "judge": judge_info,
+                   "summary": summ, "rows": rows},
                   f, ensure_ascii=False, indent=1)
     with open(out + ".csv", "w", newline="", encoding="utf-8-sig") as f:
         w = csv.DictWriter(f, fieldnames=list(dict.fromkeys(k for r in rows for k in r)))
