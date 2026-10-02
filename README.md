@@ -255,11 +255,11 @@ Measured on a Ryzen 7 5700X, CPU only (container: 8 cores).
 
 | | Value |
 |---|---|
-| Warm retrieval | **725 ms** (rerank 706 = 97.3%, dense 0.5, BM25 1.4, expand 7.9) |
+| Warm retrieval | **846 ms** (rerank 784 = 93%, expand 53, authz 5, BM25 1.4, dense 0.5) |
 | End-to-end | 2.8–4.3 s · TTFT 2.78 s |
-| Throughput | 1.65 req/s, saturating at **4 concurrent users** |
+| Throughput | 1.18 req/s for one user, 1.38 req/s at **4 concurrent users**, where it saturates |
 
-Past saturation the throughput plateaus (~1.0 req/s up to 32 users) and latency grows linearly — Little's law, a queue that works, not a collapse. Per-document search adds two BM25+rerank passes **only** on routed questions; its latency has not been measured on this machine yet.
+Page expansion went from 8 to 53 ms when a per-user authorization check was added to it — about 1% of end to end, kept. Past saturation the throughput plateaus (~1.0 req/s up to 32 users) and latency grows linearly — Little's law, a queue that works, not a collapse. Per-document search adds two BM25+rerank passes **only** on routed questions; its latency has not been measured on this machine yet.
 
 ### Cost
 
@@ -292,7 +292,7 @@ What was measured, kept, and — more often — **rejected**. Each row is a real
 | **Deterministic fusion** | `dict.fromkeys` + tie-break on chunk id. Made every later measurement trustworthy |
 | **Reranker threads and `batch_size`** | 667 → **434 ms** with bit-identical scores (thread heuristic under WSL2; padding in one large batch) |
 | **Capped thinking budget** (REST) | TTFT 3.90 s → **2.78 s**, judge scores unchanged |
-| **Domain-aware translation** | Greek *«μηχανήματα»* had become `machinery` instead of `servers`; two questions gained +7.74 / +4.14 logits; 30 English controls: max \|Δ\| = 0.000 |
+| **Domain-aware translation** | Greek *«μηχανήματα»* had become `machinery` instead of `servers`. The first measurement (+7.74 / +4.14 logits on two questions) turned out to be **leakage**: the prompt's examples were those two questions' answers. The examples were removed; the clean size of the gain was never measured — kept as a design choice, not as a result |
 | **Corrective agent** + its own threshold | Silence → correct answer on the questions it targets, **0 hallucinations**, off-topic still 5/5 |
 | **Server-side citation labels** (`[S3]` instead of `[file, p.12]`) | With labels written by the model, 10/97 page numbers were wrong — it copied the page number *printed* in the PDF. The labels themselves were right 97/97. What you don't ask the model to produce cannot come out wrong |
 | **Rate limiting in Postgres**, **`/metrics`** | Shared across processes, zero new containers |
@@ -351,7 +351,7 @@ docker compose exec backend python evaluation/trace_query.py --id q028 --target 
 - **LLM judges.** Two vendors now agree, but both are LLMs; the golden sets are self-authored and hand-verified, not externally annotated
 - **Corrective verification is not reproducible** (a Gemini rewrite with no seed), and its threshold rests on a handful of questions — the midpoint of a range that behaves identically, not an optimum
 - **Throughput saturates at 4 concurrent users** on one CPU-bound worker
-- **Model availability:** new Gemini API keys no longer get `gemini-2.5-flash`; switching models means re-measuring the gate
+- **Model availability.** New Gemini API keys no longer get `gemini-2.5-flash`, the model everything here was measured on. `gemini-3.8-flash` was run through the full scoreboard against a pre-registered bar and **did not become the default**: two off-topic questions passed the relevance gate (one through a long, domain-heavy rewrite by the corrective agent), it blocked one harmless prompt (`blockReason: OTHER`), it thinks despite a thinking budget of 0 (which first cut 11/157 translations short), and its translations match 2.5's in only 3/122 Greek questions and are not reproducible between calls. On the plus side it closed the translation regression behind `q025`/`q059` (gate 61/61). Ranking changes were all within noise (paired bootstrap). It costs ~2.4× per question at current prices
 - **`google.generativeai` is deprecated** and `google-genai` needs Pydantic 2, incompatible with the pinned stack — generation uses the REST endpoint directly
 
 ## Quickstart
@@ -365,6 +365,14 @@ cp .env.example .env        # fill in your keys
 docker compose up -d --build
 ```
 
+> **New Gemini API key?** Google no longer offers `gemini-2.5-flash` to new keys, and the app will only show a generic AI error. Add this line to `.env`:
+>
+> ```
+> GEMINI_MODEL=gemini-3.8-flash
+> ```
+>
+> Checked end to end (a Greek question answered with citations, an off-topic one refused). Every number in this README was measured on 2.5 Flash, though — on the full scoreboard 3.8 is not a drop-in replacement; see [Known limitations](#known-limitations).
+
 First start downloads the embedding + reranker models (~2.5 GB, cached in a volume afterwards).
 
 - UI: http://localhost:8502 — register, upload a PDF, wait for "ready", ask away
@@ -376,6 +384,8 @@ First start downloads the embedding + reranker models (~2.5 GB, cached in a volu
 | Variable | Purpose |
 |---|---|
 | `GEMINI_API_KEY` | Gemini API key (generation, translation, judge 1) |
+| `GEMINI_MODEL` | Model for translation, rewrites and answers. Default `gemini-2.5-flash` (what everything was measured on); new keys need `gemini-3.8-flash` |
+| `JUDGE_MODEL` | Model of judge 1 in the evaluation scripts (default `gemini-2.5-flash`, pass with `docker compose exec -e`). Separate from `GEMINI_MODEL`, so testing a new model does not also change the judge |
 | `OPENAI_API_KEY` | only for the second judge (`compare_judge2.py`) |
 | `POSTGRES_PASSWORD` | Postgres password |
 | `SECRET_KEY` | JWT signing key — `openssl rand -hex 32` |
@@ -388,7 +398,7 @@ First start downloads the embedding + reranker models (~2.5 GB, cached in a volu
 ## Tests & evaluation
 
 ```bash
-docker compose exec backend python -m pytest tests/ -q     # 109 tests; 69 need neither models nor Postgres
+docker compose exec backend python -m pytest tests/ -q     # 116 tests; 73 need neither models nor Postgres
 
 docker compose exec backend python evaluation/scoreboard.py            # all 8 sets, frozen, per-question diff
 docker compose exec backend python evaluation/check_determinism.py
@@ -420,7 +430,7 @@ backend/
     compare_judge2.py            # second judge (OpenAI), agreement (κ)
     probe_*.py                   # one experiment each — prediction and result in the docstring
     runs/                        # every result, including the rejected ones
-  tests/                # 109 tests
+  tests/                # 116 tests
 frontend/
   app_ui.py             # Streamlit chat UI
 docker-compose.yml      # postgres + backend + frontend

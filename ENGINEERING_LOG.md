@@ -195,7 +195,7 @@ Embedding/reranking/BM25 = 0 $ ανά κλήση επειδή τρέχουν σ�
 | `RERANK_BATCH_SIZE=4` | 479→434 ms (1.15×), Pearson ρ=1.0000, 0 top-1 flips |
 | REST γέννηση + `THINKING_BUDGET=512` | TTFT 3.90→2.78 s· ~1000 κρυφά thinking tokens σβήστηκαν |
 | `_corpus_signature` με mtime | διέγραψε το #1 known limitation (multi-worker) |
-| domain-aware translation prompt | «μηχανήματα»→machinery· δύο ερωτήσεις +7.74 και +4.14 logits· στο κύριο σετ ουδέτερο, 30 αγγλικές max \|Δ\|=0.000 |
+| domain-aware translation prompt | «μηχανήματα»→machinery· δύο ερωτήσεις +7.74 και +4.14 logits· στο κύριο σετ ουδέτερο, 30 αγγλικές max \|Δ\|=0.000. **Διόρθωση 28/9: το +7.74/+4.14 ήταν διαρροή του σετ** — τα παραδείγματα του prompt ήταν οι απαντήσεις των δύο ερωτήσεων (h007, h004). Αφαιρέθηκαν 16/8· το καθαρό μέγεθος του κέρδους δεν μετρήθηκε ποτέ |
 | corrective retrieval agent | 4 ερωτήσεις από σιωπή → σωστή απάντηση, 0 ψευδαισθήσεις, out_of_corpus 5/5, κύριο σετ 61/61 ανέπαφο |
 | `CORRECTIVE_MIN_SCORE` +0.4 → −3.8 | hard set 12/16 → 13/16· το κατώφλι ήταν βαθμονομημένο σε λάθος κλίμακα (ερωτήσεις vs ονοματικές φράσεις) |
 | `metrics.py` + `/metrics` (Prometheus text, 0 εξαρτήσεις) | νέα ορατότητα: gate_block_rate, corrective_success_rate, tokens, latency ανά φάση |
