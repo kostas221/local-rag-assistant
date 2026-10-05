@@ -16,13 +16,13 @@ Built as a diploma thesis, then pushed further under one rule: **no change witho
 > | Questions that need two papers — both halves right | **17 / 29** (was 7 before per-document search) |
 > | Tables — exact values read correctly | **69 / 69** |
 >
-> Graded by Gemini and, independently, by GPT-4.1 against reference answers — the two judges agree on 95–100% of verdicts. Every component was measured before it was kept — and 20+ ideas were [rejected with numbers](#rejected-with-numbers).
+> Graded by Gemini and, independently, by GPT-4.1 against reference answers — the two judges agree on 95–100% of verdicts. The main components were measured against alternatives before they were kept — and 20+ ideas were [rejected with numbers](#rejected-with-numbers).
 
 ## Demo
 
-![Z-AI Platform — anti-hallucination gate + bilingual Q&A](docs/demo.gif)
+![Z-AI Platform demo — a Greek question answered with citations, a question that spans two papers, and two questions it correctly declines](docs/demo.gif)
 
-> Upload a PDF, ask in Greek or English, and get grounded answers with page-level citations — plus a clear *"not found"* when the answer isn't in the documents.
+> A Greek question answered in Greek from English papers with citations, a question that spans two papers, a question the papers don't answer (it says so), and an off-topic question (refused).
 
 ## Two judges — and the one that was wrong
 
