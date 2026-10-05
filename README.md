@@ -6,16 +6,17 @@ A **RAG system for scientific papers**: upload PDFs, ask in Greek or English, ge
 
 Built as a diploma thesis, then pushed further under one rule: **no change without a measurement on this project's own data** — including changes that the literature says should work.
 
-> **Head-to-head on the same 137 questions, with the same LLM, graded by two judges from two vendors:**
+> **Measured, not eyeballed** — 235 hand-checked questions over 7 papers, graded by two judges from two vendors:
 >
-> | | **This system** | Naive RAG | LlamaIndex (defaults) |
-> |---|---|---|---|
-> | Standard questions answered correctly (45) | **42** | 34 | 26 |
-> | Two-paper questions, **both** halves right (29) | **18** | 3 | 2 |
-> | Near-miss questions correctly declined (42) | 40 | 41 | 41 |
-> | Generation cost per question | 0.47¢ | 0.19¢ | 0.17¢ |
+> | Test set | Result |
+> |---|---|
+> | Standard questions answered correctly | **42 / 45** |
+> | Off-topic questions declined | **5 / 5** |
+> | Near-miss questions declined (related to the papers, but not answerable from them) | **40 / 42** |
+> | Questions that need two papers — both halves right | **17 / 29** (was 7 before per-document search) |
+> | Tables — exact values read correctly | **69 / 69** |
 >
-> GPT-4.1 judging against reference answers; a Gemini judge gives the same ranking (agreement κ = 0.91). It wins where retrieval is hard, ties where the model's own caution decides, and costs ~2.5× more — [evidence below](#head-to-head-same-questions-same-llm-same-judges).
+> Graded by Gemini and, independently, by GPT-4.1 against reference answers — the two judges agree on 95–100% of verdicts. Every component was measured before it was kept — and 20+ ideas were [rejected with numbers](#rejected-with-numbers).
 
 ## Demo
 
@@ -23,57 +24,17 @@ Built as a diploma thesis, then pushed further under one rule: **no change witho
 
 > Upload a PDF, ask in Greek or English, and get grounded answers with page-level citations — plus a clear *"not found"* when the answer isn't in the documents.
 
-## Head-to-head: same questions, same LLM, same judges
+## Two judges — and the one that was wrong
 
-Three systems answered the same **137 questions** over the same 7 papers, all with **Gemini 2.5 Flash** writing the answer, so the difference measures the retrieval pipeline — not the model.
+Answers are graded by **two LLM judges from two vendors**: Gemini (judge 1, used throughout the project) and GPT-4.1 (judge 2), which grades **against the reference answer only**. On this system's answers they agree on 95% of two-paper halves (κ = 0.86), 100% of near-miss verdicts and 41 of 42 standard questions — so the scores are not one model grading its own family.
 
-| System | What it is |
-|---|---|
-| **This system** | translate → bge-m3 + BM25 → RRF → cross-encoder → relevance gate → corrective retry → whole pages → per-document search for two-paper questions |
-| **Naive RAG** | the tutorial recipe: bge-m3, top-4 chunks. **Same prompt, same chunks, same LLM** as this system — only retrieval differs |
-| **LlamaIndex 0.14.25, defaults** | `SimpleDirectoryReader` → `VectorStoreIndex` → `as_query_engine()` — its own chunking, top-2, its own prompt. Only the embedder (bge-m3; the default needs OpenAI) and the LLM are shared |
-
-| | This system | Naive RAG | LlamaIndex |
-|---|---|---|---|
-| **Standard (45)** — correct, judge 2 (GPT-4.1, vs reference) | **42** | 34 | 26 |
-| Standard — 5/5/5/5, judge 1 (Gemini)¹ | **42** | 34 | 30 |
-| Standard — "not found" although the answer exists | **1** | 2 | 5 |
-| Standard — off-topic questions declined (5) | 5 | 5 | 5 |
-| **Two papers (29)** — correct halves, judge 2 | **45/58** | 18/58 | 17/58 |
-| Two papers — both halves correct, judge 2 / judge 1 | **18 / 17** | 3 / 3 | 2 / 2 |
-| **Near-miss (42)** — correctly declined, judge 2 / judge 1 | 40 / 40 | 41 / 42 | 41 / 41 |
-| **Tables (16)** — fully correct · exact values (69) | **16 · 69** | 15 · 63 | 13 · 57 |
-| Greek question → Greek answer (18) | 18 | 18 | 16 |
-| Generation cost per question (median) | 0.47¢ | 0.19¢ | **0.17¢** |
-
-Per question, paired against this system: **standard 11/3 and 17/1** (wins/losses vs naive and LlamaIndex; p = 0.06 and < 0.001) · **two-paper halves 28/1 and 28/0** · near-miss 1/2 and 0/1 (noise).
-
-**How to read it:**
-
-- **The value of the pipeline is finding the right pages.** On questions that need two papers, the naive and default pipelines answer both halves 2–3 times out of 29; this one 18.
-- **Declining is a tie — and not because of the pipeline.** All three decline 40–42 of 42 near-miss questions. With LlamaIndex's generic prompt it is still 41/42, so the caution comes mostly from the model. This system's two misses come from giving the model *more* relevant material (8 pages vs 2–4 chunks); "all PDFs in the prompt" shows the same pattern below.
-- **It costs 2.5× more** per question, for the same reason: 8 pages of context. Still under half a cent.
-
-**Fairness notes.** LlamaIndex ran with its **defaults** — a tuned LlamaIndex (hybrid search, a reranker, more context) would close part of the gap, and that tuning is exactly the work being measured. Versions are pinned in [`requirements_compare.txt`](backend/evaluation/requirements_compare.txt); every answer and every judgement is committed under [`runs/compare/`](backend/evaluation/runs/compare).
-
-**Two judges.** Judge 1 is Gemini (as in the rest of the project); judge 2 is GPT-4.1, grading **against the reference answer only**. They agree on 95% of two-paper halves (κ = 0.91) and 99% of near-miss verdicts (κ = 0.85), and rank the systems identically — so the result is not one model grading its own family.
+Judge 2 exists because judge 1 turned out to be wrong in a specific way. While testing simpler retrieval set-ups, the answer judge used since v1 gave **5/5/5/5 to *"I cannot find the answer … in the provided source text"*** on questions whose answer *is* in the papers, whenever retrieval had missed the page. Its criteria are relative to the retrieved context, so a failed search followed by an honest refusal looks perfect. The rule was corrected — a refusal on an answerable question is not a perfect answer — and the reference-only judge was added to check it. A context-relative judge is fine for comparing configurations of *one* retriever; across retrievers it rewards the worse one.
 
 ```bash
-# answers + judge 1 (in Docker), LlamaIndex in a throwaway container, judge 2 on the host
-docker compose run --rm --no-deps backend python -u evaluation/compare_systems.py --system naive
-docker compose run --rm --no-deps -u root backend sh -c "pip install -q -r evaluation/requirements_compare.txt && python -u evaluation/compare_llamaindex.py"
-docker compose run --rm --no-deps backend python -u evaluation/compare_systems.py --system llamaindex
-python backend/evaluation/compare_judge2.py
-docker compose run --rm --no-deps backend python evaluation/compare_systems.py --table   # the table above, zero API calls
+python backend/evaluation/compare_judge2.py      # judge 2 on the host; every verdict is cached and committed
 ```
 
-### The judge was rewarding failed retrieval
-
-¹ The first comparison ran with the answer judge this project had used since v1 — and it gave **5/5/5/5 to *"the provided context does not contain this information"*** on questions whose answer *is* in the papers, whenever retrieval had missed the page. Its criteria are relative to the retrieved context, so a failed search followed by an honest refusal looks perfect. Seven such answers (five LlamaIndex, two naive) were scored perfect; raw perfect counts were 42 / 36 / 35.
-
-The rule was corrected (a refusal on an answerable question is not a perfect answer), and the reference-only second judge was added to check the correction. Of the 17 answers that only judge 1 called perfect, **16 belonged to the two baselines** — refusals and half-answers. A context-relative judge is fine for comparing configurations of *one* retriever; across retrievers it rewards the worse one.
-
-### And against "just put all the PDFs in the prompt"
+## Why retrieve at all? Against "just put all the PDFs in the prompt"
 
 The 7 papers are ~132k tokens and fit in Gemini's context window, so the obvious question is why retrieve at all. The same `ask_ai` was run with all 122 pages instead of 8:
 
@@ -135,7 +96,7 @@ docker compose exec backend python evaluation/ablation_ladder.py
 - **Inline citations** — `[S3]` markers resolved server-side to (file, page), so the model is never asked to copy a page number — the step that used to go wrong
 - **Conversational rewriting** — follow-ups are rewritten into self-contained queries; leak tests confirm an off-topic follow-up is still refused
 - **Robust PDF extraction** — PyMuPDF with Unicode NFKC normalization and de-hyphenation (`A WS` → `AWS`, ligatures, line-break hyphens)
-- **Evaluation framework** — 8 golden sets in one frozen scoreboard, two LLM judges, paired bootstrap, chance floors, per-stage tracing, determinism checks, head-to-head comparisons
+- **Evaluation framework** — 8 golden sets in one frozen scoreboard, two LLM judges, paired bootstrap, chance floors, per-stage tracing, determinism checks
 - **Prometheus metrics** — `/metrics` with zero dependencies: gate block rate, corrective success rate, tokens, latency per phase
 - **Multi-user** — JWT auth, per-user document isolation enforced in the vector store, rate limiting shared across processes via Postgres
 
@@ -343,7 +304,7 @@ docker compose exec backend python evaluation/trace_query.py --id q028 --target 
 
 ## Known limitations
 
-- **Two near-miss leaks out of 42.** Asked how the programming language affects AWS autoscaling, the system concludes it doesn't — a synthesis of two facts no paper links (stable across draws). Asked about multi-cloud security "in 2024", it answers about cloud security without saying the specifics are missing (varies between draws). Both follow from giving the model 8 pages of related material; the naive baseline declines both. A claim-level grounding check (e.g. HHEM, MiniCheck) is the natural next experiment
+- **Two near-miss leaks out of 42.** Asked how the programming language affects AWS autoscaling, the system concludes it doesn't — a synthesis of two facts no paper links (stable across draws). Asked about multi-cloud security "in 2024", it answers about cloud security without saying the specifics are missing (varies between draws). Both follow from giving the model 8 pages of related material. A claim-level grounding check (e.g. HHEM, MiniCheck) is the natural next experiment
 - **Text-layer PDFs only.** A scanned PDF is flagged in the UI as *"no extractable text (scanned PDF — needs OCR)"* instead of silently showing as ready; there is no OCR or layout model. Figures were audited instead of ingested
 - **Not measured:** questions about the whole corpus at once ("what do all seven papers say about cold starts?"), multi-step agentic retrieval, and prompt injection hidden in uploaded PDFs (uploads are private to their owner, so an injected document can only mislead its own uploader)
 - **Two-paper routing uses hand-written aliases** for the 7 papers; paraphrases ("the video-processing system") and pronouns are not caught. Automatic alias extraction at ingest is open
@@ -407,7 +368,6 @@ docker compose exec backend python evaluation/ablation_ladder.py
 docker compose exec backend python evaluation/trace_query.py --id q028
 docker compose exec backend python evaluation/compare_pages_rerankers.py
 docker compose exec backend python evaluation/measure_gate_margin.py
-docker compose run --rm --no-deps backend python evaluation/compare_systems.py --table   # head-to-head, 0 API calls
 ```
 
 ## Project structure
@@ -425,8 +385,6 @@ backend/
     golden_*.jsonl               # 8 scoreboard sets + domains + dangling
     scoreboard.py                # all sets, one frozen run, per-question diff
     scoreboard_answers.py        # answers + judges per set
-    compare_systems.py           # naive / LlamaIndex vs this system, paired tests
-    compare_llamaindex.py        # LlamaIndex with defaults (throwaway container)
     compare_judge2.py            # second judge (OpenAI), agreement (κ)
     probe_*.py                   # one experiment each — prediction and result in the docstring
     runs/                        # every result, including the rejected ones
@@ -438,4 +396,4 @@ docker-compose.yml      # postgres + backend + frontend
 
 ## Tech stack
 
-FastAPI · Streamlit · ChromaDB · PostgreSQL · sentence-transformers (bge-m3, ms-marco-MiniLM) · rank-bm25 · PyMuPDF · Gemini 2.5 Flash · Docker Compose · evaluated against LlamaIndex, with GPT-4.1 as a second judge
+FastAPI · Streamlit · ChromaDB · PostgreSQL · sentence-transformers (bge-m3, ms-marco-MiniLM) · rank-bm25 · PyMuPDF · Gemini 2.5 Flash · Docker Compose · GPT-4.1 as a second judge
