@@ -49,6 +49,22 @@ def test_where_user_and_files_combined_with_and():
     assert files == {"$or": [{"file_name": "a.pdf"}, {"file_name": "b.pdf"}]}
 
 
+def test_where_single_doc_id():
+    assert _build_where(None, None, target_doc_ids=[42]) == {"doc_id": 42}
+
+
+def test_where_multiple_doc_ids_and_user():
+    w = _build_where(None, user_id=7, target_doc_ids=[10, 20])
+    access, ids = w["$and"]
+    assert access == {"$or": [{"user_id": 7}, {"is_public": True}]}
+    assert ids == {"$or": [{"doc_id": 10}, {"doc_id": 20}]}
+
+
+def test_where_doc_ids_take_precedence_over_filenames():
+    w = _build_where(target_filenames=["ignored.pdf"], user_id=None, target_doc_ids=[42])
+    assert w == {"doc_id": 42}
+
+
 # --- delete_file_from_db: REGRESSION TEST για το duplicate-delete bug ---
 
 
@@ -206,3 +222,65 @@ def test_relevance_gate_passes_above_threshold(monkeypatch):
     assert len(result) > 0
     text, meta = result[0]
     assert isinstance(text, str) and meta["file_name"] == "a.pdf"
+
+
+def test_expand_to_pages_preserves_doc_id(monkeypatch):
+    """Parent document retrieval (_expand_to_pages) διατηρεί το doc_id στο metadata."""
+    ids = ["c0", "c1"]
+    texts = ["page 1 text", "page 2 text"]
+    metas = [{"file_name": "paper.pdf", "page": 1, "doc_id": 99},
+             {"file_name": "paper.pdf", "page": 2, "doc_id": 99}]
+    monkeypatch.setattr(ai_core, "collection", _StubCollection(ids, texts, metas))
+    top_chunks = [(1.5, "chunk text", {"file_name": "paper.pdf", "page": 1, "doc_id": 99})]
+    pages = ai_core._expand_to_pages(top_chunks, max_pages=1, user_id=1)
+    assert len(pages) == 1
+    page_text, meta = pages[0]
+    assert meta.get("doc_id") == 99
+    assert meta.get("file_name") == "paper.pdf"
+    assert meta.get("page") == 1
+
+
+def test_translation_cache_respects_domain_terms_and_model(monkeypatch):
+    """Το translation cache λαμβάνει υπόψη domain, όρους και μοντέλο (όχι μόνο το query)."""
+    import gemini_rest
+
+    calls = []
+
+    async def fake_generate_once(prompt, model, **kwargs):
+        calls.append((prompt, model))
+        if "Cardiology" in prompt:
+            return "cardiology english query"
+        return "cloud english query"
+
+    monkeypatch.setattr(gemini_rest, "generate_once", fake_generate_once)
+    monkeypatch.setattr(ai_core, "_save_translation_cache", lambda: None)
+    ai_core._translation_cache.clear()
+
+    q = "Πώς λειτουργεί η ελαστικότητα;"
+
+    # 1. Πρώτη κλήση με πεδίο Cloud -> API call
+    res1 = asyncio.run(ai_core.optimize_query(q, domain="Cloud Computing", terms="serverless"))
+    assert res1 == "cloud english query"
+    assert len(calls) == 1
+
+    # 2. Ίδια ερώτηση με ΙΔΙΑ ρύθμιση -> Cache HIT (κανένα νέο API call)
+    res2 = asyncio.run(ai_core.optimize_query(q, domain="Cloud Computing", terms="serverless"))
+    assert res2 == "cloud english query"
+    assert len(calls) == 1
+
+    # 3. Ίδια ερώτηση αλλά με πεδίο Cardiology -> Cache MISS (νέο API call)
+    res3 = asyncio.run(ai_core.optimize_query(q, domain="Cardiology", terms="heart"))
+    assert res3 == "cardiology english query"
+    assert len(calls) == 2
+
+    # 4. Ίδια ερώτηση με terms="" (κενό string): δεν αντικαθίσταται από default _CORPUS_TERMS!
+    res4 = asyncio.run(ai_core.optimize_query(q, domain="Cardiology", terms=""))
+    assert len(calls) == 3
+    # Το prompt του calls[2] ΔΕΝ πρέπει να περιέχει τους όρους του Cloud
+    assert "serverless" not in calls[2][0]
+
+    # 5. Αλλαγή μοντέλου -> Cache MISS
+    monkeypatch.setattr(ai_core, "GEMINI_MODEL", "gemini-3.8-flash")
+    res5 = asyncio.run(ai_core.optimize_query(q, domain="Cloud Computing", terms="serverless"))
+    assert len(calls) == 4
+

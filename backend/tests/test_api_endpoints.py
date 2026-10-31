@@ -46,9 +46,9 @@ def _make_ai_core_stub():
     def delete_file_from_db(filename, user_id=None, doc_id=None):
         stub.calls.append(("delete_file_from_db", filename, user_id, doc_id))
 
-    async def ask_ai(question, target_filenames, history=None, user_id=None,
-                     persona="Researcher", precomputed=None):
-        stub.calls.append(("ask_ai", question, user_id))
+    async def ask_ai(question, target_filenames=None, history=None, user_id=None,
+                     persona="Researcher", precomputed=None, target_doc_ids=None):
+        stub.calls.append(("ask_ai", question, user_id, target_doc_ids))
         yield {"type": "sources", "data": []}
         yield {"type": "text", "data": "stub answer"}
 
@@ -365,3 +365,68 @@ def test_scanned_pdf_is_not_marked_ready(app_env, alice, monkeypatch,
     got = db.query(models.Document).filter(models.Document.id == doc_id).first()
     assert got.status == expected
     db.close()
+
+
+# --- Feedback Authorization ---------------------------------------------------
+
+def test_feedback_requires_valid_message_ownership(app_env, alice, bob):
+    """REGRESSION ΑΣΦΑΛΕΙΑΣ: Το feedback επιτρέπεται ΜΟΝΟ σε assistant μηνύματα
+    συνομιλίας που ανήκει στον τρέχοντα χρήστη."""
+    client, _ = app_env
+    # Alice creates conversation and sends message
+    conv_id = client.post("/conversations", json={"title": "alice feedback test"},
+                          headers=alice).json()["id"]
+    client.post("/chat", headers=alice,
+                json={"conversation_id": conv_id,
+                      "question": "ερώτηση Alice", "history": [],
+                      "target_filenames": [], "persona": "Researcher"})
+
+    # Get message IDs from Alice's conversation
+    msgs = client.get(f"/conversations/{conv_id}/messages", headers=alice).json()
+    user_msg = next(m for m in msgs if m["role"] == "user")
+    ai_msg = next(m for m in msgs if m["role"] == "assistant")
+
+    # 1. Bob cannot submit feedback for Alice's assistant message -> 404
+    bob_res = client.post("/feedback", headers=bob,
+                          json={"message_id": ai_msg["id"], "is_positive": True})
+    assert bob_res.status_code == 404, "Ο Bob έδωσε feedback σε μήνυμα της Alice!"
+
+    # 2. Alice cannot submit feedback for a user message -> 400
+    user_fb_res = client.post("/feedback", headers=alice,
+                              json={"message_id": user_msg["id"], "is_positive": True})
+    assert user_fb_res.status_code == 400
+
+    # 3. Alice cannot submit feedback for nonexistent message -> 404
+    nonexistent = client.post("/feedback", headers=alice,
+                              json={"message_id": 999999, "is_positive": True})
+    assert nonexistent.status_code == 404
+
+    # 4. Alice CAN submit feedback for her own assistant message -> 200
+    ok_res = client.post("/feedback", headers=alice,
+                         json={"message_id": ai_msg["id"], "is_positive": True,
+                               "comment": "πολύ καλό"})
+    assert ok_res.status_code == 200
+
+    # 5. Subsequent feedback from Alice updates existing row (upsert)
+    up_res = client.post("/feedback", headers=alice,
+                         json={"message_id": ai_msg["id"], "is_positive": False,
+                               "comment": "άλλαξα γνώμη"})
+    assert up_res.status_code == 200
+    assert up_res.json()["status"] == "success"
+
+
+def test_chat_passes_target_doc_ids(app_env, alice):
+    """Το /chat περνά τα target_doc_ids στο ai_core.ask_ai."""
+    client, stub = app_env
+    conv_id = client.post("/conversations", json={"title": "doc_ids test"},
+                          headers=alice).json()["id"]
+    stub.calls.clear()
+    res = client.post("/chat", headers=alice,
+                      json={"conversation_id": conv_id,
+                            "question": "test question", "history": [],
+                            "target_filenames": [], "target_doc_ids": [101, 102],
+                            "persona": "Concise"})
+    assert res.status_code == 200
+    ask_calls = [c for c in stub.calls if c[0] == "ask_ai"]
+    assert len(ask_calls) == 1
+    assert ask_calls[0][3] == [101, 102], f"target_doc_ids was not passed: {ask_calls[0]}"

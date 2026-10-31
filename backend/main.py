@@ -573,7 +573,14 @@ async def chat_with_ai(query: schemas.ChatMessage,
         final_sources = []
 
         try:
-            async for packet in ai_core.ask_ai(question=query.question, target_filenames=query.target_filenames, history=query.history, user_id=current_user.id, persona=query.persona):
+            async for packet in ai_core.ask_ai(
+                question=query.question,
+                target_filenames=query.target_filenames,
+                history=query.history,
+                user_id=current_user.id,
+                persona=query.persona,
+                target_doc_ids=query.target_doc_ids,
+            ):
 
                 if packet["type"] == "sources":
                     final_sources = packet["data"]
@@ -582,6 +589,9 @@ async def chat_with_ai(query: schemas.ChatMessage,
                 elif packet["type"] == "text":
                     full_answer += packet["data"]
                     yield f"{json.dumps({'type': 'text', 'data': packet['data']})}\n"
+
+                elif packet["type"] == "status":
+                    yield f"{json.dumps({'type': 'status', 'data': packet['data'], 'reason': packet.get('reason')})}\n"
 
                 elif packet["type"] == "metrics":
                     # Per-phase latency + tokens προς το UI. ΔΕΝ αποθηκεύεται στο
@@ -605,6 +615,25 @@ async def chat_with_ai(query: schemas.ChatMessage,
 
 @app.post("/feedback")
 def submit_feedback(fb: schemas.FeedbackCreate, current_user: models.User = Depends(get_current_user), db: Session = Depends(get_db)):
+    # ΑΣΦΑΛΕΙΑ: το μήνυμα πρέπει να ανήκει σε συνομιλία του τρέχοντος χρήστη
+    # και να είναι απάντηση του AI (ρόλος "assistant").
+    msg = (
+        db.query(models.Message)
+        .join(models.Conversation, models.Message.conversation_id == models.Conversation.id)
+        .filter(models.Message.id == fb.message_id, models.Conversation.user_id == current_user.id)
+        .first()
+    )
+    if not msg:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Message not found or not authorized",
+        )
+    if msg.role != "assistant":
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Feedback can only be submitted for assistant messages",
+        )
+
     # UPSERT: ένα feedback ανά (χρήστη, μήνυμα). Δεύτερο POST (αλλαγή ψήφου ή
     # προσθήκη σχολίου στο 👎) ενημερώνει την υπάρχουσα εγγραφή — όχι διπλότυπα.
     existing = db.query(models.Feedback).filter(

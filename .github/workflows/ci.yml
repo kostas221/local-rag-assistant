@@ -68,7 +68,8 @@ jobs:
           pytest tests/test_schemas.py tests/test_security.py \
                  tests/test_gemini_rest.py tests/test_api_endpoints.py \
                  tests/test_metrics.py tests/test_rate_limit.py \
-                 tests/test_scope_domain.py tests/test_doc_routing.py -v
+                 tests/test_scope_domain.py tests/test_doc_routing.py \
+                 tests/test_generate_once_finish.py -v
 
   core-tests:
     # Τα tests του RAG πυρήνα: el_tokenize, _has_greek, _build_where, _rrf_fuse
@@ -119,4 +120,4 @@ jobs:
         # Το rewrite είναι stubbed -> μηδέν κλήσεις δικτύου/API.
         run: |
           pytest tests/test_rag_core.py tests/test_corpus_signature.py \
-                 tests/test_corrective_retrieval.py -v
+                 tests/test_corrective_retrieval.py tests/test_citations.py -v

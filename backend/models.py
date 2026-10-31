@@ -1,4 +1,13 @@
-from sqlalchemy import Boolean, Column, DateTime, ForeignKey, Integer, String, func
+from sqlalchemy import (
+    Boolean,
+    Column,
+    DateTime,
+    ForeignKey,
+    Integer,
+    String,
+    UniqueConstraint,
+    func,
+)
 from sqlalchemy.orm import relationship
 
 from database import Base
@@ -60,6 +69,8 @@ class Message(Base):
 
 class Feedback(Base):
     __tablename__ = "feedbacks"
+    __table_args__ = (UniqueConstraint("user_id", "message_id", name="uq_feedback_user_message"),)
+
     id = Column(Integer, primary_key=True, index=True)
     message_id = Column(Integer, ForeignKey("messages.id"))
     is_positive = Column(Boolean)  # True για 👍, False για 👎

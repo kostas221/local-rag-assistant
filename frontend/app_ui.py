@@ -658,11 +658,18 @@ def app_main(token):
             if d.get("status") == "ready"
             and st.session_state.get(f"check_{d['id']}", True)
         ]
+        active_doc_ids = [
+            d["id"]
+            for d in docs_cache
+            if d.get("status") == "ready"
+            and st.session_state.get(f"check_{d['id']}", True)
+        ]
         payload = {
             "conversation_id": st.session_state.current_conv_id,
             "question": q,
             "history": st.session_state.chat_history,
             "target_filenames": active_filenames,
+            "target_doc_ids": active_doc_ids,
             "persona": persona,
         }
 
@@ -734,6 +741,9 @@ def app_main(token):
                                     # Έρχονται ΤΕΛΕΥΤΑΙΑ (μετά το κείμενο) -> τα
                                     # κρατάμε και τα δείχνουμε μετά το stream.
                                     metrics_data = data["data"]
+                                elif data["type"] == "status":
+                                    if data.get("data") == "incomplete":
+                                        st.warning(f"⚠️ Response incomplete: {data.get('reason')}")
                                 elif data["type"] == "text":
                                     if first_chunk:
                                         message_placeholder.empty()

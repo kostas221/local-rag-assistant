@@ -1,4 +1,5 @@
 import asyncio
+import hashlib
 import json
 import os
 import re
@@ -493,6 +494,10 @@ _CORPUS_FILES = _load_descriptor_files()
 _CORPUS_NAMES = doc_routing.load_names(os.path.join(os.path.dirname(__file__), "corpus_names.json"))
 
 
+def _translation_cache_key(prompt: str, model: str) -> str:
+    return hashlib.sha256(f"{model}:{prompt}".encode("utf-8")).hexdigest()
+
+
 async def optimize_query(query: str, domain: str | None = None, terms: str | None = None):
     """Translate-then-Retrieve: τα έγγραφα είναι ΑΓΓΛΙΚΑ, οπότε αν η ερώτηση
     είναι ελληνική τη μεταφράζουμε σε αγγλικά ΜΟΝΟ για την ανάκτηση (retrieval).
@@ -501,15 +506,11 @@ async def optimize_query(query: str, domain: str | None = None, terms: str | Non
     if not _has_greek(query):
         return query
 
-    if query in _translation_cache:
-        return _translation_cache[query]
-
     # Glossary/domain ΤΟΥ SCOPE (τα χτίζει το search_documents από τα in-scope
-    # αρχεία). Fallback στα καθολικά όταν λείπουν: legacy chunks πριν το backfill,
-    # ή κλήση χωρίς ορίσματα (tests/probes/CLI). Το ΚΕΝΟ string πέφτει κι αυτό στο
-    # fallback — γι' αυτό `or`, όχι έλεγχος για None.
-    domain = domain or _CORPUS_DOMAIN
-    terms = terms or _CORPUS_TERMS
+    # αρχεία). None -> fallback στα καθολικά. Κενό string "" -> ρητά κενό (χωρίς όρους /
+    # ουδέτερο πεδίο), άρα ΔΕΝ αντικαθίσταται από το _CORPUS_TERMS του cloud!
+    domain = _CORPUS_DOMAIN if domain is None else domain
+    terms = _CORPUS_TERMS if terms is None else terms
 
     try:
         # ΤΟ ΠΡΟΒΛΗΜΑ ΠΟΥ ΛΥΝΕΙ (μετρημένο, measure_gate_margin.py):
@@ -544,9 +545,14 @@ async def optimize_query(query: str, domain: str | None = None, terms: str | Non
             "terms. No quotes, no extra text.\n\n"
             f"User question: {query}"
         )
+        cache_key = _translation_cache_key(prompt, GEMINI_MODEL)
+        if cache_key in _translation_cache:
+            return _translation_cache[cache_key]
+
         english_query = (
             await gemini_rest.generate_once(prompt, model=GEMINI_MODEL, api_key=GEMINI_API_KEY)
         ).strip(" \"'\n")
+        _translation_cache[cache_key] = english_query
         _translation_cache[query] = english_query
         _save_translation_cache()
         logger.info(f"---> Retrieval translate: '{query[:40]}...' -> '{english_query}'")
@@ -943,20 +949,30 @@ def _expand_to_pages(top_chunks, max_pages: int = 8, user_id: int | None = None)
             continue
         ordered = sorted(zip(pg["ids"], pg["documents"]), key=lambda p: _chunk_idx_from_id(p[0]))
         page_text = "\n".join(doc for _, doc in ordered)
-        results.append((page_text, {"file_name": file_name, "page": page}))
+        results.append((page_text, {"file_name": file_name, "page": page, "doc_id": doc_id}))
     return results
 
 
-def _build_where(target_filenames: list | None = None, user_id: int | None = None):
+def _build_where(
+    target_filenames: list | None = None,
+    user_id: int | None = None,
+    target_doc_ids: list[int] | None = None,
+):
     """Φτιάχνει το ChromaDB where filter συνδυάζοντας:
     - δικαίωμα πρόσβασης (δικά μου έγγραφα ή public), αν δοθεί user_id
-    - τα επιλεγμένα αρχεία (target_filenames), αν δοθούν
+    - τα επιλεγμένα αρχεία (target_doc_ids με προτεραιότητα, ή target_filenames)
     """
     # ΣΗΜ: η chromadb 0.4.6 ΔΕΝ υποστηρίζει $in — χρησιμοποιούμε $or από $eq.
     clauses = []
     if user_id is not None:
         clauses.append({"$or": [{"user_id": user_id}, {"is_public": True}]})
-    if target_filenames:
+
+    if target_doc_ids:
+        if len(target_doc_ids) == 1:
+            clauses.append({"doc_id": target_doc_ids[0]})
+        else:
+            clauses.append({"$or": [{"doc_id": did} for did in target_doc_ids]})
+    elif target_filenames:
         if len(target_filenames) == 1:
             clauses.append({"file_name": target_filenames[0]})
         else:
@@ -977,8 +993,7 @@ def _build_where(target_filenames: list | None = None, user_id: int | None = Non
 # φιλτράρει. Το v1 κρατά τις ψευδαισθήσεις στα ΧΑΜΗΛΑ σκορ, άρα φιλτράρονται.
 _CORRECTIVE_PROMPT = (
     "The following search query returned no sufficiently relevant results from a "
-    "corpus of computer-science papers on cloud computing, serverless computing "
-    "and distributed systems.\n\n"
+    "corpus of scientific research papers on {domain}.\n\n"
     "Rewrite it as a keyword-rich search query using the standard technical "
     "terminology of that field. Replace vague or conversational wording with the "
     "terms a paper would actually use. Do NOT add facts, system names or numbers "
@@ -989,7 +1004,14 @@ _CORRECTIVE_PROMPT = (
 )
 
 
-async def _corrective_retry(query: str, first_best: float, allowed_ids: list, idx: dict, dm: dict):
+async def _corrective_retry(
+    query: str,
+    first_best: float,
+    allowed_ids: list,
+    idx: dict,
+    dm: dict,
+    domain: str | None = None,
+):
     """2ο pass μετά από κοπή του gate. Επιστρέφει sorted_final, ή None αν πρέπει
     να παραμείνει κομμένο. Best-effort: ΚΑΘΕ σφάλμα -> None (δηλαδή η σημερινή
     συμπεριφορά), ποτέ εξαίρεση προς τον χρήστη."""
@@ -997,10 +1019,13 @@ async def _corrective_retry(query: str, first_best: float, allowed_ids: list, id
         metrics.inc("rag_corrective_skipped_total", {"reason": "disabled"})
         return None
     metrics.inc("rag_corrective_attempts_total")
+    domain = _CORPUS_DOMAIN if domain is None else domain
     try:
         new_query = (
             await gemini_rest.generate_once(
-                _CORRECTIVE_PROMPT.format(query=query), model=GEMINI_MODEL, api_key=GEMINI_API_KEY
+                _CORRECTIVE_PROMPT.format(query=query, domain=domain),
+                model=GEMINI_MODEL,
+                api_key=GEMINI_API_KEY,
             )
         ).strip(" \"'\n")
     except Exception as e:
@@ -1093,11 +1118,16 @@ async def _add_perdoc_pages(raw_query, query, pages, allowed_ids, idx, dm, user_
 
 
 async def search_documents(
-    raw_query: str, target_filenames: list | None = None, user_id: int | None = None
+    raw_query: str,
+    target_filenames: list | None = None,
+    user_id: int | None = None,
+    target_doc_ids: list[int] | None = None,
 ):
     # Αν ο χρήστης δεν έχει επιλέξει κανένα (έγκυρο) αρχείο, μη γυρνάς τυχαία
     # αποτελέσματα — απάντησε "τίποτα".
-    if target_filenames is not None and len(target_filenames) == 0:
+    if target_doc_ids is not None and len(target_doc_ids) == 0 and (target_filenames is None or len(target_filenames) == 0):
+        return []
+    if target_filenames is not None and len(target_filenames) == 0 and target_doc_ids is None:
         return []
 
     metrics.inc("rag_queries_total")
@@ -1105,7 +1135,7 @@ async def search_documents(
     # ΣΕΙΡΑ: πρώτα authz + BM25 index, ΜΕΤΑ μετάφραση. Δύο λόγοι: (α) το glossary
     # της μετάφρασης χτίζεται από τα metadata των in-scope αρχείων -> χρειάζεται το
     # idx· (β) κενό scope -> γυρνάμε [] ΠΡΙΝ ξοδέψουμε κλήση μετάφρασης.
-    where_filter = _build_where(target_filenames, user_id)
+    where_filter = _build_where(target_filenames, user_id, target_doc_ids=target_doc_ids)
 
     # 1. Allowed ids (AUTHORIZATION single-source στη Chroma). include=[] ->
     # ΜΟΝΟ τα ids. Τα metadatas ζητούνταν για 418 chunks σε ΚΑΘΕ ερώτηση και
@@ -1192,7 +1222,9 @@ async def search_documents(
         metrics.inc("rag_gate_blocked_total")
         # Corrective 2ο pass: ΜΟΝΟ εδώ, δηλαδή μόνο όταν το σύστημα ήδη απέτυχε.
         # Το happy path (61/61 ερωτήσεις του golden set) δεν το βλέπει ποτέ.
-        sorted_final = await _corrective_retry(query, sorted_final[0][0], allowed_ids, idx, dm)
+        sorted_final = await _corrective_retry(
+            query, sorted_final[0][0], allowed_ids, idx, dm, domain=scope_domain
+        )
         if sorted_final is None:
             return []
 
@@ -1274,7 +1306,13 @@ PERSONA_STYLES = {
 
 
 async def ask_ai(
-    question, target_filenames, history=None, user_id=None, persona="Researcher", precomputed=None
+    question,
+    target_filenames=None,
+    history=None,
+    user_id=None,
+    persona="Researcher",
+    precomputed=None,
+    target_doc_ids=None,
 ):
     """precomputed: έτοιμο αποτέλεσμα ανάκτησης — χρησιμοποιείται ΜΟΝΟ από το eval
     ώστε να μη γίνει δεύτερη φορά η ίδια (ακριβή σε CPU) αναζήτηση. Η εφαρμογή δεν
@@ -1292,7 +1330,9 @@ async def ask_ai(
     top_3_data = (
         precomputed
         if precomputed is not None
-        else await search_documents(retrieval_query, target_filenames, user_id=user_id)
+        else await search_documents(
+            retrieval_query, target_filenames, user_id=user_id, target_doc_ids=target_doc_ids
+        )
     )
     retrieval_time = time.perf_counter() - t_retrieval
     metrics.observe("rag_retrieval_seconds", retrieval_time)
@@ -1332,6 +1372,7 @@ async def ask_ai(
     for i, (text, meta) in enumerate(top_3_data, 1):
         file_n = meta.get("file_name", "Unknown File")
         page_n = meta.get("page", "?")
+        doc_id = meta.get("doc_id")
         header = SOURCE_HEADER.format(i=i, file=file_n, page=page_n)
         context_text += f"\n{header}\n{text}\n"
         # Πλούσιο αντικείμενο αντί για string: το UI δείχνει και απόσπασμα
@@ -1344,6 +1385,7 @@ async def ask_ai(
                 "label": f"S{i}",
                 "file": file_n,
                 "page": page_n,
+                "doc_id": doc_id,
                 "preview": text[:400] + ("…" if len(text) > 400 else ""),
             }
         )
@@ -1356,7 +1398,6 @@ async def ask_ai(
             history_text += f"{role}: {msg.get('content')}\n\n"
         history_text += "---------------------------\n\n"
 
-    # --- SYSTEM PROMPT: γλώσσα + persona-στυλ + κανόνας μη-ψευδαίσθησης ---
     # --- SYSTEM PROMPT: γλώσσα + persona-στυλ + κανόνας μη-ψευδαίσθησης ---
     persona_style = PERSONA_STYLES.get(persona, PERSONA_STYLES["Researcher"])
     citation_rule = f"\n    6. CITATIONS: {CITATION_RULE}" if CITATION_RULE else ""
@@ -1387,10 +1428,11 @@ async def ask_ai(
         f"ANSWER:"
     )
 
-    # Dedup ανά (αρχείο, σελίδα) (8 → 4)
+    # Dedup ανά (doc_id, page) αν υπάρχει doc_id, αλλιώς (file, page) (8 → 4)
     seen, unique_sources = set(), []
     for s in sources_list:
-        key = (s["file"], s["page"])
+        doc_id = s.get("doc_id")
+        key = (doc_id, s["page"]) if doc_id is not None and doc_id != -1 else (s["file"], s["page"])
         if key not in seen:
             seen.add(key)
             unique_sources.append(s)
@@ -1398,6 +1440,7 @@ async def ask_ai(
 
     t_generation = time.perf_counter()
     prompt_tokens = out_tokens = thinking_tokens = None
+    finish_reason = None
     produced_text = False  # για fallback αν το μοντέλο γυρίσει ΜΟΝΟ thinking
     # Το outcome κρίνεται ΕΔΩ και καταγράφεται ΜΙΑ φορά στο τέλος. Πριν, το except
     # έγραφε "generation_error" ΚΑΙ μετά συνέχιζε στο "ok": το ίδιο αποτυχημένο
@@ -1416,10 +1459,13 @@ async def ask_ai(
                 temperature=GENERATION_CONFIG.temperature,
                 max_output_tokens=GENERATION_CONFIG.max_output_tokens,
                 thinking_budget=THINKING_BUDGET,
+                with_finish=True,
             ):
                 if kind == "text":
                     produced_text = True
                     yield {"type": "text", "data": data}
+                elif kind == "finish":
+                    finish_reason = data
                 else:
                     prompt_tokens, out_tokens, thinking_tokens = gemini_rest.usage_tokens(data)
         else:
@@ -1436,6 +1482,18 @@ async def ask_ai(
                 if text:
                     produced_text = True
                     yield {"type": "text", "data": text}
+
+        # Ένδειξη αν η απάντηση διακόπηκε (π.χ. MAX_TOKENS ή SAFETY)
+        if finish_reason and finish_reason != "STOP":
+            logger.warning(f"Gemini: απάντηση διακόπηκε (finish_reason={finish_reason})")
+            outcome = f"incomplete_{finish_reason.lower()}"
+            cutoff_msg = (
+                f"\n\n⚠️ *[Η απάντηση διακόπηκε πρόωρα: {finish_reason}]*"
+                if _has_greek(question)
+                else f"\n\n⚠️ *[Response was truncated prematurely: {finish_reason}]*"
+            )
+            yield {"type": "text", "data": cutoff_msg}
+            yield {"type": "status", "data": "incomplete", "reason": finish_reason}
 
         # Edge case 2.5-flash: όλα τα tokens πήγαν σε «thinking», 0 σε απάντηση ->
         # μη γυρνάς κενό. Μήνυμα ασφαλείας (σπάνιο & διακοπτόμενο -> ξαναδοκίμασε).
@@ -1498,6 +1556,7 @@ async def ask_ai(
                 "prompt_tokens": prompt_tokens,
                 "completion_tokens": out_tokens,
                 "thinking_tokens": thinking_tokens,
+                "finish_reason": finish_reason,
             },
         }
 

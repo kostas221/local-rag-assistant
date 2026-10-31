@@ -114,3 +114,48 @@ def test_empty_rule_restores_the_pre_citation_prompt(monkeypatch):
     prompt, _ = _drive(monkeypatch)
     assert "CITATIONS" not in prompt
     assert "5. COMPLETENESS" in prompt
+
+
+def test_same_filename_different_doc_id_not_falsely_deduped(monkeypatch):
+    """Δύο διαφορετικά έγγραφα με ίδιο filename και ίδια σελίδα δεν συγχέονται."""
+    diff_docs = [
+        ("content from doc 1", {"file_name": "paper.pdf", "page": 1, "doc_id": 10}),
+        ("content from doc 2", {"file_name": "paper.pdf", "page": 1, "doc_id": 20}),
+    ]
+    prompt, sources = _drive(monkeypatch, precomputed=diff_docs)
+    assert len(sources) == 2
+    assert sources[0]["doc_id"] == 10 and sources[0]["label"] == "S1"
+    assert sources[1]["doc_id"] == 20 and sources[1]["label"] == "S2"
+
+
+def test_ask_ai_flags_truncated_finish_reason(monkeypatch):
+    """Όταν το μοντέλο διακόπτεται με finishReason != STOP (π.χ. MAX_TOKENS), εκπέμπεται προειδοποίηση."""
+    async def fake_stream_truncated(prompt, **kwargs):
+        yield "text", "partial answer..."
+        if kwargs.get("with_finish"):
+            yield "finish", "MAX_TOKENS"
+
+    monkeypatch.setattr(gemini_rest, "stream_generate", fake_stream_truncated)
+    monkeypatch.setattr(ai_core, "USE_REST_GENERATION", True)
+
+    async def run():
+        out = []
+        async for ev in ai_core.ask_ai("question", None, precomputed=PAGES):
+            out.append(ev)
+        return out
+
+    events = asyncio.run(run())
+    text_events = [e["data"] for e in events if e["type"] == "text"]
+    status_events = [e for e in events if e["type"] == "status"]
+    metrics_event = next(e["data"] for e in events if e["type"] == "metrics")
+
+    # Flagged in text
+    assert any("MAX_TOKENS" in t for t in text_events)
+    # Emitted as status event
+    assert len(status_events) == 1
+    assert status_events[0]["data"] == "incomplete"
+    assert status_events[0]["reason"] == "MAX_TOKENS"
+    # Recorded in metrics
+    assert metrics_event.get("finish_reason") == "MAX_TOKENS"
+
+

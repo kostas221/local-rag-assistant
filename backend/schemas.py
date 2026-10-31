@@ -49,6 +49,7 @@ class ChatMessage(BaseModel):
     conversation_id: int
     question: str
     target_filenames: list = []
+    target_doc_ids: list[int] = []
     persona: str = "Researcher"  # The AI answer style
     # <--- Η ΠΡΟΣΘΗΚΗ ΜΑΣ: Δέχεται λίστα από λεξικά (τη μνήμη)
     history: list[dict[str, Any]] = []
