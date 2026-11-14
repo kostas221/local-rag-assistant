@@ -36,10 +36,10 @@ jobs:
           cache: pip
       - name: Install lightweight test deps
         run: |
-          pip install pydantic==1.10.26 "python-jose[cryptography]==3.5.0" \
-                      passlib==1.7.4 bcrypt==3.2.2 python-dotenv pytest==8.3.4 \
-                      httpx==0.28.1 loguru fastapi==0.99.1 sqlalchemy \
-                      python-multipart
+          pip install pydantic==2.14.1 "python-jose[cryptography]==3.5.0" \
+                      passlib==1.7.4 bcrypt==4.0.1 python-dotenv pytest==8.3.4 \
+                      httpx==0.28.1 loguru fastapi==0.162.0 \
+                      starlette==1.10.0 sqlalchemy python-multipart
       # ΤΙ ΤΡΕΧΕΙ ΕΔΩ ΚΑΙ ΓΙΑΤΙ ΟΧΙ ΣΤΟ core-tests: και τα τέσσερα αρχεία
       # αποφεύγουν εντελώς το `import ai_core` (2.4GB μοντέλα, ~1 λεπτό):
       #   test_gemini_rest    — ψεύτικος httpx client, χωρίς δίκτυο/API key
@@ -102,10 +102,13 @@ jobs:
 
       - name: Install CPU-only torch first
         # Χωρίς αυτό το pip τραβάει το CUDA build (~2.5GB), άχρηστο σε runner.
-        run: pip install torch --index-url https://download.pytorch.org/whl/cpu
+        run: pip install torch==2.14.0 --index-url https://download.pytorch.org/whl/cpu
 
       - name: Install backend deps
         run: pip install -r backend/requirements.txt
+
+      - name: Check installed dependency compatibility
+        run: pip check
 
       - name: Run RAG core tests
         working-directory: backend
@@ -120,4 +123,5 @@ jobs:
         # Το rewrite είναι stubbed -> μηδέν κλήσεις δικτύου/API.
         run: |
           pytest tests/test_rag_core.py tests/test_corpus_signature.py \
-                 tests/test_corrective_retrieval.py tests/test_citations.py -v
+                 tests/test_corrective_retrieval.py tests/test_citations.py \
+                 tests/test_vector_store.py tests/test_ingestion.py -v

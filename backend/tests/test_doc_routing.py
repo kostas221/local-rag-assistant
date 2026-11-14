@@ -73,3 +73,9 @@ def test_extra_pages_zero_limit_and_no_duplicates():
     assert doc_routing.extra_pages(base, [[_page("a.pdf", 2)]], 0) == []
     got = doc_routing.extra_pages(base, [[_page("a.pdf", 2)], [_page("a.pdf", 2)]], 4)
     assert len(got) == 1
+
+
+def test_distinct_document_ids_with_same_filename_keep_both_pages():
+    first = ("first", {"file_name": "paper.pdf", "page": 1, "doc_id": 10})
+    second = ("second", {"file_name": "paper.pdf", "page": 1, "doc_id": 20})
+    assert doc_routing.extra_pages([first], [[first, second]], 4) == [second]

@@ -37,3 +37,8 @@ def test_email_is_normalized_lowercase():
     u = UserCreate(username="bob", email="  BOB@Example.COM ",
                    password="secret123")
     assert u.email == "bob@example.com"
+
+
+def test_password_does_not_silently_truncate_at_bcrypt_byte_limit():
+    with pytest.raises(ValidationError):
+        UserCreate(username="alice", email="alice@example.com", password="α" * 36 + "1")

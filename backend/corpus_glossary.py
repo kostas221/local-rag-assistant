@@ -212,7 +212,10 @@ def assemble(allowed_ids: list[str], idx: dict) -> tuple[str, str]:
         if p is None or p >= len(metas):
             continue
         m = metas[p] or {}
-        fn = m.get("file_name")
+        doc_id = m.get("doc_id")
+        fn = ("document", doc_id) if doc_id is not None and doc_id != -1 else (
+            "legacy", m.get("user_id"), m.get("file_name")
+        )
         if fn in seen_files:
             continue
         seen_files.add(fn)
@@ -222,7 +225,7 @@ def assemble(allowed_ids: list[str], idx: dict) -> tuple[str, str]:
         t = (m.get("terms") or "").strip()
         if t:
             term_items.extend(x.strip() for x in t.split(",") if x.strip())
-        domain = "; ".join(dict.fromkeys(domains))
+    domain = "; ".join(dict.fromkeys(domains))
     terms = ", ".join(dict.fromkeys(term_items))
     return domain, terms
 
@@ -243,6 +246,17 @@ def scope_has_files(allowed_ids: list[str], idx: dict, files: set) -> bool:
         if p is not None and p < len(metas) and (metas[p] or {}).get("file_name") in files:
             return True
     return False
+
+
+def translation_context(allowed_ids: list[str], idx: dict, descriptor_files: set | None,
+                        descriptor_domain: str, fallback_domain: str) -> tuple[str, str]:
+    """Use a descriptor only in its scope, without restoring an unrelated glossary."""
+    domain, terms = assemble(allowed_ids, idx)
+    if not domain:
+        domain = (descriptor_domain
+                  if descriptor_files is None or scope_has_files(allowed_ids, idx, descriptor_files)
+                  else fallback_domain)
+    return domain, terms
 
 
 def _normalize(text: str) -> str:

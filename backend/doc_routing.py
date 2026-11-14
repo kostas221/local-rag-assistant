@@ -46,8 +46,12 @@ def named_docs(text: str, names: dict, in_scope) -> list[str]:
     return sorted(first, key=lambda d: (first[d], d))
 
 
-def _key(meta: dict) -> str:
-    return f"{meta.get('file_name')}:{meta.get('page')}"
+def source_key(meta: dict) -> tuple:
+    """Document identity survives filenames shared by different uploads."""
+    doc_id = meta.get("doc_id")
+    if doc_id is not None and doc_id != -1:
+        return ("document", doc_id, meta.get("page"))
+    return ("legacy", meta.get("user_id"), meta.get("file_name"), meta.get("page"))
 
 
 def extra_pages(base: list, legs: list, limit: int) -> list:
@@ -56,13 +60,13 @@ def extra_pages(base: list, legs: list, limit: int) -> list:
     χάνει σήμερα τις θέσεις."""
     if limit <= 0:
         return []
-    seen = {_key(m) for _t, m in base}
+    seen = {source_key(m) for _t, m in base}
     out = []
     for tier in itertools.zip_longest(*legs):
         for pg in tier:
-            if pg is None or _key(pg[1]) in seen:
+            if pg is None or source_key(pg[1]) in seen:
                 continue
-            seen.add(_key(pg[1]))
+            seen.add(source_key(pg[1]))
             out.append(pg)
             if len(out) >= limit:
                 return out

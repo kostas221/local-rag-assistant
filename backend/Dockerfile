@@ -1,13 +1,7 @@
 # ΣΤΑΔΙΟ 1: Builder
-FROM python:3.11-slim as builder
+FROM python:3.11-slim AS builder
 
 WORKDIR /app
-
-# ΝΕΟ: Εγκατάσταση των C++ Compilers για να μπορέσει να χτιστεί το hnswlib
-RUN apt-get update && apt-get install -y \
-    build-essential \
-    python3-dev \
-    && rm -rf /var/lib/apt/lists/*
 
 # Δημιουργία Virtual Environment (Ανεξάρτητο από τον root)
 RUN python -m venv /opt/venv
@@ -16,10 +10,11 @@ RUN python -m venv /opt/venv
 ENV PATH="/opt/venv/bin:$PATH"
 
 COPY requirements.txt .
+# Install CPU torch first; the normal PyPI build pulls unnecessary CUDA packages.
+ARG TORCH_INDEX_URL=https://download.pytorch.org/whl/cpu
+RUN pip install --no-cache-dir torch==2.14.0 --index-url ${TORCH_INDEX_URL}
 RUN pip install --no-cache-dir -r requirements.txt
-
-# ΣΤΑΔΙΟ 2: Runtime
-# ... (Από εδώ και κάτω άφησε το αρχείο όπως ακριβώς το είχες) ...
+RUN pip check
 
 # ΣΤΑΔΙΟ 2: Runtime
 FROM python:3.11-slim

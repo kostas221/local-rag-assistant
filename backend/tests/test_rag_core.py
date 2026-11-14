@@ -5,7 +5,21 @@
 import asyncio
 
 import ai_core
+import gemini_rest
 from ai_core import _build_where, _has_greek, el_tokenize
+
+
+def test_empty_translation_does_not_poison_cache(monkeypatch):
+    cache = {}
+
+    async def empty_response(*args, **kwargs):
+        return "   "
+
+    monkeypatch.setattr(ai_core, "_translation_cache", cache)
+    monkeypatch.setattr(gemini_rest, "generate_once", empty_response)
+    question = "Τι είναι η πίεση;"
+    assert asyncio.run(ai_core.optimize_query(question, "cardiology", "")) == question
+    assert cache == {}
 
 # --- el_tokenize: Greek-aware tokenization για το BM25 ---
 
@@ -63,6 +77,33 @@ def test_where_multiple_doc_ids_and_user():
 def test_where_doc_ids_take_precedence_over_filenames():
     w = _build_where(target_filenames=["ignored.pdf"], user_id=None, target_doc_ids=[42])
     assert w == {"doc_id": 42}
+
+
+def test_empty_document_selection_does_not_fall_back_to_filenames(monkeypatch):
+    class NoAccess:
+        def get(self, **kwargs):
+            raise AssertionError("empty selection must not query the store")
+
+    monkeypatch.setattr(ai_core, "collection", NoAccess())
+    assert asyncio.run(ai_core.search_documents(
+        "question", ["paper.pdf"], user_id=1, target_doc_ids=[]
+    )) == []
+
+
+def test_real_vector_store_isolates_document_ids_and_users(tmp_path, monkeypatch):
+    import chromadb
+
+    client = chromadb.PersistentClient(path=str(tmp_path / "vectors"))
+    store = client.create_collection("review_documents", embedding_function=None)
+    store.add(ids=["mine", "theirs", "public"], documents=["my text", "private", "shared"],
+              embeddings=[[1.0, 0.0], [0.0, 1.0], [1.0, 1.0]], metadatas=[
+                  {"file_name": "paper.pdf", "doc_id": 1, "user_id": 7, "is_public": False},
+                  {"file_name": "paper.pdf", "doc_id": 2, "user_id": 8, "is_public": False},
+                  {"file_name": "paper.pdf", "doc_id": 3, "user_id": 8, "is_public": True},
+              ])
+    where = _build_where(["paper.pdf"], user_id=7, target_doc_ids=[1, 2, 3])
+    assert set(store.get(where=where, include=[])["ids"]) == {"mine", "public"}
+    assert store.get(where=_build_where(None, 7, [2]), include=[])["ids"] == []
 
 
 # --- delete_file_from_db: REGRESSION TEST για το duplicate-delete bug ---
@@ -234,7 +275,7 @@ def test_expand_to_pages_preserves_doc_id(monkeypatch):
     top_chunks = [(1.5, "chunk text", {"file_name": "paper.pdf", "page": 1, "doc_id": 99})]
     pages = ai_core._expand_to_pages(top_chunks, max_pages=1, user_id=1)
     assert len(pages) == 1
-    page_text, meta = pages[0]
+    _page_text, meta = pages[0]
     assert meta.get("doc_id") == 99
     assert meta.get("file_name") == "paper.pdf"
     assert meta.get("page") == 1
@@ -275,6 +316,7 @@ def test_translation_cache_respects_domain_terms_and_model(monkeypatch):
 
     # 4. Ίδια ερώτηση με terms="" (κενό string): δεν αντικαθίσταται από default _CORPUS_TERMS!
     res4 = asyncio.run(ai_core.optimize_query(q, domain="Cardiology", terms=""))
+    assert res4 == "cardiology english query"
     assert len(calls) == 3
     # Το prompt του calls[2] ΔΕΝ πρέπει να περιέχει τους όρους του Cloud
     assert "serverless" not in calls[2][0]
@@ -282,5 +324,6 @@ def test_translation_cache_respects_domain_terms_and_model(monkeypatch):
     # 5. Αλλαγή μοντέλου -> Cache MISS
     monkeypatch.setattr(ai_core, "GEMINI_MODEL", "gemini-3.8-flash")
     res5 = asyncio.run(ai_core.optimize_query(q, domain="Cloud Computing", terms="serverless"))
+    assert res5 == "cloud english query"
     assert len(calls) == 4
 

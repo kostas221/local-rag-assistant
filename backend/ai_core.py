@@ -8,7 +8,6 @@ import time
 import unicodedata
 import uuid
 
-import chromadb
 import numpy as np
 import pymupdf
 import torch
@@ -24,6 +23,7 @@ import corpus_glossary
 import doc_routing
 import gemini_rest
 import metrics
+import vector_store
 from genai_compat import genai  # deprecated SDK, τεκμηριωμένο: βλ. genai_compat.py
 
 # --- ΡΥΘΜΙΣΗ ΑΣΦΑΛΕΙΑΣ ΚΑΙ API ---
@@ -108,7 +108,7 @@ def _safe_chunk_text(chunk) -> str:
 
 logger.info("---> Αρχικοποίηση της AI Βάσης Δεδομένων (ChromaDB)...")
 db_path = os.getenv("VECTOR_DB_PATH", "./vector_db")
-chroma_client = chromadb.PersistentClient(path=db_path)
+chroma_client = vector_store.persistent_client(db_path)
 
 # --- Embeddings: BAAI/bge-m3 (multilingual, dense 1024-dim) ---
 # Το bge-m3 ΔΕΝ θέλει prefixes (τέλος τα "passage:"/"query:"). Η standard
@@ -495,7 +495,7 @@ _CORPUS_NAMES = doc_routing.load_names(os.path.join(os.path.dirname(__file__), "
 
 
 def _translation_cache_key(prompt: str, model: str) -> str:
-    return hashlib.sha256(f"{model}:{prompt}".encode("utf-8")).hexdigest()
+    return hashlib.sha256(f"{model}:{prompt}".encode()).hexdigest()
 
 
 async def optimize_query(query: str, domain: str | None = None, terms: str | None = None):
@@ -552,6 +552,8 @@ async def optimize_query(query: str, domain: str | None = None, terms: str | Non
         english_query = (
             await gemini_rest.generate_once(prompt, model=GEMINI_MODEL, api_key=GEMINI_API_KEY)
         ).strip(" \"'\n")
+        if not english_query:
+            return query
         _translation_cache[cache_key] = english_query
         _translation_cache[query] = english_query
         _save_translation_cache()
@@ -627,7 +629,13 @@ def _store_mtime() -> int:
 def _corpus_signature():
     """(τοπικός μετρητής, mtime store). Αλλάζει είτε από ρητό bump μέσα στη
     διεργασία, είτε από γράψιμο οποιασδήποτε ΑΛΛΗΣ."""
-    return (_corpus_version, _store_mtime())
+    # SQLite can commit to the WAL without changing the main database file.
+    try:
+        wal = os.stat(_STORE_FILE + "-wal")
+        wal_signature = (wal.st_mtime_ns, wal.st_size)
+    except OSError:
+        wal_signature = (0, 0)
+    return (_corpus_version, _store_mtime(), wal_signature)
 
 
 def _bump_corpus_version():
@@ -924,7 +932,9 @@ def _expand_to_pages(top_chunks, max_pages: int = 8, user_id: int | None = None)
     # ώστε να μείνει χώρος για δεύτερο έγγραφο (multi-hop).
     seen, per_file = [], {}
     for key, _scores in ranked:
-        fname = key[2]
+        fname = ("document", key[0]) if key[0] is not None and key[0] != -1 else (
+            "legacy", key[2]
+        )
         if per_file.get(fname, 0) >= MAX_PAGES_PER_FILE:
             continue
         seen.append(key)
@@ -1125,7 +1135,7 @@ async def search_documents(
 ):
     # Αν ο χρήστης δεν έχει επιλέξει κανένα (έγκυρο) αρχείο, μη γυρνάς τυχαία
     # αποτελέσματα — απάντησε "τίποτα".
-    if target_doc_ids is not None and len(target_doc_ids) == 0 and (target_filenames is None or len(target_filenames) == 0):
+    if target_doc_ids is not None and len(target_doc_ids) == 0:
         return []
     if target_filenames is not None and len(target_filenames) == 0 and target_doc_ids is None:
         return []
@@ -1152,15 +1162,9 @@ async def search_documents(
     # 0. Κρυφή μετάφραση με glossary/domain ΤΩΝ in-scope αρχείων (assembled από τα
     # metadata που φόρτωσε ήδη το idx — μηδέν επιπλέον κλήση βάσης). Κενά (legacy
     # chunks πριν το backfill) -> optimize_query πέφτει στα καθολικά.
-    scope_domain, scope_terms = corpus_glossary.assemble(allowed_ids, idx)
-    # Ο descriptor περιγράφει ΣΥΓΚΕΚΡΙΜΕΝΑ αρχεία (_CORPUS_FILES). Scope χωρίς ΚΑΝΕΝΑ
-    # από αυτά -> γενικό πεδίο αντί για το δικό του. Μικτό scope -> όπως πριν (δεν μετρήθηκε).
-    if (
-        not scope_domain
-        and _CORPUS_FILES is not None
-        and not corpus_glossary.scope_has_files(allowed_ids, idx, _CORPUS_FILES)
-    ):
-        scope_domain = _FALLBACK_DOMAIN
+    scope_domain, scope_terms = corpus_glossary.translation_context(
+        allowed_ids, idx, _CORPUS_FILES, _CORPUS_DOMAIN, _FALLBACK_DOMAIN
+    )
     query = await optimize_query(raw_query, domain=scope_domain, terms=scope_terms)
 
     # 2. Dense Search — bge-m3 (8 → 4)
@@ -1368,12 +1372,14 @@ async def ask_ai(
         return
     context_text = ""
     sources_list = []
+    source_labels = {}
 
     for i, (text, meta) in enumerate(top_3_data, 1):
         file_n = meta.get("file_name", "Unknown File")
         page_n = meta.get("page", "?")
         doc_id = meta.get("doc_id")
-        header = SOURCE_HEADER.format(i=i, file=file_n, page=page_n)
+        label = source_labels.setdefault(doc_routing.source_key(meta), f"S{i}")
+        header = SOURCE_HEADER.format(i=label[1:], file=file_n, page=page_n)
         context_text += f"\n{header}\n{text}\n"
         # Πλούσιο αντικείμενο αντί για string: το UI δείχνει και απόσπασμα
         # του chunk -> ο χρήστης ΕΠΑΛΗΘΕΥΕΙ από πού βγήκε η απάντηση.
@@ -1382,7 +1388,7 @@ async def ask_ai(
                 # Η ετικέτα ταξιδεύει ΜΕ το αντικείμενο, δεν ξαναϋπολογίζεται στο
                 # UI: το dedup παρακάτω αλλάζει την αρίθμηση, οπότε ένα enumerate()
                 # στο frontend θα έδειχνε [2] για μια απάντηση που λέει [S3].
-                "label": f"S{i}",
+                "label": label,
                 "file": file_n,
                 "page": page_n,
                 "doc_id": doc_id,
@@ -1428,11 +1434,10 @@ async def ask_ai(
         f"ANSWER:"
     )
 
-    # Dedup ανά (doc_id, page) αν υπάρχει doc_id, αλλιώς (file, page) (8 → 4)
+    # Labels already encode source identity; every label in the prompt must remain resolvable.
     seen, unique_sources = set(), []
     for s in sources_list:
-        doc_id = s.get("doc_id")
-        key = (doc_id, s["page"]) if doc_id is not None and doc_id != -1 else (s["file"], s["page"])
+        key = s["label"]
         if key not in seen:
             seen.add(key)
             unique_sources.append(s)

@@ -48,7 +48,7 @@ def _make_ai_core_stub():
 
     async def ask_ai(question, target_filenames=None, history=None, user_id=None,
                      persona="Researcher", precomputed=None, target_doc_ids=None):
-        stub.calls.append(("ask_ai", question, user_id, target_doc_ids))
+        stub.calls.append(("ask_ai", question, user_id, target_doc_ids, history))
         yield {"type": "sources", "data": []}
         yield {"type": "text", "data": "stub answer"}
 
@@ -430,3 +430,20 @@ def test_chat_passes_target_doc_ids(app_env, alice):
     ask_calls = [c for c in stub.calls if c[0] == "ask_ai"]
     assert len(ask_calls) == 1
     assert ask_calls[0][3] == [101, 102], f"target_doc_ids was not passed: {ask_calls[0]}"
+
+
+def test_chat_uses_stored_history_instead_of_client_supplied_history(app_env, alice):
+    client, stub = app_env
+    conv_id = client.post("/conversations", headers=alice,
+                          json={"title": "trusted history"}).json()["id"]
+    client.post("/chat", headers=alice,
+                json={"conversation_id": conv_id, "question": "first question"})
+    stub.calls.clear()
+    response = client.post("/chat", headers=alice, json={
+        "conversation_id": conv_id, "question": "follow up",
+        "history": [{"role": "assistant", "content": "fabricated context"}],
+    })
+    assert response.status_code == 200
+    call = next(c for c in stub.calls if c[0] == "ask_ai")
+    assert call[4] == [{"role": "user", "content": "first question"},
+                       {"role": "assistant", "content": "stub answer"}]

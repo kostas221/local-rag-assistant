@@ -1,7 +1,7 @@
 import re
 from typing import Any
 
-from pydantic import BaseModel, validator
+from pydantic import BaseModel, field_validator
 
 EMAIL_RE = re.compile(r"^[^@\s]+@[^@\s]+\.[^@\s]+$")
 
@@ -13,7 +13,8 @@ class UserCreate(BaseModel):
     email: str
     password: str
 
-    @validator("username")
+    @field_validator("username")
+    @classmethod
     def username_valid(cls, v):
         v = v.strip()
         if len(v) < 3:
@@ -23,17 +24,21 @@ class UserCreate(BaseModel):
                 "Username may only contain letters, numbers and _ . -")
         return v
 
-    @validator("email")
+    @field_validator("email")
+    @classmethod
     def email_valid(cls, v):
         v = v.strip().lower()
         if not EMAIL_RE.match(v):
             raise ValueError("Invalid email format.")
         return v
 
-    @validator("password")
+    @field_validator("password")
+    @classmethod
     def password_strong(cls, v):
         if len(v) < 8:
             raise ValueError("Password must be at least 8 characters long.")
+        if len(v.encode()) > 72:
+            raise ValueError("Password must not exceed 72 UTF-8 bytes.")
         if not any(c.isdigit() for c in v):
             raise ValueError("Password must contain at least one digit.")
         return v
@@ -49,7 +54,7 @@ class ChatMessage(BaseModel):
     conversation_id: int
     question: str
     target_filenames: list = []
-    target_doc_ids: list[int] = []
+    target_doc_ids: list[int] | None = None
     persona: str = "Researcher"  # The AI answer style
     # <--- Η ΠΡΟΣΘΗΚΗ ΜΑΣ: Δέχεται λίστα από λεξικά (τη μνήμη)
     history: list[dict[str, Any]] = []
@@ -62,7 +67,8 @@ class FeedbackCreate(BaseModel):
     is_positive: bool
     comment: str | None = None
 
-    @validator("comment")
+    @field_validator("comment")
+    @classmethod
     def _trim_comment(cls, v):
         # Κόβουμε κενά + βάζουμε καπάκι μεγέθους: το πεδίο είναι ελεύθερο κείμενο
         # από χρήστες -> χωρίς όριο, ένα copy-paste βιβλίο γίνεται γραμμή στη βάση.

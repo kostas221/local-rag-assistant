@@ -192,6 +192,22 @@ def test_empty_rewrite_is_treated_as_no_change(monkeypatch):
     assert rr.calls == 1
 
 
+def test_corrective_rewrite_uses_the_selected_document_domain(monkeypatch):
+    _patch(monkeypatch, first_score=ai_core.MIN_RERANK_SCORE - 1)
+    for meta in ai_core.collection._metas:
+        meta["domain"] = "cardiology"
+    prompts = []
+
+    async def rewrite(prompt, **kwargs):
+        prompts.append(prompt)
+        return ""
+
+    monkeypatch.setattr(gemini_rest, "generate_once", rewrite)
+    assert _search() == []
+    assert len(prompts) == 1
+    assert "corpus of scientific research papers on cardiology." in prompts[0]
+
+
 def test_threshold_stays_above_out_of_corpus(monkeypatch):
     """Η ΠΑΛΙΑ αναλλοίωτη ήταν «το retry είναι αυστηρότερο από το gate». Δεν
     στέκει: τα δύο κατώφλια εφαρμόζονται σε ΔΙΑΦΟΡΕΤΙΚΕΣ κλίμακες (το 1ο πέρασμα

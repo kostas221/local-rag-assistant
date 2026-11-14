@@ -563,6 +563,14 @@ async def chat_with_ai(query: schemas.ChatMessage,
     if not conv:
         raise HTTPException(status_code=404, detail="Conversation not found")
 
+    # History is loaded from the authorized conversation, never trusted from the client.
+    previous_messages = (db.query(models.Message)
+                         .filter(models.Message.conversation_id == query.conversation_id,
+                                 models.Message.role.in_(["user", "assistant"]))
+                         .order_by(models.Message.id.desc()).limit(4).all())
+    history = [{"role": m.role, "content": m.content}
+               for m in reversed(previous_messages)]
+
     user_msg = models.Message(
         conversation_id=query.conversation_id, role="user", content=query.question)
     db.add(user_msg)
@@ -576,7 +584,7 @@ async def chat_with_ai(query: schemas.ChatMessage,
             async for packet in ai_core.ask_ai(
                 question=query.question,
                 target_filenames=query.target_filenames,
-                history=query.history,
+                history=history,
                 user_id=current_user.id,
                 persona=query.persona,
                 target_doc_ids=query.target_doc_ids,

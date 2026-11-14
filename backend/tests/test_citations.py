@@ -106,6 +106,7 @@ def test_labels_do_not_shift_when_dedup_drops_a_page(monkeypatch):
     prompt, sources = _drive(monkeypatch, precomputed=dup)
     assert [s["label"] for s in sources] == ["S1", "S3"]
     assert "[S3: paper-b.pdf, Page: 11]" in prompt
+    assert "[S2:" not in prompt, "every prompt label must resolve to a displayed source"
 
 
 def test_empty_rule_restores_the_pre_citation_prompt(monkeypatch):
@@ -122,10 +123,18 @@ def test_same_filename_different_doc_id_not_falsely_deduped(monkeypatch):
         ("content from doc 1", {"file_name": "paper.pdf", "page": 1, "doc_id": 10}),
         ("content from doc 2", {"file_name": "paper.pdf", "page": 1, "doc_id": 20}),
     ]
-    prompt, sources = _drive(monkeypatch, precomputed=diff_docs)
+    _prompt, sources = _drive(monkeypatch, precomputed=diff_docs)
     assert len(sources) == 2
     assert sources[0]["doc_id"] == 10 and sources[0]["label"] == "S1"
     assert sources[1]["doc_id"] == 20 and sources[1]["label"] == "S2"
+
+
+def test_every_label_survives_for_legacy_sources_with_different_owners(monkeypatch):
+    pages = [("first", {"file_name": "paper.pdf", "page": 1, "user_id": 1}),
+             ("second", {"file_name": "paper.pdf", "page": 1, "user_id": 2})]
+    prompt, sources = _drive(monkeypatch, precomputed=pages)
+    assert [source["label"] for source in sources] == ["S1", "S2"]
+    assert "[S1:" in prompt and "[S2:" in prompt
 
 
 def test_ask_ai_flags_truncated_finish_reason(monkeypatch):

@@ -63,3 +63,21 @@ def test_descriptor_lists_the_files_it_describes():
     files = d.get("files")
     assert files and all(isinstance(x, str) and x.endswith(".pdf") for x in files)
     assert len(set(files)) == len(files)
+
+
+def test_glossary_keeps_distinct_documents_with_same_name():
+    idx = {"pos": {"a": 0, "b": 1}, "metas": [
+        {"file_name": "paper.pdf", "doc_id": 1, "domain": "cloud", "terms": "server"},
+        {"file_name": "paper.pdf", "doc_id": 2, "domain": "medicine", "terms": "heart"},
+    ]}
+    assert corpus_glossary.assemble(["a", "b"], idx) == ("cloud; medicine", "server, heart")
+    assert corpus_glossary.assemble([], idx) == ("", "")
+
+
+def test_translation_context_preserves_known_descriptor_without_leaking_to_new_documents():
+    ids, idx = _idx(["excamera-nsdi17.pdf", "medicine.pdf"])
+    context = corpus_glossary.translation_context
+    assert context(ids[:1], idx, CLOUD, "cloud", "science") == ("cloud", "")
+    assert context(ids[1:], idx, CLOUD, "cloud", "science") == ("science", "")
+    idx["metas"][1].update(domain="cardiology", terms="heart")
+    assert context(ids[1:], idx, CLOUD, "cloud", "science") == ("cardiology", "heart")

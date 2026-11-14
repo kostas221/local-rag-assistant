@@ -90,6 +90,15 @@ def test_signature_is_hashable_tuple(tmp_path, monkeypatch):
     assert hash(sig) is not None
 
 
+def test_external_wal_write_invalidates_cache_without_touching_main_file(tmp_path, monkeypatch):
+    store = _prepare_store(tmp_path, monkeypatch)
+    before = ai_core._corpus_signature()
+    store.with_name(store.name + "-wal").write_bytes(b"committed update")
+    after = ai_core._corpus_signature()
+    assert after != before
+    assert after[:2] == before[:2]
+
+
 def test_caches_actually_rebuild_after_external_write(tmp_path, monkeypatch):
     """Ο πλήρης κύκλος, όχι μόνο η υπογραφή: γεμίζουμε το cache, προσποιούμαστε
     ξένη εγγραφή, και επαληθεύουμε ότι το _get_bm25_index ΞΑΝΑΧΤΙΖΕΙ αντί να
