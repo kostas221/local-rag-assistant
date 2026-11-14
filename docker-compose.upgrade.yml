@@ -1,0 +1,12 @@
+# Opt-in rollout: a separate vector volume preserves the original Chroma 0.4 store.
+# Export with the old runtime, then import before starting this configuration.
+# See docs/STABILIZATION_2026-11-01.md.
+services:
+  backend:
+    environment:
+      VECTOR_DB_PATH: /app/vector_db/current
+    volumes:
+      - chromadb_data_next:/app/vector_db
+
+volumes:
+  chromadb_data_next:

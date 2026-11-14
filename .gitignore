@@ -6,6 +6,7 @@ chromadb_data/
 *.db
 .env
 backups/
+*.vector-export.json
 
 # committed Chroma collections caused stale data to seed the Docker volume
 vector_db/

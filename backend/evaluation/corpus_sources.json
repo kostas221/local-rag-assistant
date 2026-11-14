@@ -1,0 +1,30 @@
+{
+  "1702.04024.pdf": {
+    "url": "https://arxiv.org/pdf/1702.04024v2", "pages": 8,
+    "sha256": "982630565cf2b8bf930574c56a5827e4fbebe8e5a3bbc85587388249045da517"
+  },
+  "1706.03178.pdf": {
+    "url": "https://arxiv.org/pdf/1706.03178v1", "pages": 20,
+    "sha256": "bf5cb7e0e5675855212a44c508a114a764828aded6a83ab130b67400b40a4150"
+  },
+  "1812.03651.pdf": {
+    "url": "https://arxiv.org/pdf/1812.03651v1", "pages": 8,
+    "sha256": "9c6b7888afcda0813db34d55b984aa4defbd1efd9a5108d534d46ef73bdffc8a"
+  },
+  "1902.03383v1.pdf": {
+    "url": "https://arxiv.org/pdf/1902.03383v1", "pages": 33,
+    "sha256": "3e725f619a8f6745b175f75d5f5f5d77c156a5ccbb2af4b283094d7c01146e80"
+  },
+  "EECS-2009-28.pdf": {
+    "url": "https://eecs.berkeley.edu/Pubs/TechRpts/2009/EECS-2009-28.pdf", "pages": 25,
+    "sha256": "93dd4ca349a5e1e2f0d68dae5ee21cf85ef2663b6fc283f246c7b3c3a9be50b5"
+  },
+  "excamera-nsdi17.pdf": {
+    "url": "https://www.usenix.org/system/files/conference/nsdi17/nsdi17-fouladi.pdf", "pages": 15,
+    "sha256": "218668d7c64a50173eaea442b98fbcbcda13f1e540c3b477b59f52e3056f32e9"
+  },
+  "mapreduce-osdi04.pdf": {
+    "url": "https://research.google.com/archive/mapreduce-osdi04.pdf", "pages": 13,
+    "sha256": "ae84cc48ff0005c5a79e095039e54e91dce5c116f65746e1593e819d21830ce9"
+  }
+}

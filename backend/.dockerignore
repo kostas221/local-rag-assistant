@@ -8,3 +8,10 @@ __pycache__/
 .pytest_cache/
 .env
 *.db
+venv/
+.venv/
+ragas_env/
+backups/
+*.vector-export.json
+evaluation/test_papers/
+evaluation/runs/figures_png/
