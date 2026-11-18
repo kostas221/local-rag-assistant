@@ -1001,14 +1001,22 @@ def _build_where(
 # που δίνουν στον reranker ελάχιστο σήμα. Χειρότερο ακόμα: στο v2 η ΥΨΗΛΟΤΕΡΗ
 # βαθμολογία ολόκληρου του retry ήταν ψευδαίσθηση -> κανένα κατώφλι δεν τη
 # φιλτράρει. Το v1 κρατά τις ψευδαισθήσεις στα ΧΑΜΗΛΑ σκορ, άρα φιλτράρονται.
+# v3 (18/11/2026, 10ο τρέξιμο): ΙΔΙΟ v1 + ο κανόνας της μετάφρασης (optimize_query) — όροι ΜΟΝΟ για
+# ό,τι ρωτά η ερώτηση, ΠΟΤΕ το όνομα/γενικές λέξεις του πεδίου ως προσθήκη. ΑΙΤΙΑ: με 3.8 οι ooc
+# q048/q050 πέρασαν γιατί η αναδιατύπωση πρόσθεσε «cloud service providers» / «distributed systems
+# cloud computing» (g38b). ΟΧΙ «συντόμευση»: η λακωνική v2 ήταν χειρότερη (βλ. πάνω).
 _CORRECTIVE_PROMPT = (
     "The following search query returned no sufficiently relevant results from a "
     "corpus of scientific research papers on {domain}.\n\n"
     "Rewrite it as a keyword-rich search query using the standard technical "
     "terminology of that field. Replace vague or conversational wording with the "
     "terms a paper would actually use. Do NOT add facts, system names or numbers "
-    "that are not implied by the original question. If the question is about a "
-    "topic OUTSIDE that field, return it unchanged.\n\n"
+    "that are not implied by the original question. Every term you write must name "
+    "something the original query itself asks about: NEVER append the name of the "
+    "field or general vocabulary of the field that the query does not mention, and "
+    "NEVER map a proper noun (a place, person, product, law or brand name) onto the "
+    "field's vocabulary. If the question is about a topic OUTSIDE that field, return "
+    "it unchanged.\n\n"
     "Output ONLY the rewritten query. No quotes, no extra text.\n\n"
     "Original query: {query}\nRewritten query:"
 )

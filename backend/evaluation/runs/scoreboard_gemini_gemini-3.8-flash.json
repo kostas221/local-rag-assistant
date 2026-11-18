@@ -670,5 +670,129 @@
  "33219e99968aa7520bf76708067837d48e91980bd16affe25e2111c814dd78e4": {
   "tail": "ze one. Output ONLY a concise English search query with the key terms. No quotes, no extra text.\n\nUser question: Ποια κλινική δοκιμή έδειξε την υπεροχή του sacubitril/valsartan έναντι της εναλαπρίλης;",
   "out": "clinical trial sacubitril valsartan superiority enalapril"
+ },
+ "90739ed25659bbea5804ac5fa1b9abfd0f560329fa70bcb5dc68d1079433552d": {
+  "tail": "ic OUTSIDE that field, return it unchanged.\n\nOutput ONLY the rewritten query. No quotes, no extra text.\n\nOriginal query: What do the documents say about quantum computing performance?\nRewritten query:",
+  "out": "What do the documents say about quantum computing performance?"
+ },
+ "043835898760407514db0ad2d74be13aa48a894583457e2c39cbec2f0332c972": {
+  "tail": "uestion. If the question is about a topic OUTSIDE that field, return it unchanged.\n\nOutput ONLY the rewritten query. No quotes, no extra text.\n\nOriginal query: Bitcoin price documents\nRewritten query:",
+  "out": "Bitcoin price documents"
+ },
+ "a8a6a7cadfd396667d51c790daa490b55265631122229a6475b502533648d24d": {
+  "tail": "ld, return it unchanged.\n\nOutput ONLY the rewritten query. No quotes, no extra text.\n\nOriginal query: What do the documents say about GDPR compliance requirements for cloud providers?\nRewritten query:",
+  "out": "GDPR compliance data protection regulatory requirements cloud service providers"
+ },
+ "a94c92c5c04f3c6e6bec06966eea17a83bc9b5f4eb836678570752a497c1612d": {
+  "tail": "uestion. If the question is about a topic OUTSIDE that field, return it unchanged.\n\nOutput ONLY the rewritten query. No quotes, no extra text.\n\nOriginal query: clinical trials results\nRewritten query:",
+  "out": "clinical trials results"
+ },
+ "6c3ea37ded8926ff23548aeeddedc5d89c2a316c5b79a216b41f0815dd980083": {
+  "tail": "that field, return it unchanged.\n\nOutput ONLY the rewritten query. No quotes, no extra text.\n\nOriginal query: What benchmark results for GPU tensor cores are reported in these papers?\nRewritten query:",
+  "out": "GPU Tensor Core performance benchmark evaluation metrics throughput latency distributed systems cloud computing"
+ },
+ "d6e2ea57bd6311ff60745cfedca43591d3f71ecab4faf150306b812fc6a1dfac": {
+  "tail": "stion is about a topic OUTSIDE that field, return it unchanged.\n\nOutput ONLY the rewritten query. No quotes, no extra text.\n\nOriginal query: legal issues confidentiality control audit\nRewritten query:",
+  "out": "cloud regulatory compliance data confidentiality access control security auditing provenance"
+ },
+ "a157ae8d21a1d92c421b9b636eb7a0db583220c4bed57f27d5d7775ce26ee570": {
+  "tail": " about a topic OUTSIDE that field, return it unchanged.\n\nOutput ONLY the rewritten query. No quotes, no extra text.\n\nOriginal query: difference between two types of services described\nRewritten query:",
+  "out": "service model comparison IaaS PaaS SaaS microservices monolithic architecture cloud services comparative analysis"
+ },
+ "9cf9b663745ffa29df0b1a22d1269511d34d604d468c1e8d8f533270af2710b9": {
+  "tail": " field, return it unchanged.\n\nOutput ONLY the rewritten query. No quotes, no extra text.\n\nOriginal query: Why does the same thing end up costing different amounts in different places?\nRewritten query:",
+  "out": "cloud computing regional pricing disparity geographic cost variation data center location pricing model"
+ },
+ "99b2074c17de02d5f5d5c3d4f1337e0bfd7bb49357105cc6c128192aff4950e5": {
+  "tail": "that field, return it unchanged.\n\nOutput ONLY the rewritten query. No quotes, no extra text.\n\nOriginal query: What do the authors of that system paper themselves say they contributed?\nRewritten query:",
+  "out": "\"our contributions\" OR \"main contributions\" OR \"this paper presents\" OR \"we propose\" distributed system architecture cloud computing"
+ },
+ "687139972dee778426c33531056a3ed3464cce85983d2af63a4f08d1d935d6b1": {
+  "tail": " field, return it unchanged.\n\nOutput ONLY the rewritten query. No quotes, no extra text.\n\nOriginal query: specific implementation additions compared to general description other paper\nRewritten query:",
+  "out": "system implementation extensions differences architectural modifications experimental evaluation comparative analysis specification"
+ },
+ "41a070108e415f78d6b58b84e53c04dc1accef642f92c769bd434378a33666af": {
+  "tail": " field, return it unchanged.\n\nOutput ONLY the rewritten query. No quotes, no extra text.\n\nOriginal query: Is it still worth keeping the data right next to the machines doing the work?\nRewritten query:",
+  "out": "data locality performance disaggregated storage compute separation cloud distributed systems"
+ },
+ "e0bbbfa9f54994b4506247a88539cc81cb2f8f4533393f352a4f29f5fdc3da93": {
+  "tail": "bout a topic OUTSIDE that field, return it unchanged.\n\nOutput ONLY the rewritten query. No quotes, no extra text.\n\nOriginal query: Why do they bring up that older system as a warning?\nRewritten query:",
+  "out": "legacy system limitations pitfalls failure modes lessons learned architectural tradeoffs cautionary case study distributed systems"
+ },
+ "b38b4a710305b75262273672b25ca68d69db294fdbb21c7facca5aefad501432": {
+  "tail": "\n\nOutput ONLY the rewritten query. No quotes, no extra text.\n\nOriginal query: What's the difference in how you pay for the newer kind of internet computing compared to the older kind?\nRewritten query:",
+  "out": "pricing models cloud computing on-premises cost comparison pay-as-you-go capital expenditure operational expenditure"
+ },
+ "35f3964ef724501b61d0eea923d5790f69800ceab5bc040592a43ad6295f53a7": {
+  "tail": "he question is about a topic OUTSIDE that field, return it unchanged.\n\nOutput ONLY the rewritten query. No quotes, no extra text.\n\nOriginal query: five applications pushing boundaries\nRewritten query:",
+  "out": "emerging applications workloads performance challenges edge cloud computing distributed systems"
+ },
+ "15f1e8889b1337a30e53d49c8338ca7166eab9b0a11cb3dbac58fc8ade475e1c": {
+  "tail": "rewritten query. No quotes, no extra text.\n\nOriginal query: What solutions does the document suggest for the challenges of rapidly increasing system size and how software is paid for?\nRewritten query:",
+  "out": "scalability solutions challenges software pricing models monetization cloud computing distributed systems"
+ },
+ "38f38f06f5a687725ce009b63bdad1b2bdd6057a6c6a856e1a654b5effc7a525": {
+  "tail": "utput ONLY the rewritten query. No quotes, no extra text.\n\nOriginal query: What does this paper say could help with the problems of making things bigger fast and how software is sold?\nRewritten query:",
+  "out": "rapid scalability challenges software monetization pricing models cloud computing distributed systems"
+ },
+ "5de2a500d4f9bfe4d676e48e5f64693d68a14cf39efefcf988142f14802983d8": {
+  "tail": "y: What wrong idea about moving small, on-demand programs between different providers does the paper point out, and which initiative is mentioned as a step towards making this easier?\nRewritten query:",
+  "out": "serverless FaaS function portability vendor lock-in misconception standardization interoperability initiative"
+ },
+ "d3eb29a956db379905174225072f04ecf67f8d8365c050729f6aab9aacdbc87a": {
+  "tail": "ield, return it unchanged.\n\nOutput ONLY the rewritten query. No quotes, no extra text.\n\nOriginal query: How do the counting mechanisms work in the data processing framework described?\nRewritten query:",
+  "out": "distributed data processing framework aggregation counting state management architecture metrics"
+ },
+ "9a69cef04a1fd5f7f294f2c6f6cc7896a4ccddeae5b7ae5dea7aed953e8093dd": {
+  "tail": "hanged.\n\nOutput ONLY the rewritten query. No quotes, no extra text.\n\nOriginal query: How do the authors describe the operation of the counting feature in their data processing system?\nRewritten query:",
+  "out": "distributed data processing stream processing count aggregation stateful operation implementation mechanism architecture"
+ },
+ "c824d3e4d9d9c56938e6435224772278446c57936501c1bcf5838b41e72f3d90": {
+  "tail": "f the question is about a topic OUTSIDE that field, return it unchanged.\n\nOutput ONLY the rewritten query. No quotes, no extra text.\n\nOriginal query: Knative enterprise adoption today\nRewritten query:",
+  "out": "Knative serverless enterprise adoption deployment challenges Kubernetes"
+ },
+ "7eeb3f55653c6e8e8b5ce1a689d1d4d9417a67c80e6cb76e64888b85b88434ff": {
+  "tail": "es, no extra text.\n\nOriginal query: What is the average latency improvement observed when using edge computing for real-time video processing compared to traditional cloud approaches?\nRewritten query:",
+  "out": "edge computing cloud computing real-time video analytics latency comparison performance evaluation"
+ },
+ "ad6a04c41f42e7583be2fdc4feda154a4ef4230a391d8facddcbe324e008ebda": {
+  "tail": "that field, return it unchanged.\n\nOutput ONLY the rewritten query. No quotes, no extra text.\n\nOriginal query: What are the core principles behind the OpenStack cloud operating system?\nRewritten query:",
+  "out": "OpenStack cloud architecture design principles system overview infrastructure as a service IaaS"
+ },
+ "6657c48862e91d083399168acf84049970ced28022e1094d1293efb356765790": {
+  "tail": "about a topic OUTSIDE that field, return it unchanged.\n\nOutput ONLY the rewritten query. No quotes, no extra text.\n\nOriginal query: basic operating principle Open Container Initiative\nRewritten query:",
+  "out": "Open Container Initiative container runtime image specification architecture virtualization operating principles"
+ },
+ "b5c8dbcdb047ec366590da306f0776701455b14edf1568129a89b049e0b983e1": {
+  "tail": "nal question. If the question is about a topic OUTSIDE that field, return it unchanged.\n\nOutput ONLY the rewritten query. No quotes, no extra text.\n\nOriginal query: Bitcoin price cost\nRewritten query:",
+  "out": "Bitcoin price cost"
+ },
+ "5cdeacff9627766c3a7d92b817013dd10d0215f8cb7a087ec2d47ffefd9fd547": {
+  "tail": "t a topic OUTSIDE that field, return it unchanged.\n\nOutput ONLY the rewritten query. No quotes, no extra text.\n\nOriginal query: quantum computing performance results paper experiments\nRewritten query:",
+  "out": "quantum computing performance results paper experiments"
+ },
+ "3a85502db4814c3a2f783ed6a44144dd55810c8e6046cc832b9a06e8b7190f26": {
+  "tail": "stion is about a topic OUTSIDE that field, return it unchanged.\n\nOutput ONLY the rewritten query. No quotes, no extra text.\n\nOriginal query: model proposed explain linear relationship\nRewritten query:",
+  "out": "linear model hypothesis mechanism correlation explanation linear relationship"
+ },
+ "0753a24936e11ac094aeafeab072a5cdb8ce02961955e611c6014c9c0b4a0490": {
+  "tail": "at field, return it unchanged.\n\nOutput ONLY the rewritten query. No quotes, no extra text.\n\nOriginal query: Ποιος είναι ο σταθερός ρυθμός τροφοδοσίας μάγματος από τον βαθύ ταμιευτήρα;\nRewritten query:",
+  "out": "Ποιος είναι ο σταθερός ρυθμός τροφοδοσίας μάγματος από τον βαθύ ταμιευτήρα;"
+ },
+ "c86263af14eb47b0c3fe000b0bc00e160096b7a7c8d92d7e143dd530f2a0fd30": {
+  "tail": "al question. If the question is about a topic OUTSIDE that field, return it unchanged.\n\nOutput ONLY the rewritten query. No quotes, no extra text.\n\nOriginal query: Bitcoin price today\nRewritten query:",
+  "out": "Bitcoin price today"
+ },
+ "03b8cb53baed99d06c2dcbe0dc1834fc01dc6cd984ec7c37fdb06cd1efcf8b46": {
+  "tail": "tion. If the question is about a topic OUTSIDE that field, return it unchanged.\n\nOutput ONLY the rewritten query. No quotes, no extra text.\n\nOriginal query: how quantum computer works\nRewritten query:",
+  "out": "how quantum computer works"
+ },
+ "ea010e193318e6a76ba92573cd70e991b5688a3be598281c48879bc8c79849fa": {
+  "tail": " topic OUTSIDE that field, return it unchanged.\n\nOutput ONLY the rewritten query. No quotes, no extra text.\n\nOriginal query: recommended aspirin dosage following myocardial infarction\nRewritten query:",
+  "out": "recommended aspirin dosage following myocardial infarction"
+ },
+ "7e03c471a8b38f1cd24b76f800aada34998a3b32e0d1ed3679c0fc4ce029c440": {
+  "tail": "s about a topic OUTSIDE that field, return it unchanged.\n\nOutput ONLY the rewritten query. No quotes, no extra text.\n\nOriginal query: statins cholesterol reduction efficacy comparison\nRewritten query:",
+  "out": "statins cholesterol reduction efficacy comparison"
  }
 }

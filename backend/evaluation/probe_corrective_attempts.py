@@ -93,7 +93,8 @@ async def _retrieve(query, allowed_ids, idx, dm):
 async def _rewrite(query: str) -> str:
     """Ίδιο prompt με την παραγωγή (`ai_core._CORRECTIVE_PROMPT`)."""
     raw = await gemini_rest.generate_once(
-        ai_core._CORRECTIVE_PROMPT.format(query=query),
+        # domain: από 31/10 το prompt το ζητά (χωρίς αυτό KeyError — βρέθηκε 18/11)
+        ai_core._CORRECTIVE_PROMPT.format(query=query, domain=ai_core._CORPUS_DOMAIN),
         model=ai_core.GEMINI_MODEL, api_key=ai_core.GEMINI_API_KEY)
     return (raw or "").strip(' "\'\n')
 

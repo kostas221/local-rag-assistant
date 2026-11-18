@@ -206,6 +206,9 @@ def test_corrective_rewrite_uses_the_selected_document_domain(monkeypatch):
     assert _search() == []
     assert len(prompts) == 1
     assert "corpus of scientific research papers on cardiology." in prompts[0]
+    # 18/11/2026 (g38b): ο κανόνας κατά της προσθήκης λέξεων του πεδίου — η αιτία των διαρροών q048/q050.
+    assert "NEVER append the name of the field" in prompts[0]
+    assert "keyword-rich" in prompts[0]   # όχι λακωνική εκδοχή: η v2 ήταν μετρημένα χειρότερη
 
 
 def test_threshold_stays_above_out_of_corpus(monkeypatch):
