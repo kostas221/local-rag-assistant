@@ -524,6 +524,15 @@ def app_main(token):
                         sources = json.loads(sources)
                     except json.JSONDecodeError:
                         sources = []
+                # Χρόνοι της ΤΕΛΕΥΤΑΙΑΣ απάντησης: δεν αποθηκεύονται στη βάση, οπότε χωρίς
+                # αυτό η γραμμή χανόταν στο st.rerun() αμέσως μετά το streaming.
+                last = st.session_state.get("last_metrics")
+                if (
+                    last
+                    and index == len(st.session_state.chat_history) - 1
+                    and last.get("conv_id") == st.session_state.current_conv_id
+                ):
+                    render_metrics(last["metrics"], last["total_s"])
                 render_sources(sources)
 
                 # Feedback ΜΟΝΟ στις απαντήσεις του AI — στέλνεται πραγματικά στο backend.
@@ -766,8 +775,14 @@ def app_main(token):
                     yield f"⚠️ Ο server δεν αποκρίνεται: {e}"
 
             st.write_stream(stream_backend_response())
-            render_metrics(metrics_data, time.perf_counter() - t_start)
+            total_s = time.perf_counter() - t_start
+            render_metrics(metrics_data, total_s)
             render_sources(sources_data)
+            st.session_state.last_metrics = {
+                "conv_id": st.session_state.current_conv_id,
+                "metrics": metrics_data,
+                "total_s": total_s,
+            }
 
         # Τελείωσε κανονικά -> ξεκλείδωσε & ξαναφόρτωσε καθαρά από το backend
         # (single source of truth -> καμία διπλοεγγραφή, σωστή σειρά).

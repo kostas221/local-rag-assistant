@@ -295,6 +295,9 @@ def test_translation_cache_respects_domain_terms_and_model(monkeypatch):
 
     monkeypatch.setattr(gemini_rest, "generate_once", fake_generate_once)
     monkeypatch.setattr(ai_core, "_save_translation_cache", lambda: None)
+    # Σταθερό αρχικό μοντέλο: αλλιώς το GEMINI_MODEL του .env (π.χ. gemini-3.8-flash) κάνει
+    # την «αλλαγή μοντέλου» του βήματος 5 να μην είναι αλλαγή.
+    monkeypatch.setattr(ai_core, "GEMINI_MODEL", "test-model-a")
     ai_core._translation_cache.clear()
 
     q = "Πώς λειτουργεί η ελαστικότητα;"
