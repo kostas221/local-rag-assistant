@@ -74,6 +74,9 @@ SOURCES = {
     "naive": {sk: f"compare/naive_{sk}.json" for sk in ("main", "mh_new", "near_ooc")},
     "llamaindex": {sk: f"compare/llamaindex_{sk}.json" for sk in ("main", "mh_new", "near_ooc")},
 }
+# Συστήματα που πρόσθεσε το --add: οι απαντήσεις τους ΔΕΝ έχουν 1ο κριτή (π.χ. 3.8 Flash, 18/11/2026,
+# όταν το 2.5-flash δεν δινόταν πια) -> μένουν έξω από τη «συμφωνία των δύο κριτών».
+ADDED: set[str] = set()
 GOLD = {"main": "golden_set_50.jsonl", "mh_new": "golden_multihop_v2.jsonl", "near_ooc": "golden_near_ooc.jsonl"}
 PREFER = ("gpt-4.1", "gpt-4o", "gpt-5-mini", "gpt-4.1-mini", "gpt-4o-mini")
 # ΕΚΤΙΜΗΣΗ $ ανά 1M tokens (είσοδος, έξοδος) — μόνο για τον φύλακα κόστους, όχι για αναφορά
@@ -372,7 +375,8 @@ def report(rows: list[dict], model: str) -> dict:
             print(f"  {s:<11} {sk:<9} {len(win):>3} / {len(lose):<3} · p={binom_p(len(win), len(lose)):.3f} · {v}"
                   + (f"   χάνει στα: {' '.join(lose)}" if lose else ""))
 
-    print("\nΣΥΜΦΩΝΙΑ ΤΩΝ ΔΥΟ ΚΡΙΤΩΝ (ανά μονάδα, όλα τα συστήματα μαζί)")
+    print("\nΣΥΜΦΩΝΙΑ ΤΩΝ ΔΥΟ ΚΡΙΤΩΝ (ανά μονάδα, όσα συστήματα έχουν και 1ο κριτή)")
+    all_rows, rows = rows, [r for r in rows if r["system"] not in ADDED]
     a = [r[f"j1_label_{h}"] == "correct" for r in rows if r["set"] == "mh_new" for h in (1, 2)]
     b = [r[f"label_{h}"] == "correct" for r in rows if r["set"] == "mh_new" for h in (1, 2)]
     k = kappa(a, b)
@@ -393,6 +397,7 @@ def report(rows: list[dict], model: str) -> dict:
         only2 = [f"{r['system']}:{r['id']}" for r in m if not r["j1_perfect"] and r["label"] == "correct"]
         print(f"  κύριο: 1ος «5/5/5/5» και 2ος «correct» {both} · μόνο ο 1ος {len(only1)} · μόνο ο 2ος {len(only2)}")
         print(f"    μόνο ο 1ος (ύποπτα: η άρνηση/παράλειψη που ο 1ος επιβράβευσε): {' '.join(only1)}")
+    rows = all_rows
     bad = [f"{r['system']}:{r['set']}:{r['id']}" for r in rows
            if r.get("evfound") == 0 or r.get("evfound_1") == 0 or r.get("evfound_2") == 0]
     unknown = [f"{r['system']}:{r['id']}" for r in rows
@@ -412,7 +417,17 @@ def main() -> int:
     ap.add_argument("--list-models", action="store_true")
     ap.add_argument("--limit", type=int, default=0, help="N ανά σετ ανά σύστημα (δοκιμή· δεν γράφει αποτελέσματα)")
     ap.add_argument("--max-usd", type=float, default=3.0)
+    ap.add_argument("--add", default="", help="label ενός τρεξίματος scoreboard_answers (π.χ. g38b): κρίνει "
+                    "και τα runs/scoreboard/answers_<label>_{main,mh_new,near_ooc}.json ως σύστημα <label>")
     args = ap.parse_args()
+    if args.add:
+        paths = {sk: f"scoreboard/answers_{args.add}_{sk}.json" for sk in ("main", "mh_new", "near_ooc")}
+        missing = [p for p in paths.values() if not os.path.exists(os.path.join(RUNS, p))]
+        if missing:
+            print(f"!! Λείπουν: {missing} — τρέξε πρώτα scoreboard_answers.py --label {args.add} --no-judge")
+            return 1
+        SOURCES[args.add] = paths
+        ADDED.add(args.add)
     key = api_key()
     if not key:
         print("!! Λείπει OPENAI_API_KEY (περιβάλλον ή .env της ρίζας)")
@@ -443,7 +458,7 @@ def main() -> int:
     if args.limit:
         print("(--limit: δεν γράφεται αρχείο αποτελεσμάτων)")
         return 0
-    out = os.path.join(CMP, f"judge2_{model}.json")
+    out = os.path.join(CMP, f"judge2_{model}" + (f"_{args.add}" if args.add else "") + ".json")
     with open(out, "w", encoding="utf-8") as f:
         json.dump({"model": model, "when": time.strftime("%Y-%m-%d %H:%M"), "summary": summ, "rows": rows},
                   f, ensure_ascii=False, indent=1)

@@ -921,6 +921,8 @@ async def run(args) -> int:
                         "strict_missing": "|".join(str(f.get("value", f.get("text")))
                                                    for f, ok in zip(t["facts"], strict) if not ok),
                         "strict_verdict": table_verdict(sum(strict), len(strict), row["target"])}
+        elif args.no_judge:
+            pass        # κρίνει ο 2ος κριτής (compare_judge2 --add <label>) πάνω στο αρχείο απαντήσεων
         else:
             try:
                 if mh:
@@ -971,7 +973,10 @@ async def run(args) -> int:
         with open(args.compare, encoding="utf-8") as f:
             pj = json.load(f)
         prev, prev_rows = pj["summary"], pj["rows"]
-    if mh:
+    if args.no_judge and not tables:
+        print(f"\n--no-judge: {len(rows)} απαντήσεις χωρίς 1ο κριτή ({sum(bool(r['error']) for r in rows)} "
+              f"σφάλματα) · κρίση: python backend/evaluation/compare_judge2.py --add {args.label}")
+    elif mh:
         print_summary(summ, prev)
         print_attention(rows)
         if prev_rows is not None:
@@ -1024,8 +1029,9 @@ async def run(args) -> int:
         return 1 if (cache.errors or frozen.errors) else 0
     frozen.save()
     out = os.path.join(S.OUT_DIR, f"answers_{args.label}_{args.set}")
-    judge_info = ({"model": E.JUDGE_MODEL, **JUDGE_KW} if mh or near else
-                  {"none": "ακριβείς τιμές, eval_tables.check"} if tables else
+    judge_info = ({"none": "ακριβείς τιμές, eval_tables.check + table_scoring"} if tables else
+                  {"none": "--no-judge: κρίνει ο 2ος κριτής (compare_judge2 --add)"} if args.no_judge else
+                  {"model": E.JUDGE_MODEL, **JUDGE_KW} if mh or near else
                   {"model": E.JUDGE_MODEL, "via": "eval_engine SDK", "temperature": 0.0})
     with open(out + ".json", "w", encoding="utf-8") as f:
         json.dump({"label": args.label, "set": args.set, "when": time.strftime("%Y-%m-%d %H:%M"),
@@ -1047,6 +1053,9 @@ def main() -> int:
                    help="ο πίνακας runs/scoreboard/<label>.json που δίνει τις σελίδες-έλεγχο")
     p.add_argument("--compare", help="answers_<άλλο>_<σετ>.json για σύγκριση")
     p.add_argument("--limit", type=int, default=0, help="μόνο οι πρώτες N (δοκιμή)")
+    p.add_argument("--no-judge", action="store_true",
+                   help="μόνο απαντήσεις, χωρίς τον 1ο κριτή (18/11/2026: το 2.5-flash δεν δίνεται "
+                        "πια στο κλειδί)· κρίνει το compare_judge2 --add <label>")
     args = p.parse_args()
     if not E.API_KEY:
         print("!! Λείπει GEMINI_API_KEY")

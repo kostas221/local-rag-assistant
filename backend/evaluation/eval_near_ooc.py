@@ -80,8 +80,10 @@ import shutil
 import sys
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
 import gemini_rest
+from model_guard import ensure_not_redirected
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 NEAR_PATH = os.path.join(HERE, "golden_near_ooc.jsonl")
@@ -96,6 +98,9 @@ MODEL = os.getenv("GEMINI_MODEL", "gemini-2.5-flash")
 # βαθμολογεί, και η διαφορά δεν θα αποδιδόταν σε κανέναν. Default = ο κριτής όλων των μετρήσεων.
 JUDGE_MODEL = os.getenv("JUDGE_MODEL", "gemini-2.5-flash")
 DEFAULT_MODEL = "gemini-2.5-flash"     # το μοντέλο πάνω στο οποίο μετρήθηκαν τα πάντα ως 30/9
+# Από 1/12/2026 το gemini-2.5-flash απαντά σιωπηλά ως gemini-3.5-flash-lite (βλ. model_guard).
+ensure_not_redirected(MODEL, "GEMINI_MODEL (σύστημα)")
+ensure_not_redirected(JUDGE_MODEL, "JUDGE_MODEL (κριτής)")
 API_KEY = os.getenv("GEMINI_API_KEY")
 N_POS_CONTROLS = 5
 LABELS = ("correct", "soft_leak", "leak")

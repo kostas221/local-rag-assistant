@@ -9,12 +9,20 @@ from pydantic import BaseModel, Field
 from ai_core import ask_ai, search_documents
 from genai_compat import genai  # deprecated SDK, τεκμηριωμένο: βλ. genai_compat.py
 
+try:  # εισάγεται και ως `eval_engine` και ως `evaluation.eval_engine`
+    from model_guard import ensure_not_redirected
+except ImportError:
+    from evaluation.model_guard import ensure_not_redirected
+
 load_dotenv()
 
 # Ορίζουμε το μοντέλο που θα κάνει το "judging" με την επίσημη βιβλιοθήκη της Google
 genai.configure(api_key=os.getenv("GEMINI_API_KEY"))
 # JUDGE_MODEL, ΟΧΙ GEMINI_MODEL (1/10/2026): αλλαγή μοντέλου του συστήματος δεν αλλάζει τον κριτή
-judge_model = genai.GenerativeModel(os.getenv("JUDGE_MODEL", "gemini-2.5-flash"))
+JUDGE_MODEL = os.getenv("JUDGE_MODEL", "gemini-2.5-flash")
+# Από 1/12/2026 το gemini-2.5-flash απαντά σιωπηλά ως gemini-3.5-flash-lite (βλ. model_guard).
+ensure_not_redirected(JUDGE_MODEL, "JUDGE_MODEL (κριτής του eval_engine)")
+judge_model = genai.GenerativeModel(JUDGE_MODEL)
 
 # Καρφωμένο eval corpus: τυχόν ΑΛΛΑ έγγραφα στη βάση (π.χ. demo uploads) δεν
 # μολύνουν τη μέτρηση.
