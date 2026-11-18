@@ -33,9 +33,12 @@ if not GEMINI_API_KEY:
     logger.error("ΠΡΟΣΟΧΗ: Δεν βρέθηκε το GEMINI_API_KEY στο .env αρχείο!")
 genai.configure(api_key=GEMINI_API_KEY)
 
-# Μοντέλο μέσω env (default gemini-2.5-flash, 1M context window) -> αλλάζει
-# χωρίς rebuild στο deploy, π.χ. GEMINI_MODEL=gemini-2.5-pro.
-GEMINI_MODEL = os.getenv("GEMINI_MODEL", "gemini-2.5-flash")
+# Μοντέλο μέσω env -> αλλάζει χωρίς rebuild στο deploy. Default gemini-3.8-flash από 19/11/2026:
+# το 2.5-flash δεν δίνεται πια σε κλειδιά και από 1/12/2026 ανακατευθύνεται σιωπηλά στο
+# 3.5-flash-lite. Μετρημένο στο 9ο τρέξιμο (evaluation/scoreboard.py): απαντήσεις καλύτερες από το
+# 2.5 (κύριο 45/45, δύο papers 24/29), με δηλωμένο περιορισμό στην ανάκτηση (2/5 ooc περνούν το
+# corrective· η απάντηση αρνείται). ΠΡΟΣΟΧΗ: το 3.8 αγνοεί temperature και thinkingBudget.
+GEMINI_MODEL = os.getenv("GEMINI_MODEL", "gemini-3.8-flash")
 
 # GenerationConfig:
 #  • temperature=0.1 -> σχεδόν ντετερμινιστικές, ΣΤΑΘΕΡΕΣ απαντήσεις: ίδια ερώτηση

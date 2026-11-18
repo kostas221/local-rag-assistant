@@ -1,0 +1,50 @@
+﻿id,lang,category,question,outcome,n_pages,same_pages,error,shape,doc,page,target,cov,n_kw,answer,refusal,prompt_tokens,out_tokens,thinking_tokens,values_ok,values_total,missing,verdict,strict_ok,strict_total,strict_missing,strict_verdict
+t001,en,table,What is the maximum run time and the maximum local storage of an AWS serverless cloud function?,passed_gate,8,1,,two_column,1902.03383v1.pdf,5,1,2,2,"Based on the provided source text, an AWS serverless cloud function has a maximum run time of 900 seconds [S1]. Additionally, its maximum local storage is 0.5 GiB [S1]. Note that an earlier prototype mentioned AWS Lambda providing a restricted runtime with a maximum execution time of 300 seconds and 512 MB of local storage [S3].",0,9017,81,0,2,2,,σωστή,2,2,,σωστή
+t002,en,table,What is the minimum accounting unit for serverless cloud functions compared to serverful cloud VMs?,passed_gate,8,1,,two_column,1902.03383v1.pdf,5,1,2,2,"Based on the provided comparison between AWS Serverless Cloud (Lambda) and AWS Serverful Cloud (on-demand EC2 instances), the minimum accounting unit for serverless cloud functions is 0.1 seconds (100 ms) [S1, S2]. In contrast, the minimum accounting unit for serverful cloud VMs is 60 seconds [S1].",0,7225,75,0,2,2,,σωστή,2,2,,σωστή
+t003,en,table,"In the 2018 survey of serverless use cases, what percentage goes to web and API serving and what percentage to data processing?",passed_gate,8,1,,percentages,1902.03383v1.pdf,9,1,2,2,"According to the 2018 survey on the popularity of serverless computing use cases, web and API serving accounts for 32% [S1]. In addition, data processing (such as batch ETL, which refers to database Extract, Transform, and Load) represents 21% of the use cases [S1]. Together, these two categories constitute the most prominent uses reported in the survey [S1].",0,7453,86,0,2,2,,σωστή,2,2,,σωστή
+t004,en,table,"Which serverless services are listed with their programming interfaces, and what is the cost model of BigQuery and Athena?",passed_gate,8,1,,rows_with_mapping,1902.03383v1.pdf,8,1,2,2,"Based on the provided text, the serverless computing services and their corresponding programming interfaces listed together are:
+
+1. Cloud Functions, which has the programming interface of arbitrary code [S1].
+2. BigQuery/Athena, which has the programming interface of an SQL-like query [S1].
+3. DynamoDB, which has the programming interface of `puts()` and `gets()` [S1].
+4. SQS, which has the programming interface of enqueue/dequeue events [S1].
+
+For BigQuery and Athena, the cost model is based on the amount of data scanned by the query [S1]. In addition, for these serverless compute offerings, users pay separately for storage, such as in Google Cloud Storage, AWS S3, or Azure Blob Storage [S1].",0,7722,164,0,3,3,,σωστή,3,3,,σωστή
+t005,en,table,How many MapReduce jobs were run in August 2004 and what was the average job completion time?,passed_gate,7,1,,label_value,mapreduce-osdi04.pdf,10,1,2,2,"In August 2004, a total of 29,423 MapReduce jobs were run [S1]. The average job completion time for these jobs was 634 seconds [S1].",0,8418,45,0,2,2,,σωστή,2,2,,σωστή
+t006,en,table,"How much input data was read, how much intermediate data was produced and how much output data was written in August 2004?",passed_gate,8,1,,label_value,mapreduce-osdi04.pdf,10,1,2,2,"According to statistics logged for a subset of MapReduce jobs run at Google in August 2004, the volume of input data read was 3,288 TB [S1]. During the same period, 758 TB of intermediate data was produced [S1]. Finally, the total amount of output data written was 193 TB [S1].",0,11623,78,0,3,3,,σωστή,3,3,,σωστή
+t007,en,table,What was the average number of worker machines per job and the average number of worker deaths per job in August 2004?,passed_gate,8,1,,label_value,mapreduce-osdi04.pdf,10,1,2,2,"According to statistics for MapReduce jobs run at Google in August 2004, the average number of worker machines per job was 157 [S1]. During the same period, the average number of worker deaths per job was 1.2 [S1].",0,10870,57,0,2,2,,σωστή,2,2,,σωστή
+t008,en,table,"What is the latency of invoking a no-op Lambda function on a 1KB argument, and how many times slower is it than a direct network message?",passed_gate,6,1,,two_header_rows,1812.03651.pdf,5,1,2,2,"The latency of invoking a no-op Lambda function on a 1KB argument—averaged over 1,000 calls to model pure functional event-driven communication—is 303ms [S1]. In comparison, a direct 1KB network message roundtrip using Python and ZeroMQ across two EC2 instances has a latency of 290μs [S1]. Consequently, invoking the no-op Lambda function is 1,045 times slower than direct network messaging [S1].",0,10296,107,0,2,2,,σωστή,2,2,,σωστή
+t009,en,table,What write speed does S3 reach and what write speed does a single SSD on a c3.8xlarge instance reach?,passed_gate,7,1,,label_value,1702.04024.pdf,3,1,2,2,"Based on the provided benchmark data comparing single-machine write bandwidth to remote storage and instance local storage, S3 reaches a write speed of 501.13 MB/s [S1]. In comparison, a single SSD on a c3.8xlarge instance reaches a write speed of 208.73 MB/s [S1]. Consequently, remote storage on S3 is faster than a single SSD on the standard c3.8xlarge instance [S1].",0,10972,102,0,2,2,,σωστή,2,2,,σωστή
+t010,en,table,What is the mean and the standard deviation of the lambda start latency in the featurization experiment?,passed_gate,6,1,,mean_std,1702.04024.pdf,5,1,2,2,"Based on the featurization and classification experiment, the lambda start latency has a mean of 9.7 seconds and a standard deviation of 29.1 seconds [S1].",0,9731,38,0,2,2,,σωστή,2,2,,σωστή
+t011,en,table,What did network and storage cost in a medium-sized datacenter compared to a very large datacenter in 2006?,passed_gate,8,1,,three_column,EECS-2009-28.pdf,8,1,2,2,"In 2006, network costs were $95 per Mbit/sec/month in a medium-sized datacenter (approximately 1,000 servers) compared to $13 per Mbit/sec/month in a very large datacenter (approximately 50,000 servers), representing a cost ratio of 7.1 [S1]. During the same period, storage cost $2.20 per GByte/month in a medium-sized datacenter compared to $0.40 per GByte/month in a very large datacenter, which corresponds to a cost ratio of 5.7 [S1].",0,11884,135,0,4,4,,σωστή,4,4,,σωστή
+t012,en,table,"What is the price per kilowatt-hour of electricity in Idaho and in California, and why do they differ?",passed_gate,8,1,,row_per_region,EECS-2009-28.pdf,8,1,2,2,"According to the source text, the price of electricity is 3.6¢ per kilowatt-hour (KWH) in Idaho and 10.0¢ per KWH in California [S1]. 
+
+The primary reasons cited for this price difference relate to power sources and transmission factors [S1]:
+1. In Idaho, electricity is generated via hydroelectric power and is not transmitted over long distances [S1].
+2. In California, electricity is transmitted over long distances across the grid, transmission lines are limited in the Bay Area, and no coal-fired electricity generation is allowed within the state [S1].",0,11232,127,0,3,3,,σωστή,3,3,,σωστή
+t013,en,table,List every use case in the 2018 serverless survey together with its percentage.,passed_gate,8,1,,full_enumeration,1902.03383v1.pdf,9,1,2,2,"Based on the 2018 survey reported in the source text, the popularity of serverless computing use cases is as follows [S1]:
+
+1. Web and API serving: 32% [S1]
+2. Data Processing, e.g., batch ETL (database Extract, Transform, and Load): 21% [S1]
+3. Integrating 3rd Party Services: 17% [S1]
+4. Internal tooling: 16% [S1]
+5. Chat bots e.g., Alexa Skills (SDK for Alexa AI Assistant): 8% [S1]
+6. Internet of Things: 6% [S1]",0,6062,146,0,12,12,,σωστή,6,6,,σωστή
+t014,en,table,List every storage medium in the write bandwidth comparison together with its write speed.,passed_gate,6,1,,full_enumeration,1702.04024.pdf,3,1,2,2,"Based on the comparison of single-machine write bandwidth in Amazon EC2 provided in the source text, the storage media and their corresponding write speeds are:
+
+1. SSD on c3.8xlarge: 208.73 MB/s [S1]
+2. SSD on i2.8xlarge: 460.36 MB/s [S1]
+3. 4 SSDs on i2.8xlarge: 1768.04 MB/s [S1]
+4. S3: 501.13 MB/s [S1]",0,9825,132,0,7,7,,σωστή,4,4,,σωστή
+t015,en,table,List every phase of the featurization experiment with its mean time and its standard deviation.,passed_gate,8,1,,full_enumeration,1702.04024.pdf,5,1,2,2,"Based on Table 2 in the source text, the phases of the featurization and classification experiment, along with their mean times and standard deviations, are:
+
+1. **Lambda start latency**: mean of 9.7s, standard deviation of 29.1s [S1].
+2. **Lambda setup time**: mean of 14.2s, standard deviation of 5.2s [S1].
+3. **Featurization**: mean of 112.9s, standard deviation of 10.2s [S1].
+4. **Result fetch**: mean of 22.0s, standard deviation of 10.0s [S1].
+5. **Fit linear classifier**: mean of 4.3s, standard deviation of 0.5s [S1].",0,12226,178,0,10,10,,σωστή,10,10,,σωστή
+t016,en,table,"List every technology in the economies of scale table with the cost in a medium-sized datacenter, the cost in a very large datacenter and the ratio.",passed_gate,7,1,,full_enumeration,EECS-2009-28.pdf,8,1,2,2,"Based on the economies of scale table in the provided text, the technologies along with their respective costs and ratios are as follows:
+
+1. **Network**: Cost in a medium-sized datacenter is $95 per Mbit/sec/month, cost in a very large datacenter is $13 per Mbit/sec/month, and the ratio is 7.1 [S1].
+2. **Storage**: Cost in a medium-sized datacenter is $2.20 per GByte / month, cost in a very large datacenter is $0.40 per GByte / month, and the ratio is 5.7 [S1].
+3. **Administration**: Cost in a medium-sized datacenter is ≈140 Servers / Administrator, cost in a very large datacenter is >1000 Servers / Administrator, and the ratio is 7.1 [S1].",0,9371,189,0,11,11,,σωστή,11,11,,σωστή

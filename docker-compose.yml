@@ -25,7 +25,7 @@ services:
     environment:
       - DATABASE_URL=postgresql://zosi_admin:${POSTGRES_PASSWORD}@db:5432/ai_platform_db
       - GEMINI_API_KEY=${GEMINI_API_KEY}
-      - GEMINI_MODEL=${GEMINI_MODEL:-gemini-2.5-flash}
+      - GEMINI_MODEL=${GEMINI_MODEL:-gemini-3.8-flash}
       - SECRET_KEY=${SECRET_KEY}
       - ALLOWED_ORIGINS=${ALLOWED_ORIGINS:-http://localhost:8502}
     depends_on:

@@ -194,13 +194,27 @@ class Judge:
                 self.data = json.load(f)
         self.new = self.hits = 0
         self.usd = 0.0
+        self._saved_new = 0
 
     def save(self) -> None:
+        """Γράφει μόνο αν υπάρχουν ΝΕΕΣ κρίσεις. 18/11/2026: γράφοντας το ~370 KB αρχείο μετά από
+        ΚΑΘΕ ερώτηση (και με 0 νέες), τα Windows (antivirus/ευρετήριο) κλείδωναν το αρχείο και το
+        os.replace έριχνε PermissionError. Και ξαναδοκιμάζει λίγες φορές πριν τα παρατήσει."""
+        if self.new == self._saved_new and os.path.exists(CACHE_PATH):
+            return
         os.makedirs(CMP, exist_ok=True)
         tmp = CACHE_PATH + ".tmp"
         with open(tmp, "w", encoding="utf-8") as f:
             json.dump(self.data, f, ensure_ascii=False, indent=1)
-        os.replace(tmp, CACHE_PATH)
+        for attempt in range(10):
+            try:
+                os.replace(tmp, CACHE_PATH)
+                break
+            except PermissionError:
+                if attempt == 9:
+                    raise
+                time.sleep(0.5)
+        self._saved_new = self.new
 
     def __call__(self, prompt: str) -> dict:
         k = hashlib.sha256(f"{self.model}\n{prompt}".encode()).hexdigest()

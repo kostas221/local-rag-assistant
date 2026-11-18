@@ -7198,5 +7198,2365 @@
     "rejected_prediction_tokens": 0
    }
   }
+ },
+ "a837ad41e5e69646d0811d3d56e0910809fc7fb3b6799ca02700559b07328a5f": {
+  "model": "gpt-4.1",
+  "tail": "ose:\n{\"label\": \"correct|partial|refused|wrong\", \"evidence\": \"<ONE sentence copied VERBATIM from the SYSTEM ANSWER that decided the label, or empty>\"}\n",
+  "out": "{\"label\": \"correct\", \"evidence\": \"Cloud Computing refers to both the applications delivered as services over the Internet and the hardware and systems software in the datacenters that provide those services [S1, S3].\"}",
+  "usage": {
+   "prompt_tokens": 565,
+   "completion_tokens": 47,
+   "total_tokens": 612,
+   "prompt_tokens_details": {
+    "cached_tokens": 0,
+    "audio_tokens": 0
+   },
+   "completion_tokens_details": {
+    "reasoning_tokens": 0,
+    "audio_tokens": 0,
+    "accepted_prediction_tokens": 0,
+    "rejected_prediction_tokens": 0
+   }
+  }
+ },
+ "4903539b954c34433155b5b20e1f5e1d80b424967e830f41d64f1cbad9e03ecc": {
+  "model": "gpt-4.1",
+  "tail": "ose:\n{\"label\": \"correct|partial|refused|wrong\", \"evidence\": \"<ONE sentence copied VERBATIM from the SYSTEM ANSWER that decided the label, or empty>\"}\n",
+  "out": "{\"label\": \"correct\", \"evidence\": \"From a hardware point of view, the three new aspects in Cloud Computing are:\\n\\n1. The illusion of infinite computing resources available on demand, which eliminates the need for Cloud Computing users to plan far ahead for provisioning [S1] [S2].\\n2. The elimination of an up-front commitment by Cloud users, allowing companies to start small and expand hardware resources only when their needs increase [S1] [S2].\\n3. The ability to pay for the use of computing resources on a short-term basis as needed (such as processors by the hour and storage by the day) and release them as needed, rewarding conservation by releasing machines and storage when they are no longer useful [S1] [S2].\"}",
+  "usage": {
+   "prompt_tokens": 470,
+   "completion_tokens": 162,
+   "total_tokens": 632,
+   "prompt_tokens_details": {
+    "cached_tokens": 0,
+    "audio_tokens": 0
+   },
+   "completion_tokens_details": {
+    "reasoning_tokens": 0,
+    "audio_tokens": 0,
+    "accepted_prediction_tokens": 0,
+    "rejected_prediction_tokens": 0
+   }
+  }
+ },
+ "a127cba7f303d8ba50ccbef3e88239bd07a859345071cfb8ac12a8c7094f0375": {
+  "model": "gpt-4.1",
+  "tail": "ose:\n{\"label\": \"correct|partial|refused|wrong\", \"evidence\": \"<ONE sentence copied VERBATIM from the SYSTEM ANSWER that decided the label, or empty>\"}\n",
+  "out": "{\"label\": \"correct\", \"evidence\": \"The cheapest and fastest way to transfer large amounts of data is to physically ship disks or complete computers using overnight delivery services [S1], [S2].\"}",
+  "usage": {
+   "prompt_tokens": 724,
+   "completion_tokens": 43,
+   "total_tokens": 767,
+   "prompt_tokens_details": {
+    "cached_tokens": 0,
+    "audio_tokens": 0
+   },
+   "completion_tokens_details": {
+    "reasoning_tokens": 0,
+    "audio_tokens": 0,
+    "accepted_prediction_tokens": 0,
+    "rejected_prediction_tokens": 0
+   }
+  }
+ },
+ "724cace988d7a6c908f2b6baf03d3031960072afc501128a785ff0f68e9ac155": {
+  "model": "gpt-4.1",
+  "tail": "ose:\n{\"label\": \"correct|partial|refused|wrong\", \"evidence\": \"<ONE sentence copied VERBATIM from the SYSTEM ANSWER that decided the label, or empty>\"}\n",
+  "out": "{\"label\": \"correct\", \"evidence\": \"Extremely large datacenters housing tens of thousands of computers can purchase network bandwidth, hardware, and power at factors of 5 to 7 (or an estimated factor of 3 to 5) less than the prices offered to medium-sized datacenters [S2].\"}",
+  "usage": {
+   "prompt_tokens": 562,
+   "completion_tokens": 68,
+   "total_tokens": 630,
+   "prompt_tokens_details": {
+    "cached_tokens": 0,
+    "audio_tokens": 0
+   },
+   "completion_tokens_details": {
+    "reasoning_tokens": 0,
+    "audio_tokens": 0,
+    "accepted_prediction_tokens": 0,
+    "rejected_prediction_tokens": 0
+   }
+  }
+ },
+ "641cdabcd5fb924e0af9c6c0b5142826f16ffecb40e2496500f25b44e8947361": {
+  "model": "gpt-4.1",
+  "tail": "ose:\n{\"label\": \"correct|partial|refused|wrong\", \"evidence\": \"<ONE sentence copied VERBATIM from the SYSTEM ANSWER that decided the label, or empty>\"}\n",
+  "out": "{\"label\": \"correct\", \"evidence\": \"The primary obstacle regarding data confidentiality and auditability is the widespread reluctance to place sensitive corporate data into the cloud due to security and compliance concerns [S3].\"}",
+  "usage": {
+   "prompt_tokens": 591,
+   "completion_tokens": 44,
+   "total_tokens": 635,
+   "prompt_tokens_details": {
+    "cached_tokens": 0,
+    "audio_tokens": 0
+   },
+   "completion_tokens_details": {
+    "reasoning_tokens": 0,
+    "audio_tokens": 0,
+    "accepted_prediction_tokens": 0,
+    "rejected_prediction_tokens": 0
+   }
+  }
+ },
+ "a8b94d23d997462eaf8cf29472ca03beb7ca551988f9d81574f2b99beda95ee1": {
+  "model": "gpt-4.1",
+  "tail": "ose:\n{\"label\": \"correct|partial|refused|wrong\", \"evidence\": \"<ONE sentence copied VERBATIM from the SYSTEM ANSWER that decided the label, or empty>\"}\n",
+  "out": "{\"label\": \"correct\", \"evidence\": \"These application opportunities include: 1. **Mobile interactive applications:** ... 2. **Parallel batch processing:** ... 3. **The rise of analytics:** ... 4. **Extension of compute-intensive desktop applications:** ...\"}",
+  "usage": {
+   "prompt_tokens": 649,
+   "completion_tokens": 57,
+   "total_tokens": 706,
+   "prompt_tokens_details": {
+    "cached_tokens": 0,
+    "audio_tokens": 0
+   },
+   "completion_tokens_details": {
+    "reasoning_tokens": 0,
+    "audio_tokens": 0,
+    "accepted_prediction_tokens": 0,
+    "rejected_prediction_tokens": 0
+   }
+  }
+ },
+ "be2012ae16622a3b96994728c5033d32c191ce7f832decc66dd892c50ceb66f7": {
+  "model": "gpt-4.1",
+  "tail": "ose:\n{\"label\": \"correct|partial|refused|wrong\", \"evidence\": \"<ONE sentence copied VERBATIM from the SYSTEM ANSWER that decided the label, or empty>\"}\n",
+  "out": "{\"label\": \"correct\", \"evidence\": \"the primary difference between Backend as a Service (BaaS) and Function as a Service (FaaS) lies in their generality and purpose within serverless computing, which is defined as FaaS + BaaS [S3].\"}",
+  "usage": {
+   "prompt_tokens": 637,
+   "completion_tokens": 62,
+   "total_tokens": 699,
+   "prompt_tokens_details": {
+    "cached_tokens": 0,
+    "audio_tokens": 0
+   },
+   "completion_tokens_details": {
+    "reasoning_tokens": 0,
+    "audio_tokens": 0,
+    "accepted_prediction_tokens": 0,
+    "rejected_prediction_tokens": 0
+   }
+  }
+ },
+ "42f7da9d6792b2206f9ec048bbd32d8b1d6209aeaf427c64ff3674655f4da8da": {
+  "model": "gpt-4.1",
+  "tail": "ose:\n{\"label\": \"correct|partial|refused|wrong\", \"evidence\": \"<ONE sentence copied VERBATIM from the SYSTEM ANSWER that decided the label, or empty>\"}\n",
+  "out": "{\"label\": \"correct\", \"evidence\": \"Function invocations can suffer from substantial launch overheads (taking up to 20–30 seconds without caching) due to platform invocation rate limits and runtime setup times [S4].\"}",
+  "usage": {
+   "prompt_tokens": 854,
+   "completion_tokens": 48,
+   "total_tokens": 902,
+   "prompt_tokens_details": {
+    "cached_tokens": 0,
+    "audio_tokens": 0
+   },
+   "completion_tokens_details": {
+    "reasoning_tokens": 0,
+    "audio_tokens": 0,
+    "accepted_prediction_tokens": 0,
+    "rejected_prediction_tokens": 0
+   }
+  }
+ },
+ "40ccaed58c95fd0b5d2c667ad46f103d823b36fa6178d82117476b6413fa1611": {
+  "model": "gpt-4.1",
+  "tail": "ose:\n{\"label\": \"correct|partial|refused|wrong\", \"evidence\": \"<ONE sentence copied VERBATIM from the SYSTEM ANSWER that decided the label, or empty>\"}\n",
+  "out": "{\"label\": \"correct\", \"evidence\": \"The primary difference between serverless and serverful cloud billing lies in paying in proportion to resources actually used rather than paying for allocated or reserved resources [S1].\"}",
+  "usage": {
+   "prompt_tokens": 620,
+   "completion_tokens": 44,
+   "total_tokens": 664,
+   "prompt_tokens_details": {
+    "cached_tokens": 0,
+    "audio_tokens": 0
+   },
+   "completion_tokens_details": {
+    "reasoning_tokens": 0,
+    "audio_tokens": 0,
+    "accepted_prediction_tokens": 0,
+    "rejected_prediction_tokens": 0
+   }
+  }
+ },
+ "6a9459891028f5e32b9847ac39dc8633af91e91ed104db1cc84b6a4ae95564d8": {
+  "model": "gpt-4.1",
+  "tail": "ose:\n{\"label\": \"correct|partial|refused|wrong\", \"evidence\": \"<ONE sentence copied VERBATIM from the SYSTEM ANSWER that decided the label, or empty>\"}\n",
+  "out": "{\"label\": \"correct\", \"evidence\": \"Serverless computing drew widespread attention in 2015 with the introduction of Amazon's AWS Lambda service [S1].\"}",
+  "usage": {
+   "prompt_tokens": 411,
+   "completion_tokens": 35,
+   "total_tokens": 446,
+   "prompt_tokens_details": {
+    "cached_tokens": 0,
+    "audio_tokens": 0
+   },
+   "completion_tokens_details": {
+    "reasoning_tokens": 0,
+    "audio_tokens": 0,
+    "accepted_prediction_tokens": 0,
+    "rejected_prediction_tokens": 0
+   }
+  }
+ },
+ "5bc4162a508250b0d08a15a1164a8f74bd23f4d241827955b315d2ee3d464d71": {
+  "model": "gpt-4.1",
+  "tail": "ose:\n{\"label\": \"correct|partial|refused|wrong\", \"evidence\": \"<ONE sentence copied VERBATIM from the SYSTEM ANSWER that decided the label, or empty>\"}\n",
+  "out": "{\"label\": \"correct\", \"evidence\": \"According to the paper, five applications that stretch the limits of current serverless computing platforms are:\"}",
+  "usage": {
+   "prompt_tokens": 697,
+   "completion_tokens": 31,
+   "total_tokens": 728,
+   "prompt_tokens_details": {
+    "cached_tokens": 0,
+    "audio_tokens": 0
+   },
+   "completion_tokens_details": {
+    "reasoning_tokens": 0,
+    "audio_tokens": 0,
+    "accepted_prediction_tokens": 0,
+    "rejected_prediction_tokens": 0
+   }
+  }
+ },
+ "617b69c7429a63dbac8f4739717c7f9fb66b0cb4e55227578b05f09755a18e96": {
+  "model": "gpt-4.1",
+  "tail": "ose:\n{\"label\": \"correct|partial|refused|wrong\", \"evidence\": \"<ONE sentence copied VERBATIM from the SYSTEM ANSWER that decided the label, or empty>\"}\n",
+  "out": "{\"label\": \"correct\", \"evidence\": \"Ως Utility Computing ορίζεται η υπηρεσία που πωλείται όταν ένα Cloud διατίθεται στο ευρύ κοινό με μοντέλο πληρωμής βάσει χρήσης (pay-as-you-go), αποτελώντας δηλαδή ένα Public Cloud [S1, S3].\"}",
+  "usage": {
+   "prompt_tokens": 865,
+   "completion_tokens": 72,
+   "total_tokens": 937,
+   "prompt_tokens_details": {
+    "cached_tokens": 0,
+    "audio_tokens": 0
+   },
+   "completion_tokens_details": {
+    "reasoning_tokens": 0,
+    "audio_tokens": 0,
+    "accepted_prediction_tokens": 0,
+    "rejected_prediction_tokens": 0
+   }
+  }
+ },
+ "ed5d82a4435ce02e156e8db9d12a43b6f4da60b94f61f4be41109decb54877ac": {
+  "model": "gpt-4.1",
+  "tail": "ose:\n{\"label\": \"correct|partial|refused|wrong\", \"evidence\": \"<ONE sentence copied VERBATIM from the SYSTEM ANSWER that decided the label, or empty>\"}\n",
+  "out": "{\"label\": \"correct\", \"evidence\": \"τα 10 κορυφαία εμπόδια (obstacles) για την υιοθέτηση και την ανάπτυξη του Cloud Computing είναι τα εξής\"}",
+  "usage": {
+   "prompt_tokens": 1348,
+   "completion_tokens": 43,
+   "total_tokens": 1391,
+   "prompt_tokens_details": {
+    "cached_tokens": 0,
+    "audio_tokens": 0
+   },
+   "completion_tokens_details": {
+    "reasoning_tokens": 0,
+    "audio_tokens": 0,
+    "accepted_prediction_tokens": 0,
+    "rejected_prediction_tokens": 0
+   }
+  }
+ },
+ "ee6d6f7abc5e086fe9d81921188f5b428ec1d0d0e6f55a09d68b8442b4412075": {
+  "model": "gpt-4.1",
+  "tail": "ose:\n{\"label\": \"correct|partial|refused|wrong\", \"evidence\": \"<ONE sentence copied VERBATIM from the SYSTEM ANSWER that decided the label, or empty>\"}\n",
+  "out": "{\"label\": \"correct\", \"evidence\": \"Η ελαστικότητα του Cloud Computing επιτρέπει τη μεταφορά του ρίσκου λανθασμένης εκτίμησης του φόρτου εργασίας από τον διαχειριστή της υπηρεσίας στον πάροχο cloud [S2].\"}",
+  "usage": {
+   "prompt_tokens": 938,
+   "completion_tokens": 65,
+   "total_tokens": 1003,
+   "prompt_tokens_details": {
+    "cached_tokens": 0,
+    "audio_tokens": 0
+   },
+   "completion_tokens_details": {
+    "reasoning_tokens": 0,
+    "audio_tokens": 0,
+    "accepted_prediction_tokens": 0,
+    "rejected_prediction_tokens": 0
+   }
+  }
+ },
+ "596d6d43c355e01399a1a90a2dc5e64d6b3fd103cb6290c30ee13741da2ec115": {
+  "model": "gpt-4.1",
+  "tail": "ose:\n{\"label\": \"correct|partial|refused|wrong\", \"evidence\": \"<ONE sentence copied VERBATIM from the SYSTEM ANSWER that decided the label, or empty>\"}\n",
+  "out": "{\"label\": \"correct\", \"evidence\": \"Το cold start (ψυχρή εκκίνηση) στο serverless computing είναι η καθυστέρηση και το υπολογιστικό κόστος που προκύπτει προκειμένου να προετοιμαστεί ο κώδικας μιας serverless συνάρτησης ώστε να εκτελεστεί [S1].\"}",
+  "usage": {
+   "prompt_tokens": 907,
+   "completion_tokens": 78,
+   "total_tokens": 985,
+   "prompt_tokens_details": {
+    "cached_tokens": 0,
+    "audio_tokens": 0
+   },
+   "completion_tokens_details": {
+    "reasoning_tokens": 0,
+    "audio_tokens": 0,
+    "accepted_prediction_tokens": 0,
+    "rejected_prediction_tokens": 0
+   }
+  }
+ },
+ "8687a9b86edc4d1f010adbb0742ee5462dce5d7fb8e07f1b2349637ec8ff0b17": {
+  "model": "gpt-4.1",
+  "tail": "ose:\n{\"label\": \"correct|partial|refused|wrong\", \"evidence\": \"<ONE sentence copied VERBATIM from the SYSTEM ANSWER that decided the label, or empty>\"}\n",
+  "out": "{\"label\": \"correct\", \"evidence\": \"Αντί ο χρήστης να δεσμεύει υπολογιστικούς πόρους, απλώς παρέχει ένα κομμάτι κώδικα γραμμένο σε μια γλώσσα υψηλού επιπέδου (όπως JavaScript ή Python), ορίζει το συμβάν (event) που θα ενεργοποιήσει την εκτέλεσή του, και το σύστημα του cloud διαχειρίζεται αυτόματα όλα τα υπόλοιπα [S1][S7].\"}",
+  "usage": {
+   "prompt_tokens": 1033,
+   "completion_tokens": 113,
+   "total_tokens": 1146,
+   "prompt_tokens_details": {
+    "cached_tokens": 0,
+    "audio_tokens": 0
+   },
+   "completion_tokens_details": {
+    "reasoning_tokens": 0,
+    "audio_tokens": 0,
+    "accepted_prediction_tokens": 0,
+    "rejected_prediction_tokens": 0
+   }
+  }
+ },
+ "4944da7722d6520ec3d5048e9e5fd49f35d7fffa7ae7bb4224a1cca6808cb127": {
+  "model": "gpt-4.1",
+  "tail": "ose:\n{\"label\": \"correct|partial|refused|wrong\", \"evidence\": \"<ONE sentence copied VERBATIM from the SYSTEM ANSWER that decided the label, or empty>\"}\n",
+  "out": "{\"label\": \"correct\", \"evidence\": \"Συγκεκριμένα, η κακή συμπεριφορά ενός και μόνο πελάτη μπορεί να επηρεάσει αρνητικά τη φήμη ολόκληρου του cloud [S1]. Για παράδειγμα, η τοποθέτηση διευθύνσεων IP του EC2 σε μαύρες λίστες (blacklisting) από υπηρεσίες πρόληψης spam μπορεί να περιορίσει ποιες εφαρμογές μπορούν να φιλοξενηθούν αποτελεσματικά [S1].\"}",
+  "usage": {
+   "prompt_tokens": 746,
+   "completion_tokens": 116,
+   "total_tokens": 862,
+   "prompt_tokens_details": {
+    "cached_tokens": 0,
+    "audio_tokens": 0
+   },
+   "completion_tokens_details": {
+    "reasoning_tokens": 0,
+    "audio_tokens": 0,
+    "accepted_prediction_tokens": 0,
+    "rejected_prediction_tokens": 0
+   }
+  }
+ },
+ "a2168135eadd5a98d370643da19d4ea55ab4209ca565048db138df8b29f7409a": {
+  "model": "gpt-4.1",
+  "tail": "ose:\n{\"label\": \"correct|partial|refused|wrong\", \"evidence\": \"<ONE sentence copied VERBATIM from the SYSTEM ANSWER that decided the label, or empty>\"}\n",
+  "out": "{\"label\": \"correct\", \"evidence\": \"Το paper προβλέπει ότι το serverless computing θα εξελιχθεί στο προεπιλεγμένο υπολογιστικό υπόδειγμα (default computing paradigm) της Εποχής του Cloud, αντικαθιστώντας σε μεγάλο βαθμό το serverful computing και σηματοδοτώντας έτσι το τέλος της Εποχής Client-Server [S1].\"}",
+  "usage": {
+   "prompt_tokens": 1002,
+   "completion_tokens": 86,
+   "total_tokens": 1088,
+   "prompt_tokens_details": {
+    "cached_tokens": 0,
+    "audio_tokens": 0
+   },
+   "completion_tokens_details": {
+    "reasoning_tokens": 0,
+    "audio_tokens": 0,
+    "accepted_prediction_tokens": 0,
+    "rejected_prediction_tokens": 0
+   }
+  }
+ },
+ "2f372aa638d9ea5f61ac678dcdf992cbc1e576a885de35a2f7efda548ad06857": {
+  "model": "gpt-4.1",
+  "tail": "ose:\n{\"label\": \"correct|partial|refused|wrong\", \"evidence\": \"<ONE sentence copied VERBATIM from the SYSTEM ANSWER that decided the label, or empty>\"}\n",
+  "out": "{\"label\": \"correct\", \"evidence\": \"The source text highlights several specific services from AWS and Google Cloud as examples of serverless offerings:\"}",
+  "usage": {
+   "prompt_tokens": 554,
+   "completion_tokens": 31,
+   "total_tokens": 585,
+   "prompt_tokens_details": {
+    "cached_tokens": 0,
+    "audio_tokens": 0
+   },
+   "completion_tokens_details": {
+    "reasoning_tokens": 0,
+    "audio_tokens": 0,
+    "accepted_prediction_tokens": 0,
+    "rejected_prediction_tokens": 0
+   }
+  }
+ },
+ "c978a6be44bf18d478357030f122b903226daca746f88f6de60f8274cec5867a": {
+  "model": "gpt-4.1",
+  "tail": "ose:\n{\"label\": \"correct|partial|refused|wrong\", \"evidence\": \"<ONE sentence copied VERBATIM from the SYSTEM ANSWER that decided the label, or empty>\"}\n",
+  "out": "{\"label\": \"correct\", \"evidence\": \"the five applications analyzed in depth as stretching today's serverless computing are [S1, S3]: 1. **ExCamera**: Video encoding in real-time [S1, S3]. 2. **MapReduce**: Supporting analytics workloads and full-fledged MapReduce jobs [S1, S3]. 3. **Numpywren**: Large-scale linear algebra computations [S1, S3]. 4. **Cirrus**: Machine learning training workflows, including preprocessing, model training, and hyperparameter tuning [S1, S3]. 5. **Serverless SQLite**: Transactional databases and state-heavy applications [S1, S3].\"}",
+  "usage": {
+   "prompt_tokens": 459,
+   "completion_tokens": 151,
+   "total_tokens": 610,
+   "prompt_tokens_details": {
+    "cached_tokens": 0,
+    "audio_tokens": 0
+   },
+   "completion_tokens_details": {
+    "reasoning_tokens": 0,
+    "audio_tokens": 0,
+    "accepted_prediction_tokens": 0,
+    "rejected_prediction_tokens": 0
+   }
+  }
+ },
+ "7d1b240eef67c3c21718af7bc85e62cadd295dd94b616347a756d5989ae8c27e": {
+  "model": "gpt-4.1",
+  "tail": "ose:\n{\"label\": \"correct|partial|refused|wrong\", \"evidence\": \"<ONE sentence copied VERBATIM from the SYSTEM ANSWER that decided the label, or empty>\"}\n",
+  "out": "{\"label\": \"correct\", \"evidence\": \"Στο εξωτερικό επίπεδο και στην πλευρά του Edge περιλαμβάνονται τα εξής στοιχεία: 1. UI [S1] 2. API Gateway [S1] 3. Cloud Event Sources [S1] ... Στο επίπεδο διαχείρισης (Master) εντοπίζονται: 4. Controller [S1] 5. Entitlement [S1] 6. Consul [S1] ... Στο επίπεδο εκτέλεσης (Worker) και στα επιμέρους υποσυστήματα περιλαμβάνονται: 7. Invoker [S1] 8. Execution Engine [S1] 9. Registrator [S1] 10. Log Forwarder [S1] 11. Executor [S1]\"}",
+  "usage": {
+   "prompt_tokens": 707,
+   "completion_tokens": 176,
+   "total_tokens": 883,
+   "prompt_tokens_details": {
+    "cached_tokens": 0,
+    "audio_tokens": 0
+   },
+   "completion_tokens_details": {
+    "reasoning_tokens": 0,
+    "audio_tokens": 0,
+    "accepted_prediction_tokens": 0,
+    "rejected_prediction_tokens": 0
+   }
+  }
+ },
+ "9e8faf6af13e601936a532db507a3dba5c602daf925e553ea42bcfb6ec59bd7e": {
+  "model": "gpt-4.1",
+  "tail": "ose:\n{\"label\": \"correct|partial|refused|wrong\", \"evidence\": \"<ONE sentence copied VERBATIM from the SYSTEM ANSWER that decided the label, or empty>\"}\n",
+  "out": "{\"label\": \"correct\", \"evidence\": \"students in the authors' research group have used PyWren for diverse scientific and analytic applications, including computational imaging, scientific instrument design, solar physics, and object recognition [S1].\"}",
+  "usage": {
+   "prompt_tokens": 502,
+   "completion_tokens": 49,
+   "total_tokens": 551,
+   "prompt_tokens_details": {
+    "cached_tokens": 0,
+    "audio_tokens": 0
+   },
+   "completion_tokens_details": {
+    "reasoning_tokens": 0,
+    "audio_tokens": 0,
+    "accepted_prediction_tokens": 0,
+    "rejected_prediction_tokens": 0
+   }
+  }
+ },
+ "2fd1691eb5b9619704e185cbd3366426b9fb5a0e97ad7d57c3d4faf49970e6f1": {
+  "model": "gpt-4.1",
+  "tail": "ose:\n{\"label\": \"correct|partial|refused|wrong\", \"evidence\": \"<ONE sentence copied VERBATIM from the SYSTEM ANSWER that decided the label, or empty>\"}\n",
+  "out": "{\"label\": \"correct\", \"evidence\": \"Συγκεκριμένα, αναφέρονται οι εξής τιμές και οι αντίστοιχοι πιθανοί λόγοι διαφοροποίησής τους:\\n\\n1. **Idaho (3,6¢ ανά KWH):** Η χαμηλή τιμή οφείλεται στη χρήση υδροηλεκτρικής ενέργειας (hydroelectric power) και στο γεγονός ότι η ηλεκτρική ενέργεια δεν αποστέλλεται σε μεγάλες αποστάσεις [S1].\\n2. **Καλιφόρνια (10,0¢ ανά KWH):** Η υψηλότερη τιμή αποδίδεται στο ότι ο ηλεκτρισμός μεταδίδεται σε μεγάλες αποστάσεις μέσω του δικτύου, υπάρχουν περιορισμένες γραμμές μεταφοράς στην περιοχή του Bay Area, και δεν επιτρέπεται η παραγωγή ηλεκτρικής ενέργειας από άνθρακα στην Καλιφόρνια [S1].\\n3. **Χαβάη (18,0¢ ανά KWH):** Το υψηλό κόστος οφείλεται στην ανάγκη μεταφοράς (αποστολής) καυσίμων για την παραγωγή ηλεκτρικής ενέργειας [S1].\"}",
+  "usage": {
+   "prompt_tokens": 870,
+   "completion_tokens": 282,
+   "total_tokens": 1152,
+   "prompt_tokens_details": {
+    "cached_tokens": 0,
+    "audio_tokens": 0
+   },
+   "completion_tokens_details": {
+    "reasoning_tokens": 0,
+    "audio_tokens": 0,
+    "accepted_prediction_tokens": 0,
+    "rejected_prediction_tokens": 0
+   }
+  }
+ },
+ "78e7a75848c8b3299f53962c76c1e7fc763483a2371c58d1ffea5df1b2393a5b": {
+  "model": "gpt-4.1",
+  "tail": "ose:\n{\"label\": \"correct|partial|refused|wrong\", \"evidence\": \"<ONE sentence copied VERBATIM from the SYSTEM ANSWER that decided the label, or empty>\"}\n",
+  "out": "{\"label\": \"correct\", \"evidence\": \"Object storage services such as AWS S3 are inadequate for fine-grained state sharing between serverless functions primarily because they exhibit high access latencies and high access costs [S1].\"}",
+  "usage": {
+   "prompt_tokens": 632,
+   "completion_tokens": 48,
+   "total_tokens": 680,
+   "prompt_tokens_details": {
+    "cached_tokens": 0,
+    "audio_tokens": 0
+   },
+   "completion_tokens_details": {
+    "reasoning_tokens": 0,
+    "audio_tokens": 0,
+    "accepted_prediction_tokens": 0,
+    "rejected_prediction_tokens": 0
+   }
+  }
+ },
+ "f5dbf71f83c5b36bc528f9f73cba5530b045bf599464110a48c1de0e74e115b0": {
+  "model": "gpt-4.1",
+  "tail": "ose:\n{\"label\": \"correct|partial|refused|wrong\", \"evidence\": \"<ONE sentence copied VERBATIM from the SYSTEM ANSWER that decided the label, or empty>\"}\n",
+  "out": "{\"label\": \"correct\", \"evidence\": \"the paper examines six storage categories (including the serverless ideal) with the following mean latencies [S2]\"}",
+  "usage": {
+   "prompt_tokens": 533,
+   "completion_tokens": 35,
+   "total_tokens": 568,
+   "prompt_tokens_details": {
+    "cached_tokens": 0,
+    "audio_tokens": 0
+   },
+   "completion_tokens_details": {
+    "reasoning_tokens": 0,
+    "audio_tokens": 0,
+    "accepted_prediction_tokens": 0,
+    "rejected_prediction_tokens": 0
+   }
+  }
+ },
+ "293296dbcd161409ada1189e748b9f632d7d4247976041493c2ca5012c978b82": {
+  "model": "gpt-4.1",
+  "tail": "ose:\n{\"label\": \"correct|partial|refused|wrong\", \"evidence\": \"<ONE sentence copied VERBATIM from the SYSTEM ANSWER that decided the label, or empty>\"}\n",
+  "out": "{\"label\": \"correct\", \"evidence\": \"Based on the appendix of the ExCamera paper, the following specific command-line flags and parameters are listed for its `vpxenc` encoding runs [S7]:\"}",
+  "usage": {
+   "prompt_tokens": 700,
+   "completion_tokens": 46,
+   "total_tokens": 746,
+   "prompt_tokens_details": {
+    "cached_tokens": 0,
+    "audio_tokens": 0
+   },
+   "completion_tokens_details": {
+    "reasoning_tokens": 0,
+    "audio_tokens": 0,
+    "accepted_prediction_tokens": 0,
+    "rejected_prediction_tokens": 0
+   }
+  }
+ },
+ "ed736fc10fb7438e0321377a55939798e2c44af3576693036ea5288318dd69a1": {
+  "model": "gpt-4.1",
+  "tail": "ose:\n{\"label\": \"correct|partial|refused|wrong\", \"evidence\": \"<ONE sentence copied VERBATIM from the SYSTEM ANSWER that decided the label, or empty>\"}\n",
+  "out": "{\"label\": \"correct\", \"evidence\": \"Το σύστημα MapReduce εγγυάται ότι, όταν οι συναρτήσεις map και reduce που παρέχονται από τον χρήστη είναι ντετερμινιστικές, η κατανεμημένη υλοποίηση παράγει το ίδιο ακριβώς αποτέλεσμα που θα παρήγαγε και μια σειριακή εκτέλεση ολόκληρου του προγράμματος χωρίς σφάλματα [S1].\"}",
+  "usage": {
+   "prompt_tokens": 1135,
+   "completion_tokens": 97,
+   "total_tokens": 1232,
+   "prompt_tokens_details": {
+    "cached_tokens": 0,
+    "audio_tokens": 0
+   },
+   "completion_tokens_details": {
+    "reasoning_tokens": 0,
+    "audio_tokens": 0,
+    "accepted_prediction_tokens": 0,
+    "rejected_prediction_tokens": 0
+   }
+  }
+ },
+ "e76c48e22bbd91e6747e28eeb6e2f8dda4d4824e38052b406d6f0b64cc4d9b64": {
+  "model": "gpt-4.1",
+  "tail": "ose:\n{\"label\": \"correct|partial|refused|wrong\", \"evidence\": \"<ONE sentence copied VERBATIM from the SYSTEM ANSWER that decided the label, or empty>\"}\n",
+  "out": "{\"label\": \"correct\", \"evidence\": \"Συγκεκριμένα, ένας χρήστης μπορεί, για παράδειγμα, να καταναλώσει 100 server-hours σήμερα και καμία αύριο, συνεχίζοντας να πληρώνει αποκλειστικά και μόνο για ό,τι πραγματικά χρησιμοποιεί [S1].\"}",
+  "usage": {
+   "prompt_tokens": 1138,
+   "completion_tokens": 70,
+   "total_tokens": 1208,
+   "prompt_tokens_details": {
+    "cached_tokens": 0,
+    "audio_tokens": 0
+   },
+   "completion_tokens_details": {
+    "reasoning_tokens": 0,
+    "audio_tokens": 0,
+    "accepted_prediction_tokens": 0,
+    "rejected_prediction_tokens": 0
+   }
+  }
+ },
+ "49d4b32d002a6c86d03ba6e6a316e9c06c2422f93f4a9ec91971ccf71f5f1d47": {
+  "model": "gpt-4.1",
+  "tail": "ose:\n{\"label\": \"correct|partial|refused|wrong\", \"evidence\": \"<ONE sentence copied VERBATIM from the SYSTEM ANSWER that decided the label, or empty>\"}\n",
+  "out": "{\"label\": \"correct\", \"evidence\": \"According to the paper, ExCamera makes two major contributions: 1. **A general-purpose parallel computing framework on cloud functions:** The authors designed a framework to orchestrate general-purpose parallel computations across a commercial \\\"cloud function\\\" service (specifically AWS Lambda) with low latency [S1][S2]. This system is capable of starting up thousands of C++-implemented threads in seconds and managing inter-thread communication [S2]. 2. **A video encoder designed for fine-grained parallelism:** The authors implemented a video encoder tailored for massive, fine-grained parallelism without harming compression efficiency [S1][S2].\" }",
+  "usage": {
+   "prompt_tokens": 536,
+   "completion_tokens": 141,
+   "total_tokens": 677,
+   "prompt_tokens_details": {
+    "cached_tokens": 0,
+    "audio_tokens": 0
+   },
+   "completion_tokens_details": {
+    "reasoning_tokens": 0,
+    "audio_tokens": 0,
+    "accepted_prediction_tokens": 0,
+    "rejected_prediction_tokens": 0
+   }
+  }
+ },
+ "2fd7f7db98f4369b10824541aa0f6bb28db8733aa187b0fdd4c93b3606cad05d": {
+  "model": "gpt-4.1",
+  "tail": "ose:\n{\"label\": \"correct|partial|refused|wrong\", \"evidence\": \"<ONE sentence copied VERBATIM from the SYSTEM ANSWER that decided the label, or empty>\"}\n",
+  "out": "{\"label\": \"correct\", \"evidence\": \"The opportunities to overcome this obstacle are inventing an auto-scaler that relies on machine learning, as well as providing fast and easy-to-use snapshots to encourage computing resource conservationism [S2, S3, S5].\"}",
+  "usage": {
+   "prompt_tokens": 589,
+   "completion_tokens": 57,
+   "total_tokens": 646,
+   "prompt_tokens_details": {
+    "cached_tokens": 0,
+    "audio_tokens": 0
+   },
+   "completion_tokens_details": {
+    "reasoning_tokens": 0,
+    "audio_tokens": 0,
+    "accepted_prediction_tokens": 0,
+    "rejected_prediction_tokens": 0
+   }
+  }
+ },
+ "12a3529abe76dc36f6b8e0c0200a7f16334130d529d3bd07fb7f0e725b289d30": {
+  "model": "gpt-4.1",
+  "tail": "ose:\n{\"label\": \"correct|partial|refused|wrong\", \"evidence\": \"<ONE sentence copied VERBATIM from the SYSTEM ANSWER that decided the label, or empty>\"}\n",
+  "out": "{\"label\": \"correct\", \"evidence\": \"Συγκεκριμένα, ένα EC2 instance που εκτελεί Microsoft Windows κοστίζει 0,15 δολάρια ανά ώρα, σε σύγκριση με το παραδοσιακό κόστος των 0,10 δολαρίων ανά ώρα για την έκδοση ανοιχτού κώδικα (open source) [S1].\"}",
+  "usage": {
+   "prompt_tokens": 662,
+   "completion_tokens": 88,
+   "total_tokens": 750,
+   "prompt_tokens_details": {
+    "cached_tokens": 0,
+    "audio_tokens": 0
+   },
+   "completion_tokens_details": {
+    "reasoning_tokens": 0,
+    "audio_tokens": 0,
+    "accepted_prediction_tokens": 0,
+    "rejected_prediction_tokens": 0
+   }
+  }
+ },
+ "bce580940797aabf68a28a34ade89bc9571f018be25f7f45de23cdb26cb81228": {
+  "model": "gpt-4.1",
+  "tail": "ose:\n{\"label\": \"correct|partial|refused|wrong\", \"evidence\": \"<ONE sentence copied VERBATIM from the SYSTEM ANSWER that decided the label, or empty>\"}\n",
+  "out": "{\"label\": \"correct\", \"evidence\": \"The paper identifies the fallacy that because serverless computing programming is written in high-level languages like Python, it is easy to port applications between serverless computing providers [S1].\"}",
+  "usage": {
+   "prompt_tokens": 552,
+   "completion_tokens": 48,
+   "total_tokens": 600,
+   "prompt_tokens_details": {
+    "cached_tokens": 0,
+    "audio_tokens": 0
+   },
+   "completion_tokens_details": {
+    "reasoning_tokens": 0,
+    "audio_tokens": 0,
+    "accepted_prediction_tokens": 0,
+    "rejected_prediction_tokens": 0
+   }
+  }
+ },
+ "ed57afa7936e6263685cc7b8e0d4f15d9437b62181fec4019a7ad0ca19eb95c2": {
+  "model": "gpt-4.1",
+  "tail": "ose:\n{\"label\": \"correct|partial|refused|wrong\", \"evidence\": \"<ONE sentence copied VERBATIM from the SYSTEM ANSWER that decided the label, or empty>\"}\n",
+  "out": "{\"label\": \"correct\", \"evidence\": \"Το paper αντιμετωπίζει τον ισχυρισμό ότι οι cloud functions δεν μπορούν να διαχειριστούν εφαρμογές πολύ χαμηλής καθυστέρησης (low latency) με προβλέψιμη απόδοση ως πλάνη (fallacy) [S1].\"}",
+  "usage": {
+   "prompt_tokens": 689,
+   "completion_tokens": 71,
+   "total_tokens": 760,
+   "prompt_tokens_details": {
+    "cached_tokens": 0,
+    "audio_tokens": 0
+   },
+   "completion_tokens_details": {
+    "reasoning_tokens": 0,
+    "audio_tokens": 0,
+    "accepted_prediction_tokens": 0,
+    "rejected_prediction_tokens": 0
+   }
+  }
+ },
+ "e0278005061e265fa1867eb3a88f045e34be989b5cbf9b2ff15793e32c2b3fa6": {
+  "model": "gpt-4.1",
+  "tail": "ose:\n{\"label\": \"correct|partial|refused|wrong\", \"evidence\": \"<ONE sentence copied VERBATIM from the SYSTEM ANSWER that decided the label, or empty>\"}\n",
+  "out": "{\"label\": \"correct\", \"evidence\": \"The function then converts the coordinates to a zip code using a geo-location service (`gis.geoToZip`), queries a weather service for forecasts (`weather.forecast`), extracts the first three days, translates them (e.g., from English to French via a language translation service), and filters the result before returning the three-day forecast back to the mobile application [S1].\"}",
+  "usage": {
+   "prompt_tokens": 574,
+   "completion_tokens": 87,
+   "total_tokens": 661,
+   "prompt_tokens_details": {
+    "cached_tokens": 0,
+    "audio_tokens": 0
+   },
+   "completion_tokens_details": {
+    "reasoning_tokens": 0,
+    "audio_tokens": 0,
+    "accepted_prediction_tokens": 0,
+    "rejected_prediction_tokens": 0
+   }
+  }
+ },
+ "195069430bb2303ff4a44d690beefda856c7bd43a0cdb3ff596f10add3676e27": {
+  "model": "gpt-4.1",
+  "tail": "ose:\n{\"label\": \"correct|partial|refused|wrong\", \"evidence\": \"<ONE sentence copied VERBATIM from the SYSTEM ANSWER that decided the label, or empty>\"}\n",
+  "out": "{\"label\": \"correct\", \"evidence\": \"Για παράδειγμα, το «fog computing» στοχεύει στη δημιουργία μιας οριζόντιας αρχιτεκτονικής σε επίπεδο συστήματος, η οποία διανέμει πόρους και υπηρεσίες υπολογισμού, αποθήκευσης, ελέγχου και δικτύωσης οπουδήποτε κατά μήκος του συνεχούς από το Cloud έως το IoT [S1].\"}",
+  "usage": {
+   "prompt_tokens": 952,
+   "completion_tokens": 100,
+   "total_tokens": 1052,
+   "prompt_tokens_details": {
+    "cached_tokens": 0,
+    "audio_tokens": 0
+   },
+   "completion_tokens_details": {
+    "reasoning_tokens": 0,
+    "audio_tokens": 0,
+    "accepted_prediction_tokens": 0,
+    "rejected_prediction_tokens": 0
+   }
+  }
+ },
+ "e8d1d231e7588b5a7bf946f2a6de4f175c2fe5a7709bd24fa1bcbfa425dfcf56": {
+  "model": "gpt-4.1",
+  "tail": "ose:\n{\"label\": \"correct|partial|refused|wrong\", \"evidence\": \"<ONE sentence copied VERBATIM from the SYSTEM ANSWER that decided the label, or empty>\"}\n",
+  "out": "{\"label\": \"correct\", \"evidence\": \"The CIDR paper argues that FaaS stymies hardware-accelerated software innovation because current FaaS offerings run exclusively on a uniform and mundane virtual machine platform that lacks access to custom hardware and accelerators [S1].\"}",
+  "usage": {
+   "prompt_tokens": 550,
+   "completion_tokens": 59,
+   "total_tokens": 609,
+   "prompt_tokens_details": {
+    "cached_tokens": 0,
+    "audio_tokens": 0
+   },
+   "completion_tokens_details": {
+    "reasoning_tokens": 0,
+    "audio_tokens": 0,
+    "accepted_prediction_tokens": 0,
+    "rejected_prediction_tokens": 0
+   }
+  }
+ },
+ "67a43536868b0d682fece927bb4380c2abdc39148c79afb85e535ea2a0ee1d39": {
+  "model": "gpt-4.1",
+  "tail": "ose:\n{\"label\": \"correct|partial|refused|wrong\", \"evidence\": \"<ONE sentence copied VERBATIM from the SYSTEM ANSWER that decided the label, or empty>\"}\n",
+  "out": "{\"label\": \"correct\", \"evidence\": \"In the CIDR paper, fluid code and data placement refers to the cloud infrastructure's capability to physically colocate certain code and data to achieve high performance [S1].\"}",
+  "usage": {
+   "prompt_tokens": 600,
+   "completion_tokens": 46,
+   "total_tokens": 646,
+   "prompt_tokens_details": {
+    "cached_tokens": 0,
+    "audio_tokens": 0
+   },
+   "completion_tokens_details": {
+    "reasoning_tokens": 0,
+    "audio_tokens": 0,
+    "accepted_prediction_tokens": 0,
+    "rejected_prediction_tokens": 0
+   }
+  }
+ },
+ "9d552c2d4f932e184a82e54ac8aa53d2feba29a3f91dfa646cbe36cede0de7d8": {
+  "model": "gpt-4.1",
+  "tail": "ose:\n{\"label\": \"correct|partial|refused|wrong\", \"evidence\": \"<ONE sentence copied VERBATIM from the SYSTEM ANSWER that decided the label, or empty>\"}\n",
+  "out": "{\"label\": \"correct\", \"evidence\": \"The headline result of this evaluation was that ExCamera achieved similar bitrates and quality to a state-of-the-art video encoder—Google's vpxenc running with multi-threading on a 128-core machine—while running approximately 60× faster [S1].\"}",
+  "usage": {
+   "prompt_tokens": 477,
+   "completion_tokens": 65,
+   "total_tokens": 542,
+   "prompt_tokens_details": {
+    "cached_tokens": 0,
+    "audio_tokens": 0
+   },
+   "completion_tokens_details": {
+    "reasoning_tokens": 0,
+    "audio_tokens": 0,
+    "accepted_prediction_tokens": 0,
+    "rejected_prediction_tokens": 0
+   }
+  }
+ },
+ "ee7f2dde4b2f46cc57cd358c56479e5f31df323fe620ffdaa8d8ec4ca89b1b6f": {
+  "model": "gpt-4.1",
+  "tail": "ose:\n{\"label\": \"correct|partial|refused|wrong\", \"evidence\": \"<ONE sentence copied VERBATIM from the SYSTEM ANSWER that decided the label, or empty>\"}\n",
+  "out": "{\"label\": \"correct\", \"evidence\": \"Οι τιμές των counters από τα επιμέρους μηχανήματα workers μεταδίδονται περιοδικά στον master, ενσωματωμένες στις απαντήσεις των μηνυμάτων ping (piggybacked) [S2].\"}",
+  "usage": {
+   "prompt_tokens": 868,
+   "completion_tokens": 61,
+   "total_tokens": 929,
+   "prompt_tokens_details": {
+    "cached_tokens": 0,
+    "audio_tokens": 0
+   },
+   "completion_tokens_details": {
+    "reasoning_tokens": 0,
+    "audio_tokens": 0,
+    "accepted_prediction_tokens": 0,
+    "rejected_prediction_tokens": 0
+   }
+  }
+ },
+ "fad6d66c68b7983be232bb3bc5521a7b9b4c70afcbb8857700f9762d2625dc45": {
+  "model": "gpt-4.1",
+  "tail": "ose:\n{\"label\": \"correct|partial|refused|wrong\", \"evidence\": \"<ONE sentence copied VERBATIM from the SYSTEM ANSWER that decided the label, or empty>\"}\n",
+  "out": "{\"label\": \"correct\", \"evidence\": \"Μετά από 960 δευτερόλεπτα, όλες οι εργασίες reduce εκτός από 5 έχουν ολοκληρωθεί, αλλά αυτές οι τελευταίες καθυστερημένες εργασίες (stragglers) χρειάζονται άλλα 300 δευτερόλεπτα για να τελειώσουν [S1]. Ως αποτέλεσμα, ολόκληρος ο υπολογισμός διαρκεί 1283 δευτερόλεπτα, σημειώνοντας μια αύξηση της τάξης του 44% στον χρόνο εκτέλεσης [S1].\"}",
+  "usage": {
+   "prompt_tokens": 903,
+   "completion_tokens": 134,
+   "total_tokens": 1037,
+   "prompt_tokens_details": {
+    "cached_tokens": 0,
+    "audio_tokens": 0
+   },
+   "completion_tokens_details": {
+    "reasoning_tokens": 0,
+    "audio_tokens": 0,
+    "accepted_prediction_tokens": 0,
+    "rejected_prediction_tokens": 0
+   }
+  }
+ },
+ "6865579fe0c0068f3ceb6ee5063aa87f187a1b8c60d424faa5e10917c6008096": {
+  "model": "gpt-4.1",
+  "tail": "ose:\n{\"label\": \"correct|partial|refused|wrong\", \"evidence\": \"<ONE sentence copied VERBATIM from the SYSTEM ANSWER that decided the label, or empty>\"}\n",
+  "out": "{\"label\": \"correct\", \"evidence\": \"PyWren executes user code by dynamically injecting serialized functions into a common, pre-registered AWS Lambda function via remote storage [S1, S2].\"}",
+  "usage": {
+   "prompt_tokens": 707,
+   "completion_tokens": 43,
+   "total_tokens": 750,
+   "prompt_tokens_details": {
+    "cached_tokens": 0,
+    "audio_tokens": 0
+   },
+   "completion_tokens_details": {
+    "reasoning_tokens": 0,
+    "audio_tokens": 0,
+    "accepted_prediction_tokens": 0,
+    "rejected_prediction_tokens": 0
+   }
+  }
+ },
+ "d534bd51d138ad2a019cc45927836e4b775a87ea493e7fbbf9188fdbc176b974": {
+  "model": "gpt-4.1",
+  "tail": "ose:\n{\"label\": \"correct|partial|refused|wrong\", \"evidence\": \"<ONE sentence copied VERBATIM from the SYSTEM ANSWER that decided the label, or empty>\"}\n",
+  "out": "{\"label\": \"correct\", \"evidence\": \"Specifically, for a 15-minute animated movie in 4K resolution, ExCamera (using `ExCamera[6,16]`) achieves an encode time of 2.6 minutes (or 0.5 minutes for `ExCamera[6,1]`), compared to 149 minutes for multithreaded `vpxenc`, 453 minutes for single-threaded `vpxenc`, 36.5 minutes for YouTube H.264, and 417 minutes for YouTube VP9 [S7].\"}",
+  "usage": {
+   "prompt_tokens": 657,
+   "completion_tokens": 121,
+   "total_tokens": 778,
+   "prompt_tokens_details": {
+    "cached_tokens": 0,
+    "audio_tokens": 0
+   },
+   "completion_tokens_details": {
+    "reasoning_tokens": 0,
+    "audio_tokens": 0,
+    "accepted_prediction_tokens": 0,
+    "rejected_prediction_tokens": 0
+   }
+  }
+ },
+ "3cbc93a1ce41d7b20540d37ea11b9bfb202d5744edb6fdf571d5699af2e12e68": {
+  "model": "gpt-4.1",
+  "tail": "ose:\n{\"label\": \"correct|partial|refused|wrong\", \"evidence\": \"<ONE sentence copied VERBATIM from the SYSTEM ANSWER that decided the label, or empty>\"}\n",
+  "out": "{\"label\": \"correct\", \"evidence\": \"Από την άλλη πλευρά, το Berkeley View επισημαίνει ως βασική πρόκληση και ανεπάρκεια την απουσία κατάλληλης αποθήκευσης για λειτουργίες λεπτού κόκκου (fine-grained operations) [S2].\"}",
+  "usage": {
+   "prompt_tokens": 1229,
+   "completion_tokens": 68,
+   "total_tokens": 1297,
+   "prompt_tokens_details": {
+    "cached_tokens": 0,
+    "audio_tokens": 0
+   },
+   "completion_tokens_details": {
+    "reasoning_tokens": 0,
+    "audio_tokens": 0,
+    "accepted_prediction_tokens": 0,
+    "rejected_prediction_tokens": 0
+   }
+  }
+ },
+ "1c16eb84a79f1f61146854a2252f9667619f6630bc468db64f2d2e17161c87c9": {
+  "model": "gpt-4.1",
+  "tail": "ose:\n{\"label\": \"correct|partial|refused|wrong\", \"evidence\": \"<ONE sentence copied VERBATIM from the SYSTEM ANSWER that decided the label, or empty>\"}\n",
+  "out": "{\"label\": \"correct\", \"evidence\": \"Because the functions are completely stateless and store all inputs, serialized function code, and outputs externally in shared remote storage (such as Amazon S3), PyWren relies on the cloud provider's underlying infrastructure to launch and manage independent remote function invocations elastically [S4, S7].\"}",
+  "usage": {
+   "prompt_tokens": 698,
+   "completion_tokens": 71,
+   "total_tokens": 769,
+   "prompt_tokens_details": {
+    "cached_tokens": 0,
+    "audio_tokens": 0
+   },
+   "completion_tokens_details": {
+    "reasoning_tokens": 0,
+    "audio_tokens": 0,
+    "accepted_prediction_tokens": 0,
+    "rejected_prediction_tokens": 0
+   }
+  }
+ },
+ "e996fcec8196c041b8b4c83e8a832bb7f70c42024f4b7cc84540a7b144112602": {
+  "model": "gpt-4.1",
+  "tail": "ose:\n{\"label\": \"correct|partial|refused|wrong\", \"evidence\": \"<ONE sentence copied VERBATIM from the SYSTEM ANSWER that decided the label, or empty>\"}\n",
+  "out": "{\"label\": \"correct\", \"evidence\": \"η αρχιτεκτονική του IBM OpenWhisk διαθέτει πρόσθετα στοιχεία (components) για τον χειρισμό σημαντικών απαιτήσεων, όπως η ασφάλεια (security), η καταγραφή συμβάντων (logging) και η παρακολούθηση (monitoring) [S1]. Ειδικότερα, στο διάγραμμα της αρχιτεκτονικής του OpenWhisk αποτυπώνονται συγκεκριμένα επιμέρους στοιχεία, μεταξύ των οποίων περιλαμβάνονται τα Edge, UI, API Gateway, Master, Worker, Controller, Entitlement, Log Forwarder, Consul, Registrator, Invoker, Execution Engine και Executor [S1].\"}",
+  "usage": {
+   "prompt_tokens": 740,
+   "completion_tokens": 153,
+   "total_tokens": 893,
+   "prompt_tokens_details": {
+    "cached_tokens": 0,
+    "audio_tokens": 0
+   },
+   "completion_tokens_details": {
+    "reasoning_tokens": 0,
+    "audio_tokens": 0,
+    "accepted_prediction_tokens": 0,
+    "rejected_prediction_tokens": 0
+   }
+  }
+ },
+ "a2f9a06eb7c6609828c9176635205bd0be1a874a49d5c3b9b8c2a5ac0c203ee5": {
+  "model": "gpt-4.1",
+  "tail": "ose:\n{\"label\": \"correct|partial|refused|wrong\", \"evidence\": \"<ONE sentence copied VERBATIM from the SYSTEM ANSWER that decided the label, or empty>\"}\n",
+  "out": "{\"label\": \"correct\", \"evidence\": \"Based on the provided documents, I cannot find any mention of GDPR (General Data Protection Regulation) compliance requirements for cloud providers.\"}",
+  "usage": {
+   "prompt_tokens": 367,
+   "completion_tokens": 37,
+   "total_tokens": 404,
+   "prompt_tokens_details": {
+    "cached_tokens": 0,
+    "audio_tokens": 0
+   },
+   "completion_tokens_details": {
+    "reasoning_tokens": 0,
+    "audio_tokens": 0,
+    "accepted_prediction_tokens": 0,
+    "rejected_prediction_tokens": 0
+   }
+  }
+ },
+ "535aad75a6581ae4aa27f33ff57575269f8aec71b8cd642341612b034a0d196d": {
+  "model": "gpt-4.1",
+  "tail": "ose:\n{\"label\": \"correct|partial|refused|wrong\", \"evidence\": \"<ONE sentence copied VERBATIM from the SYSTEM ANSWER that decided the label, or empty>\"}\n",
+  "out": "{\"label\": \"correct\", \"evidence\": \"Based on the provided documents, there is no mention of GPU tensor cores or their benchmark results. Therefore, I cannot find the answer in the provided documents.\"}",
+  "usage": {
+   "prompt_tokens": 341,
+   "completion_tokens": 43,
+   "total_tokens": 384,
+   "prompt_tokens_details": {
+    "cached_tokens": 0,
+    "audio_tokens": 0
+   },
+   "completion_tokens_details": {
+    "reasoning_tokens": 0,
+    "audio_tokens": 0,
+    "accepted_prediction_tokens": 0,
+    "rejected_prediction_tokens": 0
+   }
+  }
+ },
+ "1efb251f08f38ad6d0e0e56d939aa881e510a8eb63cbdba7fcaf93251e9d1268": {
+  "model": "gpt-4.1",
+  "tail": "nce_1\": \"<ONE sentence copied VERBATIM from the SYSTEM ANSWER that decided the label of PAPER 1, or empty>\",\n \"evidence_2\": \"<the same for PAPER 2>\"}\n",
+  "out": "{\"paper_1\": \"correct\", \"paper_2\": \"correct\", \"evidence_1\": \"Reports that AWS Lambda provides a restricted containerized runtime with a maximum of **300 seconds** (or 5 minutes) of execution time [S2, S4].\", \"evidence_2\": \"Reports that AWS Lambda function invocations have a limited lifetime of **15 minutes**, after which they are shut down by the infrastructure [S6, S9, S10].\"}",
+  "usage": {
+   "prompt_tokens": 586,
+   "completion_tokens": 101,
+   "total_tokens": 687,
+   "prompt_tokens_details": {
+    "cached_tokens": 0,
+    "audio_tokens": 0
+   },
+   "completion_tokens_details": {
+    "reasoning_tokens": 0,
+    "audio_tokens": 0,
+    "accepted_prediction_tokens": 0,
+    "rejected_prediction_tokens": 0
+   }
+  }
+ },
+ "94dabe1696dd04377d3643b1e4eb0aec3f27e8cfe73b75439eb54406fea026d0": {
+  "model": "gpt-4.1",
+  "tail": "nce_1\": \"<ONE sentence copied VERBATIM from the SYSTEM ANSWER that decided the label of PAPER 1, or empty>\",\n \"evidence_2\": \"<the same for PAPER 2>\"}\n",
+  "out": "{\"paper_1\": \"correct\", \"paper_2\": \"correct\", \"evidence_1\": \"In the PyWren paper, the reported cost for AWS Lambda execution is approximately $0.06 per GB-hour, measured in 100 ms increments [S2].\", \"evidence_2\": \"according to the 2008 pricing reported in *Above the Clouds*, Amazon S3 storage was priced between $0.12 and $0.15 per gigabyte-month (or $0.12 to $0.15 per GB-Month depending on capacity tiers, down from $0.15 across all tiers in 2006) [S4] [S8] [S10].\"}",
+  "usage": {
+   "prompt_tokens": 709,
+   "completion_tokens": 146,
+   "total_tokens": 855,
+   "prompt_tokens_details": {
+    "cached_tokens": 0,
+    "audio_tokens": 0
+   },
+   "completion_tokens_details": {
+    "reasoning_tokens": 0,
+    "audio_tokens": 0,
+    "accepted_prediction_tokens": 0,
+    "rejected_prediction_tokens": 0
+   }
+  }
+ },
+ "d6daa173427331f62bc76ee0e72df7b72be4a2291010ac3fa333e8900a8ab3c8": {
+  "model": "gpt-4.1",
+  "tail": "nce_1\": \"<ONE sentence copied VERBATIM from the SYSTEM ANSWER that decided the label of PAPER 1, or empty>\",\n \"evidence_2\": \"<the same for PAPER 2>\"}\n",
+  "out": "{\"paper_1\": \"correct\", \"paper_2\": \"correct\", \"evidence_1\": \"For instance, when a worker failure occurs, any map tasks completed by that worker are reset to an idle state and re-executed because their output was stored locally on the failed machine's disks and became inaccessible [S5].\", \"evidence_2\": \"When a function fails, the system restarts it—possibly at a different location—and executes it on the same input [S10].\"}",
+  "usage": {
+   "prompt_tokens": 743,
+   "completion_tokens": 105,
+   "total_tokens": 848,
+   "prompt_tokens_details": {
+    "cached_tokens": 0,
+    "audio_tokens": 0
+   },
+   "completion_tokens_details": {
+    "reasoning_tokens": 0,
+    "audio_tokens": 0,
+    "accepted_prediction_tokens": 0,
+    "rejected_prediction_tokens": 0
+   }
+  }
+ },
+ "5a34812389cea37e7c6692221eae6a9b49b2221dbc16503acbad0f52309f8880": {
+  "model": "gpt-4.1",
+  "tail": "nce_1\": \"<ONE sentence copied VERBATIM from the SYSTEM ANSWER that decided the label of PAPER 1, or empty>\",\n \"evidence_2\": \"<the same for PAPER 2>\"}\n",
+  "out": "{\"paper_1\": \"correct\", \"paper_2\": \"correct\", \"evidence_1\": \"Baldini et al. suggest that serverless computing is not economically suitable for I/O-bound functions because invocations are billed based on execution time, meaning I/O-bound functions end up paying for compute resources they do not fully utilize [S1].\", \"evidence_2\": \"Ultimately, Hellerstein et al. demonstrate that running such an I/O-heavy, data-shipping workload on Lambda is 21× slower and 7.3× more expensive than dedicated cloud instances, corroborating Baldini et al.'s assertion that serverless is economically disadvantageous for I/O-bound tasks [S1] [S2] [S8].\"}",
+  "usage": {
+   "prompt_tokens": 911,
+   "completion_tokens": 156,
+   "total_tokens": 1067,
+   "prompt_tokens_details": {
+    "cached_tokens": 0,
+    "audio_tokens": 0
+   },
+   "completion_tokens_details": {
+    "reasoning_tokens": 0,
+    "audio_tokens": 0,
+    "accepted_prediction_tokens": 0,
+    "rejected_prediction_tokens": 0
+   }
+  }
+ },
+ "82d78bb7e5ac48e2839d17497ab82a8821f7c90ce10b866702b73a9b78974a75": {
+  "model": "gpt-4.1",
+  "tail": "nce_1\": \"<ONE sentence copied VERBATIM from the SYSTEM ANSWER that decided the label of PAPER 1, or empty>\",\n \"evidence_2\": \"<the same for PAPER 2>\"}\n",
+  "out": "{\"paper_1\": \"correct\", \"paper_2\": \"correct\", \"evidence_1\": \"In the 2009 *Berkeley View of Cloud Computing* paper, Amazon EC2 is placed at one extreme of the utility computing spectrum where an instance looks much like physical hardware, allowing users to control nearly the entire software stack from the kernel upwards [S3].\", \"evidence_2\": \"In a serverless model, however, developers execute small code snippets or stateless functions in the cloud without any control over the underlying resources or infrastructure on which the code runs [S7], [S11].\"}",
+  "usage": {
+   "prompt_tokens": 842,
+   "completion_tokens": 128,
+   "total_tokens": 970,
+   "prompt_tokens_details": {
+    "cached_tokens": 0,
+    "audio_tokens": 0
+   },
+   "completion_tokens_details": {
+    "reasoning_tokens": 0,
+    "audio_tokens": 0,
+    "accepted_prediction_tokens": 0,
+    "rejected_prediction_tokens": 0
+   }
+  }
+ },
+ "ca9f5d0d8635bc17abcc2dd52ad81f3401d34dfd39163a0da93c0141698ba89f": {
+  "model": "gpt-4.1",
+  "tail": "nce_1\": \"<ONE sentence copied VERBATIM from the SYSTEM ANSWER that decided the label of PAPER 1, or empty>\",\n \"evidence_2\": \"<the same for PAPER 2>\"}\n",
+  "out": "{\"paper_1\": \"correct\", \"paper_2\": \"correct\",\n \"evidence_1\": \"Due to Lambda's limited resources and data-shipping architecture, executing this workload on Lambda was 21× slower and 7.3× more expensive than running on EC2 [S4].\",\n \"evidence_2\": \"Furthermore, serverless computing employs fine-grained accounting boundaries, scales resources up and down dynamically, and incurs zero charges when no events are invoking cloud functions, allowing customers to report cost savings of 4× to 10× [S5].\"}",
+  "usage": {
+   "prompt_tokens": 962,
+   "completion_tokens": 120,
+   "total_tokens": 1082,
+   "prompt_tokens_details": {
+    "cached_tokens": 0,
+    "audio_tokens": 0
+   },
+   "completion_tokens_details": {
+    "reasoning_tokens": 0,
+    "audio_tokens": 0,
+    "accepted_prediction_tokens": 0,
+    "rejected_prediction_tokens": 0
+   }
+  }
+ },
+ "a60bf0e5a0cfed6b974431e8a584e51ce5d39404d2d1ed8594f08b3dfe710c60": {
+  "model": "gpt-4.1",
+  "tail": "nce_1\": \"<ONE sentence copied VERBATIM from the SYSTEM ANSWER that decided the label of PAPER 1, or empty>\",\n \"evidence_2\": \"<the same for PAPER 2>\"}\n",
+  "out": "{\"paper_1\": \"correct\", \"paper_2\": \"correct\", \"evidence_1\": \"In *Above the Clouds* (2009), the economic benefit of cloud computing's pay-as-you-go model is characterized as directly capturing the buyer's advantage by enabling elasticity and the transference of risk, rather than simply converting capital expenses into operating expenses (CapEx to OpEx) [S1].\", \"evidence_2\": \"In *Serverless Computing: One Step Forward, Two Steps Back* (2019), the primary economic driver for current serverless adoption is identified as autoscaling coupled with fine-grained pay-per-use billing (such as billing by the function execution) [S5, S6, S12].\"}",
+  "usage": {
+   "prompt_tokens": 893,
+   "completion_tokens": 153,
+   "total_tokens": 1046,
+   "prompt_tokens_details": {
+    "cached_tokens": 0,
+    "audio_tokens": 0
+   },
+   "completion_tokens_details": {
+    "reasoning_tokens": 0,
+    "audio_tokens": 0,
+    "accepted_prediction_tokens": 0,
+    "rejected_prediction_tokens": 0
+   }
+  }
+ },
+ "58d8e4d5e38b5e055b5c2986f7827836ea964daa9ec5a808a182315a2a08c05b": {
+  "model": "gpt-4.1",
+  "tail": "nce_1\": \"<ONE sentence copied VERBATIM from the SYSTEM ANSWER that decided the label of PAPER 1, or empty>\",\n \"evidence_2\": \"<the same for PAPER 2>\"}\n",
+  "out": "{\"paper_1\": \"correct\", \"paper_2\": \"correct\",\n \"evidence_1\": \"Η επανεκτέλεση των ολοκληρωμένων εργασιών Map είναι απαραίτητη επειδή τα ενδιάμεσα δεδομένα εξόδου τους αποθηκεύονται στον τοπικό δίσκο (ή δίσκους) του μηχανήματος που απέτυχε και, ως εκ τούτου, καθίστανται μη προσβάσιμα [S2].\",\n \"evidence_2\": \"το πλαίσιο mu του ExCamera δεν υποστηρίζει ανάκαμψη από αποτυχία ενός εργάτη Lambda εν μέσω της εκτέλεσης μιας εργασίας [S8].\"}",
+  "usage": {
+   "prompt_tokens": 1177,
+   "completion_tokens": 151,
+   "total_tokens": 1328,
+   "prompt_tokens_details": {
+    "cached_tokens": 0,
+    "audio_tokens": 0
+   },
+   "completion_tokens_details": {
+    "reasoning_tokens": 0,
+    "audio_tokens": 0,
+    "accepted_prediction_tokens": 0,
+    "rejected_prediction_tokens": 0
+   }
+  }
+ },
+ "d0127d87658bc8db37a71d6806228c023bea76691cfff35f6e429cd7f2bf0ae5": {
+  "model": "gpt-4.1",
+  "tail": "nce_1\": \"<ONE sentence copied VERBATIM from the SYSTEM ANSWER that decided the label of PAPER 1, or empty>\",\n \"evidence_2\": \"<the same for PAPER 2>\"}\n",
+  "out": "{\"paper_1\": \"correct\", \"paper_2\": \"correct\", \"evidence_1\": \"Σύμφωνα με την εργασία του PyWren, το μέγιστο όριο χρόνου εκτέλεσης (running time) για τις λειτουργίες του AWS Lambda είναι τα 300 δευτερόλεπτα [S1, S8].\", \"evidence_2\": \"Η επιβολή ορίων πόρων είναι απαραίτητη ώστε η πλατφόρμα να μπορεί να διαχειρίζεται εξάρσεις φορτίου (load spikes) καθώς και να αντιμετωπίζει επιθέσεις [S3].\"}",
+  "usage": {
+   "prompt_tokens": 1029,
+   "completion_tokens": 138,
+   "total_tokens": 1167,
+   "prompt_tokens_details": {
+    "cached_tokens": 0,
+    "audio_tokens": 0
+   },
+   "completion_tokens_details": {
+    "reasoning_tokens": 0,
+    "audio_tokens": 0,
+    "accepted_prediction_tokens": 0,
+    "rejected_prediction_tokens": 0
+   }
+  }
+ },
+ "42d876dc7ce3ced892acd49b70f21b582765f0b6b4e7cf8c03949db30159fde1": {
+  "model": "gpt-4.1",
+  "tail": "nce_1\": \"<ONE sentence copied VERBATIM from the SYSTEM ANSWER that decided the label of PAPER 1, or empty>\",\n \"evidence_2\": \"<the same for PAPER 2>\"}\n",
+  "out": "{\"paper_1\": \"partial\", \"paper_2\": \"correct\", \"evidence_1\": \"Αντιθέτως, η αναφορά σε stragglers εντοπίζεται κατά την εκτέλεση ενός προγράμματος καταμέτρησης λέξεων (word count), όπου η επιβράδυνση σε σχέση με το PySpark αποδίδεται στην έλλειψη παράλληλων αναγνώσεων shuffle blocks και σε ορισμένους stragglers κατά την εγγραφή και ανάγνωση από το S3 [S3].\", \"evidence_2\": \"Συγκεκριμένα, επισημαίνουν ότι αυτές περιλαμβάνουν σημασιολογίες τύπου ακριβώς μία φορά (exactly once), το πολύ μία φορά (at most once) και τουλάχιστον μία φορά (at least once) [S7].\"}",
+  "usage": {
+   "prompt_tokens": 1024,
+   "completion_tokens": 188,
+   "total_tokens": 1212,
+   "prompt_tokens_details": {
+    "cached_tokens": 0,
+    "audio_tokens": 0
+   },
+   "completion_tokens_details": {
+    "reasoning_tokens": 0,
+    "audio_tokens": 0,
+    "accepted_prediction_tokens": 0,
+    "rejected_prediction_tokens": 0
+   }
+  }
+ },
+ "28a5d49f244ae984865626e83dddf532286db44b9daf8bd6bde2efee79c02d46": {
+  "model": "gpt-4.1",
+  "tail": "nce_1\": \"<ONE sentence copied VERBATIM from the SYSTEM ANSWER that decided the label of PAPER 1, or empty>\",\n \"evidence_2\": \"<the same for PAPER 2>\"}\n",
+  "out": "{\"paper_1\": \"correct\", \"paper_2\": \"correct\", \"evidence_1\": \"Το PyWren αναφέρει ότι η κλήση μιας συνάρτησης (function invocation) μπορεί να διαρκέσει έως και 20–30 δευτερόλεπτα χωρίς κάποιον μηχανισμό caching, χρόνος ο οποίος αντιστοιχεί περίπου στο 10% του συνολικού χρόνου εκτέλεσης [S1].\", \"evidence_2\": \"Όσον αφορά τη σχέση μεταξύ της διάρκειας ζωής των συναρτήσεων και της διατήρησης κατάστασης, η κριτική του CIDR επισημαίνει ότι οι συναρτήσεις στο AWS Lambda έχουν περιορισμένη διάρκεια ζωής, καθώς τερματίζονται αναγκαστικά μετά από 15 λεπτά [S9].\"}",
+  "usage": {
+   "prompt_tokens": 1005,
+   "completion_tokens": 181,
+   "total_tokens": 1186,
+   "prompt_tokens_details": {
+    "cached_tokens": 0,
+    "audio_tokens": 0
+   },
+   "completion_tokens_details": {
+    "reasoning_tokens": 0,
+    "audio_tokens": 0,
+    "accepted_prediction_tokens": 0,
+    "rejected_prediction_tokens": 0
+   }
+  }
+ },
+ "55133ebd73449fd8fab4e59d10a10d5e5950ad4973a1b2eb1fa9385c7882226b": {
+  "model": "gpt-4.1",
+  "tail": "nce_1\": \"<ONE sentence copied VERBATIM from the SYSTEM ANSWER that decided the label of PAPER 1, or empty>\",\n \"evidence_2\": \"<the same for PAPER 2>\"}\n",
+  "out": "{\"paper_1\": \"correct\", \"paper_2\": \"correct\", \"evidence_1\": \"Συγκεκριμένα, όταν μια συνάρτηση αποτυγχάνει, απλώς επανεκκινείται (πιθανώς σε διαφορετική τοποθεσία) και εκτελείται ξανά με την ίδια είσοδο [S4].\", \"evidence_2\": \"Χάρη στη δυνατότητα προσθήκης ή αφαίρεσης πόρων σε λεπτόκοκκο επίπεδο και με χρόνο προετοιμασίας λεπτών αντί για εβδομάδες, οι πόροι μπορούν να ταιριάξουν πολύ πιο στενά με τον πραγματικό φόρτο εργασίας, αποτρέποντας τη σπατάλη χωρητικότητας σε περιόδους μη αιχμής ή την απώλεια χρηστών και εσόδων κατά τη διάρκεια απότομων εξάρσεων ζήτησης [S3].\"}",
+  "usage": {
+   "prompt_tokens": 1260,
+   "completion_tokens": 205,
+   "total_tokens": 1465,
+   "prompt_tokens_details": {
+    "cached_tokens": 0,
+    "audio_tokens": 0
+   },
+   "completion_tokens_details": {
+    "reasoning_tokens": 0,
+    "audio_tokens": 0,
+    "accepted_prediction_tokens": 0,
+    "rejected_prediction_tokens": 0
+   }
+  }
+ },
+ "e11bcbefdd0f33e430f8a3206e219ef2279b8eefa2f184459190b6b86cdad92d": {
+  "model": "gpt-4.1",
+  "tail": "nce_1\": \"<ONE sentence copied VERBATIM from the SYSTEM ANSWER that decided the label of PAPER 1, or empty>\",\n \"evidence_2\": \"<the same for PAPER 2>\"}\n",
+  "out": "{\"paper_1\": \"correct\", \"paper_2\": \"correct\", \"evidence_1\": \"Σύμφωνα με την εργασία του PyWren, η τιμή του AWS Lambda κατά τον χρόνο συγγραφής ανέρχεται σε περίπου $0,06 ανά GB-ώρα εκτέλεσης (μετρούμενη σε προσαυξήσεις των 100ms) [S3].\", \"evidence_2\": \"Από την άλλη πλευρά, στην εργασία «Above the Clouds» (2009) αναφέρεται ότι το Amazon Elastic Compute Cloud (EC2) χρέωνε 10 cents ($0,10) ανά ώρα για μια «φέτα» (slice) 1,0-GHz x86 ISA [S4].\"}",
+  "usage": {
+   "prompt_tokens": 839,
+   "completion_tokens": 163,
+   "total_tokens": 1002,
+   "prompt_tokens_details": {
+    "cached_tokens": 0,
+    "audio_tokens": 0
+   },
+   "completion_tokens_details": {
+    "reasoning_tokens": 0,
+    "audio_tokens": 0,
+    "accepted_prediction_tokens": 0,
+    "rejected_prediction_tokens": 0
+   }
+  }
+ },
+ "6a24b66653ad5c990ccfa8edad87c2bc8dc49b4fc8dd5eca998d862e3dd8aba0": {
+  "model": "gpt-4.1",
+  "tail": "nce_1\": \"<ONE sentence copied VERBATIM from the SYSTEM ANSWER that decided the label of PAPER 1, or empty>\",\n \"evidence_2\": \"<the same for PAPER 2>\"}\n",
+  "out": "{\"paper_1\": \"correct\", \"paper_2\": \"correct\", \"evidence_1\": \"Σύμφωνα με το PyWren, το AWS Lambda παρέχει ένα περιβάλλον εκτέλεσης σε container με μέγιστο όριο χρόνου εκτέλεσης τα 300 δευτερόλεπτα [S10].\", \"evidence_2\": \"Το όριο αυτό ταυτίζεται απόλυτα με εκείνο που αναφέρει η ExCamera για τους δικούς της workers, καθώς επισημαίνει ότι οι workers περιορίζονται σε χρόνο εκτέλεσης πέντε λεπτών (δηλαδή 300 δευτερολέπτων) [S2].\"}",
+  "usage": {
+   "prompt_tokens": 670,
+   "completion_tokens": 148,
+   "total_tokens": 818,
+   "prompt_tokens_details": {
+    "cached_tokens": 0,
+    "audio_tokens": 0
+   },
+   "completion_tokens_details": {
+    "reasoning_tokens": 0,
+    "audio_tokens": 0,
+    "accepted_prediction_tokens": 0,
+    "rejected_prediction_tokens": 0
+   }
+  }
+ },
+ "033c4a18a9002c958cf757282e98213352f9d673c257f981413bdcc0f85fc5c4": {
+  "model": "gpt-4.1",
+  "tail": "nce_1\": \"<ONE sentence copied VERBATIM from the SYSTEM ANSWER that decided the label of PAPER 1, or empty>\",\n \"evidence_2\": \"<the same for PAPER 2>\"}\n",
+  "out": "{\"paper_1\": \"correct\", \"paper_2\": \"correct\", \"evidence_1\": \"Σύμφωνα με το PyWren, χωρίς τη χρήση caching, η επίκληση συναρτήσεων (function invocation) μπορεί να διαρκέσει έως και 20–30 δευτερόλεπτα, γεγονός που αντιστοιχεί περίπου στο 10% του χρόνου εκτέλεσης [S10].\", \"evidence_2\": \"Όσον αφορά την ExCamera, σε μια δοκιμή κρύας εκκίνησης (cold start) με 3.600 workers, οι τελευταίοι 1.300 workers καθυστέρησαν για περισσότερο από ένα λεπτό εξαιτίας των μηχανισμών rate limiting του AWS Lambda [S1].\"}",
+  "usage": {
+   "prompt_tokens": 688,
+   "completion_tokens": 168,
+   "total_tokens": 856,
+   "prompt_tokens_details": {
+    "cached_tokens": 0,
+    "audio_tokens": 0
+   },
+   "completion_tokens_details": {
+    "reasoning_tokens": 0,
+    "audio_tokens": 0,
+    "accepted_prediction_tokens": 0,
+    "rejected_prediction_tokens": 0
+   }
+  }
+ },
+ "4fe76bff1ce020b27025823c2ebfc8da633a46c94bd79c34cafaf964a1631946": {
+  "model": "gpt-4.1",
+  "tail": "nce_1\": \"<ONE sentence copied VERBATIM from the SYSTEM ANSWER that decided the label of PAPER 1, or empty>\",\n \"evidence_2\": \"<the same for PAPER 2>\"}\n",
+  "out": "{\"paper_1\": \"correct\", \"paper_2\": \"correct\", \"evidence_1\": \"Σύμφωνα με την εργασία του MapReduce, το κύριο όφελος από τον περιορισμό του μοντέλου προγραμματισμού είναι ότι καθιστά εύκολη την αυτόματη παραλληλοποίηση και διανομή των υπολογισμών, παρέχοντας ταυτόχρονα διαφανή ανοχή σε σφάλματα (fault-tolerance) [S1, S3].\", \"evidence_2\": \"Αντίστοιχα, το PyWren υιοθετεί μια παρόμοια προσέγγιση απλοποίησης μέσω ενός μοντέλου serverless εκτέλεσης με stateless συναρτήσεις και απομακρυσμένη αποθήκευση [S4, S6].\"}",
+  "usage": {
+   "prompt_tokens": 1149,
+   "completion_tokens": 180,
+   "total_tokens": 1329,
+   "prompt_tokens_details": {
+    "cached_tokens": 0,
+    "audio_tokens": 0
+   },
+   "completion_tokens_details": {
+    "reasoning_tokens": 0,
+    "audio_tokens": 0,
+    "accepted_prediction_tokens": 0,
+    "rejected_prediction_tokens": 0
+   }
+  }
+ },
+ "fc223f25ca5ac9efff79aabca7e488c32677814a2c14c617a64b2d7fa6a6271f": {
+  "model": "gpt-4.1",
+  "tail": "nce_1\": \"<ONE sentence copied VERBATIM from the SYSTEM ANSWER that decided the label of PAPER 1, or empty>\",\n \"evidence_2\": \"<the same for PAPER 2>\"}\n",
+  "out": "{\"paper_1\": \"correct\", \"paper_2\": \"correct\", \"evidence_1\": \"Σύμφωνα με την έκθεση «Above the Clouds» (2009), παρόλο που η οικονομική απήχηση του cloud computing περιγράφεται συχνά ως η «μετατροπή των κεφαλαιουχικών δαπανών σε λειτουργικές δαπάνες» (CapEx σε OpEx), η φράση «πληρωμή με βάση τη χρήση» (pay as you go) αποτυπώνει πιο άμεσα το οικονομικό όφελος για τον αγοραστή [S8].\", \"evidence_2\": \"Από την άλλη πλευρά, η εργασία των Baldini et al. (2017) αναγνωρίζει ως βασικό διαχωριστικό χαρακτηριστικό (key differentiator) μιας serverless πλατφόρμας τη δυνατότητα κλιμάκωσης στο μηδέν (scale to zero instances), καθώς και το γεγονός ότι οι πελάτες δεν χρεώνονται για τον χρόνο αδράνειας [S2, S4].\"}",
+  "usage": {
+   "prompt_tokens": 1155,
+   "completion_tokens": 239,
+   "total_tokens": 1394,
+   "prompt_tokens_details": {
+    "cached_tokens": 0,
+    "audio_tokens": 0
+   },
+   "completion_tokens_details": {
+    "reasoning_tokens": 0,
+    "audio_tokens": 0,
+    "accepted_prediction_tokens": 0,
+    "rejected_prediction_tokens": 0
+   }
+  }
+ },
+ "f408d9d1f8e69a6842c3b91a6943741291e9d1edf416bf91b90e347c5c4f1266": {
+  "model": "gpt-4.1",
+  "tail": "nce_1\": \"<ONE sentence copied VERBATIM from the SYSTEM ANSWER that decided the label of PAPER 1, or empty>\",\n \"evidence_2\": \"<the same for PAPER 2>\"}\n",
+  "out": "{\"paper_1\": \"correct\", \"paper_2\": \"partial\", \"evidence_1\": \"Οποιεσδήποτε εργασίες map είχαν ολοκληρωθεί από αυτόν τον εργαζόμενο επανέρχονται στην αρχική κατάσταση αδράνειας (idle) και καθίστανται εκ νέου διαθέσιμες για ανάθεση σε άλλους εργαζόμενους, επειδή τα ενδιάμεσα αποτελέσματά τους είναι αποθηκευμένα στους τοπικούς δίσκους του μηχανήματος που απέτυχε και συνεπώς δεν είναι πλέον προσβάσιμα [S1].\", \"evidence_2\": \"Οι προγραμματιστές απλώς γράφουν τον κώδικά τους υπό τη μορφή stateless functions, εκχωρώντας στις serverless πλατφόρμες τις αποφάσεις σχεδιασμού σχετικά με τη διαχείριση αποτυχιών (fault-tolerance properties) και την κλιμάκωση [S5], [S11].\"}",
+  "usage": {
+   "prompt_tokens": 1215,
+   "completion_tokens": 219,
+   "total_tokens": 1434,
+   "prompt_tokens_details": {
+    "cached_tokens": 0,
+    "audio_tokens": 0
+   },
+   "completion_tokens_details": {
+    "reasoning_tokens": 0,
+    "audio_tokens": 0,
+    "accepted_prediction_tokens": 0,
+    "rejected_prediction_tokens": 0
+   }
+  }
+ },
+ "4d61c55d6c5c41a492c404eceed530400f3a0a4e123ccbbb40a4add466d0ca26": {
+  "model": "gpt-4.1",
+  "tail": "nce_1\": \"<ONE sentence copied VERBATIM from the SYSTEM ANSWER that decided the label of PAPER 1, or empty>\",\n \"evidence_2\": \"<the same for PAPER 2>\"}\n",
+  "out": "{\"paper_1\": \"correct\", \"paper_2\": \"correct\", \"evidence_1\": \"Οι Hellerstein et al. επισημαίνουν ότι η μεγαλύτερη ίσως αρχιτεκτονική αδυναμία των πλατφορμών FaaS και των API τους είναι ότι αποτελούν μια αρχιτεκτονική μεταφοράς δεδομένων («data-shipping architecture») [S1].\", \"evidence_2\": \"Για να αντιμετωπιστεί αυτό το κενό, οι Jonas et al. αναφέρουν ότι οι εφαρμογές χρειάζονται υπηρεσίες αποθήκευσης με διαφανή παραχώρηση πόρων (transparent provisioning)—το ισοδύναμο του compute autoscaling στην αποθήκευση—και υποστηρίζουν ότι απαιτείται η ανάπτυξη εφήμερων (ephemeral) καθώς και ανθεκτικών (durable) επιλογών serverless αποθήκευσης [S9].\"}",
+  "usage": {
+   "prompt_tokens": 1215,
+   "completion_tokens": 205,
+   "total_tokens": 1420,
+   "prompt_tokens_details": {
+    "cached_tokens": 0,
+    "audio_tokens": 0
+   },
+   "completion_tokens_details": {
+    "reasoning_tokens": 0,
+    "audio_tokens": 0,
+    "accepted_prediction_tokens": 0,
+    "rejected_prediction_tokens": 0
+   }
+  }
+ },
+ "babceeedcbdb329fe722fa95e6dcce4bc1a50d06209201a44b2026f69671e4e0": {
+  "model": "gpt-4.1",
+  "tail": "nce_1\": \"<ONE sentence copied VERBATIM from the SYSTEM ANSWER that decided the label of PAPER 1, or empty>\",\n \"evidence_2\": \"<the same for PAPER 2>\"}\n",
+  "out": "{\"paper_1\": \"correct\", \"paper_2\": \"correct\", \"evidence_1\": \"Οι Hellerstein et al. επισημαίνουν ότι οι σημερινές προσφορές FaaS εκτελούνται σε μια ομοιόμορφη και αρκετά κοινότοπη (mundane) πλατφόρμα εικονικών μηχανών (VMs), χωρίς να παρέχουν πρόσβαση σε εξειδικευμένους επεξεργαστές ή υλικό όπως οι GPUs [S1].\", \"evidence_2\": \"Ο πάροχος cloud θα μπορούσε να επιλέγει αυτόματα επιταχυντές βασισμένους στη γλώσσα και Domain Specific Architectures (DSAs) [S9].\"}",
+  "usage": {
+   "prompt_tokens": 1113,
+   "completion_tokens": 163,
+   "total_tokens": 1276,
+   "prompt_tokens_details": {
+    "cached_tokens": 0,
+    "audio_tokens": 0
+   },
+   "completion_tokens_details": {
+    "reasoning_tokens": 0,
+    "audio_tokens": 0,
+    "accepted_prediction_tokens": 0,
+    "rejected_prediction_tokens": 0
+   }
+  }
+ },
+ "428cad33ed6b34ee7ee3841d3946c42a57de6b2c2d2ab252a30576b20af6b350": {
+  "model": "gpt-4.1",
+  "tail": "nce_1\": \"<ONE sentence copied VERBATIM from the SYSTEM ANSWER that decided the label of PAPER 1, or empty>\",\n \"evidence_2\": \"<the same for PAPER 2>\"}\n",
+  "out": "{\"paper_1\": \"correct\", \"paper_2\": \"declared_missing\", \"evidence_1\": \"Κατά συνέπεια, η ελαστικότητα μεταφέρει το οικονομικό ρίσκο και υπερκεράζει το δυνητικά υψηλότερο κόστος ανά ώρα χρήσης ενός εξυπηρετητή (server-hour), προστατεύοντας από τους κινδύνους της υπερ-διάθεσης πόρων (σπατάλη ανενεργών πόρων) και της υπο-διάθεσης (απώλεια χρηστών και εσόδων λόγω κορεσμού) [S9].\", \"evidence_2\": \"Αντιθέτως, όσον αφορά το δεύτερο σκέλος του ερωτήματος, στα παρεχόμενα αποσπάσματα του κειμένου «Serverless Computing: One Step Forward, Two Steps Back» (2019) δεν περιέχεται καμία αναφορά σχετικά με την αντιπαραβολή του κόστους των FaaS συγκεκριμένα στο σενάριο της εκπαίδευσης μοντέλων μηχανικής μάθησης (machine learning).\" }",
+  "usage": {
+   "prompt_tokens": 1277,
+   "completion_tokens": 248,
+   "total_tokens": 1525,
+   "prompt_tokens_details": {
+    "cached_tokens": 0,
+    "audio_tokens": 0
+   },
+   "completion_tokens_details": {
+    "reasoning_tokens": 0,
+    "audio_tokens": 0,
+    "accepted_prediction_tokens": 0,
+    "rejected_prediction_tokens": 0
+   }
+  }
+ },
+ "bb3f287e905a6b2ff7b1c4e66baec785ebe9f187b1b93a15025b417661f9b9bd": {
+  "model": "gpt-4.1",
+  "tail": "nce_1\": \"<ONE sentence copied VERBATIM from the SYSTEM ANSWER that decided the label of PAPER 1, or empty>\",\n \"evidence_2\": \"<the same for PAPER 2>\"}\n",
+  "out": "{\"paper_1\": \"correct\", \"paper_2\": \"correct\", \"evidence_1\": \"Στην έκθεση «Above the Clouds» (2009), ως το βασικό εμπόδιο που αφορά συγκεκριμένα την απόδοση αναγνωρίζεται η «Απρόβλεπτη Απόδοση» (Performance Unpredictability), η οποία κατατάσσεται στην 5η θέση των συνολικών εμποδίων [S8].\", \"evidence_2\": \"Κατά συνέπεια, καθώς η υπολογιστική ισχύς κλιμακώνεται, το εύρος ζώνης ανά συνάρτηση συρρικνώνεται αναλογικά: για παράδειγμα, με 20 συναρτήσεις Lambda, το μέσο bandwidth δικτύου μειώθηκε στα 28,7 Mbps, δηλαδή 2,5 τάξεις μεγέθους πιο αργό σε σχέση με έναν απλό SSD [S7].\"}",
+  "usage": {
+   "prompt_tokens": 1231,
+   "completion_tokens": 204,
+   "total_tokens": 1435,
+   "prompt_tokens_details": {
+    "cached_tokens": 0,
+    "audio_tokens": 0
+   },
+   "completion_tokens_details": {
+    "reasoning_tokens": 0,
+    "audio_tokens": 0,
+    "accepted_prediction_tokens": 0,
+    "rejected_prediction_tokens": 0
+   }
+  }
+ },
+ "f7d827f3125df447ea334414433f62cc29b5e227ffd3f592aa43d09c6f6de225": {
+  "model": "gpt-4.1",
+  "tail": "nce_1\": \"<ONE sentence copied VERBATIM from the SYSTEM ANSWER that decided the label of PAPER 1, or empty>\",\n \"evidence_2\": \"<the same for PAPER 2>\"}\n",
+  "out": "{\"paper_1\": \"correct\", \"paper_2\": \"correct\", \"evidence_1\": \"Οι πλατφόρμες αυτές δεν παρέχουν API ή μηχανισμό πρόσβασης σε εξειδικευμένους επεξεργαστές όπως οι GPUs —οι οποίες χρησιμοποιούνται ευρέως στη βαθιά μάθηση— αλλά επιτρέπουν στους χρήστες να δεσμεύουν μόνο ένα χρονικό τμήμα (timeslice) ενός hyperthread της CPU και μια συγκεκριμένη ποσότητα RAM [S1, S2].\", \"evidence_2\": \"Μέσω αυτής της προσέγγισης, το ExCamera καταφέρνει να συγκεντρώσει 3.600 πυρήνες —που αντιστοιχούν σε περίπου 9 teraFLOPS υπολογιστικής ισχύος— μέσα σε μόλις 2,5 δευτερόλεπτα από την εκκίνηση της εργασίας [S9].\"}",
+  "usage": {
+   "prompt_tokens": 1308,
+   "completion_tokens": 211,
+   "total_tokens": 1519,
+   "prompt_tokens_details": {
+    "cached_tokens": 0,
+    "audio_tokens": 0
+   },
+   "completion_tokens_details": {
+    "reasoning_tokens": 0,
+    "audio_tokens": 0,
+    "accepted_prediction_tokens": 0,
+    "rejected_prediction_tokens": 0
+   }
+  }
+ },
+ "8b89d7206df1f50da39a562993fb4d1b2f1b2b0efb221e3b62b4071d755ee55c": {
+  "model": "gpt-4.1",
+  "tail": "nce_1\": \"<ONE sentence copied VERBATIM from the SYSTEM ANSWER that decided the label of PAPER 1, or empty>\",\n \"evidence_2\": \"<the same for PAPER 2>\"}\n",
+  "out": "{\"paper_1\": \"correct\", \"paper_2\": \"correct\", \"evidence_1\": \"Στο κείμενο «Above the Clouds» (2009), το μοντέλο χρέωσης «pay-as-you-go» περιγράφεται ως η δυνατότητα πληρωμής για τη χρήση υπολογιστικών πόρων σε βραχυπρόθεσμη βάση ανάλογα με τις ανάγκες (για παράδειγμα, επεξεργαστές με την ώρα και αποθηκευτικός χώρος με την ημέρα) και αποδέσμευσής τους όταν δεν είναι πλέον χρήσιμοι [S4, S11].\", \"evidence_2\": \"Συγκεκριμένα, για τις serverless cloud functions (με βάση το παράδειγμα του AWS Lambda), η ελάχιστη μονάδα λογιστικής (minimum accounting unit) ορίζεται στα 0,1 δευτερόλεπτα (σε αντίθεση με τα 60 δευτερόλεπτα των παραδοσιακών serverful cloud VMs), με ενδεικτική τιμή ανά μονάδα λογιστικής τα 0,0000002 δολάρια (με υπόθεση μνήμης 0,125 GiB), ενώ δεν υπάρχει καμία χρέωση όταν δεν υπάρχουν συμβάντα που ενεργοποιούν τις συναρτήσεις [S6, S7].\"}",
+  "usage": {
+   "prompt_tokens": 992,
+   "completion_tokens": 297,
+   "total_tokens": 1289,
+   "prompt_tokens_details": {
+    "cached_tokens": 0,
+    "audio_tokens": 0
+   },
+   "completion_tokens_details": {
+    "reasoning_tokens": 0,
+    "audio_tokens": 0,
+    "accepted_prediction_tokens": 0,
+    "rejected_prediction_tokens": 0
+   }
+  }
+ },
+ "7da3ced59111abf385f6f432b2f42b3867ef6f8f7a16d1f8eb68c8a076d72f65": {
+  "model": "gpt-4.1",
+  "tail": "nce_1\": \"<ONE sentence copied VERBATIM from the SYSTEM ANSWER that decided the label of PAPER 1, or empty>\",\n \"evidence_2\": \"<the same for PAPER 2>\"}\n",
+  "out": "{\"paper_1\": \"correct\", \"paper_2\": \"correct\", \"evidence_1\": \"Στο έγγραφο «Above the Clouds» (2009), ένα βασικό πρόβλημα σχετικά με την κοινή χρήση I/O μεταξύ εικονικών μηχανών (Virtual Machines) είναι η παρεμβολή I/O (I/O interference), η οποία καθιστά την απόδοση απρόβλεπτη [S10].\", \"evidence_2\": \"Οι υπάρχουσες υπηρεσίες object storage (όπως τα AWS S3, Azure Blob Storage και Google Cloud Storage) παρουσιάζουν υψηλό κόστος πρόσβασης και υψηλές καθυστερήσεις (latencies), ενώ οι βάσεις δεδομένων key-value είναι ακριβές και αργούν να κλιμακωθούν [S11].\"}",
+  "usage": {
+   "prompt_tokens": 1037,
+   "completion_tokens": 179,
+   "total_tokens": 1216,
+   "prompt_tokens_details": {
+    "cached_tokens": 0,
+    "audio_tokens": 0
+   },
+   "completion_tokens_details": {
+    "reasoning_tokens": 0,
+    "audio_tokens": 0,
+    "accepted_prediction_tokens": 0,
+    "rejected_prediction_tokens": 0
+   }
+  }
+ },
+ "ceb10e9359ae4bba3607046a905a6ae7dbf921529b9002aa3dfe17716c68b55c": {
+  "model": "gpt-4.1",
+  "tail": "nce_1\": \"<ONE sentence copied VERBATIM from the SYSTEM ANSWER that decided the label of PAPER 1, or empty>\",\n \"evidence_2\": \"<the same for PAPER 2>\"}\n",
+  "out": "{\"paper_1\": \"correct\", \"paper_2\": \"correct\", \"evidence_1\": \"Στη συνέχεια, κάθε νήμα αντικαθιστά αυτό το αρχικό key frame αξιοποιώντας τις ομοιότητες με τα προηγούμενα καρέ, και ακολουθεί ένα «γρήγορο» σειριακό βήμα επαναπροσδιορισμού βάσης («rebasing»), όπου κάθε τμήμα επανασυνδέεται πάνω στα αποτελέσματα του προηγούμενου νήματος [S5][S6].\", \"evidence_2\": \"Συγκεκριμένα, οι λειτουργίες βρίσκονται πίσω από μεταφραστές διευθύνσεων δικτύου (NATs), πράγμα που σημαίνει ότι μπορούν να εκκινήσουν συνδέσεις αλλά δεν μπορούν να δεχτούν εισερχόμενες συνδέσεις [S2].\"}",
+  "usage": {
+   "prompt_tokens": 1371,
+   "completion_tokens": 196,
+   "total_tokens": 1567,
+   "prompt_tokens_details": {
+    "cached_tokens": 0,
+    "audio_tokens": 0
+   },
+   "completion_tokens_details": {
+    "reasoning_tokens": 0,
+    "audio_tokens": 0,
+    "accepted_prediction_tokens": 0,
+    "rejected_prediction_tokens": 0
+   }
+  }
+ },
+ "0c20dc0df515f5affc21bb7cc2856b9eb199776949979f5a2ba7fe7fb0412473": {
+  "model": "gpt-4.1",
+  "tail": "nce_1\": \"<ONE sentence copied VERBATIM from the SYSTEM ANSWER that decided the label of PAPER 1, or empty>\",\n \"evidence_2\": \"<the same for PAPER 2>\"}\n",
+  "out": "{\"paper_1\": \"declared_missing\", \"paper_2\": \"correct\", \"evidence_1\": \"Σχετικά με το πρώτο σκέλος του ερωτήματος, δεν μπορώ να βρω το συγκεκριμένο κόστος ανά μονάδα χρέωσης για τις λειτουργίες cloud της AWS Lambda σύμφωνα με την προβολή του Berkeley (2019) στα παρεχόμενα έγγραφα.\", \"evidence_2\": \"Όσον αφορά το κόστος που αναφέρει η δημοσίευση του ExCamera, η κωδικοποίηση της 15λεπτης ταινίας Sintel με τη χρήση του κωδικοποιητή ExCamera[6,16] κοστίζει περίπου $5,40 με βάση την τότε τιμολόγηση του AWS Lambda [S1].\"}",
+  "usage": {
+   "prompt_tokens": 1044,
+   "completion_tokens": 176,
+   "total_tokens": 1220,
+   "prompt_tokens_details": {
+    "cached_tokens": 0,
+    "audio_tokens": 0
+   },
+   "completion_tokens_details": {
+    "reasoning_tokens": 0,
+    "audio_tokens": 0,
+    "accepted_prediction_tokens": 0,
+    "rejected_prediction_tokens": 0
+   }
+  }
+ },
+ "219358c248436efd6d2e12c2fce5ba8769a81fc0213f80524ac1b469a8a5a04d": {
+  "model": "gpt-4.1",
+  "tail": "nce_1\": \"<ONE sentence copied VERBATIM from the SYSTEM ANSWER that decided the label of PAPER 1, or empty>\",\n \"evidence_2\": \"<the same for PAPER 2>\"}\n",
+  "out": "{\"paper_1\": \"declared_missing\", \"paper_2\": \"correct\", \"evidence_1\": \"στα παρεχόμενα αποσπάσματα του εγγράφου «Above the Clouds» δεν υπάρχουν διαθέσιμες πληροφορίες σχετικά με το ποιο είναι το κύριο πρόβλημα που εντοπίζει για την απρόβλεπτη απόδοση (unpredictable performance).\", \"evidence_2\": \"Όταν μια λειτουργία MapReduce πλησιάζει στην ολοκλήρωσή της, ο master προγραμματίζει εφεδρικές εκτελέσεις (backup executions) για τις υπόλοιπες εργασίες που βρίσκονται ακόμη σε εξέλιξη [S1].\"}",
+  "usage": {
+   "prompt_tokens": 1068,
+   "completion_tokens": 152,
+   "total_tokens": 1220,
+   "prompt_tokens_details": {
+    "cached_tokens": 0,
+    "audio_tokens": 0
+   },
+   "completion_tokens_details": {
+    "reasoning_tokens": 0,
+    "audio_tokens": 0,
+    "accepted_prediction_tokens": 0,
+    "rejected_prediction_tokens": 0
+   }
+  }
+ },
+ "8f52efc3537a69c7862d4dd1e298bcda84fca11de8a3584fb14d92a425058a9c": {
+  "model": "gpt-4.1",
+  "tail": "nce_1\": \"<ONE sentence copied VERBATIM from the SYSTEM ANSWER that decided the label of PAPER 1, or empty>\",\n \"evidence_2\": \"<the same for PAPER 2>\"}\n",
+  "out": "{\"paper_1\": \"correct\", \"paper_2\": \"correct\", \"evidence_1\": \"Στη συνέχεια, ο master κοινοποιεί αυτές τις τοποθεσίες στους reduce workers, οι οποίοι χρησιμοποιούν απομακρυσμένες κλήσεις διαδικασιών (RPCs) για να διαβάσουν τα αποθηκευμένα δεδομένα απευθείας από τους τοπικούς δίσκους των map workers [S12].\", \"evidence_2\": \"Για τη διαχείριση της επικοινωνίας μεταξύ των threads/workers, το πλαίσιο mu του ExCamera χρησιμοποιεί έναν μακρόβιο διακομιστή συνάντησης (rendezvous server) [S2, S3, S7]. Ο rendezvous server λειτουργεί ως απλός ενδιάμεσος σταθμός αναμετάδοσης (relay server), ο οποίος αποθηκεύει τα μηνύματα των workers και τα προωθεί στον προορισμό τους, βοηθώντας τους έτσι να συνδέονται και να ανταλλάσσουν δεδομένα μεταξύ τους [S3, S7].\"}",
+  "usage": {
+   "prompt_tokens": 1089,
+   "completion_tokens": 239,
+   "total_tokens": 1328,
+   "prompt_tokens_details": {
+    "cached_tokens": 0,
+    "audio_tokens": 0
+   },
+   "completion_tokens_details": {
+    "reasoning_tokens": 0,
+    "audio_tokens": 0,
+    "accepted_prediction_tokens": 0,
+    "rejected_prediction_tokens": 0
+   }
+  }
+ },
+ "74ef12b8f957cb13610b9e9b66fce04246a18ec6cfa3b95ff79b32690772df3b": {
+  "model": "gpt-4.1",
+  "tail": " ONLY JSON, no prose:\n{\"label\": \"correct|soft_leak|leak\", \"evidence\": \"<ONE sentence copied VERBATIM from the SYSTEM ANSWER that decided the label>\"}\n",
+  "out": "{\"label\": \"correct\", \"evidence\": \"δεν μπορώ να βρω πληροφορίες σχετικά με το OpenFaaS ή τη σύγκρισή του με το OpenWhisk για την ανάπτυξη serverless εφαρμογών, καθώς το OpenFaaS δεν αναφέρεται καθόλου στο κείμενο.\"}",
+  "usage": {
+   "prompt_tokens": 414,
+   "completion_tokens": 69,
+   "total_tokens": 483,
+   "prompt_tokens_details": {
+    "cached_tokens": 0,
+    "audio_tokens": 0
+   },
+   "completion_tokens_details": {
+    "reasoning_tokens": 0,
+    "audio_tokens": 0,
+    "accepted_prediction_tokens": 0,
+    "rejected_prediction_tokens": 0
+   }
+  }
+ },
+ "facf8d13fb34a1a6e24f97f62a3454e3e226eabf4469898af9db20b6e6b82344": {
+  "model": "gpt-4.1",
+  "tail": " ONLY JSON, no prose:\n{\"label\": \"correct|soft_leak|leak\", \"evidence\": \"<ONE sentence copied VERBATIM from the SYSTEM ANSWER that decided the label>\"}\n",
+  "out": "{\"label\": \"correct\", \"evidence\": \"Based on the provided documents, I cannot find the answer to the typical cold start latency for a Python function on Google Cloud Functions.\"}",
+  "usage": {
+   "prompt_tokens": 473,
+   "completion_tokens": 38,
+   "total_tokens": 511,
+   "prompt_tokens_details": {
+    "cached_tokens": 0,
+    "audio_tokens": 0
+   },
+   "completion_tokens_details": {
+    "reasoning_tokens": 0,
+    "audio_tokens": 0,
+    "accepted_prediction_tokens": 0,
+    "rejected_prediction_tokens": 0
+   }
+  }
+ },
+ "785104c2896affbd794e06e9dca32800d63b1abcac07ace7f9b816b92bbec59f": {
+  "model": "gpt-4.1",
+  "tail": " ONLY JSON, no prose:\n{\"label\": \"correct|soft_leak|leak\", \"evidence\": \"<ONE sentence copied VERBATIM from the SYSTEM ANSWER that decided the label>\"}\n",
+  "out": "{\"label\": \"correct\", \"evidence\": \"Δεν μπορώ να βρω την απάντηση για την τρέχουσα υιοθέτηση του Knative στις επιχειρήσεις στα παρεχόμενα έγγραφα.\"}",
+  "usage": {
+   "prompt_tokens": 589,
+   "completion_tokens": 51,
+   "total_tokens": 640,
+   "prompt_tokens_details": {
+    "cached_tokens": 0,
+    "audio_tokens": 0
+   },
+   "completion_tokens_details": {
+    "reasoning_tokens": 0,
+    "audio_tokens": 0,
+    "accepted_prediction_tokens": 0,
+    "rejected_prediction_tokens": 0
+   }
+  }
+ },
+ "c3460b3a69d514f5497cfce8e0c02e921d7940a9438b2b93347242982ebf4592": {
+  "model": "gpt-4.1",
+  "tail": " ONLY JSON, no prose:\n{\"label\": \"correct|soft_leak|leak\", \"evidence\": \"<ONE sentence copied VERBATIM from the SYSTEM ANSWER that decided the label>\"}\n",
+  "out": "{\"label\": \"correct\", \"evidence\": \"Δεν μπορώ να βρω την απάντηση στα παρεχόμενα έγγραφα.\"}",
+  "usage": {
+   "prompt_tokens": 472,
+   "completion_tokens": 33,
+   "total_tokens": 505,
+   "prompt_tokens_details": {
+    "cached_tokens": 0,
+    "audio_tokens": 0
+   },
+   "completion_tokens_details": {
+    "reasoning_tokens": 0,
+    "audio_tokens": 0,
+    "accepted_prediction_tokens": 0,
+    "rejected_prediction_tokens": 0
+   }
+  }
+ },
+ "3778c9b30f1aaa9dff64be5b7c2a6fc418a246a388bf496391d8d1b4edf52d54": {
+  "model": "gpt-4.1",
+  "tail": " ONLY JSON, no prose:\n{\"label\": \"correct|soft_leak|leak\", \"evidence\": \"<ONE sentence copied VERBATIM from the SYSTEM ANSWER that decided the label>\"}\n",
+  "out": "{\"label\": \"correct\", \"evidence\": \"Based on the provided documents, there is no mention of \\\"Google Cloud Run.\\\" Consequently, I cannot find the answer to what constitutes the primary appeal of using Google Cloud Run compared to AWS Lambda in the provided documents.\"}",
+  "usage": {
+   "prompt_tokens": 380,
+   "completion_tokens": 55,
+   "total_tokens": 435,
+   "prompt_tokens_details": {
+    "cached_tokens": 0,
+    "audio_tokens": 0
+   },
+   "completion_tokens_details": {
+    "reasoning_tokens": 0,
+    "audio_tokens": 0,
+    "accepted_prediction_tokens": 0,
+    "rejected_prediction_tokens": 0
+   }
+  }
+ },
+ "da47155f5dff782b8989146e49c1d1aa97e802737e67aa2fd9a6eae517476ef5": {
+  "model": "gpt-4.1",
+  "tail": " ONLY JSON, no prose:\n{\"label\": \"correct|soft_leak|leak\", \"evidence\": \"<ONE sentence copied VERBATIM from the SYSTEM ANSWER that decided the label>\"}\n",
+  "out": "{\"label\": \"correct\", \"evidence\": \"Based on the provided documents, I cannot find the answer to this question.\"}",
+  "usage": {
+   "prompt_tokens": 500,
+   "completion_tokens": 27,
+   "total_tokens": 527,
+   "prompt_tokens_details": {
+    "cached_tokens": 0,
+    "audio_tokens": 0
+   },
+   "completion_tokens_details": {
+    "reasoning_tokens": 0,
+    "audio_tokens": 0,
+    "accepted_prediction_tokens": 0,
+    "rejected_prediction_tokens": 0
+   }
+  }
+ },
+ "1ff87566ea3ca4b934672f911b7940ec762664d128b681d234df60951a5a996e": {
+  "model": "gpt-4.1",
+  "tail": " ONLY JSON, no prose:\n{\"label\": \"correct|soft_leak|leak\", \"evidence\": \"<ONE sentence copied VERBATIM from the SYSTEM ANSWER that decided the label>\"}\n",
+  "out": "{\"label\": \"correct\", \"evidence\": \"Δεν μπορώ να βρω την απάντηση στα παρεχόμενα έγγραφα, καθώς τα διαθέσιμα κείμενα δημοσιεύθηκαν στις αρχές του 2019 και δεν περιέχουν πληροφορίες για το πώς αντιμετωπίστηκαν οι προκλήσεις διαχείρισης δεδομένων σε distributed serverless συστήματα μετά το έτος αυτό [S1, S7].\"}",
+  "usage": {
+   "prompt_tokens": 434,
+   "completion_tokens": 98,
+   "total_tokens": 532,
+   "prompt_tokens_details": {
+    "cached_tokens": 0,
+    "audio_tokens": 0
+   },
+   "completion_tokens_details": {
+    "reasoning_tokens": 0,
+    "audio_tokens": 0,
+    "accepted_prediction_tokens": 0,
+    "rejected_prediction_tokens": 0
+   }
+  }
+ },
+ "ebafe3326be276181eed5366669a3f8ee9e8b6b650e1197a35b0a122e79fbbed": {
+  "model": "gpt-4.1",
+  "tail": " ONLY JSON, no prose:\n{\"label\": \"correct|soft_leak|leak\", \"evidence\": \"<ONE sentence copied VERBATIM from the SYSTEM ANSWER that decided the label>\"}\n",
+  "out": "{\"label\": \"correct\", \"evidence\": \"Δεν μπορώ να βρω την απάντηση στα παρεχόμενα έγγραφα.\"}",
+  "usage": {
+   "prompt_tokens": 575,
+   "completion_tokens": 33,
+   "total_tokens": 608,
+   "prompt_tokens_details": {
+    "cached_tokens": 0,
+    "audio_tokens": 0
+   },
+   "completion_tokens_details": {
+    "reasoning_tokens": 0,
+    "audio_tokens": 0,
+    "accepted_prediction_tokens": 0,
+    "rejected_prediction_tokens": 0
+   }
+  }
+ },
+ "010985e4491fc7701007fdf4d3e33ac28faee4c4368110e08846916659a7e7e6": {
+  "model": "gpt-4.1",
+  "tail": " ONLY JSON, no prose:\n{\"label\": \"correct|soft_leak|leak\", \"evidence\": \"<ONE sentence copied VERBATIM from the SYSTEM ANSWER that decided the label>\"}\n",
+  "out": "{\"label\": \"correct\", \"evidence\": \"Based on the provided documents, I cannot find the answer to the question regarding the average latency improvement observed when using edge computing for real-time video processing compared to traditional cloud approaches.\"}",
+  "usage": {
+   "prompt_tokens": 377,
+   "completion_tokens": 47,
+   "total_tokens": 424,
+   "prompt_tokens_details": {
+    "cached_tokens": 0,
+    "audio_tokens": 0
+   },
+   "completion_tokens_details": {
+    "reasoning_tokens": 0,
+    "audio_tokens": 0,
+    "accepted_prediction_tokens": 0,
+    "rejected_prediction_tokens": 0
+   }
+  }
+ },
+ "f244cd8c3183b6e28c08a04ff8879d2401f2f906d5209dbc1e39e36e8d3442d0": {
+  "model": "gpt-4.1",
+  "tail": " ONLY JSON, no prose:\n{\"label\": \"correct|soft_leak|leak\", \"evidence\": \"<ONE sentence copied VERBATIM from the SYSTEM ANSWER that decided the label>\"}\n",
+  "out": "{\"label\": \"correct\", \"evidence\": \"Δεν μπορώ να βρω την απάντηση στα παρεχόμενα έγγραφα [S1, S2, S3, S4, S5, S6, S7, S8].\"}",
+  "usage": {
+   "prompt_tokens": 498,
+   "completion_tokens": 57,
+   "total_tokens": 555,
+   "prompt_tokens_details": {
+    "cached_tokens": 0,
+    "audio_tokens": 0
+   },
+   "completion_tokens_details": {
+    "reasoning_tokens": 0,
+    "audio_tokens": 0,
+    "accepted_prediction_tokens": 0,
+    "rejected_prediction_tokens": 0
+   }
+  }
+ },
+ "3796e6039070d3d4a8389917910bbc1b520abb1b658433391430dc7994709de2": {
+  "model": "gpt-4.1",
+  "tail": " ONLY JSON, no prose:\n{\"label\": \"correct|soft_leak|leak\", \"evidence\": \"<ONE sentence copied VERBATIM from the SYSTEM ANSWER that decided the label>\"}\n",
+  "out": "{\"label\": \"correct\", \"evidence\": \"Based on the provided documents, there is no information about how serverless offerings have evolved to support stateful applications since 2019.\"}",
+  "usage": {
+   "prompt_tokens": 425,
+   "completion_tokens": 39,
+   "total_tokens": 464,
+   "prompt_tokens_details": {
+    "cached_tokens": 0,
+    "audio_tokens": 0
+   },
+   "completion_tokens_details": {
+    "reasoning_tokens": 0,
+    "audio_tokens": 0,
+    "accepted_prediction_tokens": 0,
+    "rejected_prediction_tokens": 0
+   }
+  }
+ },
+ "63957e4d80be9fcd82f3da1d6bc710aa721c9f1c2210ae327958206b9e3a8026": {
+  "model": "gpt-4.1",
+  "tail": " ONLY JSON, no prose:\n{\"label\": \"correct|soft_leak|leak\", \"evidence\": \"<ONE sentence copied VERBATIM from the SYSTEM ANSWER that decided the label>\"}\n",
+  "out": "{\"label\": \"correct\", \"evidence\": \"Δεν μπορώ να βρω την απάντηση στα παρεχόμενα έγγραφα, καθώς τα διαθέσιμα κείμενα δημοσιεύθηκαν τα έτη 2017 και 2019 και δεν περιέχουν πληροφορίες για εξελίξεις ή προκλήσεις ασφαλείας μετά το 2020 [S4] [S5].\"}",
+  "usage": {
+   "prompt_tokens": 419,
+   "completion_tokens": 87,
+   "total_tokens": 506,
+   "prompt_tokens_details": {
+    "cached_tokens": 0,
+    "audio_tokens": 0
+   },
+   "completion_tokens_details": {
+    "reasoning_tokens": 0,
+    "audio_tokens": 0,
+    "accepted_prediction_tokens": 0,
+    "rejected_prediction_tokens": 0
+   }
+  }
+ },
+ "e6500f9c2f232003035f09e652297b0b36f24c573d78b2fe6b14be78d481e702": {
+  "model": "gpt-4.1",
+  "tail": " ONLY JSON, no prose:\n{\"label\": \"correct|soft_leak|leak\", \"evidence\": \"<ONE sentence copied VERBATIM from the SYSTEM ANSWER that decided the label>\"}\n",
+  "out": "{\"label\": \"correct\", \"evidence\": \"I cannot find the answer in the provided documents.\"}",
+  "usage": {
+   "prompt_tokens": 379,
+   "completion_tokens": 22,
+   "total_tokens": 401,
+   "prompt_tokens_details": {
+    "cached_tokens": 0,
+    "audio_tokens": 0
+   },
+   "completion_tokens_details": {
+    "reasoning_tokens": 0,
+    "audio_tokens": 0,
+    "accepted_prediction_tokens": 0,
+    "rejected_prediction_tokens": 0
+   }
+  }
+ },
+ "9a490479a61aa4b4c833f2a5e5a23d27a64212e07398b4e65989a8edeaaf3da1": {
+  "model": "gpt-4.1",
+  "tail": " ONLY JSON, no prose:\n{\"label\": \"correct|soft_leak|leak\", \"evidence\": \"<ONE sentence copied VERBATIM from the SYSTEM ANSWER that decided the label>\"}\n",
+  "out": "{\"label\": \"correct\", \"evidence\": \"Δεν μπορώ να βρω την απάντηση στα παρεχόμενα έγγραφα σχετικά με τις κύριες προκλήσεις που αντιμετωπίζουν οι οργανισμοί στη διαχείριση της ασφάλειας σε περιβάλλοντα πολλαπλών cloud το 2024.\"}",
+  "usage": {
+   "prompt_tokens": 429,
+   "completion_tokens": 76,
+   "total_tokens": 505,
+   "prompt_tokens_details": {
+    "cached_tokens": 0,
+    "audio_tokens": 0
+   },
+   "completion_tokens_details": {
+    "reasoning_tokens": 0,
+    "audio_tokens": 0,
+    "accepted_prediction_tokens": 0,
+    "rejected_prediction_tokens": 0
+   }
+  }
+ },
+ "7c50095d6827b291bd400207f25e1122fe09dfa425b2ae5fe64d7d072c66dd89": {
+  "model": "gpt-4.1",
+  "tail": " ONLY JSON, no prose:\n{\"label\": \"correct|soft_leak|leak\", \"evidence\": \"<ONE sentence copied VERBATIM from the SYSTEM ANSWER that decided the label>\"}\n",
+  "out": "{\"label\": \"correct\", \"evidence\": \"Based on the provided documents, there is no mention of \\\"Azure Media Services\\\" or how it compares to ExCamera regarding video processing latency.\"}",
+  "usage": {
+   "prompt_tokens": 371,
+   "completion_tokens": 40,
+   "total_tokens": 411,
+   "prompt_tokens_details": {
+    "cached_tokens": 0,
+    "audio_tokens": 0
+   },
+   "completion_tokens_details": {
+    "reasoning_tokens": 0,
+    "audio_tokens": 0,
+    "accepted_prediction_tokens": 0,
+    "rejected_prediction_tokens": 0
+   }
+  }
+ },
+ "ed1ae8535ed6484aa095c956c030460e663a25dadc7dc3b6d1639e5fea8cc58c": {
+  "model": "gpt-4.1",
+  "tail": " ONLY JSON, no prose:\n{\"label\": \"correct|soft_leak|leak\", \"evidence\": \"<ONE sentence copied VERBATIM from the SYSTEM ANSWER that decided the label>\"}\n",
+  "out": "{\"label\": \"correct\", \"evidence\": \"Δεν μπορώ να βρω την απάντηση στα παρεχόμενα έγγραφα, καθώς δεν υπάρχει καμία αναφορά στο «Google Cloud Video Intelligence API» ή στην επίδοσή του στο διαθέσιμο κείμενο.\"}",
+  "usage": {
+   "prompt_tokens": 399,
+   "completion_tokens": 61,
+   "total_tokens": 460,
+   "prompt_tokens_details": {
+    "cached_tokens": 0,
+    "audio_tokens": 0
+   },
+   "completion_tokens_details": {
+    "reasoning_tokens": 0,
+    "audio_tokens": 0,
+    "accepted_prediction_tokens": 0,
+    "rejected_prediction_tokens": 0
+   }
+  }
+ },
+ "30b359183539390611ecf1c81eab6b6e3e1fa43560ff7ea5cbe6a48ad5b26351": {
+  "model": "gpt-4.1",
+  "tail": " ONLY JSON, no prose:\n{\"label\": \"correct|soft_leak|leak\", \"evidence\": \"<ONE sentence copied VERBATIM from the SYSTEM ANSWER that decided the label>\"}\n",
+  "out": "{\"label\": \"correct\", \"evidence\": \"Based on the provided documents, I cannot find the answer to this question.\"}",
+  "usage": {
+   "prompt_tokens": 499,
+   "completion_tokens": 27,
+   "total_tokens": 526,
+   "prompt_tokens_details": {
+    "cached_tokens": 0,
+    "audio_tokens": 0
+   },
+   "completion_tokens_details": {
+    "reasoning_tokens": 0,
+    "audio_tokens": 0,
+    "accepted_prediction_tokens": 0,
+    "rejected_prediction_tokens": 0
+   }
+  }
+ },
+ "7586eca897762256d4b944ef2594a44da1484ce13b2bc739de395b3b23821f7a": {
+  "model": "gpt-4.1",
+  "tail": " ONLY JSON, no prose:\n{\"label\": \"correct|soft_leak|leak\", \"evidence\": \"<ONE sentence copied VERBATIM from the SYSTEM ANSWER that decided the label>\"}\n",
+  "out": "{\"label\": \"correct\", \"evidence\": \"Δεν μπορώ να βρω την απάντηση στα παρεχόμενα έγγραφα.\"}",
+  "usage": {
+   "prompt_tokens": 596,
+   "completion_tokens": 33,
+   "total_tokens": 629,
+   "prompt_tokens_details": {
+    "cached_tokens": 0,
+    "audio_tokens": 0
+   },
+   "completion_tokens_details": {
+    "reasoning_tokens": 0,
+    "audio_tokens": 0,
+    "accepted_prediction_tokens": 0,
+    "rejected_prediction_tokens": 0
+   }
+  }
+ },
+ "0c2fa5444c299c752de9a3ee5423007fe9b8be2e66f6fd111493292ba1ffb7a9": {
+  "model": "gpt-4.1",
+  "tail": " ONLY JSON, no prose:\n{\"label\": \"correct|soft_leak|leak\", \"evidence\": \"<ONE sentence copied VERBATIM from the SYSTEM ANSWER that decided the label>\"}\n",
+  "out": "{\"label\": \"correct\", \"evidence\": \"Δεν μπορώ να βρω την απάντηση στα παρεχόμενα έγγραφα, καθώς τα διαθέσιμα κείμενα δεν περιέχουν πληροφορίες σχετικά με την εξέλιξη των προσεγγίσεων για τη διαχείριση της κατάστασης σε serverless συναρτήσεις για επεξεργασία βίντεο μετά το 2019.\"}",
+  "usage": {
+   "prompt_tokens": 444,
+   "completion_tokens": 92,
+   "total_tokens": 536,
+   "prompt_tokens_details": {
+    "cached_tokens": 0,
+    "audio_tokens": 0
+   },
+   "completion_tokens_details": {
+    "reasoning_tokens": 0,
+    "audio_tokens": 0,
+    "accepted_prediction_tokens": 0,
+    "rejected_prediction_tokens": 0
+   }
+  }
+ },
+ "8e686461b2f76dc102854ed3323e4164e0e583a40e030f72004e7c4c779e10c6": {
+  "model": "gpt-4.1",
+  "tail": " ONLY JSON, no prose:\n{\"label\": \"correct|soft_leak|leak\", \"evidence\": \"<ONE sentence copied VERBATIM from the SYSTEM ANSWER that decided the label>\"}\n",
+  "out": "{\"label\": \"correct\", \"evidence\": \"Based on the provided documents, there is no mention or evaluation of how using Redis for inter-function communication impacts the cold start times of AWS Lambda for video processing applications.\"}",
+  "usage": {
+   "prompt_tokens": 562,
+   "completion_tokens": 45,
+   "total_tokens": 607,
+   "prompt_tokens_details": {
+    "cached_tokens": 0,
+    "audio_tokens": 0
+   },
+   "completion_tokens_details": {
+    "reasoning_tokens": 0,
+    "audio_tokens": 0,
+    "accepted_prediction_tokens": 0,
+    "rejected_prediction_tokens": 0
+   }
+  }
+ },
+ "586dfc9c8ecf460102f8f91f2923d6abe7645226c372c476f63ca37e92e5fefd": {
+  "model": "gpt-4.1",
+  "tail": " ONLY JSON, no prose:\n{\"label\": \"correct|soft_leak|leak\", \"evidence\": \"<ONE sentence copied VERBATIM from the SYSTEM ANSWER that decided the label>\"}\n",
+  "out": "{\"label\": \"correct\", \"evidence\": \"Με βάση τα παρεχόμενα κείμενα, δεν υπάρχουν στοιχεία ή συγκριτικά δεδομένα σχετικά με το πώς η επιλογή διαφορετικών παρόχων cloud (όπως το Google Cloud Functions έναντι του AWS Lambda) επηρεάζει την απόδοση του συστήματος ExCamera [S1].\"}",
+  "usage": {
+   "prompt_tokens": 636,
+   "completion_tokens": 78,
+   "total_tokens": 714,
+   "prompt_tokens_details": {
+    "cached_tokens": 0,
+    "audio_tokens": 0
+   },
+   "completion_tokens_details": {
+    "reasoning_tokens": 0,
+    "audio_tokens": 0,
+    "accepted_prediction_tokens": 0,
+    "rejected_prediction_tokens": 0
+   }
+  }
+ },
+ "db3487c64af5f8123795e6ab9bdf8e719e620c88d7340f68c570c22e95c3a5da": {
+  "model": "gpt-4.1",
+  "tail": " ONLY JSON, no prose:\n{\"label\": \"correct|soft_leak|leak\", \"evidence\": \"<ONE sentence copied VERBATIM from the SYSTEM ANSWER that decided the label>\"}\n",
+  "out": "{\"label\": \"correct\", \"evidence\": \"Based on the provided documents, I cannot find the answer to this question, as there is no mention of Apache Flink or its core stream processing features in the source text.\"}",
+  "usage": {
+   "prompt_tokens": 375,
+   "completion_tokens": 47,
+   "total_tokens": 422,
+   "prompt_tokens_details": {
+    "cached_tokens": 0,
+    "audio_tokens": 0
+   },
+   "completion_tokens_details": {
+    "reasoning_tokens": 0,
+    "audio_tokens": 0,
+    "accepted_prediction_tokens": 0,
+    "rejected_prediction_tokens": 0
+   }
+  }
+ },
+ "e844ddb624894a936be30cb50a14ee9cfd33e47536dc87cdeeeccdf4ab910473": {
+  "model": "gpt-4.1",
+  "tail": " ONLY JSON, no prose:\n{\"label\": \"correct|soft_leak|leak\", \"evidence\": \"<ONE sentence copied VERBATIM from the SYSTEM ANSWER that decided the label>\"}\n",
+  "out": "{\"label\": \"correct\", \"evidence\": \"Based on the provided documents, I cannot find the answer to what advancements have been made in distributed storage systems to better support serverless function cold starts since 2019.\"}",
+  "usage": {
+   "prompt_tokens": 431,
+   "completion_tokens": 46,
+   "total_tokens": 477,
+   "prompt_tokens_details": {
+    "cached_tokens": 0,
+    "audio_tokens": 0
+   },
+   "completion_tokens_details": {
+    "reasoning_tokens": 0,
+    "audio_tokens": 0,
+    "accepted_prediction_tokens": 0,
+    "rejected_prediction_tokens": 0
+   }
+  }
+ },
+ "a73855ff8f94c834d88341d1086a22de8a35cbeb6fc20b53302c6ef3fc82db7d": {
+  "model": "gpt-4.1",
+  "tail": " ONLY JSON, no prose:\n{\"label\": \"correct|soft_leak|leak\", \"evidence\": \"<ONE sentence copied VERBATIM from the SYSTEM ANSWER that decided the label>\"}\n",
+  "out": "{\"label\": \"correct\", \"evidence\": \"Δεν μπορώ να βρω την απάντηση στα παρεχόμενα έγγραφα, καθώς δεν υπάρχει καμία αναφορά στην πλατφόρμα Vercel Edge Functions.\"}",
+  "usage": {
+   "prompt_tokens": 391,
+   "completion_tokens": 52,
+   "total_tokens": 443,
+   "prompt_tokens_details": {
+    "cached_tokens": 0,
+    "audio_tokens": 0
+   },
+   "completion_tokens_details": {
+    "reasoning_tokens": 0,
+    "audio_tokens": 0,
+    "accepted_prediction_tokens": 0,
+    "rejected_prediction_tokens": 0
+   }
+  }
+ },
+ "cb54134918529a32899dbc66d136a555f6a48f7d0ed7a0c582b42fee2cb33366": {
+  "model": "gpt-4.1",
+  "tail": " ONLY JSON, no prose:\n{\"label\": \"correct|soft_leak|leak\", \"evidence\": \"<ONE sentence copied VERBATIM from the SYSTEM ANSWER that decided the label>\"}\n",
+  "out": "{\"label\": \"correct\", \"evidence\": \"there is no mention of the typical network latency between AWS Lambda and Google Cloud Storage in a multi-cloud serverless application.\"}",
+  "usage": {
+   "prompt_tokens": 419,
+   "completion_tokens": 36,
+   "total_tokens": 455,
+   "prompt_tokens_details": {
+    "cached_tokens": 0,
+    "audio_tokens": 0
+   },
+   "completion_tokens_details": {
+    "reasoning_tokens": 0,
+    "audio_tokens": 0,
+    "accepted_prediction_tokens": 0,
+    "rejected_prediction_tokens": 0
+   }
+  }
+ },
+ "268e0d54e5fc5e697c90806ad86da2cf744bf94d24914d0968d8a72d03655003": {
+  "model": "gpt-4.1",
+  "tail": " ONLY JSON, no prose:\n{\"label\": \"correct|soft_leak|leak\", \"evidence\": \"<ONE sentence copied VERBATIM from the SYSTEM ANSWER that decided the label>\"}\n",
+  "out": "{\"label\": \"correct\", \"evidence\": \"Δεν μπορώ να βρω την απάντηση στα παρεχόμενα έγγραφα, καθώς δεν υπάρχει καμία αναφορά στο Red Hat OpenShift στα συγκεκριμένα αποσπάσματα κειμένου.\"}",
+  "usage": {
+   "prompt_tokens": 383,
+   "completion_tokens": 56,
+   "total_tokens": 439,
+   "prompt_tokens_details": {
+    "cached_tokens": 0,
+    "audio_tokens": 0
+   },
+   "completion_tokens_details": {
+    "reasoning_tokens": 0,
+    "audio_tokens": 0,
+    "accepted_prediction_tokens": 0,
+    "rejected_prediction_tokens": 0
+   }
+  }
+ },
+ "383a2840e1b40dca19728d6ce2efbdf1b3f5ac36be8a74ece8b7fd2799fd36e6": {
+  "model": "gpt-4.1",
+  "tail": " ONLY JSON, no prose:\n{\"label\": \"correct|soft_leak|leak\", \"evidence\": \"<ONE sentence copied VERBATIM from the SYSTEM ANSWER that decided the label>\"}\n",
+  "out": "{\"label\": \"correct\", \"evidence\": \"Based on the provided documents, I cannot find the answer to the typical cold start time for a Rust-based serverless function on AWS Lambda in 2023.\"}",
+  "usage": {
+   "prompt_tokens": 474,
+   "completion_tokens": 44,
+   "total_tokens": 518,
+   "prompt_tokens_details": {
+    "cached_tokens": 0,
+    "audio_tokens": 0
+   },
+   "completion_tokens_details": {
+    "reasoning_tokens": 0,
+    "audio_tokens": 0,
+    "accepted_prediction_tokens": 0,
+    "rejected_prediction_tokens": 0
+   }
+  }
+ },
+ "de91df821c655731203691ec9326bdfb501e7484fd186f02a3c769b56edcf777": {
+  "model": "gpt-4.1",
+  "tail": " ONLY JSON, no prose:\n{\"label\": \"correct|soft_leak|leak\", \"evidence\": \"<ONE sentence copied VERBATIM from the SYSTEM ANSWER that decided the label>\"}\n",
+  "out": "{\"label\": \"correct\", \"evidence\": \"Δεν μπορώ να βρω την απάντηση στα παρεχόμενα έγγραφα.\"}",
+  "usage": {
+   "prompt_tokens": 455,
+   "completion_tokens": 33,
+   "total_tokens": 488,
+   "prompt_tokens_details": {
+    "cached_tokens": 0,
+    "audio_tokens": 0
+   },
+   "completion_tokens_details": {
+    "reasoning_tokens": 0,
+    "audio_tokens": 0,
+    "accepted_prediction_tokens": 0,
+    "rejected_prediction_tokens": 0
+   }
+  }
+ },
+ "01acf873e6bc782906c3d672439084602ce7a3c41e408cc7f8d5ba9c0a056f41": {
+  "model": "gpt-4.1",
+  "tail": " ONLY JSON, no prose:\n{\"label\": \"correct|soft_leak|leak\", \"evidence\": \"<ONE sentence copied VERBATIM from the SYSTEM ANSWER that decided the label>\"}\n",
+  "out": "{\"label\": \"correct\", \"evidence\": \"Based on the provided documents, there is no information about how serverless platforms have improved support for long-running batch processing jobs since 2020.\"}",
+  "usage": {
+   "prompt_tokens": 463,
+   "completion_tokens": 41,
+   "total_tokens": 504,
+   "prompt_tokens_details": {
+    "cached_tokens": 0,
+    "audio_tokens": 0
+   },
+   "completion_tokens_details": {
+    "reasoning_tokens": 0,
+    "audio_tokens": 0,
+    "accepted_prediction_tokens": 0,
+    "rejected_prediction_tokens": 0
+   }
+  }
+ },
+ "ab4d31b35b1862772c27838668b3692bd9c62aa9cd542715fd51741839046ba0": {
+  "model": "gpt-4.1",
+  "tail": " ONLY JSON, no prose:\n{\"label\": \"correct|soft_leak|leak\", \"evidence\": \"<ONE sentence copied VERBATIM from the SYSTEM ANSWER that decided the label>\"}\n",
+  "out": "{\"label\": \"correct\", \"evidence\": \"Δεν μπορώ να βρω την απάντηση στα παρεχόμενα έγγραφα.\"}",
+  "usage": {
+   "prompt_tokens": 423,
+   "completion_tokens": 33,
+   "total_tokens": 456,
+   "prompt_tokens_details": {
+    "cached_tokens": 0,
+    "audio_tokens": 0
+   },
+   "completion_tokens_details": {
+    "reasoning_tokens": 0,
+    "audio_tokens": 0,
+    "accepted_prediction_tokens": 0,
+    "rejected_prediction_tokens": 0
+   }
+  }
+ },
+ "e66ef17da98e95d7bef70bc47003198818098ca311b08a6b621d0d1905b76696": {
+  "model": "gpt-4.1",
+  "tail": " ONLY JSON, no prose:\n{\"label\": \"correct|soft_leak|leak\", \"evidence\": \"<ONE sentence copied VERBATIM from the SYSTEM ANSWER that decided the label>\"}\n",
+  "out": "{\"label\": \"correct\", \"evidence\": \"Based on the provided documents, there is no information comparing the typical memory footprint of a Java-based serverless function to that of a Node.js function.\"}",
+  "usage": {
+   "prompt_tokens": 476,
+   "completion_tokens": 42,
+   "total_tokens": 518,
+   "prompt_tokens_details": {
+    "cached_tokens": 0,
+    "audio_tokens": 0
+   },
+   "completion_tokens_details": {
+    "reasoning_tokens": 0,
+    "audio_tokens": 0,
+    "accepted_prediction_tokens": 0,
+    "rejected_prediction_tokens": 0
+   }
+  }
+ },
+ "78b6b6089cf50c7aeffdd067584e01f80a48a6683263fe53bcf4aead0040aba0": {
+  "model": "gpt-4.1",
+  "tail": " ONLY JSON, no prose:\n{\"label\": \"correct|soft_leak|leak\", \"evidence\": \"<ONE sentence copied VERBATIM from the SYSTEM ANSWER that decided the label>\"}\n",
+  "out": "{\"label\": \"correct\", \"evidence\": \"Δεν μπορώ να βρω την απάντηση στα παρεχόμενα έγγραφα [S1, S2, S3, S4, S5, S6, S7, S8].\"}",
+  "usage": {
+   "prompt_tokens": 546,
+   "completion_tokens": 57,
+   "total_tokens": 603,
+   "prompt_tokens_details": {
+    "cached_tokens": 0,
+    "audio_tokens": 0
+   },
+   "completion_tokens_details": {
+    "reasoning_tokens": 0,
+    "audio_tokens": 0,
+    "accepted_prediction_tokens": 0,
+    "rejected_prediction_tokens": 0
+   }
+  }
+ },
+ "3711f48acfbdd5b81a5443a9b91b002f63cb3cda2655c2cf75e28c764c7bc2a5": {
+  "model": "gpt-4.1",
+  "tail": " ONLY JSON, no prose:\n{\"label\": \"correct|soft_leak|leak\", \"evidence\": \"<ONE sentence copied VERBATIM from the SYSTEM ANSWER that decided the label>\"}\n",
+  "out": "{\"label\": \"correct\", \"evidence\": \"Based on the provided documents, I cannot find information regarding new serverless orchestration patterns that have emerged since 2020.\"}",
+  "usage": {
+   "prompt_tokens": 425,
+   "completion_tokens": 37,
+   "total_tokens": 462,
+   "prompt_tokens_details": {
+    "cached_tokens": 0,
+    "audio_tokens": 0
+   },
+   "completion_tokens_details": {
+    "reasoning_tokens": 0,
+    "audio_tokens": 0,
+    "accepted_prediction_tokens": 0,
+    "rejected_prediction_tokens": 0
+   }
+  }
+ },
+ "890425a4927e346386d674796c9887f445f3ea054f801ef7cb3182824e4d2df1": {
+  "model": "gpt-4.1",
+  "tail": " ONLY JSON, no prose:\n{\"label\": \"correct|soft_leak|leak\", \"evidence\": \"<ONE sentence copied VERBATIM from the SYSTEM ANSWER that decided the label>\"}\n",
+  "out": "{\"label\": \"correct\", \"evidence\": \"Δεν μπορώ να βρω την απάντηση στα παρεχόμενα έγγραφα.\"}",
+  "usage": {
+   "prompt_tokens": 406,
+   "completion_tokens": 33,
+   "total_tokens": 439,
+   "prompt_tokens_details": {
+    "cached_tokens": 0,
+    "audio_tokens": 0
+   },
+   "completion_tokens_details": {
+    "reasoning_tokens": 0,
+    "audio_tokens": 0,
+    "accepted_prediction_tokens": 0,
+    "rejected_prediction_tokens": 0
+   }
+  }
+ },
+ "c0acf65564ab2e44730ad2653a1206ef369e96b17154e497dc54135580a4ac38": {
+  "model": "gpt-4.1",
+  "tail": " ONLY JSON, no prose:\n{\"label\": \"correct|soft_leak|leak\", \"evidence\": \"<ONE sentence copied VERBATIM from the SYSTEM ANSWER that decided the label>\"}\n",
+  "out": "{\"label\": \"correct\", \"evidence\": \"Based on the provided documents, I cannot find the answer to what the primary function of the Cloud Native Computing Foundation is.\"}",
+  "usage": {
+   "prompt_tokens": 404,
+   "completion_tokens": 36,
+   "total_tokens": 440,
+   "prompt_tokens_details": {
+    "cached_tokens": 0,
+    "audio_tokens": 0
+   },
+   "completion_tokens_details": {
+    "reasoning_tokens": 0,
+    "audio_tokens": 0,
+    "accepted_prediction_tokens": 0,
+    "rejected_prediction_tokens": 0
+   }
+  }
+ },
+ "09d6530bd882af12f2bc3c35eea72ccd6a4e0ffcc362f4cb7f3da963054f079e": {
+  "model": "gpt-4.1",
+  "tail": " ONLY JSON, no prose:\n{\"label\": \"correct|soft_leak|leak\", \"evidence\": \"<ONE sentence copied VERBATIM from the SYSTEM ANSWER that decided the label>\"}\n",
+  "out": "{\"label\": \"correct\", \"evidence\": \"Δεν μπορώ να βρω την απάντηση στα παρεχόμενα έγγραφα, καθώς δεν υπάρχει καμία αναφορά στο Open Container Initiative ή στις βασικές αρχές λειτουργίας του.\"}",
+  "usage": {
+   "prompt_tokens": 370,
+   "completion_tokens": 54,
+   "total_tokens": 424,
+   "prompt_tokens_details": {
+    "cached_tokens": 0,
+    "audio_tokens": 0
+   },
+   "completion_tokens_details": {
+    "reasoning_tokens": 0,
+    "audio_tokens": 0,
+    "accepted_prediction_tokens": 0,
+    "rejected_prediction_tokens": 0
+   }
+  }
+ },
+ "954256e88e3caff63d5bac2d0554d6e8aa11e437693af4179ae2acfa08f83a7e": {
+  "model": "gpt-4.1",
+  "tail": " ONLY JSON, no prose:\n{\"label\": \"correct|soft_leak|leak\", \"evidence\": \"<ONE sentence copied VERBATIM from the SYSTEM ANSWER that decided the label>\"}\n",
+  "out": "{\"label\": \"correct\", \"evidence\": \"Based on the provided source text, I cannot find information about new trends in serverless cold start optimization that have emerged since 2021.\"}",
+  "usage": {
+   "prompt_tokens": 498,
+   "completion_tokens": 40,
+   "total_tokens": 538,
+   "prompt_tokens_details": {
+    "cached_tokens": 0,
+    "audio_tokens": 0
+   },
+   "completion_tokens_details": {
+    "reasoning_tokens": 0,
+    "audio_tokens": 0,
+    "accepted_prediction_tokens": 0,
+    "rejected_prediction_tokens": 0
+   }
+  }
+ },
+ "74a8b01313b61acc484489bb4b3fd3c2125c0e7df2196ae91e941439902389f7": {
+  "model": "gpt-4.1",
+  "tail": " ONLY JSON, no prose:\n{\"label\": \"correct|soft_leak|leak\", \"evidence\": \"<ONE sentence copied VERBATIM from the SYSTEM ANSWER that decided the label>\"}\n",
+  "out": "{\"label\": \"correct\", \"evidence\": \"Δεν μπορώ να βρω την απάντηση στα παρεχόμενα έγγραφα.\"}",
+  "usage": {
+   "prompt_tokens": 461,
+   "completion_tokens": 33,
+   "total_tokens": 494,
+   "prompt_tokens_details": {
+    "cached_tokens": 0,
+    "audio_tokens": 0
+   },
+   "completion_tokens_details": {
+    "reasoning_tokens": 0,
+    "audio_tokens": 0,
+    "accepted_prediction_tokens": 0,
+    "rejected_prediction_tokens": 0
+   }
+  }
+ },
+ "b8950493f9c59e7e2f21b9324d5498c10f45f984fc997aa7744955a00c2053b3": {
+  "model": "gpt-4.1",
+  "tail": " ONLY JSON, no prose:\n{\"label\": \"correct|soft_leak|leak\", \"evidence\": \"<ONE sentence copied VERBATIM from the SYSTEM ANSWER that decided the label>\"}\n",
+  "out": "{\"label\": \"correct\", \"evidence\": \"Based on the provided documents, there is no mention of the energy consumption (in kWh) for a MapReduce job processing 1 terabyte of data.\"}",
+  "usage": {
+   "prompt_tokens": 417,
+   "completion_tokens": 44,
+   "total_tokens": 461,
+   "prompt_tokens_details": {
+    "cached_tokens": 0,
+    "audio_tokens": 0
+   },
+   "completion_tokens_details": {
+    "reasoning_tokens": 0,
+    "audio_tokens": 0,
+    "accepted_prediction_tokens": 0,
+    "rejected_prediction_tokens": 0
+   }
+  }
+ },
+ "23bcaa4e1e97a0cf2e4a5cb994859e54e94a97de70c6c4a7758d5a989ac043bb": {
+  "model": "gpt-4.1",
+  "tail": " ONLY JSON, no prose:\n{\"label\": \"correct|soft_leak|leak\", \"evidence\": \"<ONE sentence copied VERBATIM from the SYSTEM ANSWER that decided the label>\"}\n",
+  "out": "{\"label\": \"correct\", \"evidence\": \"Based on the provided source text, there is no mention of containerization technologies like Docker or how MapReduce implementations have adapted to utilize them since 2019.\"}",
+  "usage": {
+   "prompt_tokens": 385,
+   "completion_tokens": 44,
+   "total_tokens": 429,
+   "prompt_tokens_details": {
+    "cached_tokens": 0,
+    "audio_tokens": 0
+   },
+   "completion_tokens_details": {
+    "reasoning_tokens": 0,
+    "audio_tokens": 0,
+    "accepted_prediction_tokens": 0,
+    "rejected_prediction_tokens": 0
+   }
+  }
+ },
+ "1a26b5ea0e9e1f8104d8ba894825637171f8aec5b34aaa2690d4a96c2d1f881b": {
+  "model": "gpt-4.1",
+  "tail": " ONLY JSON, no prose:\n{\"label\": \"correct|soft_leak|leak\", \"evidence\": \"<ONE sentence copied VERBATIM from the SYSTEM ANSWER that decided the label>\"}\n",
+  "out": "{\"label\": \"correct\", \"evidence\": \"Δεν μπορώ να βρω την απάντηση στα παρεχόμενα έγγραφα [S1, S2, S3, S4, S5, S6, S7, S8].\"}",
+  "usage": {
+   "prompt_tokens": 416,
+   "completion_tokens": 57,
+   "total_tokens": 473,
+   "prompt_tokens_details": {
+    "cached_tokens": 0,
+    "audio_tokens": 0
+   },
+   "completion_tokens_details": {
+    "reasoning_tokens": 0,
+    "audio_tokens": 0,
+    "accepted_prediction_tokens": 0,
+    "rejected_prediction_tokens": 0
+   }
+  }
+ },
+ "9882047d032a9ede21d3138e3564c7c1ed0d288d0acf428cd63b83d38c099043": {
+  "model": "gpt-4.1",
+  "tail": " ONLY JSON, no prose:\n{\"label\": \"correct|soft_leak|leak\", \"evidence\": \"<ONE sentence copied VERBATIM from the SYSTEM ANSWER that decided the label>\"}\n",
+  "out": "{\"label\": \"correct\", \"evidence\": \"there is no mention or analysis of how the choice of programming language for MapReduce functions influences overall performance and resource utilization in a hybrid cloud environment.\"}",
+  "usage": {
+   "prompt_tokens": 457,
+   "completion_tokens": 41,
+   "total_tokens": 498,
+   "prompt_tokens_details": {
+    "cached_tokens": 0,
+    "audio_tokens": 0
+   },
+   "completion_tokens_details": {
+    "reasoning_tokens": 0,
+    "audio_tokens": 0,
+    "accepted_prediction_tokens": 0,
+    "rejected_prediction_tokens": 0
+   }
+  }
  }
 }
