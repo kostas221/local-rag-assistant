@@ -1,0 +1,139 @@
+set,id,kind,prompt,attempt,first_best,rewrite,best,cov,passed
+main,q019,ooc,old,1,-4.442,What do the documents say about quantum computing performance?,,0.0,0
+main,q019,ooc,old,2,-4.442,quantum computing performance evaluation benchmarks fidelity speedup coherence time gate error rate,-6.847,0.0,0
+main,q019,ooc,old,3,-4.442,What do the documents say about quantum computing performance?,,0.0,0
+main,q019,ooc,new,1,-4.442,What do the documents say about quantum computing performance?,,0.0,0
+main,q019,ooc,new,2,-4.442,What do the documents say about quantum computing performance?,,0.0,0
+main,q019,ooc,new,3,-4.442,What do the documents say about quantum computing performance?,,0.0,0
+main,q020,ooc,old,1,-7.979,Bitcoin price documents,,0.0,0
+main,q020,ooc,old,2,-7.979,Bitcoin price documents,,0.0,0
+main,q020,ooc,old,3,-7.979,Bitcoin price documents,,0.0,0
+main,q020,ooc,new,1,-7.979,Bitcoin price documents,,0.0,0
+main,q020,ooc,new,2,-7.979,Bitcoin price documents,,0.0,0
+main,q020,ooc,new,3,-7.979,Bitcoin price documents,,0.0,0
+main,q048,ooc,old,1,-3.12,GDPR compliance cloud service provider regulatory requirements data protection sovereignty privacy legal obligations,-5.096,0.0,0
+main,q048,ooc,old,2,-3.12,cloud computing GDPR compliance regulatory requirements data protection service providers privacy,-0.521,0.0,1
+main,q048,ooc,old,3,-3.12,GDPR compliance data protection regulatory requirements cloud service providers CSPs,-3.311,0.0,1
+main,q048,ooc,new,1,-3.12,GDPR compliance requirements cloud service providers data protection regulatory frameworks,-2.261,0.0,1
+main,q048,ooc,new,2,-3.12,GDPR compliance requirements cloud service providers data protection regulatory standards,-2.697,0.0,1
+main,q048,ooc,new,3,-3.12,GDPR compliance requirements cloud service providers data protection regulatory frameworks,-2.261,0.0,1
+main,q049,ooc,old,1,-9.639,clinical trials results,,0.0,0
+main,q049,ooc,old,2,-9.639,clinical trials results,,0.0,0
+main,q049,ooc,old,3,-9.639,clinical trials results,,0.0,0
+main,q049,ooc,new,1,-9.639,clinical trials results,,0.0,0
+main,q049,ooc,new,2,-9.639,clinical trials results,,0.0,0
+main,q049,ooc,new,3,-9.639,clinical trials results,,0.0,0
+main,q050,ooc,old,1,-5.053,GPU tensor core benchmark performance evaluation throughput latency Cloud Computing Distributed Systems,-1.083,0.0,1
+main,q050,ooc,old,2,-5.053,GPU tensor core benchmark performance evaluation throughput latency Cloud Computing Distributed Systems,-1.083,0.0,1
+main,q050,ooc,old,3,-5.053,GPU tensor core performance evaluation benchmarks throughput latency,-4.17,0.0,0
+main,q050,ooc,new,1,-5.053,GPU tensor core benchmark performance evaluation metrics throughput latency,-1.707,0.0,1
+main,q050,ooc,new,2,-5.053,GPU tensor core benchmark performance evaluation results,-3.943,0.0,0
+main,q050,ooc,new,3,-5.053,GPU Tensor Core performance benchmark evaluation metrics results,-4.093,0.0,0
+hard_old,h004,answerable,old,1,-5.498,cloud compliance regulatory governance data confidentiality access control auditing accountability,0.711,100.0,1
+hard_old,h004,answerable,old,2,-5.498,cloud data privacy compliance regulatory legal confidentiality access control auditing provenance,-0.773,100.0,1
+hard_old,h004,answerable,old,3,-5.498,regulatory compliance data privacy access control provenance auditability cloud computing,0.748,100.0,1
+hard_old,h004,answerable,new,1,-5.498,regulatory compliance data confidentiality access control auditing,-4.812,100.0,0
+hard_old,h004,answerable,new,2,-5.498,regulatory compliance data confidentiality access control auditing,-4.812,100.0,0
+hard_old,h004,answerable,new,3,-5.498,regulatory compliance privacy access control auditing,-8.177,100.0,0
+hard_old,h005,answerable,old,1,-3.391,comparative analysis cloud service delivery models IaaS PaaS SaaS characteristics trade-offs,-2.49,50.0,1
+hard_old,h005,answerable,old,2,-3.391,cloud computing service models IaaS PaaS SaaS comparison taxonomy classification,1.292,100.0,1
+hard_old,h005,answerable,old,3,-3.391,comparison cloud service models IaaS PaaS SaaS characteristics trade-offs,-0.629,50.0,1
+hard_old,h005,answerable,new,1,-3.391,comparative analysis service types models differences,-5.345,50.0,0
+hard_old,h005,answerable,new,2,-3.391,comparative analysis service models taxonomy classification differences,-9.824,50.0,0
+hard_old,h005,answerable,new,3,-3.391,service models comparative analysis difference evaluation taxonomy,-8.876,50.0,0
+hard_old,h008,answerable,old,1,-6.236,geographic price differentiation cloud computing resources regional pricing models,-3.442,100.0,1
+hard_old,h008,answerable,old,2,-6.236,cloud computing regional pricing price disparity geographic variation data center operational costs,-2.732,100.0,1
+hard_old,h008,answerable,old,3,-6.236,cloud computing regional price disparity geographic pricing variation data center infrastructure costs,-2.616,100.0,1
+hard_old,h008,answerable,new,1,-6.236,cloud pricing regional price disparity geographic cost variance data center locations resource pricing models,-5.531,100.0,0
+hard_old,h008,answerable,new,2,-6.236,spatial price dispersion geographic pricing differences cost variations across locations,-10.484,100.0,0
+hard_old,h008,answerable,new,3,-6.236,geographic pricing price dispersion cost variation cross-region cloud services resources,-4.414,100.0,0
+hard_old,h009,answerable,old,1,-5.331,"contributions of this work"" OR ""our contributions"" OR ""we make the following contributions"" cloud distributed system architecture design implementation evaluation",-0.775,100.0,1
+hard_old,h009,answerable,old,2,-5.331,"our contributions"" OR ""contributions of this paper"" OR ""in this paper we contribute"" distributed systems cloud computing architecture",-0.403,100.0,1
+hard_old,h009,answerable,old,3,-5.331,"our contributions"" OR ""in this paper we contribute"" distributed systems cloud computing system architecture",0.072,50.0,1
+hard_old,h009,answerable,new,1,-5.331,paper contributions author claims research contributions system architecture novel contributions,-8.266,100.0,0
+hard_old,h009,answerable,new,2,-5.331,"our contributions"" paper contributions system design",-2.544,100.0,1
+hard_old,h009,answerable,new,3,-5.331,"paper contributions ""our contributions"" system paper summary",-3.476,100.0,1
+hard_old,h012,answerable,old,1,-8.01,implementation details delta extensions design modifications architectural differences baseline evaluation comparison,-8.692,0.0,0
+hard_old,h012,answerable,old,2,-8.01,system implementation details architectural extensions enhancements baseline model comparative analysis,-6.203,0.0,0
+hard_old,h012,answerable,old,3,-8.01,implementation extensions differences optimizations architectural delta reference architecture baseline specification,-8.776,0.0,0
+hard_old,h012,answerable,new,1,-8.01,implementation extensions modifications baseline design high-level specification comparative evaluation,-7.306,0.0,0
+hard_old,h012,answerable,new,2,-8.01,concrete implementation extensions architectural differences high-level design specification comparison,-5.818,0.0,0
+hard_old,h012,answerable,new,3,-8.01,implementation details extensions optimizations comparative analysis baseline specification prior work,-5.811,0.0,0
+hard_old,h015,answerable,old,1,-4.992,data locality disaggregated storage compute separation performance overhead distributed systems cloud computing,1.656,66.7,1
+hard_old,h015,answerable,old,2,-4.992,data locality disaggregated storage compute separation performance tradeoff distributed systems,1.357,66.7,1
+hard_old,h015,answerable,old,3,-4.992,data locality disaggregated storage compute separation performance trade-offs distributed systems,1.803,66.7,1
+hard_old,h015,answerable,new,1,-4.992,data locality compute storage disaggregation performance benefits,5.597,66.7,1
+hard_old,h015,answerable,new,2,-4.992,data locality disaggregated storage compute separation performance relevance,3.49,66.7,1
+hard_old,h015,answerable,new,3,-4.992,data locality compute storage disaggregation relevance performance trade-offs,1.621,66.7,1
+hard_old,h016,answerable,old,1,-9.368,legacy system architectural pitfalls design anti-patterns cautionary case studies distributed systems lessons learned,-3.047,33.3,1
+hard_old,h016,answerable,old,2,-9.368,legacy system anti-patterns cautionary tale failure modes distributed systems architectural pitfalls design trade-offs lessons learned,-5.66,0.0,0
+hard_old,h016,answerable,old,3,-9.368,legacy system pitfalls cautionary lessons anti-patterns limitations distributed systems architecture,-3.131,33.3,1
+hard_old,h016,answerable,new,1,-9.368,legacy system limitations pitfalls failure modes lessons learned anti-pattern architectural drawbacks,-7.118,66.7,0
+hard_old,h016,answerable,new,2,-9.368,legacy system limitations cautionary comparative analysis pitfalls architectural failure lessons learned,-7.072,66.7,0
+hard_old,h016,answerable,new,3,-9.368,legacy system architectural pitfalls lessons learned design anti-patterns failure modes,-8.934,66.7,0
+hard_new,h112,answerable,old,1,-3.888,pricing models serverless cloud computing vs traditional infrastructure as a service pay-as-you-go cost comparison,3.655,66.7,1
+hard_new,h112,answerable,old,2,-3.888,pricing models cost comparison serverless cloud computing traditional infrastructure on-demand pay-per-use provisioned resources,1.924,100.0,1
+hard_new,h112,answerable,old,3,-3.888,cloud computing pricing models cost comparison on-demand pay-as-you-go traditional infrastructure capital expenditure operational expenditure,1.731,33.3,1
+hard_new,h112,answerable,new,1,-3.888,cloud computing serverless on-premises pricing models cost comparison pay-as-you-go capital expenditure operational expenditure,3.005,66.7,1
+hard_new,h112,answerable,new,2,-3.888,pricing models cost comparison serverless cloud computing traditional on-premise infrastructure pay-as-you-go provisioning,2.048,100.0,1
+hard_new,h112,answerable,new,3,-3.888,pricing models cloud computing on-premises cost comparison pay-as-you-go capital expenditure operational expenditure,2.682,33.3,1
+hard_new,h129,answerable,old,1,-3.809,emerging applications workload characteristics cloud computing distributed systems performance requirements challenges,4.198,0.0,1
+hard_new,h129,answerable,old,2,-3.809,emerging applications high performance computing cloud distributed systems state of the art workloads,2.292,66.7,1
+hard_new,h129,answerable,old,3,-3.809,emerging cloud computing applications distributed systems cutting-edge workloads use cases benchmark requirements,1.579,66.7,1
+hard_new,h129,answerable,new,1,-3.809,emerging frontier demanding workloads applications,-7.264,0.0,0
+hard_new,h129,answerable,new,2,-3.809,emerging data-intensive compute-intensive applications workloads requirements challenges limitations,-0.246,33.3,1
+hard_new,h129,answerable,new,3,-3.809,applications pushing the envelope limits state of the art,-6.812,66.7,0
+hard_new,h141,answerable,old,1,-3.138,scalability challenges pricing models software monetization cloud computing distributed systems,3.218,100.0,1
+hard_new,h141,answerable,old,2,-3.138,scalability challenges elastic scaling software monetization pricing models cloud economics billing mechanisms distributed systems,1.091,100.0,1
+hard_new,h141,answerable,old,3,-3.138,scalability challenges software pricing models monetization cloud computing distributed systems solutions,3.3,100.0,1
+hard_new,h141,answerable,new,1,-3.138,scalability solutions software pricing models monetization challenges,-2.318,100.0,1
+hard_new,h141,answerable,new,2,-3.138,scalability challenges pricing models cost optimization licensing models monetization solutions,-4.821,100.0,0
+hard_new,h141,answerable,new,3,-3.138,scalability challenges software monetization pricing models solutions,-2.245,100.0,1
+hard_new,h142,answerable,old,1,-5.311,rapid elasticity scalability challenges Software as a Service SaaS pricing business models cloud computing,2.077,66.7,1
+hard_new,h142,answerable,old,2,-5.311,rapid scalability challenges software monetization pricing models cloud computing distributed systems,2.863,100.0,1
+hard_new,h142,answerable,old,3,-5.311,rapid scalability challenges software monetization pricing models SaaS,-1.022,33.3,1
+hard_new,h142,answerable,new,1,-5.311,rapid elasticity scalability challenges software licensing pricing models,0.907,100.0,1
+hard_new,h142,answerable,new,2,-5.311,rapid scalability issues software licensing software as a service pricing models monetization solutions,-3.077,100.0,1
+hard_new,h142,answerable,new,3,-5.311,rapid scalability elasticity challenges software licensing pricing models SaaS monetization,-0.67,100.0,1
+hard_new,h146,answerable,old,1,-6.967,serverless function FaaS migration portability vendor lock-in misconception initiative standardization interoperability,2.767,100.0,1
+hard_new,h146,answerable,old,2,-6.967,serverless function migration vendor lock-in portability misconception standard initiative,3.182,100.0,1
+hard_new,h146,answerable,old,3,-6.967,serverless function portability multi cloud migration misconception interoperability standardization initiative,0.897,100.0,1
+hard_new,h146,answerable,new,1,-6.967,serverless function portability across cloud providers misconception initiative interoperability migration,2.837,100.0,1
+hard_new,h146,answerable,new,2,-6.967,serverless function portability misconception initiative multi-cloud FaaS migration,0.105,100.0,1
+hard_new,h146,answerable,new,3,-6.967,serverless function portability multi-provider migration misconceptions standardization initiatives,2.27,100.0,1
+hard_new,h157,answerable,old,1,-3.01,distributed data stream processing counting mechanisms stateful aggregation metrics implementation architecture,-3.92,0.0,0
+hard_new,h157,answerable,old,2,-3.01,distributed data stream processing counting mechanisms stateful aggregation algorithms cardinality estimation sketch telemetry,-7.771,0.0,0
+hard_new,h157,answerable,old,3,-3.01,distributed data stream processing aggregation counting algorithms architecture state management,-3.545,0.0,1
+hard_new,h157,answerable,new,1,-3.01,distributed data processing framework metrics counter aggregation mechanism architecture implementation,-0.506,0.0,1
+hard_new,h157,answerable,new,2,-3.01,distributed data processing counter metrics aggregation mechanism implementation architecture,-2.438,100.0,1
+hard_new,h157,answerable,new,3,-3.01,data processing framework counting mechanisms aggregation state management algorithms metrics counters implementation,-4.809,0.0,0
+hard_new,h158,answerable,old,1,-4.639,aggregation count distinct stateful stream processing distributed data flow operator implementation,-4.98,0.0,0
+hard_new,h158,answerable,old,2,-4.639,count aggregation stream processing distributed data system architecture implementation,-1.289,0.0,1
+hard_new,h158,answerable,old,3,-4.639,distributed data stream processing aggregation counting mechanism architecture,-2.863,0.0,1
+hard_new,h158,answerable,new,1,-4.639,data processing system counter aggregation operation mechanism implementation design,0.224,100.0,1
+hard_new,h158,answerable,new,2,-4.639,data processing system count aggregation operation mechanism implementation architecture,-1.28,0.0,1
+hard_new,h158,answerable,new,3,-4.639,data processing system counter mechanism aggregation operator execution model architecture,-3.353,100.0,1
+near_ooc,n010,near,old,1,-2.809,Knative serverless enterprise adoption deployment evaluation challenges trends,4.268,0.0,1
+near_ooc,n010,near,old,2,-2.809,Knative serverless enterprise adoption deployment challenges production evaluation,2.073,0.0,1
+near_ooc,n010,near,old,3,-2.809,Knative serverless container orchestration enterprise deployment adoption challenges trends Kubernetes,3.235,0.0,1
+near_ooc,n010,near,new,1,-2.809,Knative enterprise adoption current state evaluation production deployment challenges trends,-2.986,0.0,1
+near_ooc,n010,near,new,2,-2.809,Knative enterprise adoption production deployment industrial use cases current trends,-0.707,0.0,1
+near_ooc,n010,near,new,3,-2.809,Knative enterprise adoption current trends challenges production deployment,-0.415,0.0,1
+near_ooc,n027,near,old,1,-2.898,edge computing cloud computing real-time video analytics processing latency reduction performance evaluation comparison,-1.294,0.0,1
+near_ooc,n027,near,old,2,-2.898,edge computing cloud computing real-time video analytics latency comparison performance evaluation delay reduction,-2.491,0.0,1
+near_ooc,n027,near,old,3,-2.898,edge computing cloud computing real-time video analytics processing latency reduction performance comparison evaluation,-1.305,0.0,1
+near_ooc,n027,near,new,1,-2.898,edge computing cloud computing real-time video processing latency reduction comparison evaluation,-0.721,0.0,1
+near_ooc,n027,near,new,2,-2.898,latency reduction edge computing cloud real-time video analytics processing performance comparison,0.185,0.0,1
+near_ooc,n027,near,new,3,-2.898,latency reduction edge computing cloud real-time video analytics processing performance comparison,0.185,0.0,1
+near_ooc,n033,near,old,1,-4.447,OpenStack cloud operating system architecture design principles Infrastructure as a Service IaaS framework,0.637,0.0,1
+near_ooc,n033,near,old,2,-4.447,OpenStack cloud operating system architecture design principles Infrastructure as a Service IaaS foundational concepts,-0.171,0.0,1
+near_ooc,n033,near,old,3,-4.447,OpenStack cloud operating system architectural design principles framework Infrastructure as a Service IaaS,0.152,0.0,1
+near_ooc,n033,near,new,1,-4.447,OpenStack cloud operating system architectural design principles core concepts,-2.98,0.0,1
+near_ooc,n033,near,new,2,-4.447,OpenStack cloud operating system architecture design principles core concepts,-1.851,0.0,1
+near_ooc,n033,near,new,3,-4.447,OpenStack cloud operating system architecture design principles core concepts,-1.851,0.0,1
+near_ooc,n090,near,old,1,-7.334,Open Container Initiative container runtime image specification architecture execution model virtualization,-0.289,0.0,1
+near_ooc,n090,near,old,2,-7.334,Open Container Initiative architecture container runtime specification image format specification execution model,-2.199,0.0,1
+near_ooc,n090,near,old,3,-7.334,Open Container Initiative OCI container runtime image specification architecture virtualization mechanism,-0.374,0.0,1
+near_ooc,n090,near,new,1,-7.334,Open Container Initiative runtime image specification architecture execution model,-0.867,0.0,1
+near_ooc,n090,near,new,2,-7.334,Open Container Initiative runtime specification image specification containerization architecture operational principles,-2.207,0.0,1
+near_ooc,n090,near,new,3,-7.334,Open Container Initiative architecture execution model runtime specification,-0.406,0.0,1
