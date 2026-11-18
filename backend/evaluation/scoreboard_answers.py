@@ -87,6 +87,10 @@ CONTROL χωρίς Gemini: η κρίση της 11/8 μέσα από τη σύν
 με το eval_tables.check (ίδιες αποδεκτές παραλλαγές με την 13/8). Αποτυχία = «σύνθεση» αν ήρθε η
 ΣΕΛΙΔΑ του πίνακα (doc+page του σετ), αλλιώς «ανάκτηση» — το eval_tables έκρινε με κάλυψη λέξεων.
 CONTROL χωρίς Gemini: το runs/tables.csv (13/8) μέσα από τη σύνοψη -> 16/16, 69/69 ✓.
+ΑΥΣΤΗΡΟΣ ΕΛΕΓΧΟΣ (18/11/2026, table_scoring, πεδίο `facts`): τιμή ως ολόκληρος αριθμός + μονάδα +
+γραμμή/στήλη. Γράφεται ΔΙΠΛΑ στον παλιό (strict_ok/strict_total/strict_verdict)· ο παλιός έδινε 2/2
+και στο «9000 seconds and 10.5 GB». Baseline (answers_baseline_tables): 60/60, όσο και ο έλεγχος με
+το χέρι απέναντι στα PDF.
 Προϋπόθεση: οι πίνακες στον πίνακα βάσης (scoreboard.py, 8ο σετ από 28/9).
 ΚΟΣΤΟΣ: 16 γεννήσεις, ~0.09 $, ~3 λεπτά.
 
@@ -707,6 +711,11 @@ def summarize_tables(rows: list[dict]) -> dict:
           "target": sum(r["target"] or 0 for r in ok),
           "values_ok": sum(r["values_ok"] for r in ok),
           "values_total": sum(r["values_total"] for r in ok),
+          # αυστηρός έλεγχος· παλιά αρχεία (χωρίς strict_*) δίνουν None αντί για ψεύτικο 0
+          "strict_ok": (sum(int(r["strict_ok"]) for r in ok)
+                        if ok and all(r.get("strict_ok") not in (None, "") for r in ok) else None),
+          "strict_total": sum(int(r.get("strict_total") or 0) for r in ok),
+          "strict_correct": sum(r.get("strict_verdict") == "σωστή" for r in ok),
           "by_shape": {s: {"n": sum(r["shape"] == s for r in ok),
                            "ok": sum(r["shape"] == s and r["verdict"] == "σωστή" for r in ok)}
                        for s in sorted({r["shape"] for r in ok})}}
@@ -727,6 +736,11 @@ def print_summary_tables(sm: dict, prev: dict | None) -> None:
           f"({100 * sm['values_ok'] / max(sm['values_total'], 1):.1f}%) · ήρθε η σελίδα του πίνακα "
           f"{sm['target']}/{sm['n']} · tokens εξόδου (διάμεσος) {sm['out_tokens_median']}"
           + (f"      πριν: τιμές {prev['values_ok']}/{prev['values_total']}" if prev else ""))
+    if sm.get("strict_ok") is not None:
+        print(f"ΑΥΣΤΗΡΟΣ έλεγχος (τιμή + μονάδα + γραμμή/στήλη): πλήρως σωστές "
+              f"{sm['strict_correct']}/{sm['n']} · τιμές {sm['strict_ok']}/{sm['strict_total']}"
+              + (f"      πριν: {prev['strict_ok']}/{prev['strict_total']}"
+                 if prev and prev.get("strict_ok") is not None else ""))
     print("σωστές ανά μορφή πίνακα: " + " · ".join(f"{s} {d['ok']}/{d['n']}"
                                                    for s, d in sm["by_shape"].items()))
     print("#" * 96)
@@ -820,8 +834,9 @@ async def run(args) -> int:
     import eval_engine
     calculate_mrr, calculate_ndcg = eval_engine.calculate_mrr, eval_engine.calculate_ndcg
     if tables:
-        # ΙΔΙΑ συνάρτηση ελέγχου τιμών με την 13/8
+        # ΙΔΙΑ συνάρτηση ελέγχου τιμών με την 13/8, και δίπλα ο αυστηρός (18/11)
         import eval_tables as T
+        import table_scoring as TS
 
     sdk_call = None
     if near:
@@ -900,6 +915,12 @@ async def run(args) -> int:
                     "missing": "|".join((v[0] if isinstance(v, list) else str(v))
                                         for v, f in zip(t["expected"], found) if not f),
                     "verdict": table_verdict(sum(found), len(found), row["target"])}
+            if t.get("facts"):
+                strict = TS.check_strict(answer, t["facts"])
+                row |= {"strict_ok": sum(strict), "strict_total": len(strict),
+                        "strict_missing": "|".join(str(f.get("value", f.get("text")))
+                                                   for f, ok in zip(t["facts"], strict) if not ok),
+                        "strict_verdict": table_verdict(sum(strict), len(strict), row["target"])}
         else:
             try:
                 if mh:
@@ -925,6 +946,10 @@ async def run(args) -> int:
             row.setdefault("values_total", len(t["expected"]))
             row.setdefault("missing", "")
             row.setdefault("verdict", "")
+            row.setdefault("strict_ok", 0)
+            row.setdefault("strict_total", len(t.get("facts", [])))
+            row.setdefault("strict_missing", "")
+            row.setdefault("strict_verdict", "")
         else:
             for s in SCORES:
                 row.setdefault(s, None)
