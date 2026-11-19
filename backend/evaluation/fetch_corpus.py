@@ -9,8 +9,13 @@ from pathlib import Path
 import requests
 
 
-def fetch(destination: Path):
-    sources = json.loads(Path(__file__).with_name("corpus_sources.json").read_text(encoding="utf-8"))
+def fetch(destination: Path, sources_path: Path | None = None, pin: bool = False):
+    """sources_path: default το corpus_sources.json (7 άρθρα cloud)· το heldout_sources.json για το κλειστό
+    σετ (19/11/2026). pin: άρθρο με "sha256": null κατεβαίνει ΜΙΑ φορά και το SHA-256 του γράφεται πίσω
+    στο αρχείο πηγών -> από εκεί και πέρα κάθε λήψη ελέγχεται απέναντί του (commit το αρχείο)."""
+    sources_path = sources_path or Path(__file__).with_name("corpus_sources.json")
+    sources = json.loads(sources_path.read_text(encoding="utf-8"))
+    pinned_now = []
     destination.mkdir(parents=True, exist_ok=True)
     manifest_path = destination / "download_manifest.json"
     manifest = json.loads(manifest_path.read_text(encoding="utf-8")) if manifest_path.exists() else {}
@@ -41,6 +46,11 @@ def fetch(destination: Path):
             digest = hashlib.sha256(content).hexdigest()
         if not content.startswith(b"%PDF-"):
             raise ValueError(f"Not a PDF: {name}")
+        if source.get("sha256") is None:
+            if not pin:
+                raise ValueError(f"Unpinned source (no sha256): {name} — run once with --pin")
+            source["sha256"] = digest
+            pinned_now.append(name)
         if digest != source["sha256"]:
             raise ValueError(f"Publisher file differs from the pinned corpus: {name}")
         if not target.exists():
@@ -50,6 +60,9 @@ def fetch(destination: Path):
                           "checked_utc": datetime.now(UTC).isoformat()}
         manifest_path.write_text(json.dumps(manifest, indent=2), encoding="utf-8")
         print(f"Verified {name}: {len(content)} bytes", flush=True)
+    if pinned_now:
+        sources_path.write_text(json.dumps(sources, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
+        print(f"Pinned {len(pinned_now)} new sources in {sources_path.name}: {', '.join(pinned_now)}")
     return manifest
 
 
@@ -57,4 +70,9 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--destination", type=Path,
                         default=Path(__file__).parent / "test_papers" / "cloud")
-    fetch(parser.parse_args().destination)
+    parser.add_argument("--sources", type=Path, default=None,
+                        help="sources JSON (default: corpus_sources.json; held-out: heldout_sources.json)")
+    parser.add_argument("--pin", action="store_true",
+                        help="record the SHA-256 of sources that have none yet (first download only)")
+    args = parser.parse_args()
+    fetch(args.destination, args.sources, args.pin)
