@@ -281,6 +281,28 @@ def test_expand_to_pages_preserves_doc_id(monkeypatch):
     assert meta.get("page") == 1
 
 
+def test_expand_to_pages_keeps_the_chunk_that_found_the_page(monkeypatch):
+    """19/11/2026: το UI δείχνει το chunk που ΕΦΕΡΕ τη σελίδα (μέγιστος βαθμός), όχι την αρχή της.
+    Το κείμενο της σελίδας (αυτό που πάει στο prompt) μένει ΑΚΡΙΒΩΣ ίδιο."""
+    ids = ["x_p1_c0_a", "x_p1_c1_b"]
+    texts = ["Introduction words.", "The finding: latency 303 ms."]
+    metas = [{"file_name": "paper.pdf", "page": 1, "doc_id": 7}] * 2
+    monkeypatch.setattr(ai_core, "collection", _StubCollection(ids, texts, metas))
+    m = {"file_name": "paper.pdf", "page": 1, "doc_id": 7}
+    top_chunks = [(0.4, "Introduction words.", m), (2.9, "The finding: latency 303 ms.", m)]
+    (page_text, meta), = ai_core._expand_to_pages(top_chunks, max_pages=1, user_id=1)
+    assert page_text == "Introduction words.\nThe finding: latency 303 ms."
+    assert meta["hit"] == "The finding: latency 303 ms."
+    assert ai_core._source_preview(page_text, meta["hit"]) == "The finding: latency 303 ms."
+
+
+def test_source_preview_falls_back_and_cuts_on_a_word():
+    assert ai_core._source_preview("Page start text.") == "Page start text."
+    long = "word " * 300
+    out = ai_core._source_preview(long, None)
+    assert out.endswith("…") and len(out) <= ai_core.PREVIEW_CHARS + 1 and "  " not in out
+
+
 def test_translation_cache_respects_domain_terms_and_model(monkeypatch):
     """Το translation cache λαμβάνει υπόψη domain, όρους και μοντέλο (όχι μόνο το query)."""
     import gemini_rest

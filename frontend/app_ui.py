@@ -194,30 +194,62 @@ def delete_doc_callback(doc_id, token):
         st.session_state["flash_error"] = "Could not delete the document."
 
 
-def render_sources(sources):
-    """Πηγές με preview αποσπάσματος. Συμβατό και με ΠΑΛΙΑ μηνύματα όπου οι
-    πηγές ήταν σκέτα strings (backward compatibility)."""
+_CITE_GROUP = re.compile(r"\[([^\]]+)\]")
+_CITE_LABEL = re.compile(r"\bS\d+\b")
+
+
+def cited_labels(answer: str | None) -> set:
+    """Οι ετικέτες που παραθέτει ΠΡΑΓΜΑΤΙΚΑ η απάντηση: «[S1]», «[S1, S3]», «[S2][S4]»."""
+    return {lab for group in _CITE_GROUP.findall(answer or "") for lab in _CITE_LABEL.findall(group)}
+
+
+def _render_source_item(i, src):
+    if isinstance(src, dict):
+        # Η ετικέτα έρχεται από τον server και είναι ΑΥΤΗ που γράφει η
+        # απάντηση μέσα στο κείμενο. Το enumerate μένει ΜΟΝΟ ως fallback
+        # για παλιά αποθηκευμένα μηνύματα: αριθμεί ΜΕΤΑ το dedup, οπότε
+        # θα έδειχνε [2] για μια παραπομπή που λέει [S3].
+        label = src.get("label") or f"{i + 1}"
+        st.caption(f"**[{label}]** {src.get('file')} — Page {src.get('page')}")
+        preview = src.get("preview")
+        if preview:
+            st.markdown(
+                "<div style='border-left:2px solid #ff4b4b; padding:4px 10px; "
+                "margin:2px 0 10px; color:#9aa0ac; font-size:0.85em;'>"
+                f"{html.escape(preview)}</div>",
+                unsafe_allow_html=True,
+            )
+    else:
+        st.caption(f"**[{i + 1}]** {src}")
+
+
+def render_sources(sources, answer: str | None = None):
+    """Πηγές με preview αποσπάσματος. Από 19/11/2026 το preview είναι το κομμάτι που ΕΦΕΡΕ τη σελίδα
+    (ai_core._source_preview)· σε παλιά μηνύματα είναι η αρχή της σελίδας. Συμβατό και με ΠΑΛΙΑ
+    μηνύματα όπου οι πηγές ήταν σκέτα strings (backward compatibility).
+
+    Οι σελίδες που ΔΟΘΗΚΑΝ στο μοντέλο (έως 8) ≠ αυτές που η απάντηση ΠΑΡΕΘΕΣΕ: πρώτα οι
+    παρατεθειμένες, οι υπόλοιπες χωριστά (19/11/2026· ήταν εύρημα και της αξιολόγησης 31/10)."""
     if not sources:
         return
-    with st.expander(f"📚 Sources ({len(sources)})"):
-        for i, src in enumerate(sources):
-            if isinstance(src, dict):
-                # Η ετικέτα έρχεται από τον server και είναι ΑΥΤΗ που γράφει η
-                # απάντηση μέσα στο κείμενο. Το enumerate μένει ΜΟΝΟ ως fallback
-                # για παλιά αποθηκευμένα μηνύματα: αριθμεί ΜΕΤΑ το dedup, οπότε
-                # θα έδειχνε [2] για μια παραπομπή που λέει [S3].
-                label = src.get("label") or f"{i + 1}"
-                st.caption(f"**[{label}]** {src.get('file')} — Page {src.get('page')}")
-                preview = src.get("preview")
-                if preview:
-                    st.markdown(
-                        "<div style='border-left:2px solid #ff4b4b; padding:4px 10px; "
-                        "margin:2px 0 10px; color:#9aa0ac; font-size:0.85em;'>"
-                        f"{html.escape(preview)}</div>",
-                        unsafe_allow_html=True,
-                    )
-            else:
-                st.caption(f"**[{i + 1}]** {src}")
+    cited = cited_labels(answer)
+    if answer is None or not all(isinstance(s, dict) for s in sources):
+        with st.expander(f"📚 Sources ({len(sources)})"):
+            for i, src in enumerate(sources):
+                _render_source_item(i, src)
+        return
+    used = [s for s in sources if s.get("label") in cited]
+    rest = [s for s in sources if s.get("label") not in cited]
+    if used:
+        with st.expander(f"📚 Cited in the answer ({len(used)})"):
+            for i, src in enumerate(used):
+                _render_source_item(i, src)
+    if rest:
+        title = (f"📄 Other pages searched ({len(rest)})" if used
+                 else f"📄 Pages searched ({len(rest)}) — none cited in the answer")
+        with st.expander(title):
+            for i, src in enumerate(rest):
+                _render_source_item(i, src)
 
 
 def render_metrics(m, total_s=None):
@@ -533,7 +565,7 @@ def app_main(token):
                     and last.get("conv_id") == st.session_state.current_conv_id
                 ):
                     render_metrics(last["metrics"], last["total_s"])
-                render_sources(sources)
+                render_sources(sources, message.get("content", ""))
 
                 # Feedback ΜΟΝΟ στις απαντήσεις του AI — στέλνεται πραγματικά στο backend.
                 # disabled όσο streamάρει: ένα κλικ εδώ = rerun -> κόβει την απάντηση.
@@ -774,10 +806,12 @@ def app_main(token):
                     message_placeholder.empty()
                     yield f"⚠️ Ο server δεν αποκρίνεται: {e}"
 
-            st.write_stream(stream_backend_response())
+            answer_text = st.write_stream(stream_backend_response())
+            if not isinstance(answer_text, str):     # write_stream επιστρέφει λίστα αν δεν είναι όλα str
+                answer_text = "".join(str(x) for x in (answer_text or []))
             total_s = time.perf_counter() - t_start
             render_metrics(metrics_data, total_s)
-            render_sources(sources_data)
+            render_sources(sources_data, answer_text)
             st.session_state.last_metrics = {
                 "conv_id": st.session_state.current_conv_id,
                 "metrics": metrics_data,

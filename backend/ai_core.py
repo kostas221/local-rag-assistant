@@ -897,6 +897,20 @@ def _rrf_fuse(
     return [(s, t, m) for s, _id, t, m in fused[:top_n]]
 
 
+PREVIEW_CHARS = 600
+
+
+def _source_preview(page_text: str, hit: str | None = None) -> str:
+    """Απόσπασμα πηγής για το UI: το chunk που ΕΦΕΡΕ τη σελίδα (το «hit» του _expand_to_pages),
+    όχι οι πρώτοι χαρακτήρες της σελίδας — το εύρημα μπορεί να είναι στην τελευταία παράγραφο
+    (19/11/2026). Χωρίς hit (π.χ. παλιές/παγωμένες σελίδες) -> η αρχή της σελίδας, όπως πριν."""
+    text = " ".join((hit or page_text or "").split())
+    if len(text) <= PREVIEW_CHARS:
+        return text
+    cut = text[:PREVIEW_CHARS].rsplit(" ", 1)[0]
+    return cut + "…"
+
+
 def _chunk_idx_from_id(chunk_id: str) -> int:
     """Βγάζει το chunk index από το ID (μορφή '..._p{page}_c{idx}_{uuid}') ώστε
     να ανασυνθέσουμε τη σελίδα με τη ΣΩΣΤΗ σειρά. Χωρίς re-ingest."""
@@ -921,9 +935,14 @@ def _expand_to_pages(top_chunks, max_pages: int = 8, user_id: int | None = None)
     # top_chunks έρχονται ήδη φθίνουσα κατά rerank score, το dict κρατάει σειρά
     # εισαγωγής και το sorted() είναι stable -> ίδια σειρά, ίδιες ισοπαλίες.
     by_page = {}
-    for score, _text, meta in top_chunks:
+    # Το chunk με τον ΥΨΗΛΟΤΕΡΟ βαθμό ανά σελίδα: αυτό έφερε τη σελίδα. Πηγαίνει στο meta ως «hit»
+    # ΜΟΝΟ για το UI (19/11/2026) — το prompt μένει ολόκληρη η σελίδα, άρα οι απαντήσεις δεν αλλάζουν.
+    best_hit = {}
+    for score, text, meta in top_chunks:
         key = (meta.get("doc_id"), meta.get("page"), meta.get("file_name"))
         by_page.setdefault(key, []).append(float(score))
+        if key not in best_hit or float(score) > best_hit[key][0]:
+            best_hit[key] = (float(score), text)
 
     ranked = sorted(
         by_page.items(),
@@ -962,7 +981,11 @@ def _expand_to_pages(top_chunks, max_pages: int = 8, user_id: int | None = None)
             continue
         ordered = sorted(zip(pg["ids"], pg["documents"]), key=lambda p: _chunk_idx_from_id(p[0]))
         page_text = "\n".join(doc for _, doc in ordered)
-        results.append((page_text, {"file_name": file_name, "page": page, "doc_id": doc_id}))
+        meta = {"file_name": file_name, "page": page, "doc_id": doc_id}
+        hit = best_hit.get((doc_id, page, file_name))
+        if hit and hit[1]:
+            meta["hit"] = hit[1]
+        results.append((page_text, meta))
     return results
 
 
@@ -1400,7 +1423,7 @@ async def ask_ai(
                 "file": file_n,
                 "page": page_n,
                 "doc_id": doc_id,
-                "preview": text[:400] + ("…" if len(text) > 400 else ""),
+                "preview": _source_preview(text, meta.get("hit")),
             }
         )
 
