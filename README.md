@@ -2,21 +2,21 @@
 
 [![tests](https://github.com/kostas221/local-rag-assistant/actions/workflows/ci.yml/badge.svg)](https://github.com/kostas221/local-rag-assistant/actions/workflows/ci.yml)
 
-A **RAG system for scientific papers**: upload PDFs, ask in Greek or English, get answers with page-level citations — and a plain *"not found"* when the papers don't contain the answer. Retrieval runs locally on CPU (bge-m3 + BM25 + cross-encoder); Gemini 2.5 Flash writes the answer.
+A **RAG system for scientific papers**: upload PDFs, ask in Greek or English, get answers with page-level citations — and a plain *"not found"* when the papers don't contain the answer. Retrieval runs locally on CPU (bge-m3 + BM25 + cross-encoder); Gemini 3.8 Flash writes the answer.
 
-Built as a diploma thesis, then pushed further under one rule: **no change without a measurement on this project's own data** — including changes that the literature says should work.
+Built as a diploma thesis, then pushed further under one rule: **no change without a measurement on this project's own data** — including changes that the literature says should work. Every decision rule is written down *before* the run it judges.
 
-> **Measured, not eyeballed** — 235 hand-checked questions over 7 papers, graded by two judges from two vendors:
+> **Measured, not eyeballed** — 235 hand-checked questions over 7 papers. Current system (`gemini-3.8-flash`, 18–19 Nov 2026), graded by GPT-4.1 against reference answers, next to the previous model graded by the same judge:
 >
-> | Test set | Result |
-> |---|---|
-> | Standard questions answered correctly | **42 / 45** |
-> | Off-topic questions declined | **5 / 5** |
-> | Near-miss questions declined (related to the papers, but not answerable from them) | **40 / 42** |
-> | Questions that need two papers — both halves right | **17 / 29** (was 7 before per-document search) |
-> | Tables — exact values read correctly | **69 / 69** |
+> | Test set | 3.8 Flash (now) | 2.5 Flash (Sep 2026) |
+> |---|---|---|
+> | Standard questions answered correctly | **45 / 45** | 42 / 45 |
+> | Off-topic questions — the answer declines | **5 / 5** | 5 / 5 |
+> | Near-miss questions declined (related to the papers, but not answerable from them) | **42 / 42** | 40 / 42 |
+> | Questions that need two papers — both halves right | **24 / 29** | 18 / 29 |
+> | Tables — exact values, and value + unit + row/column | **69 / 69 · 60 / 60** | 69 / 69 · 60 / 60 |
 >
-> Graded by Gemini and, independently, by GPT-4.1 against reference answers — the two judges agree on 95–100% of verdicts. The main components were measured against alternatives before they were kept — and 20+ ideas were [rejected with numbers](#rejected-with-numbers).
+> The two-paper gain is beyond noise (10 halves won, 2 lost, p = 0.039); the rest is a single draw — 3.8 accepts no `temperature`. One pre-registered bar was **not** met: on 3.8 the retrieval gate itself silences only 3 of the 5 off-topic questions; the other two are declined by the answer ([why, and three fixes that failed](#known-limitations)). The main components were measured against alternatives before they were kept — and 20+ ideas were [rejected with numbers](#rejected-with-numbers).
 
 ## Demo
 
@@ -26,17 +26,18 @@ Built as a diploma thesis, then pushed further under one rule: **no change witho
 
 ## Two judges — and the one that was wrong
 
-Answers are graded by **two LLM judges from two vendors**: Gemini (judge 1, used throughout the project) and GPT-4.1 (judge 2), which grades **against the reference answer only**. On this system's answers they agree on 95% of two-paper halves (κ = 0.86), 100% of near-miss verdicts and 41 of 42 standard questions — so the scores are not one model grading its own family.
+Answers were graded by **two LLM judges from two vendors**: Gemini 2.5 Flash (judge 1, used until October 2026) and GPT-4.1 (judge 2), which grades **against the reference answer only**. On this system's answers they agreed on 95% of two-paper halves (κ = 0.86), 100% of near-miss verdicts and 41 of 42 standard questions — so the scores are not one model grading its own family. In November 2026 judge 1 stopped being available to the project's API key (`gemini-2.5-flash` returns 404 and is redirected from 1 Dec 2026), so judge 2 — whose verdicts on the old answers were cached — is now the common judge for old and new answers.
 
 Judge 2 exists because judge 1 turned out to be wrong in a specific way. While testing simpler retrieval set-ups, the answer judge used since v1 gave **5/5/5/5 to *"I cannot find the answer … in the provided source text"*** on questions whose answer *is* in the papers, whenever retrieval had missed the page. Its criteria are relative to the retrieved context, so a failed search followed by an honest refusal looks perfect. The rule was corrected — a refusal on an answerable question is not a perfect answer — and the reference-only judge was added to check it. A context-relative judge is fine for comparing configurations of *one* retriever; across retrievers it rewards the worse one.
 
 ```bash
-python backend/evaluation/compare_judge2.py      # judge 2 on the host; every verdict is cached and committed
+python backend/evaluation/compare_judge2.py                # judge 2 on the host; every verdict is cached and committed
+python backend/evaluation/compare_judge2.py --add g38b     # the 3.8 Flash answers, next to the stored ones
 ```
 
 ## Why retrieve at all? Against "just put all the PDFs in the prompt"
 
-The 7 papers are ~132k tokens and fit in Gemini's context window, so the obvious question is why retrieve at all. The same `ask_ai` was run with all 122 pages instead of 8:
+The 7 papers are ~132k tokens and fit in Gemini's context window, so the obvious question is why retrieve at all. The same `ask_ai` was run with all 122 pages instead of 8 (on 2.5 Flash, Sep 2026):
 
 | | RAG (8 pages) | All 122 pages |
 |---|---|---|
@@ -54,12 +55,14 @@ The biggest gap found in v2: on 29 questions that name two papers, the page hold
 
 The fix is deliberately small. When a question **names at least two papers** (an alias list per paper), the same query is re-run inside each named paper and up to 4 pages are added. No LLM call, and the gate is untouched.
 
-| Two-paper questions (29) | Before | After |
+| Two-paper questions (29), 2.5 Flash, judge 1 | Before | After |
 |---|---|---|
 | Correct halves | 33/58 | **44/58** (Δ +11, 95% CI [+5, +17]) |
 | Both halves correct | 7 | **17** |
 | Unsupported halves | 4 | 2 |
 | Faithfulness | 4.52 | 4.75 |
+
+On 3.8 Flash, with the same pages, GPT-4.1 counts **53/58** correct halves and **24/29** questions with both right.
 
 Across all 235 scoreboard questions, pages changed **only** in the 41 routed ones; the gate and corrective agent decided identically in 235/235. The routing rule fires on **0 of 170** questions that don't name two papers.
 
@@ -112,9 +115,11 @@ docker compose exec backend python evaluation/ablation_ladder.py
                        └──────┬──────────┬───────────┬────┘
                               │          │           │
                        ┌──────▼───┐ ┌────▼─────┐ ┌───▼────────┐
-                       │ ChromaDB │ │ Postgres │ │ Gemini 2.5 │
+                       │ ChromaDB │ │ Postgres │ │ Gemini 3.8 │
                        │ (chunks, │ │ (users,  │ │   Flash    │
-                       │ vectors) │ │  chats)  │ │ (gen+judge)│
+                       │ vectors) │ │  chats)  │ │(translate, │
+                       │          │ │          │ │ rewrite,   │
+                       │          │ │          │ │ generate)  │
                        └──────────┘ └──────────┘ └────────────┘
 ```
 
@@ -129,7 +134,7 @@ docker compose exec backend python evaluation/ablation_ladder.py
 7. **Corrective retry** — *only if step 6 fired*: rewrite, re-run 2–5, accept above −3.8 (the rewrite produces noun phrases, whose scores sit lower on this model's scale — calibrated, not guessed)
 8. **Page-level expansion** — top chunks map back to whole pages (max 8), so tables and lists arrive intact
 9. **Per-document search** — *only if the question names ≥ 2 papers*: steps 2–5 inside each named paper, up to 4 extra pages
-10. **Generation** — Gemini 2.5 Flash over REST (thinking budget capped), streamed, with `[S#]` citations
+10. **Generation** — Gemini 3.8 Flash over REST, streamed, with `[S#]` citations (3.8 ignores `temperature` and `thinkingBudget`; both were set for 2.5)
 
 Design decisions and trade-offs behind each step: [`ARCHITECTURE.md`](ARCHITECTURE.md) · the experiment log: [`ENGINEERING_LOG.md`](ENGINEERING_LOG.md)
 
@@ -149,20 +154,25 @@ Eight golden sets, **235 questions**, over 7 open-access cloud/serverless papers
 The PDFs are not redistributed here; all seven are open-access (arXiv, USENIX, UC Berkeley, Google Research). Two more sets probe transfer: `golden_test_domains` (25 questions on two non-CS papers — does the gate calibrated on cloud papers transfer?) and `golden_dangling` (14 questions with the paper's name removed).
 
 ```bash
-docker compose exec backend python evaluation/scoreboard.py --label mytest --compare evaluation/runs/scoreboard/baseline.json
-docker compose exec backend python evaluation/scoreboard_answers.py --set main     # answers + judge
+docker compose exec backend python evaluation/scoreboard.py --label mytest --compare evaluation/runs/scoreboard/g38b.json
+docker compose exec backend python evaluation/scoreboard_answers.py --set main --label mytest --no-judge   # answers
+python backend/evaluation/compare_judge2.py --add mytest                                                   # judge 2 (host)
 ```
 
 ### Answer quality
 
-| Set | Result |
-|---|---|
-| Standard (45 + 5) | **42/45 correct** (judge 2) · judge 1 means 4.90 / 4.80 / 4.92 / 4.96 (accuracy / completeness / relevance / faithfulness) · off-topic **5/5 declined** |
-| Two papers (29) | **44/58 halves** correct (judge 1; 45/58 judge 2) · 2/58 unsupported |
-| Near-miss (42) | **40/42**: 38 answered "not in the papers", 2 silenced by the gate · 1 soft leak · 1 leak ([limitations](#known-limitations)) |
-| Tables (16) | **16/16**, 69/69 exact values |
+Judge 2 (GPT-4.1, against reference answers) on both systems. Each model answers from its own retrieval: the same pipeline, but Greek questions are translated by the model itself, so the pages can differ.
 
-A single judge run is one draw: the judge itself is not deterministic (2 of 9 identical answers moved by one point between two runs). A label change on one question is not a finding; the per-question comparisons above use paired tests for that reason.
+| Set | 3.8 Flash (Nov 2026) | 2.5 Flash (Sep 2026) |
+|---|---|---|
+| Standard (45 + 5) | **45/45 correct** · off-topic **5/5 declined** | 42/45 (2 partial, 1 refused) · 5/5 · judge 1 means 4.90 / 4.80 / 4.92 / 4.96 |
+| Two papers (29) | **53/58 halves**, **24/29 both** · 0 wrong | 45/58, 18/29 · 0 wrong |
+| Near-miss (42) | **42/42** declined · 0 leaks | 40/42 · 1 soft leak, 1 leak (`n038`, `n024`) |
+| Tables (16) | **16/16** · 69/69 values · **60/60** strict | 16/16 · 69/69 · 60/60 strict |
+
+*Strict* table scoring (`evaluation/table_scoring.py`, Nov 2026) checks the value as a whole number with its sign, its unit, and its row/column label. The original check only looked for the expected text anywhere in the answer — it would have passed "9000 seconds and 10.5 GB" for an expected 900 s and 0.5 GB. All 16 stored answers were re-checked by hand against the PDFs first: the old 69/69 was right; the test could not have caught an error.
+
+A single judge run is one draw: the judge itself is not deterministic (2 of 9 identical answers moved by one point between two runs). A label change on one question is not a finding; the per-question comparisons above use paired tests for that reason. Judge 2 does not see the retrieved pages, so it measures correctness, not grounding.
 
 ### Every percentage is read against its chance floor
 
@@ -183,11 +193,13 @@ This exercise also **found bugs in the evaluation itself**: 31 keywords in the m
 | MiniLM-L-6 | −1.80 | 4.15 | −2.69 | 0.89 |
 | **MiniLM-L-12** | −2.08 | 4.62 | −3.12 | **1.04** |
 
-The threshold **−2.6** is the midpoint of the range that separated all 61 calibration questions, maximising the *worst-case* margin on both sides. In the current scoreboard two answerable questions are refused on the first pass (`q025`, `q059`); `q025` traces to translation variance upstream of the gate — see [the third finding](#the-third-finding-anything-upstream-of-the-gate-changes-the-gate).
+The threshold **−2.6** is the midpoint of the range that separated all 61 calibration questions, maximising the *worst-case* margin on both sides. On 2.5 Flash two answerable questions were refused on the first pass (`q025`, `q059`), tracing to translation variance upstream of the gate — see [the third finding](#the-third-finding-anything-upstream-of-the-gate-changes-the-gate). On 3.8 Flash the gate passes all **61/61**.
 
 ### Determinism
 
 Retrieval is bit-for-bit reproducible across processes. Two sources of non-determinism were found and fixed: `list(set(...))` in the fusion step (iteration order depended on `PYTHONHASHSEED`, with 15 tied RRF scores out of 51 candidates), and ChromaDB's HNSW graph, which was rebuilt from the WAL on every start and did not always return the same top-30. Before the fix, the *same code* produced MRR 0.764 and 0.755.
+
+Generation is **not** reproducible on 3.8 Flash: the model ignores `temperature`, so the same prompt can return a different translation, rewrite or answer. The scoreboard therefore freezes every Gemini call by its full prompt (`runs/scoreboard_gemini_<model>.json`), and model-dependent decisions are measured over **three independent draws** (`probe_corrective_ab.py`) rather than one.
 
 ```bash
 docker compose exec backend python evaluation/check_determinism.py
@@ -212,7 +224,7 @@ docker compose exec backend python evaluation/bootstrap_ci.py \
 
 ### Performance
 
-Measured on a Ryzen 7 5700X, CPU only (container: 8 cores).
+Measured on a Ryzen 7 5700X, CPU only (container: 8 cores), with 2.5 Flash (Oct 2026). Memory matters more than cores: the embedding model alone needs ~2.3 GB, and with Docker limited to 2.8 GB on a laptop a single retrieval took **~60 s** instead of under one second. Give Docker at least 4 GB.
 
 | | Value |
 |---|---|
@@ -231,7 +243,9 @@ Page expansion went from 8 to 53 ms when a per-user authorization check was adde
 | Embeddings, reranking, BM25 | **$0.00** — local, CPU |
 | **Total** | **$5.69** |
 
-A month at that volume costs about **€10**: €5 for a CPU-only VPS plus ~€5 of API. Output tokens cost 8.3× more than input tokens, so the context-size decisions were pulling the *cheap* lever; `THINKING_BUDGET=512` is 21% of the bill — setting it to 0 was measured and dropped one multi-hop answer's faithfulness from 5.0 to **2.0**.
+Measured on 2.5 Flash. A month at that volume costs about **€10**: €5 for a CPU-only VPS plus ~€5 of API. Output tokens cost 8.3× more than input tokens, so the context-size decisions were pulling the *cheap* lever; `THINKING_BUDGET=512` is 21% of the bill — setting it to 0 was measured and dropped one multi-hop answer's faithfulness from 5.0 to **2.0**.
+
+3.8 Flash lists at $0.75 / $3.75 per 1M tokens until 31 Dec 2026 and $1.50 / $7.50 from 2027 (2.5: $0.30 / $2.50) — roughly **2.4×** the per-question cost now and **~5×** from 2027, estimated from the price list, not measured.
 
 ```bash
 docker compose exec backend python evaluation/measure_cost.py --ratio 4.53
@@ -254,7 +268,9 @@ What was measured, kept, and — more often — **rejected**. Each row is a real
 | **Reranker threads and `batch_size`** | 667 → **434 ms** with bit-identical scores (thread heuristic under WSL2; padding in one large batch) |
 | **Capped thinking budget** (REST) | TTFT 3.90 s → **2.78 s**, judge scores unchanged |
 | **Domain-aware translation** | Greek *«μηχανήματα»* had become `machinery` instead of `servers`. The first measurement (+7.74 / +4.14 logits on two questions) turned out to be **leakage**: the prompt's examples were those two questions' answers. The examples were removed; the clean size of the gain was never measured — kept as a design choice, not as a result |
-| **Corrective agent** + its own threshold | Silence → correct answer on the questions it targets, **0 hallucinations**, off-topic still 5/5 |
+| **Corrective agent** + its own threshold | Silence → correct answer on the questions it targets, **0 hallucinations**, off-topic still 5/5 (2.5 Flash). On 3.8 it rescues ~10 hard questions per run — and lets ~1–2 off-topic ones through to the answer, which declines them ([limitations](#known-limitations)) |
+| **Strict table scoring** (value, sign, unit, row/column) | Catches substring matches (`900` in `9000`), swapped values and wrong units that the original check passed; hand-check of all 16 stored answers first: the old 69/69 stood |
+| **Model guard** in the evaluation | From 1 Dec 2026 `gemini-2.5-flash` silently answers as `gemini-3.5-flash-lite`; a run naming it now stops instead of recording the wrong judge or model |
 | **Server-side citation labels** (`[S3]` instead of `[file, p.12]`) | With labels written by the model, 10/97 page numbers were wrong — it copied the page number *printed* in the PDF. The labels themselves were right 97/97. What you don't ask the model to produce cannot come out wrong |
 | **Rate limiting in Postgres**, **`/metrics`** | Shared across processes, zero new containers |
 
@@ -266,6 +282,9 @@ What was measured, kept, and — more often — **rejected**. Each row is a real
 | **Qwen3-Embedding-0.6B** | Dense top-30 clearly better (both papers present 12 → 17/29) | After fusion and rerank the gain evaporated (7 → 9); every CI crossed zero; pages changed in 221/260 questions — and **two new leaks** at margins of 0.08 and 0.13 logits. Same reranker + same threshold is *not* the same gate |
 | **Contextual chunk prefixes** (Anthropic-style Contextual Retrieval / doc2query) | Direction probe, n=33: in-corpus scores **fell** (median −0.85 logits, 22 → 18 above the gate) while an out-of-corpus question rose **+2.72** and crossed it | The direction was wrong on both sides, so the full re-ingest was not run. A technique reported to cut retrieval failures by 49–67% elsewhere, measured here first |
 | **Query enrichment with domain terms** (3 variants) | Fixed one hallucination — and **leaked one out-of-corpus question** | Enrichment helps retrieval only when the reranker also sees the added words — exactly when the gate is misled. Architectural, not a bug |
+| **Corrective rewrite rule** "never add field words the question lacks" (3.8, 3 draws per prompt) | Off-topic leaks **not** removed (`q048` passed 3/3); rescued hard questions **10.3 → 6.7** per run | The model kept "cloud service providers" on GDPR and dropped "cloud" exactly where it was helping |
+| **Higher corrective threshold** (offline, same draws) | 0 leaks only at −0.5, where rescues fall **10.3 → 7.0** | Off-topic (up to −0.52) and rescued (from −3.44) scores overlap |
+| **Re-checking the rewrite's chunks against the original question** (CRAG-style, offline) | 0 leaks only when rescues fall **10.3 → 1.0** | Inverted: "GDPR compliance" matches Sarbanes-Oxley text (−3.1) better than vague answerable questions match their own evidence (−8 to −11) — the gap the rewrite exists to bridge |
 | **LLM router / query decomposition** (Aug and Sep) | Aug: +1 keyword of 45. Sep: decomposition solved the two-paper problem, but the router split **35/50** standard questions too | An extra call and ~3 pages on almost every question. The name-based router keeps the gain with 0 false triggers and no LLM |
 | **"Which paper do you mean?" agent** | 12/14 questions stripped of the paper's name were answered normally anyway | On the 2 that needed it, restricting the search to the right paper was *still* refused: restriction removes competitors, it does not raise the gate score |
 | **Figure ingestion** (multimodal) | Audit of all 33 figures: **3** (7 generously) carry a fact absent from the text | Below the pre-registered threshold of 10. The authors state each figure's message and numbers in the text; vector diagrams already yield their labels |
@@ -304,20 +323,22 @@ docker compose exec backend python evaluation/trace_query.py --id q028 --target 
 
 ## Known limitations
 
-- **Two near-miss leaks out of 42.** Asked how the programming language affects AWS autoscaling, the system concludes it doesn't — a synthesis of two facts no paper links (stable across draws). Asked about multi-cloud security "in 2024", it answers about cloud security without saying the specifics are missing (varies between draws). Both follow from giving the model 8 pages of related material. A claim-level grounding check (e.g. HHEM, MiniCheck) is the natural next experiment
+- **The retrieval gate lets some off-topic questions through on 3.8 Flash.** The pre-registered bar asked for 5/5 off-topic questions silenced *by retrieval*; 3.8 gives **3/5** (and 4/5 on the other-domain set). `q048` (GDPR) and `q050` (GPU tensor cores) are cut by the gate, then the corrective rewrite adds field words ("cloud service providers") and they pass. In all such cases the **answer** says the papers do not cover it (5/5 off-topic, 42/42 near-miss declined). Three fixes were measured — a stricter rewrite prompt, a higher threshold, a re-check against the original question — and none separates these from the vague-but-answerable questions the same rewrite rescues ([rejected](#rejected-with-numbers)). The defence is in the answer, and next in a claim-level grounding check
+- **Near-miss leaks.** On 2.5 Flash two of 42 leaked (`n024`, a synthesis of two facts no paper links; `n038`, the 2024 time limit dropped). On 3.8 both are declined, but this is one draw; a claim-level check (e.g. MiniCheck, HHEM) is the planned safeguard
+- **Other-domain off-topic: `o4` (Vesuvius).** On 2.5 the translation was "Vesuvius eruptions" (−3.46, silenced); on 3.8 it is "Vesuvius last eruption date" (−1.56), which passes the gate on a volcanology paper about Stromboli. No corpus word was added — the glossary rule held; the literal wording alone moved the score. The answer for this set was not graded
 - **Text-layer PDFs only.** A scanned PDF is flagged in the UI as *"no extractable text (scanned PDF — needs OCR)"* instead of silently showing as ready; there is no OCR or layout model. Figures were audited instead of ingested
 - **Not measured:** questions about the whole corpus at once ("what do all seven papers say about cold starts?"), multi-step agentic retrieval, and prompt injection hidden in uploaded PDFs (uploads are private to their owner, so an injected document can only mislead its own uploader)
 - **Two-paper routing uses hand-written aliases** for the 7 papers; paraphrases ("the video-processing system") and pronouns are not caught. Automatic alias extraction at ingest is open
 - **7 papers.** The design is tuned to 418 chunks. Breaking points are measured (BM25 fails first, 6.7× slower than dense at 50k chunks), but quality at 50+ papers is not
 - **LLM judges.** Two vendors now agree, but both are LLMs; the golden sets are self-authored and hand-verified, not externally annotated
-- **Corrective verification is not reproducible** (a Gemini rewrite with no seed), and its threshold rests on a handful of questions — the midpoint of a range that behaves identically, not an optimum
-- **Throughput saturates at 4 concurrent users** on one CPU-bound worker
-- **Model availability.** New Gemini API keys no longer get `gemini-2.5-flash`, the model everything here was measured on. `gemini-3.8-flash` was run through the full scoreboard against a pre-registered bar and **did not become the default**: two off-topic questions passed the relevance gate (one through a long, domain-heavy rewrite by the corrective agent), it blocked one harmless prompt (`blockReason: OTHER`), it thinks despite a thinking budget of 0 (which first cut 11/157 translations short), and its translations match 2.5's in only 3/122 Greek questions and are not reproducible between calls. On the plus side it closed the translation regression behind `q025`/`q059` (gate 61/61). Ranking changes were all within noise (paired bootstrap). It costs ~2.4× per question at current prices
-- **`google.generativeai` is deprecated** and `google-genai` needs Pydantic 2, incompatible with the pinned stack — generation uses the REST endpoint directly
+- **Translations, rewrites and answers are not reproducible on 3.8 Flash** (no `temperature`); the corrective threshold rests on a handful of questions — the midpoint of a range that behaves identically, not an optimum
+- **Throughput saturates at 4 concurrent users** on one CPU-bound worker (measured with 2.5 Flash)
+- **Model history.** Everything before November 2026 was measured on `gemini-2.5-flash`, which is no longer offered to API keys and is redirected to `gemini-3.5-flash-lite` from 1 Dec 2026. `gemini-3.8-flash` became the default after the full scoreboard (18–19 Nov 2026); it ignores `thinkingBudget` (it can think despite a budget of 0) and occasionally returns no text for a harmless prompt (`v4`, an answerable volcanology question: `blockReason: OTHER` in October, an empty translation in November)
+- **`google.generativeai` is deprecated** — generation uses the Gemini REST endpoint directly
 
 ## Quickstart
 
-Requirements: Docker Desktop (WSL2 backend on Windows), a [Gemini API key](https://aistudio.google.com/apikey).
+Requirements: Docker Desktop (WSL2 backend on Windows) with **at least 4 GB of memory** for Docker (8 GB recommended — with 2.8 GB a retrieval took ~60 s), and a [Gemini API key](https://aistudio.google.com/apikey).
 
 ```bash
 git clone https://github.com/kostas221/local-rag-assistant.git
@@ -326,15 +347,9 @@ cp .env.example .env        # fill in your keys
 docker compose up -d --build
 ```
 
-> **New Gemini API key?** Google no longer offers `gemini-2.5-flash` to new keys, and the app will only show a generic AI error. Add this line to `.env`:
->
-> ```
-> GEMINI_MODEL=gemini-3.8-flash
-> ```
->
-> Checked end to end (a Greek question answered with citations, an off-topic one refused). Every number in this README was measured on 2.5 Flash, though — on the full scoreboard 3.8 is not a drop-in replacement; see [Known limitations](#known-limitations).
-
 First start downloads the embedding + reranker models (~2.5 GB, cached in a volume afterwards).
+
+> Upgrading an install from before November 2026? Its vector store is Chroma 0.4; read [`docs/STABILIZATION_2026-11-01.md`](docs/STABILIZATION_2026-11-01.md) and start with `-f docker-compose.yml -f docker-compose.upgrade.yml`. A fresh clone needs neither.
 
 - UI: http://localhost:8502 — register, upload a PDF, wait for "ready", ask away
 - API docs: http://localhost:8010/docs
@@ -345,9 +360,9 @@ First start downloads the embedding + reranker models (~2.5 GB, cached in a volu
 | Variable | Purpose |
 |---|---|
 | `GEMINI_API_KEY` | Gemini API key (generation, translation, judge 1) |
-| `GEMINI_MODEL` | Model for translation, rewrites and answers. Default `gemini-2.5-flash` (what everything was measured on); new keys need `gemini-3.8-flash` |
-| `JUDGE_MODEL` | Model of judge 1 in the evaluation scripts (default `gemini-2.5-flash`, pass with `docker compose exec -e`). Separate from `GEMINI_MODEL`, so testing a new model does not also change the judge |
-| `OPENAI_API_KEY` | only for the second judge (`compare_judge2.py`) |
+| `GEMINI_MODEL` | Model for translation, rewrites and answers. Default `gemini-3.8-flash` |
+| `JUDGE_MODEL` | Model of judge 1 in the evaluation scripts. Separate from `GEMINI_MODEL`, so testing a new model does not also change the judge. Its old default, `gemini-2.5-flash`, is no longer available: from 1 Dec 2026 a run that names it stops (`evaluation/model_guard.py`); use `--no-judge` and judge 2 |
+| `OPENAI_API_KEY` | only for the second judge (`compare_judge2.py`), now the common judge |
 | `POSTGRES_PASSWORD` | Postgres password |
 | `SECRET_KEY` | JWT signing key — `openssl rand -hex 32` |
 | `RERANKER_MODEL` | Cross-encoder. **Changing it requires recalibrating `MIN_RERANK_SCORE`** |
@@ -359,7 +374,7 @@ First start downloads the embedding + reranker models (~2.5 GB, cached in a volu
 ## Tests & evaluation
 
 ```bash
-docker compose exec backend python -m pytest tests/ -q     # 116 tests; 73 need neither models nor Postgres
+docker compose exec backend python -m pytest tests/ -q     # 149 tests; CI runs the model-free ones first
 
 docker compose exec backend python evaluation/scoreboard.py            # all 8 sets, frozen, per-question diff
 docker compose exec backend python evaluation/check_determinism.py
@@ -388,7 +403,7 @@ backend/
     compare_judge2.py            # second judge (OpenAI), agreement (κ)
     probe_*.py                   # one experiment each — prediction and result in the docstring
     runs/                        # every result, including the rejected ones
-  tests/                # 116 tests
+  tests/                # 149 tests
 frontend/
   app_ui.py             # Streamlit chat UI
 docker-compose.yml      # postgres + backend + frontend
@@ -396,4 +411,4 @@ docker-compose.yml      # postgres + backend + frontend
 
 ## Tech stack
 
-FastAPI · Streamlit · ChromaDB · PostgreSQL · sentence-transformers (bge-m3, ms-marco-MiniLM) · rank-bm25 · PyMuPDF · Gemini 2.5 Flash · Docker Compose · GPT-4.1 as a second judge
+FastAPI · Streamlit · ChromaDB · PostgreSQL · sentence-transformers (bge-m3, ms-marco-MiniLM) · rank-bm25 · PyMuPDF · Gemini 3.8 Flash (REST) · Docker Compose · GPT-4.1 as the evaluation judge
