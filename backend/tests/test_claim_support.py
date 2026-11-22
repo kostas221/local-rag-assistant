@@ -32,11 +32,36 @@ def test_split_keeps_labels_and_strips_citations():
     assert all(c.kind == "claim" for c in cl)
 
 
-def test_refusal_without_label_is_not_a_claim_but_with_label_it_is():
+def test_refusal_without_label_is_not_a_claim_and_cited_absence_is_not_flagged():
     ans = ("The documents do not mention the price of Lambda.\n"
-           "The paper does not report latency, but it uses 1,346 invocations [S2].")
+           "The paper does not report the price of Lambda functions [S1].")
     cl = CS.split_claims(ans, REFUSAL)
-    assert [c.kind for c in cl] == ["refusal", "claim"]
+    assert [c.kind for c in cl] == ["refusal", "claim"] and cl[1].absence
+    v = {2: {"quote": None, "label": None, "support": "full", "missing": ""}}
+    c = CS.apply_check(cl, CS.label_texts(PAGES), v)[1]
+    assert (c.status, c.reason) == ("skipped", "absence:no_quote")
+
+
+def test_quote_match_ignores_hyphens_and_cut_words_but_keeps_letter_order():
+    page = ("a recurring architectural anti-\npattern among system designers, which introduces "
+            "large la-\ntency")
+    assert CS.quote_in_source("a recurring architectural anti-pattern among system designers", page)
+    assert CS.quote_in_source("architectural antipattern among system designers", page)
+    assert CS.quote_in_source("which introduces large la-", page)
+    assert not CS.quote_in_source("a recurring architectural pattern among system designers", page)
+
+
+def test_table_quote_in_fragments_needs_every_fragment_on_the_page():
+    page = "Block\nStorage\n(e.g., AWS\nEBS, IBM)\nObject Storage\nLatency (mean)\n< 1ms\n10 −20ms"
+    assert CS.quote_in_source("Block\nStorage\n(e.g., AWS\nEBS, IBM)\n\n\nLatency (mean)\n\n< 1ms", page)
+    assert not CS.quote_in_source("Block Storage (e.g., AWS EBS, IBM)\n\n< 5ms", page)
+    assert not CS.quote_in_source("Latency\n\n< 1ms", page)      # κανένα κομμάτι δεν δείχνει σημείο
+
+
+def test_numbers_glued_to_units_on_the_page_are_found():
+    page = "achieve on average 538Mbps; 7.5x as much; 100msincrements; mean 9.7s; savings of 4x-10x"
+    assert CS.unsupported_numbers("538 Mbps, 7,5 φορές, 100 ms, 9.7 s, 4 έως 10 φορές", [page]) == []
+    assert CS.unsupported_numbers("Lambda on EC2 and S3 with t3.nano", [""]) == []
 
 
 def test_bullets_lead_in_and_trailing_citation():

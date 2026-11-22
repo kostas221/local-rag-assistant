@@ -254,7 +254,8 @@ def write_csv(path: str, rows: list[dict], public: bool) -> None:
 
 
 def summarize(rows: list[dict]) -> None:
-    claims = [r for r in rows if r["kind"] == "claim"]
+    absent = sum(r["reason"].startswith("absence") for r in rows)
+    claims = [r for r in rows if r["kind"] == "claim" and r["status"] != "skipped"]
     by = defaultdict(list)
     for r in claims:
         by[(r["group"], r["draw"], r["lang"])].append(r)
@@ -279,7 +280,8 @@ def summarize(rows: list[dict]) -> None:
         tot[(r["group"], r["draw"])].add((r["set"], r["id"]))
     print("\nαπαντήσεις με ≥1 σημαδεμένη πρόταση: " + " · ".join(
         f"{g}/{d}: {len(ans[(g, d)])}/{len(v)}" for (g, d), v in sorted(tot.items())))
-    secs = [float(r["seconds"]) for r in rows if r["seconds"] not in ("", None)]
+    print(f"προτάσεις απουσίας με παραπομπή («δεν αναφέρουν… [S1]»), εκτός μέτρησης: {absent}")
+    secs =[float(r["seconds"]) for r in rows if r["seconds"] not in ("", None)]
     if secs:
         secs.sort()
         print(f"χρόνος κλήσης ελέγχου: διάμεσος {statistics.median(secs):.1f} s · "

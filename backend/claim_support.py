@@ -45,17 +45,41 @@ def normalize_for_match(text: str) -> str:
     return re.sub(r"\s+", " ", t).strip()
 
 
+def _alnum(text: str) -> str:
+    """Μόνο γράμματα και ψηφία, πεζά, χωρίς τόνους: η ΣΕΙΡΑ των γραμμάτων μένει ίδια, φεύγουν
+    κενά, παύλες, εισαγωγικά, αλλαγές γραμμής."""
+    t = unicodedata.normalize("NFKD", text or "").lower()
+    t = "".join(c for c in t if not unicodedata.combining(c))
+    return re.sub(r"[\W_]+", "", t)
+
+
+MIN_QUOTE_ALNUM = 15                       # «0.5» ή «the cloud» δεν δείχνουν σημείο
+_FRAGMENT_SPLIT = re.compile(r"\.\.\.|…|\n\s*\n")
+
+
 def quote_in_source(quote: str, source_text: str) -> bool:
-    """Το χωρίο υπάρχει αυτούσιο (μετά από ήπια κανονικοποίηση) στη σελίδα."""
-    q = normalize_for_match(quote).strip(" .\"'")
-    return len(q) >= 8 and q in normalize_for_match(source_text)
+    """Το χωρίο υπάρχει αυτούσιο στη σελίδα, με σύγκριση ΜΟΝΟ γραμμάτων και ψηφίων.
+
+    ΑΠΟΚΛΙΣΗ 22/11/2026 (μετά το 1ο τρέξιμο, πριν από τις αλλοιώσεις): η σύγκριση με κενά και
+    παύλες σημάδευε σωστά χωρία για λόγους μορφής: «anti-pattern» απέναντι σε «anti-⏎pattern»,
+    χωρίο κομμένο σε «la-», «1⁄4». Πίνακες: το μοντέλο αντιγράφει κελιά που στο κείμενο της σελίδας
+    δεν είναι συνεχόμενα, και τα χωρίζει με κενές γραμμές ή «...». Τότε ΚΑΘΕ κομμάτι πρέπει να
+    υπάρχει στη σελίδα, και το μεγαλύτερο να έχει ≥ 15 γράμματα/ψηφία."""
+    page = _alnum(source_text)
+    frags = [f for f in (_alnum(x) for x in _FRAGMENT_SPLIT.split(quote or "")) if f]
+    if not frags or max(map(len, frags)) < MIN_QUOTE_ALNUM:
+        return False
+    return all(f in page for f in frags)
 
 
 # ---------------------------------------------------------------------------
 # Αριθμοί (από evidence_cards, library-frozen)
 # ---------------------------------------------------------------------------
 
-_NUM_RE = re.compile(r"(?<![\w.,])\d+(?:[.,]\d+)*(?![\w])")
+# Χωρίς έλεγχο ΜΕΤΑ τον αριθμό (απόκλιση 22/11/2026): στο κείμενο των PDF η μονάδα κολλάει
+# («538Mbps», «7.5x», «100msincrements», «9.7s») και ο αριθμός χανόταν. Πριν από τον αριθμό
+# μένει ο έλεγχος: «S3», «EC2», «t3.nano» δεν είναι αριθμοί.
+_NUM_RE = re.compile(r"(?<![\w.,])\d+(?:[.,]\d+)*")
 _UNITS = ["zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten",
           "eleven", "twelve", "thirteen", "fourteen", "fifteen", "sixteen", "seventeen",
           "eighteen", "nineteen"]
@@ -134,6 +158,7 @@ class Claim:
     text: str                      # χωρίς τις παραπομπές
     labels: list[str]              # π.χ. ["S1", "S3"], με τη σειρά που γράφτηκαν
     kind: str = "claim"            # claim | refusal | lead_in
+    absence: bool = False          # λέει τι ΔΕΝ υπάρχει στις πηγές (ταιριάζει με το refusal_re)
     # αποτελέσματα
     numbers_missing: list[str] = field(default_factory=list)
     quote: str | None = None
@@ -180,8 +205,9 @@ def split_claims(answer: str, refusal_re: re.Pattern | None = None) -> list[Clai
                 kind = "refusal"        # με παραπομπή = περιέχει και ισχυρισμό -> ελέγχεται
             elif not labels and body.endswith(":"):
                 kind = "lead_in"
+            absence = bool(refusal_re is not None and refusal_re.search(body))
             claims.append(Claim(i=len(claims) + 1, text=body, labels=list(dict.fromkeys(labels)),
-                                kind=kind))
+                                kind=kind, absence=absence))
     return claims
 
 
@@ -318,5 +344,11 @@ def apply_check(claims: list[Claim], texts: dict[str, str], verdicts: dict[int, 
             reason = "quote_not_in_source"
         else:
             reason = ""
+        if reason and c.absence:
+            # ΑΠΟΚΛΙΣΗ 22/11/2026: «τα κείμενα δεν αναφέρουν Χ [S1]» — μια απουσία δεν έχει χωρίο
+            # να παρατεθεί. Στο 1ο τρέξιμο ΟΛΑ τα σημάδια των σωστών αρνήσεων ήταν τέτοια.
+            # Μένει στο prompt όπως ήταν (ίδιες κλήσεις), αλλά δεν σημαδεύεται.
+            c.status, c.reason = "skipped", f"absence:{reason}"
+            continue
         c.status, c.reason = ("supported", "") if not reason else ("flagged", reason)
     return claims
