@@ -32,3 +32,7 @@ backend/evaluation/runs/compare/llamaindex_store/
 # Τρεξίματα της βιβλιοθήκης (κλάδος library-frozen): περιέχουν ΑΥΤΟΥΣΙΑ αποσπάσματα άρθρων,
 # δεν ανεβαίνουν στο δημόσιο repo.
 backend/evaluation/runs/library_pipeline_*.json
+# Βήμα 5: αυτούσια χωρία άρθρων -> μόνο τοπικά (δημόσιο repo)
+backend/evaluation/runs/claim_support_calls.json
+backend/evaluation/runs/claim_support_*_detail.csv
+backend/evaluation/runs/claim_support_blind*

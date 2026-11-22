@@ -308,7 +308,7 @@ prompt (`runs/corrective_ab.csv`).
    [NLI](../backend/evaluation/probe_nli_entailment.py) · [MiniCheck](https://aclanthology.org/2024.emnlp-main.499/) ·
    [Sufficient Context](https://research.google/pubs/sufficient-context-a-new-lens-on-retrieval-augmented-generation-systems/)
 
-Η τελική κρίση γίνεται στο κλειστό σετ.
+Η τελική κρίση γίνεται στο κλειστό σετ. **Προκαταχώριση (22/11/2026):** [CLAIM_SUPPORT_PREREG_2026-11-22.md](CLAIM_SUPPORT_PREREG_2026-11-22.md).
 
 ## Μετά το σημείο τέλους, μόνο αν το ζητήσουν τα δεδομένα
 
