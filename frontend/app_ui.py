@@ -232,6 +232,11 @@ def render_sources(sources, answer: str | None = None):
     παρατεθειμένες, οι υπόλοιπες χωριστά (19/11/2026· ήταν εύρημα και της αξιολόγησης 31/10)."""
     if not sources:
         return
+    # Κύκλος 2, βήμα 2 (23/11/2026): ουδέτερη ένδειξη, όχι προειδοποίηση. Η δεύτερη αναζήτηση σώζει
+    # σωστές δύσκολες ερωτήσεις ΚΑΙ μπορεί να φέρει άσχετο υλικό· ο χρήστης απλώς ξέρει ότι έγινε.
+    if any(isinstance(s, dict) and s.get("second_search") for s in sources):
+        st.caption("🔁 Second search used: the first search found no close match, "
+                   "so the question was rephrased and searched again.")
     cited = cited_labels(answer)
     if answer is None or not all(isinstance(s, dict) for s in sources):
         with st.expander(f"📚 Sources ({len(sources)})"):

@@ -108,6 +108,7 @@ def test_no_retry_when_gate_passes(monkeypatch):
     assert len(result) > 0
     assert calls["n"] == 0, "το rewrite κλήθηκε ενώ το gate είχε περάσει"
     assert rr.calls == 1, "έγινε δεύτερο rerank χωρίς λόγο"
+    assert not any(m.get("second_search") for _t, m in result)   # καμία ένδειξη στην 1η αναζήτηση
 
 
 def test_retry_saves_question_when_rewrite_scores_high(monkeypatch):
@@ -124,6 +125,8 @@ def test_retry_saves_question_when_rewrite_scores_high(monkeypatch):
     assert isinstance(text, str) and meta["file_name"] == "a.pdf"
     assert calls["n"] == 1
     assert rr.calls == 2, "το 2ο pass πρέπει να ξανακάνει rerank"
+    # Κύκλος 2, βήμα 2: οι σελίδες της δεύτερης αναζήτησης σημαδεύονται για το UI
+    assert all(m.get("second_search") is True for _t, m in result)
 
 
 def test_retry_respects_stricter_threshold(monkeypatch):

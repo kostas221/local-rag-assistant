@@ -168,3 +168,16 @@ def test_ask_ai_flags_truncated_finish_reason(monkeypatch):
     assert metrics_event.get("finish_reason") == "MAX_TOKENS"
 
 
+
+
+def test_second_search_mark_reaches_sources_but_not_the_prompt(monkeypatch):
+    """Κύκλος 2, βήμα 2: σελίδες από τη δεύτερη αναζήτηση -> second_search=True στις πηγές (το UI
+    δείχνει «Second search used»), ενώ το prompt μένει ΑΚΡΙΒΩΣ ίδιο με χωρίς το σημάδι."""
+    plain = [("first page", {"file_name": "paper-a.pdf", "page": 3}),
+             ("other page", {"file_name": "paper-b.pdf", "page": 11})]
+    marked = [(t, dict(m, second_search=True)) for t, m in plain]
+    prompt_plain, sources_plain = _drive(monkeypatch, precomputed=plain)
+    prompt_marked, sources_marked = _drive(monkeypatch, precomputed=marked)
+    assert prompt_marked == prompt_plain
+    assert [s["second_search"] for s in sources_plain] == [False, False]
+    assert [s["second_search"] for s in sources_marked] == [True, True]

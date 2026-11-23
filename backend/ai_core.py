@@ -1294,6 +1294,13 @@ async def search_documents(
     pages = await asyncio.to_thread(
         _expand_to_pages, sorted_final[:EXPAND_INPUT], MAX_PAGES, user_id
     )
+    if not first_pass_ok:
+        # Κύκλος 2, βήμα 2 (23/11/2026): οι σελίδες ήρθαν από τη ΔΕΥΤΕΡΗ αναζήτηση. Σημάδι ΜΟΝΟ για
+        # το UI («Second search used»): το prompt χρησιμοποιεί μόνο file_name/page από το meta, άρα οι
+        # απαντήσεις δεν αλλάζουν. Ουδέτερη διαφάνεια, όχι μέτρο αξιοπιστίας: η δεύτερη αναζήτηση
+        # σώζει ~10 σωστές δύσκολες ερωτήσεις ανά τρέξιμο ΚΑΙ αφήνει 1–2 άσχετες να φτάσουν στην απάντηση.
+        for _text, meta in pages:
+            meta["second_search"] = True
     if ENABLE_PERDOC and first_pass_ok and _CORPUS_NAMES:
         pages = await _add_perdoc_pages(raw_query, query, pages, allowed_ids, idx, dm, user_id)
     return pages
@@ -1449,6 +1456,9 @@ async def ask_ai(
                 "page": page_n,
                 "doc_id": doc_id,
                 "preview": _source_preview(text, meta.get("hit")),
+                # Από τη δεύτερη αναζήτηση (βήμα 2 του κύκλου 2): ταξιδεύει με την πηγή, άρα σώζεται
+                # και στο ιστορικό της συνομιλίας μαζί με τις πηγές.
+                "second_search": bool(meta.get("second_search")),
             }
         )
 
