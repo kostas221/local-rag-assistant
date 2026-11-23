@@ -5,13 +5,17 @@
 το περιβάλλον ή από το .env της ρίζας. Πάγωμα: runs/longctx/judge_cache.json (κλειδί μοντέλο + prompt) ->
 ξανατρέξιμο = 0 κλήσεις. Φύλακας κόστους --max-usd (default 3).
 
+ΕΛΕΓΧΟΣ ΠΛΗΡΟΤΗΤΑΣ: χωρίς --smoke, ελέγχει ΠΡΙΝ καλέσει τον κριτή ή τυπώσει απόφαση ότι το answers.json
+έχει meta.complete=True, ακριβώς τις 654 μοναδικές προκαταχωρισμένες γραμμές (μαζί με τις σιωπές του φύλακα)
+και — αν είναι ενεργό — ακριβώς τις 56 μοναδικές γραμμές του χωριστού σκέλους distractor.
+
 ΚΡΙΣΗ (ίδιοι κανόνες με το compare_judge2, ως προς την απάντηση αναφοράς, χωρίς context):
     κύριο       MAIN_J2: correct · partial · refused · wrong                     σωστή = correct
     πίνακες     table_scoring.check_strict, χωρίς κριτή                         σωστή = όλες οι τιμές
     2 άρθρα     MH_J2, ανά άρθρο                                                σωστή = και τα δύο correct
     3 άρθρα     MH3_J2 (το MH_J2 για τρία άρθρα)                                σωστή = και τα τρία correct
     κοντινές    ο κριτής της Φάσης 0.1 αυτούσιος (NEAR_J)                       σωστή άρνηση = correct
-    άσχετες     MAIN_J2 (η αναφορά λέει ότι τα έγγραφα δεν απαντούν)            σωστή άρνηση = correct
+    άσχετες     MAIN_J2 (η αναφορά λέει ότι τα έγγραφα δεν απαντούν)            σωστή άρνηση = correct|refused
     Σιωπή του φύλακα (RAG): στο κύριο «refused», στα 2/3 άρθρα «declared_missing», στην ασφάλεια σωστή.
 
     python backend/evaluation/judge_lc_vs_rag.py --smoke     # η δοκιμή (answers_smoke.json)
@@ -25,10 +29,11 @@ import statistics
 import sys
 
 import compare_judge2 as C
+import lc_vs_rag_spec as SPEC
 import table_scoring as TS
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-LC_DIR = os.path.join(HERE, "runs", "longctx")
+LC_DIR = SPEC.LC_DIR
 C.CMP = LC_DIR                                         # ο Judge γράφει το πάγωμά του εδώ, όχι στο compare/
 C.CACHE_PATH = os.path.join(LC_DIR, "judge_cache.json")
 GOLD = {"main": "golden_set_50.jsonl", "ooc": "golden_set_50.jsonl", "tables": "golden_tables.jsonl",
@@ -85,15 +90,26 @@ def lab(j: dict, field: str) -> str:
 def judge_row(judge: C.Judge, r: dict, gold: dict) -> dict:
     t = gold[r["set"]][r["id"]]
     ans, docs, cut = r["answer"], r["docs"].split(";"), bool(r["cut"])
-    out = {k: r[k] for k in ("arm", "set", "id", "size", "lang", "docs", "draw", "system", "cut",
-                             "in_tokens", "cached_tokens", "out_tokens", "usd", "ttft", "search_s")}
+    keep_fields = (
+        "arm", "set", "id", "size", "lang", "docs", "draw", "system", "cut",
+        "in_tokens", "cached_tokens", "out_tokens", "usd", "ttft", "search_s",
+    )
+    opt_fields = (
+        "cache_role", "e2e_ttft", "e2e_live", "prep_s",
+        "ret_live_calls", "ret_frozen_calls", "ret_live_s", "ret_usd", "target_doc",
+    )
+    out = {k: r[k] for k in keep_fields}
+    for k in opt_fields:
+        if k in r:
+            out[k] = r[k]
     if r["set"] in ("main", "ooc"):
         if cut:
             label = "cut" if r["set"] == "ooc" else "refused"
         else:
             label = lab(judge(C.MAIN_J2.format(question=t["question"], reference=t["reference_answer"],
                                                answer=ans)), "label")
-        out |= {"labels": [label], "ok": label in (("correct", "cut") if r["set"] == "ooc" else ("correct",)),
+        ok_labels = ("correct", "refused", "cut") if r["set"] == "ooc" else ("correct",)
+        out |= {"labels": [label], "ok": label in ok_labels,
                 "refused": label == "refused"}
     elif r["set"] == "tables":
         strict = [] if cut else TS.check_strict(ans, t["facts"])
@@ -133,8 +149,9 @@ def p90(xs: list) -> float | None:
 
 
 def stats(rows: list[dict]) -> dict:
-    """Ανά (μέγεθος, σύστημα): ποιότητα από το σκέλος του μεγέθους, ασφάλεια από το σκέλος ασφάλειας,
-    κόστος/χρόνος από τις κλήσεις του σκέλους ποιότητας (όχι οι σιωπές: εκεί δεν έγινε κλήση)."""
+    """Ανά (μέγεθος, σύστημα): ποιότητα από το προκαταχωρισμένο σκέλος του μεγέθους (one/two/three),
+    ασφάλεια από το σκέλος safety, κόστος/χρόνος από τις κλήσεις του σκέλους ποιότητας.
+    Το χωριστό σκέλος distractor ΔΕΝ μπαίνει ποτέ εδώ."""
     med = statistics.median
     S = {}
     for s in SIZES:
@@ -144,7 +161,7 @@ def stats(rows: list[dict]) -> dict:
             called = [r for r in q if not r["cut"]]
             draws = len({r["draw"] for r in q}) or 1
             tok = [r["in_tokens"] for r in called if r["in_tokens"]]
-            tt = [r["ttft"] for r in called if r["ttft"]]
+            tt = [r["ttft"] for r in called if r["ttft"] is not None]
             S[s, sysk] = {
                 "n": len(q) // draws, "draws": draws, "ok": sum(r["ok"] for r in q) / draws,
                 "refused": sum(r["refused"] for r in q) / draws,
@@ -189,6 +206,148 @@ def print_table(S: dict) -> None:
     print("#" * 82)
 
 
+def _role_stats(rs: list[dict]) -> str:
+    if not rs:
+        return "-"
+    med_u = statistics.median(r["usd"] for r in rs)
+    tok = sum(r["in_tokens"] or 0 for r in rs)
+    cache = sum(r["cached_tokens"] or 0 for r in rs) / max(1, tok) if tok else 0.0
+    return f"{med_u:.4f} ({cache:.0%}, n={len(rs)})"
+
+
+def print_cost_breakdown(rows: list[dict]) -> None:
+    """Κόστος πρώτης ερώτησης στα PDF, επόμενης διαφορετικής ερώτησης στα ίδια PDF και επανάληψης (κλ. 2)."""
+    print("\nΚΟΣΤΟΣ & CACHE ΑΝΑ ΡΟΛΟ ΕΡΩΤΗΣΗΣ (διάμεσο $, % cache, n · μόνο κλήσεις ποιότητας)")
+    roles = (
+        ("first", "1η ερώτηση στα συγκεκριμένα PDF"),
+        ("next", "Επόμενη διαφορετική ερώτηση στα ίδια PDF"),
+        ("draw1", "1η + επόμενη (κλ. 1, χωρίς επανάληψη)"),
+        ("repeat", "Επανάληψη ίδιας ερώτησης (κλ. 2)"),
+    )
+    head = f"{'':<42}" + "".join(f"{art(s):>20}" for s in SIZES)
+    print(head)
+    for rkey, title in roles:
+        print(title)
+        for sysk, name in SYSTEMS:
+            cells = []
+            for s in SIZES:
+                q = [r for r in rows if r["arm"] == QUALITY_ARM[s] and r["system"] == sysk and not r["cut"]]
+                if rkey == "draw1":
+                    sub = [r for r in q if r.get("cache_role") in ("first", "next") or (
+                        "cache_role" not in r and r["draw"] == 1
+                    )]
+                else:
+                    sub = [r for r in q if r.get("cache_role") == rkey]
+                cells.append(f"{_role_stats(sub):>20}")
+            print(f"  {name:<40}" + "".join(cells))
+
+
+def print_wait_time(rows: list[dict], live_timing: list[dict]) -> None:
+    """Χρόνος αναμονής χρήστη (έναρξη ερώτησης -> 1ο ορατό κείμενο), με p90 στους συνολικούς χρόνους."""
+    med = statistics.median
+    print("\nΧΡΟΝΟΣ ΑΝΑΜΟΝΗΣ ΧΡΗΣΤΗ (έναρξη ερώτησης -> 1ο ορατό κείμενο · διάμεσος / p90 σε s)")
+    if live_timing:
+        print("  Ζωντανό δείγμα (χωρίς παγωμένες κλήσεις ανάκτησης — περιλαμβάνει πραγματικό δίκτυο):")
+        for s in SIZES:
+            sub = [r for r in live_timing if r["size"] == s]
+            if not sub:
+                continue
+            r_tot = [r["rag_e2e_ttft"] for r in sub if r.get("rag_e2e_ttft") is not None]
+            f_tot = [r["full_e2e_ttft"] for r in sub if r.get("full_e2e_ttft") is not None]
+            r_srch = [r["rag_search_s"] for r in sub if r.get("rag_search_s") is not None]
+            api_n = sum(r.get("rag_ret_calls", 0) for r in sub)
+            print(
+                f"    {art(s)} (n={len(sub)}, ζωντανές κλήσεις ανάκτησης {api_n}): "
+                f"RAG {med(r_tot):.2f} / p90 {p90(r_tot):.2f} s (αναζήτηση διάμ. {med(r_srch):.2f} s) · "
+                f"Όλο {med(f_tot):.2f} / p90 {p90(f_tot):.2f} s"
+            )
+        r_all = [r["rag_e2e_ttft"] for r in live_timing if r.get("rag_e2e_ttft") is not None]
+        f_all = [r["full_e2e_ttft"] for r in live_timing if r.get("full_e2e_ttft") is not None]
+        if r_all and f_all:
+            print(
+                f"    Σύνολο ζωντανού δείγματος (n={len(live_timing)}): "
+                f"RAG {med(r_all):.2f} / p90 {p90(r_all):.2f} s · "
+                f"Όλο {med(f_all):.2f} / p90 {p90(f_all):.2f} s"
+            )
+    else:
+        print("  (δεν υπάρχει ζωντανό δείγμα στο αρχείο)")
+
+    # Συνολικοί χρόνοι ανά ερώτηση από το κύριο τρέξιμο (p90 πάνω στο per-question e2e_ttft)
+    has_e2e = any(r.get("e2e_ttft") is not None for r in rows)
+    if has_e2e:
+        print("  Κύριο τρέξιμο (per-question search_s/prep_s + TTFT · p90 στους συνολικούς χρόνους):")
+        for s in SIZES:
+            parts = []
+            for sysk, name in SYSTEMS:
+                q = [r for r in rows if r["arm"] == QUALITY_ARM[s] and r["system"] == sysk
+                     and r.get("e2e_ttft") is not None]
+                live_q = [r for r in q if r.get("e2e_live")]
+                if not q:
+                    continue
+                vals = [r["e2e_ttft"] for r in q]
+                msg = f"{name} {med(vals):.2f} / p90 {p90(vals):.2f} s"
+                if sysk == "rag" and live_q:
+                    lv = [r["e2e_ttft"] for r in live_q]
+                    msg += f" (χωρίς παγ. ανάκτηση n={len(lv)}: {med(lv):.2f} / p90 {p90(lv):.2f} s)"
+                parts.append(msg)
+            if parts:
+                print(f"    {art(s)}: " + " · ".join(parts))
+
+
+def print_distractor(rows: list[dict]) -> None:
+    """Χωριστό διαγνωστικό σκέλος: μονοαρθρικές ερωτήσεις με +1 ή +2 επιπλέον επιλεγμένα PDF."""
+    dist = [r for r in rows if r["arm"] == "distract"]
+    if not dist:
+        return
+    qids = sorted({r["id"] for r in dist})
+    print("\n" + "-" * 82)
+    print(f"ΔΙΑΓΝΩΣΤΙΚΟ ΣΚΕΛΟΣ DISTRACTOR (χωριστό — ΔΕΝ μπαίνει στον προκαταχωρισμένο κανόνα, n={len(qids)})")
+    print("  Γνωστές μονοαρθρικές ερωτήσεις: μόνο το άρθρο τους (1) vs +1 επιπλέον PDF (2) vs +2 (3)")
+    cols = ((1, "1 άρθρο (one)"), (2, "2 άρθρα (+1)"), (3, "3 άρθρα (+2)"))
+    head = f"{'':<36}" + "".join(f"{label:>16}" for _s, label in cols)
+    print(head)
+
+    def subset(s: int, sysk: str) -> list[dict]:
+        if s == 1:
+            return [r for r in rows if r["arm"] == "one" and r["id"] in qids and r["system"] == sysk]
+        return [r for r in dist if r["size"] == s and r["system"] == sysk]
+
+    for title, fn in (
+        ("Σωστές (ανά κλήρωση)", lambda rs: (
+            f"{sum(r['ok'] for r in rs) / (len({r['draw'] for r in rs}) or 1):.1f}/"
+            f"{len(rs) // (len({r['draw'] for r in rs}) or 1)}"
+            if rs else "-"
+        )),
+        ("Αρνήσεις (ανά κλήρωση)", lambda rs: (
+            f"{sum(r['refused'] for r in rs) / (len({r['draw'] for r in rs}) or 1):.1f}"
+            if rs else "-"
+        )),
+        ("Κόστος διάμ. ($)", lambda rs: (
+            f"{statistics.median(r['usd'] for r in rs if not r['cut']):.4f}"
+            if any(not r["cut"] for r in rs) else "-"
+        )),
+        ("Cache (%)", lambda rs: (
+            f"{sum(r['cached_tokens'] for r in rs if not r['cut']) / max(1, sum(r['in_tokens'] or 0 for r in rs if not r['cut'])):.0%}"
+            if any(not r["cut"] and r.get("in_tokens") for r in rs) else "-"
+        )),
+    ):
+        print(title)
+        for sysk, name in SYSTEMS:
+            print(f"  {name:<34}" + "".join(f"{fn(subset(s, sysk)):>16}" for s, _l in cols))
+
+    by = {(r["id"], r["size"], r["system"]): r for r in dist}
+    for s in (2, 3):
+        won, lost = [], []
+        for qid in qids:
+            f_row, r_row = by.get((qid, s, "full")), by.get((qid, s, "rag"))
+            if not f_row or not r_row or f_row["ok"] == r_row["ok"]:
+                continue
+            (won if f_row["ok"] else lost).append(qid)
+        print(f"  ζευγαρωτά {art(s)}: όλο κερδίζει {len(won)} / χάνει {len(lost)} "
+              f"(p={C.binom_p(len(won), len(lost)):.2f})  κερδίζει: {won}  χάνει: {lost}")
+    print("-" * 82)
+
+
 def decide(S: dict, smoke: bool) -> None:
     print("\nΚΑΝΟΝΑΣ (προκαταχώριση): το «όλο το κείμενο» περνά σε ένα μέγεθος αν ισχύουν ΚΑΙ τα τέσσερα")
     passed = {}
@@ -212,6 +371,9 @@ def decide(S: dict, smoke: bool) -> None:
               f"4 p90 {fmt(full['p90'], '.1f')} s ≤ {MAX_P90_TTFT:g} {m(c4)}  ->  {'ΠΕΡΝΑ' if passed[s] else 'όχι'}")
     if smoke:
         print("  (δοκιμή: λίγες ερωτήσεις — ο κανόνας ΔΕΝ εφαρμόζεται, μόνο ελέγχεται ότι όλα δουλεύουν)")
+        return
+    if len(passed) != len(SIZES):
+        print("!! Λείπουν δεδομένα για ένα ή περισσότερα μεγέθη — ΔΕΝ εκδίδεται απόφαση.")
         return
     ok_sizes = [s for s in SIZES if passed.get(s)]
     if not ok_sizes:
@@ -272,24 +434,34 @@ def diagnose(rows: list[dict]) -> None:
         print(f"  μέρη σωστά μόνο {name}: η σελίδα-τεκμήριο έλειπε από το RAG σε {miss}, ήταν εκεί σε {had}")
 
 
-def main() -> int:
+def main(argv: list[str] | None = None) -> int:
     if hasattr(sys.stdout, "reconfigure"):      # κονσόλα Windows (cp1253): ≥ ✓ × δεν τυπώνονται αλλιώς
         sys.stdout.reconfigure(encoding="utf-8")
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--smoke", action="store_true", help="κρίνει το answers_smoke.json (δοκιμή)")
+    ap.add_argument("--input", default="", help="προαιρετική διαδρομή answers JSON αντί για το default")
     ap.add_argument("--model", default="gpt-4.1")
     ap.add_argument("--max-usd", type=float, default=3.0)
-    args = ap.parse_args()
-    src = os.path.join(LC_DIR, "answers_smoke.json" if args.smoke else "answers.json")
+    args = ap.parse_args(argv)
+    src = args.input or os.path.join(LC_DIR, "answers_smoke.json" if args.smoke else "answers.json")
     if not os.path.exists(src):
         print(f"!! Λείπει το {src} — τρέξε πρώτα το probe_lc_vs_rag.py")
         return 1
+    with open(src, encoding="utf-8") as f:
+        data = json.load(f)
+
+    # Έλεγχος πληρότητας ΠΡΙΝ από οποιαδήποτε πληρωμένη κλήση κριτή ή έκδοση απόφασης
+    errs = SPEC.validate_answers(data, smoke=args.smoke)
+    if errs:
+        print(f"!! ΑΚΥΡΟ/ΗΜΙΤΕΛΕΣ {src} — ΔΕΝ κρίνεται και ΔΕΝ εκδίδεται απόφαση:")
+        for e in errs:
+            print(f"   - {e}")
+        return 1
+
     key = C.api_key()
     if not key:
         print("!! Λείπει OPENAI_API_KEY (περιβάλλον ή .env της ρίζας)")
         return 1
-    with open(src, encoding="utf-8") as f:
-        data = json.load(f)
     gold = {sk: C.load_jsonl(fn) for sk, fn in GOLD.items()}
     judge = C.Judge(args.model, key, args.max_usd)
     out = []
@@ -305,14 +477,22 @@ def main() -> int:
     S = stats(out)
     print_table(S)
     decide(S, args.smoke)
+    print_cost_breakdown(out)
+    print_wait_time(out, data.get("live_timing") or [])
+    print_distractor(out)
     paired(out)
     diagnose(out)
     m = data.get("meta") or {}
     print(f"\nGemini (μέρος 1): ~{m.get('spent_usd')} $ · κριτής: {judge.new} νέες / {judge.hits} παγωμένες "
           f"κρίσεις · ~{judge.usd:.3f} $ τώρα")
-    dst = src.replace("answers", "judged")
+    dst = src.replace("answers", "judged") if "answers" in os.path.basename(src) else src + ".judged.json"
     with open(dst, "w", encoding="utf-8") as f:
-        json.dump({"meta": m | {"judge": args.model}, "rows": out}, f, ensure_ascii=False, indent=1)
+        json.dump(
+            {"meta": m | {"judge": args.model}, "rows": out, "live_timing": data.get("live_timing") or []},
+            f,
+            ensure_ascii=False,
+            indent=1,
+        )
     print(f"→ {dst}")
     return 0
 
