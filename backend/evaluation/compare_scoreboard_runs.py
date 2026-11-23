@@ -6,7 +6,14 @@
 απόφαση του φύλακα. Το `scoreboard.py --compare` δείχνει μόνο αλλαγές κατάστασης· αυτό κοιτά όλα.
 
     python backend/evaluation/compare_scoreboard_runs.py g38b refactor_rank
+
+--only-outcome passed_corrective (βήμα 2β): η αλλαγή ΠΡΕΠΕΙ να αγγίζει μόνο τις ερωτήσεις που στο παλιό
+τρέξιμο απαντήθηκαν από τη δεύτερη αναζήτηση. Αλλαγή σε οποιαδήποτε άλλη ερώτηση = λάθος. Νέες κλήσεις
+επιτρέπονται εδώ (είναι οι κλήσεις του κριτή), αλλά μετρώνται.
+
+    python backend/evaluation/compare_scoreboard_runs.py g38b veto --only-outcome passed_corrective
 """
+import argparse
 import json
 import sys
 from pathlib import Path
@@ -21,7 +28,7 @@ def load(label: str) -> tuple[dict, dict]:
     return {r["key"]: r for r in data["rows"]}, data.get("gemini", {})
 
 
-def main(old_label: str, new_label: str) -> int:
+def main(old_label: str, new_label: str, only_outcome: str | None = None) -> int:
     old, old_gemini = load(old_label)
     new, gemini = load(new_label)
     common = sorted(old.keys() & new.keys())
@@ -32,12 +39,28 @@ def main(old_label: str, new_label: str) -> int:
                 diffs[f].append(k)
     print(f"{old_label} -> {new_label}: κοινές ερωτήσεις {len(common)} "
           f"(μόνο στο παλιό {len(old.keys() - new.keys())}, μόνο στο νέο {len(new.keys() - old.keys())})")
-    print(f"Gemini, νέες κλήσεις: παλιό {old_gemini.get('new')} · νέο {gemini.get('new')} "
-          f"(πρέπει 0)\nΣφάλματα παλιού: {old_gemini.get('errors')}\nΣφάλματα νέου:  {gemini.get('errors')}")
+    print(f"Gemini, νέες κλήσεις: παλιό {old_gemini.get('new')} · νέο {gemini.get('new')}"
+          f"{'' if only_outcome else ' (πρέπει 0)'}\nΣφάλματα παλιού: {old_gemini.get('errors')}\n"
+          f"Σφάλματα νέου:  {gemini.get('errors')}")
     for f in FIELDS:
         n_same = len(common) - len(diffs[f])
         print(f"  {f:<12} ίδια {n_same}/{len(common)}" + (f"   διαφέρουν: {diffs[f][:10]}" if diffs[f] else ""))
     changed = sorted({k for f in FIELDS for k in diffs[f]})
+
+    if only_outcome:
+        allowed = [k for k in common if old[k].get("outcome") == only_outcome]
+        outside = [k for k in changed if k not in allowed]
+        print(f"\nΕρωτήσεις με «{only_outcome}» στο {old_label}: {len(allowed)} · άλλαξαν {len(changed)} "
+              f"· ΕΚΤΟΣ αυτών {len(outside)}")
+        for k in allowed:
+            mark = "ΑΛΛΑΞΕ" if k in changed else "ίδια  "
+            print(f"  {mark} {k:<16} {old[k].get('state', '')[:28]:<28} -> {new[k].get('state', '')[:28]}")
+        for k in outside[:10]:
+            print(f"  !! αλλαγή ΕΚΤΟΣ: {k}  {old[k].get('state')} -> {new[k].get('state')}")
+        ok = not outside and not (old.keys() ^ new.keys())
+        print("\nΑΛΛΑΞΑΝ ΜΟΝΟ ΟΙ ΑΝΑΜΕΝΟΜΕΝΕΣ ✓" if ok else "\nΑΛΛΑΓΕΣ ΕΚΤΟΣ ΤΩΝ ΑΝΑΜΕΝΟΜΕΝΩΝ ✗")
+        return 0 if ok else 1
+
     for k in changed[:5]:
         print(f"\n  {k}")
         for f in FIELDS:
@@ -51,7 +74,10 @@ def main(old_label: str, new_label: str) -> int:
 
 
 if __name__ == "__main__":
-    if len(sys.argv) != 3:
-        print(__doc__)
-        sys.exit(2)
-    sys.exit(main(sys.argv[1], sys.argv[2]))
+    ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
+    ap.add_argument("old")
+    ap.add_argument("new")
+    ap.add_argument("--only-outcome", default=None,
+                    help="επιτρέπονται αλλαγές ΜΟΝΟ σε ερωτήσεις με αυτό το outcome στο παλιό τρέξιμο")
+    a = ap.parse_args()
+    sys.exit(main(a.old, a.new, a.only_outcome))

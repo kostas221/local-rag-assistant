@@ -470,17 +470,39 @@ CONTROL = [
 ]
 
 
+# Σημεία από όπου αρχίζει η ΕΡΩΤΗΣΗ μέσα σε ένα prompt (το πιο τελευταίο κερδίζει).
+_TAIL_MARKERS = ("CURRENT QUESTION:", "QUESTION:", "User question:", "Original query:")
+
+
+def safe_tail(prompt: str, limit: int = 200) -> str:
+    """Το κομμάτι του prompt που κρατά το πάγωμα για να το διαβάζει άνθρωπος (η κλήση αναγνωρίζεται από
+    το SHA-256 ολόκληρου του prompt, όχι από αυτό).
+
+    ΓΙΑΤΙ (23/11/2026): ως τώρα ήταν οι τελευταίοι 200 χαρακτήρες. Σε prompt που περιέχει σελίδες
+    (απάντηση, κριτής επάρκειας) και σύντομη ερώτηση, αυτοί περιείχαν και κομμάτι αυτούσιου κειμένου
+    άρθρου — και τα αρχεία πάγωσης ανεβαίνουν στο δημόσιο repo. Τώρα: από την ερώτηση και μετά."""
+    starts = [prompt.rfind(m) for m in _TAIL_MARKERS]
+    start = max(starts)
+    if start >= 0:
+        return prompt[start:start + limit]
+    return "" if "--- SOURCE TEXT ---" in prompt else prompt[-limit:]
+
+
 class Frozen:
     """Πάγωμα του generate_once με κλειδί ΟΛΟΚΛΗΡΟ το prompt. Τυλίγει τον κατάσκοπο του
     eval_near_ooc, ώστε το E.retrieve να βρίσκει την αναδιατύπωση και στα παγωμένα."""
 
-    def __init__(self, path: str, fresh: bool, frozen_only: bool = False):
+    def __init__(self, path: str, fresh: bool, frozen_only: bool = False,
+                 allow_new: tuple[str, ...] = ()):
         """frozen_only (23/11/2026): κλήση που λείπει από το πάγωμα ΔΕΝ γίνεται ποτέ — καταγράφεται
         ως σφάλμα και η εφαρμογή συνεχίζει όπως σε αποτυχία του API. Για τρεξίματα που πρέπει να
         αποδείξουν «δεν άλλαξε τίποτα»: χωρίς αυτό, ένα prompt που άλλαξε έστω και κατά ένα γράμμα
         έκανε σιωπηλά νέα, πληρωμένη κλήση."""
         self.path = path
         self.frozen_only = frozen_only
+        # allow_new (βήμα 2β): αρχές prompt που ΕΠΙΤΡΕΠΕΤΑΙ να γίνουν νέες κλήσεις ακόμα και με
+        # frozen_only (π.χ. «You are verifying» = ο κριτής επάρκειας). Όλα τα άλλα μένουν παγωμένα.
+        self.allow_new = tuple(allow_new)
         self.data: dict = {}
         if not fresh and os.path.exists(path):
             with open(path, encoding="utf-8") as f:
@@ -502,7 +524,7 @@ class Frozen:
                 text = self.data[key]["out"]
                 E._prompts.append((prompt[:60], text.strip(" \"'\n")))
                 return text
-            if self.frozen_only:
+            if self.frozen_only and not (self.allow_new and prompt.startswith(self.allow_new)):
                 self.errors.append(f"λείπει από το πάγωμα: «{prompt[-120:]}»")
                 raise RuntimeError("frozen-only: η κλήση δεν υπάρχει στο πάγωμα — δεν έγινε")
             try:
@@ -513,7 +535,7 @@ class Frozen:
                 self.errors.append(f"{type(e).__name__}: {e}"[:200])
                 raise
             self.misses += 1
-            self.data[key] = {"tail": prompt[-200:], "out": text}
+            self.data[key] = {"tail": safe_tail(prompt), "out": text}
             return text
 
         gemini_rest.generate_once = frozen
@@ -793,7 +815,8 @@ async def run(args) -> int:
     if args.frozen_only and args.fresh:
         print("!! --frozen-only και --fresh μαζί δεν έχουν νόημα")
         return 1
-    frozen = Frozen(FROZEN_PATH, args.fresh, frozen_only=args.frozen_only)
+    frozen = Frozen(FROZEN_PATH, args.fresh, frozen_only=args.frozen_only,
+                    allow_new=tuple(args.allow_new))
     frozen.install()
     gate = ai_core.MIN_RERANK_SCORE
     config = {"reranker": ai_core.RERANKER_MODEL, "embedder": ai_core.EMBED_MODEL_NAME,
@@ -858,6 +881,11 @@ async def run(args) -> int:
         print("\nΕΛΕΓΧΟΣ (γραμμένος πριν το 1ο τρέξιμο — βλ. docstring):")
         for k, want in CONTROL:
             print(f"  {k:<52}αναμενόταν {want:<34}μετρήθηκε {S.get(k, '—')}")
+    if prev:
+        # Με --compare, η σύγκριση μεταφράσεων γίνεται με ΑΥΤΟ το τρέξιμο (23/11/2026). Πριν, γινόταν με
+        # το κοινό αρχείο μεταφράσεων του volume, που από το βήμα 1 του κύκλου 2 δεν γράφεται πια
+        # (ιδιωτικότητα) -> έμεναν μόνο τα παλιά αρχεία του 2.5 και η αναφορά έδειχνε ψευδώς «1/75».
+        old_trans = {r["question"]: r["translation"] for r in prev["rows"] if r.get("translation")}
     translation_drift(rows, old_trans)
 
     print(f"\nGemini: {frozen.misses} νέες κλήσεις · {frozen.hits} από το πάγωμα"
@@ -892,6 +920,9 @@ def main() -> int:
     ap.add_argument("--limit", type=int, default=0, help="μόνο N ανά σετ (δοκιμή, δεν σώζει)")
     ap.add_argument("--only", default="", help=f"μόνο αυτά τα σετ, με κόμμα: {[k for k, _ in SETS]}")
     ap.add_argument("--fresh", action="store_true", help="αγνοεί το πάγωμα του Gemini")
+    ap.add_argument("--allow-new", action="append", default=[],
+                    help="με --frozen-only: αρχή prompt που επιτρέπεται να γίνει νέα κλήση "
+                         "(π.χ. 'You are verifying' για τον κριτή επάρκειας)· μπορεί πολλές φορές")
     ap.add_argument("--frozen-only", action="store_true",
                     help="μόνο αποθηκευμένες κλήσεις: σε κλήση που λείπει, σταματά ΧΩΡΙΣ να την κάνει")
     ap.add_argument("--rebuild", action="store_true", help="ξαναχτίζει το απομονωμένο store")

@@ -1,0 +1,702 @@
+{
+ "2eace4ad6f2bc0065a969239420ee69b2c1b77b4ba9275b145f03a0595b522a2": {
+  "model": "gemini-3.8-flash",
+  "draw": 1,
+  "out": "NO",
+  "seconds": 2.02,
+  "question": "What benchmark results for GPU tensor cores are reported in these papers?"
+ },
+ "c701e4f3b352db7e0493ad4023d45e313e9b04409dc82425f38e9f6e387a05a0": {
+  "model": "gemini-3.8-flash",
+  "draw": 1,
+  "out": "NO",
+  "seconds": 3.01,
+  "question": "What do the documents say about GDPR compliance requirements for cloud providers?"
+ },
+ "84cc0bd6d31b503499aa7d18d256bee44a1cd6b3b820de0cdf704c6df609050e": {
+  "model": "gemini-3.8-flash",
+  "draw": 1,
+  "out": "NO",
+  "seconds": 2.68,
+  "question": "What do the documents say about GDPR compliance requirements for cloud providers?"
+ },
+ "03da753ddbed1a44d78ea2341ee7401528c2dbcf8016a76f6da793aec284e532": {
+  "model": "gemini-3.8-flash",
+  "draw": 1,
+  "out": "YES",
+  "seconds": 2.04,
+  "question": "legal issues confidentiality control audit"
+ },
+ "9502b3d22bc11de0090812ebffa72c199e13733ac1551a9599503526b6d04435": {
+  "model": "gemini-3.8-flash",
+  "draw": 1,
+  "out": "YES",
+  "seconds": 2.09,
+  "question": "legal issues confidentiality control audit"
+ },
+ "05781253ad0872d0cde6a0d9ebe7cd81b71b66b476da92ef91304f2237320921": {
+  "model": "gemini-3.8-flash",
+  "draw": 1,
+  "out": "YES",
+  "seconds": 2.2,
+  "question": "difference between two types of services described"
+ },
+ "73314093d855d0c9ba4d96cbc85262bd4b628368d86b2a1846f729ebe4177d62": {
+  "model": "gemini-3.8-flash",
+  "draw": 1,
+  "out": "YES",
+  "seconds": 2.7,
+  "question": "legal issues confidentiality control audit"
+ },
+ "a21503093681668d82189e59421351d4342f8595206d75734f41dca1a48d977b": {
+  "model": "gemini-3.8-flash",
+  "draw": 1,
+  "out": "YES",
+  "seconds": 2.02,
+  "question": "difference between two types of services described"
+ },
+ "10d61f8750625569c903d3116b58df558f0cae670fb0b1ef16b7aaf4667936bf": {
+  "model": "gemini-3.8-flash",
+  "draw": 1,
+  "out": "YES",
+  "seconds": 2.4,
+  "question": "difference between two types of services described"
+ },
+ "dcaa6f89e417e28f10c8cb73ec3eacdec413443339da10cce55870da3449dda2": {
+  "model": "gemini-3.8-flash",
+  "draw": 1,
+  "out": "YES",
+  "seconds": 2.16,
+  "question": "Why does the same thing end up costing different amounts in different places?"
+ },
+ "3e4fd050dc4b6a983401229ddbf64d0e4d078ed2958785c3e69909f996479262": {
+  "model": "gemini-3.8-flash",
+  "draw": 1,
+  "out": "YES",
+  "seconds": 2.09,
+  "question": "Why does the same thing end up costing different amounts in different places?"
+ },
+ "8a6919f353af6fae6bd4d208e0ee218754cf858708f93fb280a210ed8a0adcdb": {
+  "model": "gemini-3.8-flash",
+  "draw": 1,
+  "out": "YES",
+  "seconds": 1.83,
+  "question": "What do the authors of that system paper themselves say they contributed?"
+ },
+ "7fb5a88b40bec37c3aafbe2dfbac80a8dff8343c68b2b86b98b359caa3c36551": {
+  "model": "gemini-3.8-flash",
+  "draw": 1,
+  "out": "YES",
+  "seconds": 4.11,
+  "question": "Why does the same thing end up costing different amounts in different places?"
+ },
+ "020f820a7c4f1713bac158f0cedef0a384fac7599de3b2f3d81cb52d119f537b": {
+  "model": "gemini-3.8-flash",
+  "draw": 1,
+  "out": "NO",
+  "seconds": 1.9,
+  "question": "What do the authors of that system paper themselves say they contributed?"
+ },
+ "97198b6f65abd782a9d3a6e385e5dd44fc4fb19768f1e44326da62f7a7723e88": {
+  "model": "gemini-3.8-flash",
+  "draw": 1,
+  "out": "YES",
+  "seconds": 2.15,
+  "question": "Is it still worth keeping the data right next to the machines doing the work?"
+ },
+ "19fc106aa65c11e3d099400c5a98923dea09eb93ce9ccd44c99f15e00b6a5688": {
+  "model": "gemini-3.8-flash",
+  "draw": 1,
+  "out": "YES",
+  "seconds": 3.74,
+  "question": "What do the authors of that system paper themselves say they contributed?"
+ },
+ "2cc43507de85c2b7425fefc033ed0590066b5b1417c07f97ac6fef48864c331d": {
+  "model": "gemini-3.8-flash",
+  "draw": 1,
+  "out": "YES",
+  "seconds": 1.9,
+  "question": "Is it still worth keeping the data right next to the machines doing the work?"
+ },
+ "fb1940a891609b0e572cb03cd36b1887b3cd8d3a3f9047cfe44e1cf3f0627677": {
+  "model": "gemini-3.8-flash",
+  "draw": 1,
+  "out": "YES",
+  "seconds": 1.71,
+  "question": "Is it still worth keeping the data right next to the machines doing the work?"
+ },
+ "99e00861f809fc23f1b2db478e53ef5cce463bcb62a2cb14faf7d2b6da8cc5da": {
+  "model": "gemini-3.8-flash",
+  "draw": 1,
+  "out": "NO",
+  "seconds": 1.59,
+  "question": "Why do they bring up that older system as a warning?"
+ },
+ "3325a0f377c125e492cc28f435cb13cb38e10ca2773beb304c8a8735a9265387": {
+  "model": "gemini-3.8-flash",
+  "draw": 1,
+  "out": "NO",
+  "seconds": 2.39,
+  "question": "Why do they bring up that older system as a warning?"
+ },
+ "485772996ed028a40909a37bf536e3e23f051f4f5d686c85137ffd7c111e2b88": {
+  "model": "gemini-3.8-flash",
+  "draw": 1,
+  "out": "YES",
+  "seconds": 1.9,
+  "question": "What's the difference in how you pay for the newer kind of internet computing compared to the older kind?"
+ },
+ "5a9b06125931eb701dbda16e621e5657316b71ca16dd549b9a07e08facb360e1": {
+  "model": "gemini-3.8-flash",
+  "draw": 1,
+  "out": "NO",
+  "seconds": 1.78,
+  "question": "five applications pushing boundaries"
+ },
+ "ce461bc009a049a70938cc3408c43714fac916eaf354181e629fa17278fbb001": {
+  "model": "gemini-3.8-flash",
+  "draw": 1,
+  "out": "YES",
+  "seconds": 3.8,
+  "question": "What's the difference in how you pay for the newer kind of internet computing compared to the older kind?"
+ },
+ "058ce62f2b09bfeb984e4d8a4d8058ed4f319ec10c7ceebfbb15b4827923c278": {
+  "model": "gemini-3.8-flash",
+  "draw": 1,
+  "out": "YES",
+  "seconds": 2.82,
+  "question": "What's the difference in how you pay for the newer kind of internet computing compared to the older kind?"
+ },
+ "2f6b16770e1c88cbba5cf67048b809d939b16174186bf426f55d493e56918942": {
+  "model": "gemini-3.8-flash",
+  "draw": 1,
+  "out": "YES",
+  "seconds": 1.72,
+  "question": "five applications pushing boundaries"
+ },
+ "917acd1f10dbce83c7f3cb396324492907140bad9e0bae87dfab91da880ac2d4": {
+  "model": "gemini-3.8-flash",
+  "draw": 1,
+  "out": "YES",
+  "seconds": 2.88,
+  "question": "five applications pushing boundaries"
+ },
+ "aaad8fb875b6809c34bd2989d21443369a495e6067a7f2dd04fa540708b5e72a": {
+  "model": "gemini-3.8-flash",
+  "draw": 1,
+  "out": "YES",
+  "seconds": 2.58,
+  "question": "What solutions does the document suggest for the challenges of rapidly increasing system size and how software is paid for?"
+ },
+ "ef630b1ff6ed33aec839f578ef258d8e590cf51cdde73f47fe49f7ffdaacb273": {
+  "model": "gemini-3.8-flash",
+  "draw": 1,
+  "out": "YES",
+  "seconds": 2.7,
+  "question": "What solutions does the document suggest for the challenges of rapidly increasing system size and how software is paid for?"
+ },
+ "967d768511dbc8ac230871a772c10e6bee06416a768d40174549a2c0ef533d88": {
+  "model": "gemini-3.8-flash",
+  "draw": 1,
+  "out": "YES",
+  "seconds": 2.52,
+  "question": "What solutions does the document suggest for the challenges of rapidly increasing system size and how software is paid for?"
+ },
+ "c71d9beb9257450b887278cc9c1947d923bb725ac3de15db6e69f6228c91827e": {
+  "model": "gemini-3.8-flash",
+  "draw": 1,
+  "out": "YES",
+  "seconds": 2.27,
+  "question": "What does this paper say could help with the problems of making things bigger fast and how software is sold?"
+ },
+ "4b2985bc3cca3ab8a6ca2e3f72bbfec5d5386e3220e9e8d473887eb51f667247": {
+  "model": "gemini-3.8-flash",
+  "draw": 1,
+  "out": "YES",
+  "seconds": 2.38,
+  "question": "What does this paper say could help with the problems of making things bigger fast and how software is sold?"
+ },
+ "0df450a8f163792ec3ecbb9f9549fe105846f6cbb886240f688792c0a354be52": {
+  "model": "gemini-3.8-flash",
+  "draw": 1,
+  "out": "YES",
+  "seconds": 2.18,
+  "question": "What does this paper say could help with the problems of making things bigger fast and how software is sold?"
+ },
+ "76363eb365dabad833d7f4a44f3a8abd8889e77a383d05b19e2d1c27c6e40d40": {
+  "model": "gemini-3.8-flash",
+  "draw": 1,
+  "out": "YES",
+  "seconds": 3.49,
+  "question": "What wrong idea about moving small, on-demand programs between different providers does the paper point out, and which initiative is mentioned as a step towards making this easier?"
+ },
+ "663b4be3f22eae8029742862703d7db8bc8ddb6a64c88b33c7e239089ef900da": {
+  "model": "gemini-3.8-flash",
+  "draw": 1,
+  "out": "YES",
+  "seconds": 1.8,
+  "question": "What wrong idea about moving small, on-demand programs between different providers does the paper point out, and which initiative is mentioned as a step towards making this easier?"
+ },
+ "17b3d1767e3363729d45773f8187cef658096703e92700618edaea4ffb45e7d5": {
+  "model": "gemini-3.8-flash",
+  "draw": 1,
+  "out": "YES",
+  "seconds": 2.35,
+  "question": "How do the counting mechanisms work in the data processing framework described?"
+ },
+ "ac3b5097ce36f34965da12f9e6f013fd502e318cda48d0d339efe907221bfcce": {
+  "model": "gemini-3.8-flash",
+  "draw": 1,
+  "out": "YES",
+  "seconds": 3.24,
+  "question": "What wrong idea about moving small, on-demand programs between different providers does the paper point out, and which initiative is mentioned as a step towards making this easier?"
+ },
+ "39ac131b17205735a2d0ce67c912fca0dab5318d9a89df89a589d0ea2b1465e2": {
+  "model": "gemini-3.8-flash",
+  "draw": 1,
+  "out": "NO",
+  "seconds": 2.46,
+  "question": "How do the authors describe the operation of the counting feature in their data processing system?"
+ },
+ "738de464cabbca1acbeda8004f0308304ef62704af1fc1c0e07213e3cebf6d7a": {
+  "model": "gemini-3.8-flash",
+  "draw": 1,
+  "out": "NO",
+  "seconds": 2.27,
+  "question": "Knative enterprise adoption today"
+ },
+ "be10b7b70950bf51dc446b15f1631cbfc06fc55d0d69fe2c46194c7df62523c3": {
+  "model": "gemini-3.8-flash",
+  "draw": 1,
+  "out": "NO",
+  "seconds": 2.27,
+  "question": "Knative enterprise adoption today"
+ },
+ "52bdaa6edfde7334d79c829c5363e15ef872df821698864801da87a263625124": {
+  "model": "gemini-3.8-flash",
+  "draw": 1,
+  "out": "YES",
+  "seconds": 3.79,
+  "question": "How do the authors describe the operation of the counting feature in their data processing system?"
+ },
+ "0df80b4269e7244ed9d035249c71940532ca60ffcb18e8404ef695c8373eae65": {
+  "model": "gemini-3.8-flash",
+  "draw": 1,
+  "out": "NO",
+  "seconds": 2.14,
+  "question": "Knative enterprise adoption today"
+ },
+ "59d13b5dd9acc3683e9a8a5a34d5569018450368cc7c131a35f227e623964b66": {
+  "model": "gemini-3.8-flash",
+  "draw": 1,
+  "out": "NO",
+  "seconds": 2.14,
+  "question": "What is the average latency improvement observed when using edge computing for real-time video processing compared to traditional cloud approaches?"
+ },
+ "8788aebf35abfbf6ce2d552e62481ca6b5c8096465bdd74d23c1c2c3cecb7a61": {
+  "model": "gemini-3.8-flash",
+  "draw": 1,
+  "out": "NO",
+  "seconds": 2.09,
+  "question": "What is the average latency improvement observed when using edge computing for real-time video processing compared to traditional cloud approaches?"
+ },
+ "68a9bd35f92690a878ff0187a87fd135c882c7871b17954aaf417864d373d82b": {
+  "model": "gemini-3.8-flash",
+  "draw": 1,
+  "out": "NO",
+  "seconds": 2.46,
+  "question": "What is the average latency improvement observed when using edge computing for real-time video processing compared to traditional cloud approaches?"
+ },
+ "aad8d2713990d0b30681346e23e0225858a9e8a4b8c3e648623a637a1ad874c0": {
+  "model": "gemini-3.8-flash",
+  "draw": 1,
+  "out": "NO",
+  "seconds": 2.57,
+  "question": "What are the core principles behind the OpenStack cloud operating system?"
+ },
+ "7cadab5128468de15a8adfc13c98323ad748ab1d16a0d3ca5ad86d6ae1c9d0c5": {
+  "model": "gemini-3.8-flash",
+  "draw": 1,
+  "out": "NO",
+  "seconds": 2.4,
+  "question": "What are the core principles behind the OpenStack cloud operating system?"
+ },
+ "231473049d6c86e32c757c691c290775777da143ec5cb52f8af3ed1373035cc9": {
+  "model": "gemini-3.8-flash",
+  "draw": 1,
+  "out": "NO",
+  "seconds": 2.04,
+  "question": "What are the core principles behind the OpenStack cloud operating system?"
+ },
+ "191e7bee40db44329dc46fa64d27bbaa0f4df7847041e72db4e3c0d13df1a4ce": {
+  "model": "gemini-3.8-flash",
+  "draw": 1,
+  "out": "NO",
+  "seconds": 2.58,
+  "question": "basic operating principle Open Container Initiative"
+ },
+ "21e90bafd74185edae68f49110ae6166bf398034b83d80aeb9b6f5f492d038e8": {
+  "model": "gemini-3.8-flash",
+  "draw": 1,
+  "out": "NO",
+  "seconds": 3.43,
+  "question": "basic operating principle Open Container Initiative"
+ },
+ "9b1f81c759548f451b0830885b7b5d6225a16a42923d55376b72526b000c8e0f": {
+  "model": "gemini-3.8-flash",
+  "draw": 1,
+  "out": "NO",
+  "seconds": 2.7,
+  "question": "basic operating principle Open Container Initiative"
+ },
+ "2ee77bed659ce47db5026d318053aa8636069f3251561a67ef81f37e0ccd1151": {
+  "model": "gemini-3.8-flash",
+  "draw": 2,
+  "out": "NO",
+  "seconds": 2.19,
+  "question": "What benchmark results for GPU tensor cores are reported in these papers?"
+ },
+ "885ec6a3bdcef2616de2f7b2d1b2917c7db04a38a351a1d3eb93ec28adfc6602": {
+  "model": "gemini-3.8-flash",
+  "draw": 2,
+  "out": "NO",
+  "seconds": 2.97,
+  "question": "What do the documents say about GDPR compliance requirements for cloud providers?"
+ },
+ "996be5a3aaaad3f58318bd06ee721580bea9b7384146b249c28282dfa23aa129": {
+  "model": "gemini-3.8-flash",
+  "draw": 2,
+  "out": "NO",
+  "seconds": 3.97,
+  "question": "What do the documents say about GDPR compliance requirements for cloud providers?"
+ },
+ "7f810bcfdfec3c938687e33a06185bfee4bd66a98fa0a59dac50bce3af3fd83e": {
+  "model": "gemini-3.8-flash",
+  "draw": 2,
+  "out": "YES",
+  "seconds": 2.05,
+  "question": "legal issues confidentiality control audit"
+ },
+ "df68afb535b49e60659a4e1e6daa519bf6ed8123a28ddba1e3d2f10e724064db": {
+  "model": "gemini-3.8-flash",
+  "draw": 2,
+  "out": "YES",
+  "seconds": 2.35,
+  "question": "legal issues confidentiality control audit"
+ },
+ "7b4078d6b1453569a0181e48fd14e5b2e0857dc74cd23e9647a9c5437a2e0253": {
+  "model": "gemini-3.8-flash",
+  "draw": 2,
+  "out": "YES",
+  "seconds": 2.28,
+  "question": "legal issues confidentiality control audit"
+ },
+ "1331c6cd5dad00540b5f28218cdeff228bc8b97428fd98be6bcb204e8361036f": {
+  "model": "gemini-3.8-flash",
+  "draw": 2,
+  "out": "YES",
+  "seconds": 2.57,
+  "question": "difference between two types of services described"
+ },
+ "b85c2b623065eb7644751202cc1cd4204760b9dea9f7edf375acb7209fddc65a": {
+  "model": "gemini-3.8-flash",
+  "draw": 2,
+  "out": "YES",
+  "seconds": 2.73,
+  "question": "difference between two types of services described"
+ },
+ "c757b0f78213907ec9a24c322ac48ab794542248e46a137ed33cfe5a564a857d": {
+  "model": "gemini-3.8-flash",
+  "draw": 2,
+  "out": "YES",
+  "seconds": 2.39,
+  "question": "difference between two types of services described"
+ },
+ "303e8db3d5581ec2fd414afec710281bdadf25f9dd90e5684588deedae48f1ce": {
+  "model": "gemini-3.8-flash",
+  "draw": 2,
+  "out": "YES",
+  "seconds": 2.33,
+  "question": "Why does the same thing end up costing different amounts in different places?"
+ },
+ "76f0d6af78e4b205e22b3a89014b99dcdab2487fe1e1ee3f57f217672c4d541d": {
+  "model": "gemini-3.8-flash",
+  "draw": 2,
+  "out": "YES",
+  "seconds": 2.01,
+  "question": "Why does the same thing end up costing different amounts in different places?"
+ },
+ "944d03fee0f2f7a05f697ac54581d502b11d082fd89366d081ad88ecfc950bc5": {
+  "model": "gemini-3.8-flash",
+  "draw": 2,
+  "out": "YES",
+  "seconds": 2.26,
+  "question": "Why does the same thing end up costing different amounts in different places?"
+ },
+ "9dc3e5de6ba5cf61a181a0d990b378c89b9ca6326f8314fe524ad5513d2875db": {
+  "model": "gemini-3.8-flash",
+  "draw": 2,
+  "out": "YES",
+  "seconds": 2.09,
+  "question": "What do the authors of that system paper themselves say they contributed?"
+ },
+ "2cd26cc3325422ba481611e7ca9a5f8f370a690717ef5ad44822b273aad3aef0": {
+  "model": "gemini-3.8-flash",
+  "draw": 2,
+  "out": "YES",
+  "seconds": 3.76,
+  "question": "What do the authors of that system paper themselves say they contributed?"
+ },
+ "fbb3c345564f621386c5b652ccbfb45771bd28d42b85a57df2fa36fc6f575cb1": {
+  "model": "gemini-3.8-flash",
+  "draw": 2,
+  "out": "YES",
+  "seconds": 2.6,
+  "question": "Is it still worth keeping the data right next to the machines doing the work?"
+ },
+ "d3fa1bc5dea350006e9b98b141fff327dda5e730a79d19ebb097849c149473af": {
+  "model": "gemini-3.8-flash",
+  "draw": 2,
+  "out": "YES",
+  "seconds": 5.39,
+  "question": "What do the authors of that system paper themselves say they contributed?"
+ },
+ "1406dacc0f00c31c7712192a9654f54f70d041dda953a90415014c52a83088f0": {
+  "model": "gemini-3.8-flash",
+  "draw": 2,
+  "out": "YES",
+  "seconds": 2.73,
+  "question": "Is it still worth keeping the data right next to the machines doing the work?"
+ },
+ "e65ba4f7984376c9fd67884adf29f307b7617421b9b24f0c71059b90ae04072c": {
+  "model": "gemini-3.8-flash",
+  "draw": 2,
+  "out": "YES",
+  "seconds": 3.54,
+  "question": "Is it still worth keeping the data right next to the machines doing the work?"
+ },
+ "505099f2fb89f1797db49c77df21b53c0a624630de4fc0e2e912204dc60bdbc6": {
+  "model": "gemini-3.8-flash",
+  "draw": 2,
+  "out": "NO",
+  "seconds": 3.3,
+  "question": "Why do they bring up that older system as a warning?"
+ },
+ "0f2b94e400c97b07f605a7a798cf5580393b02f9a171fb263832a32b8af7db93": {
+  "model": "gemini-3.8-flash",
+  "draw": 2,
+  "out": "YES",
+  "seconds": 2.22,
+  "question": "What's the difference in how you pay for the newer kind of internet computing compared to the older kind?"
+ },
+ "bc62b11f942a193d0f12e75539fdc437c002f61ed16da647b16264a79a6444d2": {
+  "model": "gemini-3.8-flash",
+  "draw": 2,
+  "out": "YES",
+  "seconds": 3.93,
+  "question": "What's the difference in how you pay for the newer kind of internet computing compared to the older kind?"
+ },
+ "f1ab356d699a9f5089bc036de3e62ed0957f69f437c1e0b8982fb532a74de532": {
+  "model": "gemini-3.8-flash",
+  "draw": 2,
+  "out": "YES",
+  "seconds": 3.81,
+  "question": "What's the difference in how you pay for the newer kind of internet computing compared to the older kind?"
+ },
+ "e259943f1e2b4dd2e5da9c8c7c0a79a98a2666b6fb28ef3bcbb1bb2c1447b154": {
+  "model": "gemini-3.8-flash",
+  "draw": 2,
+  "out": "NO",
+  "seconds": 3.37,
+  "question": "five applications pushing boundaries"
+ },
+ "56adbd35b28f46715a1ad8d9568ec050a2e7526329d9b8221e2e8b5c29dec076": {
+  "model": "gemini-3.8-flash",
+  "draw": 2,
+  "out": "YES",
+  "seconds": 2.21,
+  "question": "five applications pushing boundaries"
+ },
+ "f8df129bef33212acf1c554d3d45417b21e668d3eceb5e651373c39e45183890": {
+  "model": "gemini-3.8-flash",
+  "draw": 2,
+  "out": "YES",
+  "seconds": 2.39,
+  "question": "five applications pushing boundaries"
+ },
+ "3fd517e109cf217649c4c8aaf98376c86ca6d76ee29b6a819d3bf3c11fc4234c": {
+  "model": "gemini-3.8-flash",
+  "draw": 2,
+  "out": "YES",
+  "seconds": 2.33,
+  "question": "What solutions does the document suggest for the challenges of rapidly increasing system size and how software is paid for?"
+ },
+ "a8d459a306b2b2d0ec404fd179918c4da401920d706ad7f4310bab5b61f4652e": {
+  "model": "gemini-3.8-flash",
+  "draw": 2,
+  "out": "YES",
+  "seconds": 2.2,
+  "question": "What solutions does the document suggest for the challenges of rapidly increasing system size and how software is paid for?"
+ },
+ "1ad139eab44969da832fd4c6d27e401da65bec81430c10895cecbc8fb71f3c17": {
+  "model": "gemini-3.8-flash",
+  "draw": 2,
+  "out": "NO",
+  "seconds": 12.42,
+  "question": "Why do they bring up that older system as a warning?"
+ },
+ "3e42615dfac1980112b0780d161666794c9aa41c0a0b03ad12b455def5dabc3b": {
+  "model": "gemini-3.8-flash",
+  "draw": 2,
+  "out": "YES",
+  "seconds": 2.16,
+  "question": "What solutions does the document suggest for the challenges of rapidly increasing system size and how software is paid for?"
+ },
+ "9748888761aabf707b568387bc8fe242d0f6e0404fd545ce3150d708561783c8": {
+  "model": "gemini-3.8-flash",
+  "draw": 2,
+  "out": "YES",
+  "seconds": 2.27,
+  "question": "What does this paper say could help with the problems of making things bigger fast and how software is sold?"
+ },
+ "e70f84da3063b18ca251b652a59385174169ad4f94ccbd59f46a357341c99358": {
+  "model": "gemini-3.8-flash",
+  "draw": 2,
+  "out": "YES",
+  "seconds": 2.36,
+  "question": "What does this paper say could help with the problems of making things bigger fast and how software is sold?"
+ },
+ "abb1fd43995954cb058c28c92a94481ed5a0a135b7e79facc4c2f0737f04edc5": {
+  "model": "gemini-3.8-flash",
+  "draw": 2,
+  "out": "YES",
+  "seconds": 3.62,
+  "question": "What wrong idea about moving small, on-demand programs between different providers does the paper point out, and which initiative is mentioned as a step towards making this easier?"
+ },
+ "90bb64c34ad88cd344f128bff2cf4f8167a20a615a8e057f87d398adc7ec5e7a": {
+  "model": "gemini-3.8-flash",
+  "draw": 2,
+  "out": "YES",
+  "seconds": 3.38,
+  "question": "What wrong idea about moving small, on-demand programs between different providers does the paper point out, and which initiative is mentioned as a step towards making this easier?"
+ },
+ "906d4e1f6b83373a4631edfb7bd8fd8529313235f5c2ee33d704c9fe989601ff": {
+  "model": "gemini-3.8-flash",
+  "draw": 2,
+  "out": "YES",
+  "seconds": 3.67,
+  "question": "What wrong idea about moving small, on-demand programs between different providers does the paper point out, and which initiative is mentioned as a step towards making this easier?"
+ },
+ "632730d4c7b3b81009bc377c0a903205ef6ebdd490866cea88609d2d0b82ad9e": {
+  "model": "gemini-3.8-flash",
+  "draw": 2,
+  "out": "NO",
+  "seconds": 2.32,
+  "question": "How do the counting mechanisms work in the data processing framework described?"
+ },
+ "c717533bd30693391a4b47f3d24c756b565529c8e33a0d132e7ad0b3314e026b": {
+  "model": "gemini-3.8-flash",
+  "draw": 2,
+  "out": "NO",
+  "seconds": 2.26,
+  "question": "How do the authors describe the operation of the counting feature in their data processing system?"
+ },
+ "0f25901e48a95ef15e6b54f2f76f1df1b6ab83905b435d69494f20c8bea34e84": {
+  "model": "gemini-3.8-flash",
+  "draw": 2,
+  "out": "YES",
+  "seconds": 8.61,
+  "question": "What does this paper say could help with the problems of making things bigger fast and how software is sold?"
+ },
+ "887885d67956e31f272f3ea92855fecdfb6c5480f62b1f751686eee6d5679eea": {
+  "model": "gemini-3.8-flash",
+  "draw": 2,
+  "out": "NO",
+  "seconds": 2.3,
+  "question": "Knative enterprise adoption today"
+ },
+ "6ac388153a4ddc8a3fca86549375278f878d1dfe0cc3b6ee3872112e7c67a4df": {
+  "model": "gemini-3.8-flash",
+  "draw": 2,
+  "out": "NO",
+  "seconds": 1.77,
+  "question": "Knative enterprise adoption today"
+ },
+ "3613b213ba115a1278a5e43736be1dadcb32bcb6f7e7a12a467ebba57b6a7b2f": {
+  "model": "gemini-3.8-flash",
+  "draw": 2,
+  "out": "NO",
+  "seconds": 2.71,
+  "question": "Knative enterprise adoption today"
+ },
+ "fd1d747ce8fe60e3ac3e02bcb3c71d0265651b7f13a75b503a89fcc73f6417e0": {
+  "model": "gemini-3.8-flash",
+  "draw": 2,
+  "out": "NO",
+  "seconds": 3.37,
+  "question": "How do the authors describe the operation of the counting feature in their data processing system?"
+ },
+ "fd149d4a8c8edcb6e648b79fbf1b18b22d910c6dd4802b2f47ebe27d9d8b2c4f": {
+  "model": "gemini-3.8-flash",
+  "draw": 2,
+  "out": "NO",
+  "seconds": 2.33,
+  "question": "What is the average latency improvement observed when using edge computing for real-time video processing compared to traditional cloud approaches?"
+ },
+ "f9cab698085557cb42a1cd607287a2a8719f984032b59c4c64756a4bae0a6c52": {
+  "model": "gemini-3.8-flash",
+  "draw": 2,
+  "out": "NO",
+  "seconds": 2.09,
+  "question": "What is the average latency improvement observed when using edge computing for real-time video processing compared to traditional cloud approaches?"
+ },
+ "8f3d091a2ee950d416020ebc58bcbfbf69bf7474048a420da2f3730af594e01e": {
+  "model": "gemini-3.8-flash",
+  "draw": 2,
+  "out": "NO",
+  "seconds": 2.34,
+  "question": "What is the average latency improvement observed when using edge computing for real-time video processing compared to traditional cloud approaches?"
+ },
+ "1f1725f42072ada15060f2ce90b8703336736ce6a1c8ddb2750df1214583e30a": {
+  "model": "gemini-3.8-flash",
+  "draw": 2,
+  "out": "NO",
+  "seconds": 2.73,
+  "question": "What are the core principles behind the OpenStack cloud operating system?"
+ },
+ "37bd5bb6b21017ffd20accc17833c463e7ae2e61223fcc0b9889038247324103": {
+  "model": "gemini-3.8-flash",
+  "draw": 2,
+  "out": "NO",
+  "seconds": 2.09,
+  "question": "What are the core principles behind the OpenStack cloud operating system?"
+ },
+ "091387db29fce35a83ea4b1778ac441f1b47dad67d2c14903a5f5ab63e22003e": {
+  "model": "gemini-3.8-flash",
+  "draw": 2,
+  "out": "NO",
+  "seconds": 2.41,
+  "question": "What are the core principles behind the OpenStack cloud operating system?"
+ },
+ "57a2e835284890a897818df6e7814f8c2dd304706ea8eb70dd0e7a52bc656349": {
+  "model": "gemini-3.8-flash",
+  "draw": 2,
+  "out": "NO",
+  "seconds": 3.39,
+  "question": "basic operating principle Open Container Initiative"
+ },
+ "0031492b303c489f206ae07bc38cc247533728ac2f7f7d189ade6564eca9b439": {
+  "model": "gemini-3.8-flash",
+  "draw": 2,
+  "out": "NO",
+  "seconds": 3.0,
+  "question": "basic operating principle Open Container Initiative"
+ },
+ "d66cb64f98eea0b20a7f9d4c6fafdb5bd415d1c024679c7308cb9f9be7a7c727": {
+  "model": "gemini-3.8-flash",
+  "draw": 2,
+  "out": "NO",
+  "seconds": 6.38,
+  "question": "basic operating principle Open Container Initiative"
+ }
+}

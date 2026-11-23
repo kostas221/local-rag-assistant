@@ -324,7 +324,7 @@ class AnswerCache:
                 self.errors.append("γέννηση: κενή απάντηση (μόνο thinking)")
                 return
             self.misses += 1
-            self.data[key] = {"kind": "answer", "tail": prompt[-200:], "out": text, "usage": usage}
+            self.data[key] = {"kind": "answer", "tail": S.safe_tail(prompt), "out": text, "usage": usage}
 
         gemini_rest.stream_generate = frozen
 
@@ -337,7 +337,7 @@ class AnswerCache:
             return self.data[key]["out"]
         text = await call(prompt)
         self.misses += 1
-        self.data[key] = {"kind": "judge", "tail": prompt[-200:], "out": text}
+        self.data[key] = {"kind": "judge", "tail": S.safe_tail(prompt), "out": text}
         return text
 
     def tokens(self) -> tuple:

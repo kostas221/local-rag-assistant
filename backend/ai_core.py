@@ -24,6 +24,7 @@ import doc_routing
 import gemini_rest
 import metrics
 import pdf_report
+import sufficiency
 import vector_store
 from genai_compat import genai  # deprecated SDK, τεκμηριωμένο: βλ. genai_compat.py
 
@@ -230,6 +231,10 @@ MIN_RERANK_SCORE = float(os.getenv("MIN_RERANK_SCORE", "-2.6"))
 # ΠΡΟΣΟΧΗ: βάση βαθμονόμησης n=6 κομμένες ερωτήσεις, ΧΩΡΙΣ validation set.
 # Αν μεγαλώσει το golden set, ΞΑΝΑΜΕΤΡΑ.
 ENABLE_CORRECTIVE = os.getenv("ENABLE_CORRECTIVE", "1") not in ("0", "false", "False")
+# Κριτής επάρκειας στη δεύτερη αναζήτηση (κύκλος 2, βήμα 2β, 23/11/2026): «απαντούν οι σελίδες την
+# ΑΡΧΙΚΗ ερώτηση;» ΟΧΙ -> σιωπή. +1 κλήση (~2,4 s) μόνο όταν περνά η δεύτερη αναζήτηση (~7 % των
+# ερωτήσεων). Μετρημένο: docs/SUFFICIENCY_VETO_PREREG_2026-11-23.md. "0" -> η προηγούμενη συμπεριφορά.
+ENABLE_SUFFICIENCY_VETO = os.getenv("ENABLE_SUFFICIENCY_VETO", "1") not in ("0", "false", "False")
 CORRECTIVE_MIN_SCORE = float(os.getenv("CORRECTIVE_MIN_SCORE", "-3.8"))
 
 # Ερωτήσεις ΔΥΟ ΕΓΓΡΑΦΩΝ (Φάση 2, 30/9/2026 — βλ. doc_routing.py): αν η ερώτηση ΟΝΟΜΑΖΕΙ ≥ 2
@@ -1201,6 +1206,28 @@ async def _corrective_retry(
     return sorted_final
 
 
+async def _sufficiency_veto(question: str, pages: list) -> bool:
+    """True = ο κριτής είπε ρητά ΟΧΙ («αυτές οι σελίδες δεν απαντούν την ερώτηση») -> σιωπή.
+
+    Best-effort, όπως η ίδια η δεύτερη αναζήτηση: σφάλμα κλήσης ή ακατανόητη απάντηση -> False, δηλαδή
+    η συμπεριφορά πριν από τον κριτή. Ο κριτής δεν μπορεί ποτέ να κάνει το σύστημα χειρότερο από πριν
+    λόγω σφάλματος· μπορεί μόνο να κόψει, όχι να προσθέσει. Prompt και κανόνες: sufficiency.py."""
+    try:
+        raw = await gemini_rest.generate_once(
+            sufficiency.build_prompt(question, pages), model=GEMINI_MODEL, api_key=GEMINI_API_KEY
+        )
+    except Exception as e:
+        logger.warning(f"--- Κριτής επάρκειας απέτυχε ({type(e).__name__}) -> χωρίς βέτο ---")
+        metrics.inc("rag_sufficiency_total", {"verdict": "error"})
+        return False
+    verdict = sufficiency.parse_verdict(raw)
+    metrics.inc("rag_sufficiency_total", {"verdict": (verdict or "unparsed").lower()})
+    if sufficiency.vetoes(verdict):
+        logger.info(f"Κριτής επάρκειας: ΟΧΙ για {_for_log(question)} -> σιωπή")
+        return True
+    return False
+
+
 async def _add_perdoc_pages(raw_query, query, pages, allowed_ids, idx, dm, user_id):
     """Ερώτηση που ΟΝΟΜΑΖΕΙ ≥ 2 έγγραφα (doc_routing): η ΙΔΙΑ ερώτηση ψάχνεται και μέσα σε κάθε
     έγγραφο — ίδια dense + BM25 + RRF + κριτής, άλλη λίστα επιτρεπτών — και προστίθενται έως
@@ -1295,10 +1322,16 @@ async def search_documents(
         _expand_to_pages, sorted_final[:EXPAND_INPUT], MAX_PAGES, user_id
     )
     if not first_pass_ok:
-        # Κύκλος 2, βήμα 2 (23/11/2026): οι σελίδες ήρθαν από τη ΔΕΥΤΕΡΗ αναζήτηση. Σημάδι ΜΟΝΟ για
-        # το UI («Second search used»): το prompt χρησιμοποιεί μόνο file_name/page από το meta, άρα οι
-        # απαντήσεις δεν αλλάζουν. Ουδέτερη διαφάνεια, όχι μέτρο αξιοπιστίας: η δεύτερη αναζήτηση
-        # σώζει ~10 σωστές δύσκολες ερωτήσεις ανά τρέξιμο ΚΑΙ αφήνει 1–2 άσχετες να φτάσουν στην απάντηση.
+        # Κύκλος 2, βήμα 2β (23/11/2026): ο κριτής επάρκειας, ΜΟΝΟ εδώ. Η δεύτερη αναζήτηση έψαξε με
+        # αναδιατυπωμένη ερώτηση· ρωτάμε αν οι σελίδες απαντούν την ΑΡΧΙΚΗ (`query` = η μεταφρασμένη
+        # αρχική, όχι η αναδιατύπωση). ΟΧΙ -> σιωπή, όπως αν είχε κοπεί και η δεύτερη αναζήτηση.
+        # Μετρημένο (docs/SUFFICIENCY_VETO_PREREG_2026-11-23.md, 3 προσπάθειες x 2 κληρώσεις): άσχετες
+        # που περνούσαν 1–2 -> 0, κοντινές 4 -> 0, σωσμένες δύσκολες 10,3 -> 9,3–9,7.
+        if ENABLE_SUFFICIENCY_VETO and await _sufficiency_veto(query, pages):
+            return []
+        # Κύκλος 2, βήμα 2: οι σελίδες ήρθαν από τη ΔΕΥΤΕΡΗ αναζήτηση. Σημάδι ΜΟΝΟ για το UI («Second
+        # search used»): το prompt χρησιμοποιεί μόνο file_name/page από το meta, άρα οι απαντήσεις δεν
+        # αλλάζουν. Ουδέτερη διαφάνεια, όχι μέτρο αξιοπιστίας.
         for _text, meta in pages:
             meta["second_search"] = True
     if ENABLE_PERDOC and first_pass_ok and _CORPUS_NAMES:

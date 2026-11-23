@@ -78,6 +78,9 @@ def _patch(monkeypatch, first_score, rewritten_score=None, rewrite=None, enabled
     )
     monkeypatch.setattr(ai_core, "USE_BGE_SPARSE", False)
     monkeypatch.setattr(ai_core, "ENABLE_CORRECTIVE", enabled)
+    # Ο κριτής επάρκειας (βήμα 2β) ΕΚΤΟΣ σε αυτά τα tests: μετρούν τη δεύτερη αναζήτηση μόνη της, και
+    # το calls["n"] μετρά μόνο αναδιατυπώσεις. Ο κριτής δοκιμάζεται χωριστά, στο τέλος του αρχείου.
+    monkeypatch.setattr(ai_core, "ENABLE_SUFFICIENCY_VETO", False)
 
     async def _no_translate(q, **kwargs):
         return q
@@ -226,3 +229,48 @@ def test_threshold_stays_above_out_of_corpus(monkeypatch):
     -4.47 (runs/corr_v1_control.csv). Κάτω από αυτό, ο agent γίνεται σιωπηλά
     χαλαρωτής της άμυνας."""
     assert ai_core.CORRECTIVE_MIN_SCORE > -4.47
+
+
+# --- Κριτής επάρκειας στη δεύτερη αναζήτηση (κύκλος 2, βήμα 2β, 23/11/2026) ---------------------------
+
+
+def _patch_veto(monkeypatch, first_score, verdict):
+    """Όπως το _patch, με τον κριτή ανοιχτό. verdict: "YES" / "NO" / Exception (αποτυχία κλήσης).
+    Επιστρέφει λίστα με τις ερωτήσεις που έφτασαν στον κριτή."""
+    _patch(monkeypatch, first_score=first_score, rewritten_score=ai_core.CORRECTIVE_MIN_SCORE + 1.0)
+    monkeypatch.setattr(ai_core, "ENABLE_SUFFICIENCY_VETO", True)
+    asked = []
+
+    async def fake(prompt, *, model=None, api_key=None, **kw):
+        if prompt.startswith("You are verifying"):
+            asked.append(prompt.rsplit("QUESTION:", 1)[1].splitlines()[0].strip())
+            if isinstance(verdict, Exception):
+                raise verdict
+            return verdict
+        return f"{MARK} storage terminology"           # η αναδιατύπωση
+
+    monkeypatch.setattr(gemini_rest, "generate_once", fake)
+    return asked
+
+
+def test_veto_silences_second_search_on_explicit_no(monkeypatch):
+    asked = _patch_veto(monkeypatch, ai_core.MIN_RERANK_SCORE - 1.0, "NO")
+    assert _search() == []
+    # ο κριτής βλέπει την ΑΡΧΙΚΗ ερώτηση, όχι την αναδιατύπωση
+    assert asked == ["what is cloud computing"]
+
+
+def test_veto_keeps_second_search_on_yes_and_marks_it(monkeypatch):
+    _patch_veto(monkeypatch, ai_core.MIN_RERANK_SCORE - 1.0, "YES")
+    result = _search()
+    assert result and all(m.get("second_search") is True for _t, m in result)
+
+
+def test_veto_failure_keeps_the_old_behaviour(monkeypatch):
+    _patch_veto(monkeypatch, ai_core.MIN_RERANK_SCORE - 1.0, RuntimeError("API down"))
+    assert len(_search()) > 0
+
+
+def test_veto_never_runs_when_first_search_passes(monkeypatch):
+    asked = _patch_veto(monkeypatch, ai_core.MIN_RERANK_SCORE + 5.0, "NO")
+    assert len(_search()) > 0 and asked == []
