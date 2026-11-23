@@ -62,7 +62,7 @@ async def run(args) -> int:
         leaks = [sum(ok(x) for x in rows if x["kind"] == "ooc" and x["attempt"] == a) for a in (1, 2, 3)]
         near = sum(ok(x) for x in rows if x["kind"] == "near") / 3
         saved = sum(ok(x) for x in rows if x["kind"] == "answerable" and x["cov"] > 0) / 3
-        print(f"{'—' if t is None else f'{t:+.1f}':>6} {str(leaks):>32} {near:>9.2f} {saved:>9.2f}")
+        print(f"{'—' if t is None else f'{t:+.1f}':>6} {leaks!s:>32} {near:>9.2f} {saved:>9.2f}")
     print("=" * 80)
     if args.csv_out:
         with open(args.csv_out, "w", newline="", encoding="utf-8") as fh:

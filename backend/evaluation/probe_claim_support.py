@@ -64,6 +64,11 @@ CONCURRENCY = 4
 _GREEK = re.compile(r"[Ͱ-Ͽἀ-῿]")
 
 
+def _load_json(path: str):
+    with open(path, encoding="utf-8") as f:
+        return json.load(f)
+
+
 def _key(*parts: str) -> str:
     return hashlib.sha256("\x00".join(parts).encode("utf-8")).hexdigest()
 
@@ -71,7 +76,7 @@ def _key(*parts: str) -> str:
 class Calls:
     def __init__(self, path: str):
         self.path = path
-        self.data = json.load(open(path, encoding="utf-8")) if os.path.exists(path) else {}
+        self.data = _load_json(path) if os.path.exists(path) else {}
         self.hits = self.misses = 0
         self.errors: list[str] = []
 
@@ -107,7 +112,7 @@ def positive_ids(label: str) -> dict[str, set]:
     αυστηρές τιμές. R: κοντινές με σωστή άρνηση."""
     out: dict[str, set] = defaultdict(set)
     if os.path.exists(JUDGE2_PATH):
-        for r in json.load(open(JUDGE2_PATH, encoding="utf-8"))["rows"]:
+        for r in _load_json(JUDGE2_PATH)["rows"]:
             if r["system"] != label:
                 continue
             if r["set"] == "main" and r.get("label") == "correct":
@@ -118,7 +123,7 @@ def positive_ids(label: str) -> dict[str, set]:
                 out["near_ooc"].add(r["id"])
     p = os.path.join(S.OUT_DIR, f"answers_{label}_tables.json")
     if os.path.exists(p):
-        for r in json.load(open(p, encoding="utf-8"))["rows"]:
+        for r in _load_json(p)["rows"]:
             if r.get("strict_total") and r.get("strict_ok") == r.get("strict_total"):
                 out["tables"].add(r["id"])
     return out
@@ -191,11 +196,11 @@ async def reproduce_pages(ai_core, label: str, sets, ids) -> dict:
     """(set, id) -> (t, row, pages) μόνο όπου οι σελίδες είναι ΙΔΙΕΣ με τον πίνακα του label."""
     import eval_engine
     base_path = os.path.join(S.OUT_DIR, f"{label}.json")
-    base = {(r["set"], r["id"]): r for r in json.load(open(base_path, encoding="utf-8"))["rows"]}
+    base = {(r["set"], r["id"]): r for r in _load_json(base_path)["rows"]}
     out, skipped = {}, []
     for s in sets:
         ans = {r["id"]: r for r in
-               json.load(open(os.path.join(S.OUT_DIR, f"answers_{label}_{s}.json"), encoding="utf-8"))["rows"]}
+               _load_json(os.path.join(S.OUT_DIR, f"answers_{label}_{s}.json"))["rows"]}
         for t in E.load_jsonl(os.path.join(E.HERE, SET_FILES[s])):
             if (ids and t["id"] not in ids) or t["id"] not in ans:
                 continue
@@ -221,7 +226,7 @@ async def check_one(calls, call, draw, question, claims, texts):
         return CS.apply_check(claims, texts, None, question), None
     try:
         raw, sec = await calls.get(prompt, draw, call)
-    except Exception as e:          # noqa: BLE001  ένα σφάλμα δεν ρίχνει όλο το τρέξιμο
+    except Exception as e:
         calls.errors.append(f"{type(e).__name__}: {e}"[:200])
         return CS.apply_check(claims, texts, None, question), None
     return CS.apply_check(claims, texts, CS.parse_check(raw), question), sec
@@ -234,6 +239,7 @@ def claim_rows(group, s, t, draw, claims, sec, extra=None):
                      "draw": draw, "i": c.i, "kind": c.kind, "labels": "|".join(c.labels),
                      "status": c.status, "reason": c.reason, "support": c.support or "",
                      "quote_found": int(c.quote_found), "cite_ok": int(c.cite_ok),
+                     "quote_cover": "" if c.quote_cover is None else c.quote_cover,
                      "numbers_missing": "|".join(c.numbers_missing), "missing": c.missing,
                      "seconds": sec if c.i == 1 else "", **(extra or {}),
                      "claim": c.text, "quote": c.quote or "", "quote_label": c.quote_label or ""})
@@ -320,11 +326,20 @@ def make_blind(detail_rows: list[dict], n: int) -> None:
     rng = random.Random(SEED)
     pool = [r for r in detail_rows if r["group"] == "P" and r["draw"] == 1 and r["kind"] == "claim"]
     pick = []
+    # Αν μια γλώσσα δεν έχει αρκετές σημαδεμένες (22/11: 6 el), συμπληρώνει η άλλη, και οι μη
+    # σημαδεμένες ισορροπούν τις γλώσσες στο σύνολο. Μισές σημαδεμένες, μισές όχι, πάντα.
+    half = n // 2
     for status in ("flagged", "supported"):
+        by_lang = {}
         for lang in ("el", "en"):
-            cand = [r for r in pool if r["status"] == status and r["lang"] == lang]
-            rng.shuffle(cand)
-            pick += cand[: n // 4]
+            by_lang[lang] = [r for r in pool if r["status"] == status and r["lang"] == lang]
+            rng.shuffle(by_lang[lang])
+        if status == "flagged":
+            el = min(len(by_lang["el"]), half // 2)
+        else:
+            el_so_far = sum(r["lang"] == "el" for r in pick)
+            el = min(len(by_lang["el"]), max(0, n // 2 - el_so_far))
+        pick += by_lang["el"][:el] + by_lang["en"][: half - el]
     rng.shuffle(pick)
     key = []
     with open(BLIND_PATH, "w", encoding="utf-8-sig", newline="") as f:
@@ -334,13 +349,14 @@ def make_blind(detail_rows: list[dict], n: int) -> None:
             w.writerow([k, r["question"], r["claim"], r["pages"], ""])
             key.append({"n": k, "set": r["set"], "id": r["id"], "i": r["i"], "status": r["status"],
                         "reason": r["reason"], "lang": r["lang"]})
-    json.dump(key, open(BLIND_KEY, "w", encoding="utf-8"), ensure_ascii=False, indent=1)
+    with open(BLIND_KEY, "w", encoding="utf-8") as f:
+        json.dump(key, f, ensure_ascii=False, indent=1)
     print(f"Τυφλό δείγμα: {len(pick)} προτάσεις -> {BLIND_PATH}\nΣυμπλήρωσε την τελευταία στήλη "
           f"ανοίγοντας τα PDF στις σελίδες, και μετά: --score-blind")
 
 
 def score_blind() -> int:
-    key = {k["n"]: k for k in json.load(open(BLIND_KEY, encoding="utf-8"))}
+    key = {k["n"]: k for k in _load_json(BLIND_KEY)}
     with open(BLIND_PATH, encoding="utf-8-sig", newline="") as f:
         rows = list(csv.reader(f))[1:]
     agree, total, table = 0, 0, Counter()

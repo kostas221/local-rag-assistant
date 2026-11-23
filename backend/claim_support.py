@@ -21,6 +21,7 @@ Leaf module: μόνο stdlib, κανένα import από το project (δοκι�
 
 from __future__ import annotations
 
+import difflib
 import json
 import re
 import unicodedata
@@ -54,22 +55,43 @@ def _alnum(text: str) -> str:
 
 
 MIN_QUOTE_ALNUM = 15                       # «0.5» ή «the cloud» δεν δείχνουν σημείο
-_FRAGMENT_SPLIT = re.compile(r"\.\.\.|…|\n\s*\n")
+# Πρώτα κομμάτια χωρισμένα με κενή γραμμή ή «...»· μόνο αν δεν βρεθούν, γραμμή-γραμμή (κελιά).
+_FRAGMENT_SPLITS = (re.compile(r"\.\.\.|…|\n\s*\n"), re.compile(r"\.\.\.|…|\n"))
 
 
-def quote_in_source(quote: str, source_text: str) -> bool:
+def quote_in_source(quote: str, source_text: str, min_len: int = MIN_QUOTE_ALNUM) -> bool:
     """Το χωρίο υπάρχει αυτούσιο στη σελίδα, με σύγκριση ΜΟΝΟ γραμμάτων και ψηφίων.
 
     ΑΠΟΚΛΙΣΗ 22/11/2026 (μετά το 1ο τρέξιμο, πριν από τις αλλοιώσεις): η σύγκριση με κενά και
     παύλες σημάδευε σωστά χωρία για λόγους μορφής: «anti-pattern» απέναντι σε «anti-⏎pattern»,
     χωρίο κομμένο σε «la-», «1⁄4». Πίνακες: το μοντέλο αντιγράφει κελιά που στο κείμενο της σελίδας
-    δεν είναι συνεχόμενα, και τα χωρίζει με κενές γραμμές ή «...». Τότε ΚΑΘΕ κομμάτι πρέπει να
-    υπάρχει στη σελίδα, και το μεγαλύτερο να έχει ≥ 15 γράμματα/ψηφία."""
+    δεν είναι συνεχόμενα, και τα χωρίζει με αλλαγές γραμμής ή «...». Τότε ΚΑΘΕ κομμάτι πρέπει να
+    υπάρχει στη σελίδα, και το μεγαλύτερο να έχει ≥ `min_len` γράμματα/ψηφία.
+
+    2η ΑΠΟΚΛΙΣΗ 22/11/2026 (2ο τρέξιμο, πάλι πριν από τις αλλοιώσεις): το ελάχιστο 15 σημάδεψε 12
+    σωστά στοιχεία λίστας εντολής («--good», «--passes=2», q028), που στο 1ο τρέξιμο περνούσαν. Το
+    `apply_check` περνά min_len = min(15, μήκος της ίδιας της πρότασης): ένα χωρίο δεν χρειάζεται
+    να είναι μεγαλύτερο από αυτό που στηρίζει."""
     page = _alnum(source_text)
-    frags = [f for f in (_alnum(x) for x in _FRAGMENT_SPLIT.split(quote or "")) if f]
-    if not frags or max(map(len, frags)) < MIN_QUOTE_ALNUM:
-        return False
-    return all(f in page for f in frags)
+    for split in _FRAGMENT_SPLITS:
+        frags = [f for f in (_alnum(x) for x in split.split(quote or "")) if f]
+        if frags and max(map(len, frags)) >= min_len and all(f in page for f in frags):
+            return True
+    return False
+
+
+def quote_cover(quote: str, pages) -> float:
+    """Διάγνωση, όχι κρίση: το μεγαλύτερο ΣΥΝΕΧΕΣ κομμάτι του χωρίου (σε γράμματα/ψηφία) που
+    υπάρχει σε κάποια σελίδα, ως ποσοστό του χωρίου. ~1.0 = σχεδόν αυτούσιο (λάθος μορφής),
+    χαμηλό = ενωμένα μακρινά κομμάτια ή παράφραση."""
+    q = _alnum(quote)
+    if not q:
+        return 0.0
+    best = 0
+    for page in pages:
+        sm = difflib.SequenceMatcher(None, q, _alnum(page), autojunk=False)
+        best = max(best, sm.find_longest_match(0, len(q), 0, len(sm.b)).size)
+    return round(best / len(q), 2)
 
 
 # ---------------------------------------------------------------------------
@@ -164,6 +186,7 @@ class Claim:
     quote: str | None = None
     quote_label: str | None = None
     quote_found: bool = False      # (β) το χωρίο υπάρχει αυτούσιο στη σελίδα quote_label
+    quote_cover: float | None = None  # ΜΟΝΟ διάγνωση όταν δεν βρέθηκε: μέγιστο συνεχές κοινό κομμάτι
     cite_ok: bool = False          # (β) ... και η σελίδα αυτή παραπέμπεται από την πρόταση
     support: str | None = None     # (γ) full | partial | none
     missing: str = ""
@@ -319,18 +342,21 @@ def apply_check(claims: list[Claim], texts: dict[str, str], verdicts: dict[int, 
         cited = [texts[lab] for lab in c.labels if lab in texts] if c.labels else list(texts.values())
         c.numbers_missing = unsupported_numbers(c.text, cited, allowed)
         v = (verdicts or {}).get(c.i)
+        min_len = max(4, min(MIN_QUOTE_ALNUM, len(_alnum(c.text))))
         if v:
             c.quote, c.quote_label, c.support, c.missing = (v["quote"], v["label"], v["support"],
                                                             v["missing"])
             if c.quote and c.quote_label in texts:
-                c.quote_found = quote_in_source(c.quote, texts[c.quote_label])
+                c.quote_found = quote_in_source(c.quote, texts[c.quote_label], min_len)
             if c.quote and not c.quote_found:
                 # το μοντέλο έγραψε λάθος ετικέτα αλλά σωστό χωρίο: το βρίσκουμε, και το (β) το
                 # λέει ως λάθος σημείο αν η σελίδα δεν παραπέμπεται
                 for lab, t in texts.items():
-                    if quote_in_source(c.quote, t):
+                    if quote_in_source(c.quote, t, min_len):
                         c.quote_found, c.quote_label = True, lab
                         break
+            if c.quote and not c.quote_found:
+                c.quote_cover = quote_cover(c.quote, texts.values())
             c.cite_ok = c.quote_found and c.quote_label in c.labels
         if c.numbers_missing:
             reason = "number_missing"

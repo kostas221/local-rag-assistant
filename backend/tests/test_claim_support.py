@@ -11,7 +11,7 @@ import sys
 
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), ".."))
 
-import claim_support as CS  # noqa: E402
+import claim_support as CS
 
 REFUSAL = re.compile(r"do(?:es)? not (?:mention|provide|report)|δεν αναφέρ")
 
@@ -56,6 +56,23 @@ def test_table_quote_in_fragments_needs_every_fragment_on_the_page():
     assert CS.quote_in_source("Block\nStorage\n(e.g., AWS\nEBS, IBM)\n\n\nLatency (mean)\n\n< 1ms", page)
     assert not CS.quote_in_source("Block Storage (e.g., AWS EBS, IBM)\n\n< 5ms", page)
     assert not CS.quote_in_source("Latency\n\n< 1ms", page)      # κανένα κομμάτι δεν δείχνει σημείο
+
+
+def test_short_list_item_needs_a_quote_only_as_long_as_itself():
+    page = "vpxenc --codec=vp8 \\\n--good \\\n--cpu-used=0 \\\n--passes=2"
+    cl = CS.split_claims("--good [S1]\n--passes=3 [S1]", REFUSAL)
+    v = {1: {"quote": "--good \\", "label": "S1", "support": "full", "missing": ""},
+         2: {"quote": "--passes=3", "label": "S1", "support": "full", "missing": ""}}
+    c1, c2 = CS.apply_check(cl, {"S1": page}, v)
+    assert c1.status == "supported"
+    assert c2.status == "flagged" and c2.quote_cover is not None and c2.quote_cover < 1
+    assert not CS.quote_in_source("--good \\", page)          # χωρίς την πρόταση: ελάχιστο 15
+
+
+def test_table_cells_on_separate_lines():
+    page = "Run S1 S2 S3\n12.0 9.1 501.13"
+    assert CS.quote_in_source("S3\n501.13", page, min_len=5)
+    assert not CS.quote_in_source("S3\n502.13", page, min_len=5)
 
 
 def test_numbers_glued_to_units_on_the_page_are_found():

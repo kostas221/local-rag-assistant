@@ -82,8 +82,9 @@ import sys
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
-import gemini_rest
 from model_guard import ensure_not_redirected
+
+import gemini_rest
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 NEAR_PATH = os.path.join(HERE, "golden_near_ooc.jsonl")

@@ -27,8 +27,9 @@ sys.path.insert(0, "/app")
 sys.path.insert(0, "/app/evaluation")
 
 import eval_near_ooc as E
-import gemini_rest
 from probe_corrective_attempts import _retrieve, coverage
+
+import gemini_rest
 
 HERE = "/app/evaluation"
 SETS = {"main": "golden_set_50.jsonl", "hard_old": "golden_hard_paraphrase.jsonl",

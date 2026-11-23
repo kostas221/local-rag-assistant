@@ -7,7 +7,7 @@ import pytest
 
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "evaluation"))
 
-import model_guard  # noqa: E402
+import model_guard
 
 
 def test_before_redirect_date_is_allowed():
@@ -16,7 +16,7 @@ def test_before_redirect_date_is_allowed():
 
 def test_on_redirect_date_raises_and_names_the_target(monkeypatch):
     monkeypatch.delenv("ALLOW_REDIRECTED_MODEL", raising=False)
-    with pytest.raises(RuntimeError, match="gemini-3.5-flash-lite"):
+    with pytest.raises(RuntimeError, match=r"gemini-3\.5-flash-lite"):
         model_guard.ensure_not_redirected("gemini-2.5-flash", "κριτής", today=date(2026, 12, 1))
 
 
