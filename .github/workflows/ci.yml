@@ -131,4 +131,4 @@ jobs:
         run: |
           pytest tests/test_rag_core.py tests/test_corpus_signature.py \
                  tests/test_corrective_retrieval.py tests/test_citations.py \
-                 tests/test_vector_store.py tests/test_ingestion.py -v
+                 tests/test_vector_store.py tests/test_ingestion.py tests/test_pdf_hidden.py -v

@@ -23,6 +23,7 @@ import corpus_glossary
 import doc_routing
 import gemini_rest
 import metrics
+import pdf_hidden
 import pdf_report
 import sufficiency
 import vector_store
@@ -235,6 +236,9 @@ ENABLE_CORRECTIVE = os.getenv("ENABLE_CORRECTIVE", "1") not in ("0", "false", "F
 # ΑΡΧΙΚΗ ερώτηση;» ΟΧΙ -> σιωπή. +1 κλήση (~2,4 s) μόνο όταν περνά η δεύτερη αναζήτηση (~7 % των
 # ερωτήσεων). Μετρημένο: docs/SUFFICIENCY_VETO_PREREG_2026-11-23.md. "0" -> η προηγούμενη συμπεριφορά.
 ENABLE_SUFFICIENCY_VETO = os.getenv("ENABLE_SUFFICIENCY_VETO", "1") not in ("0", "false", "False")
+# Αφαίρεση κρυμμένου κειμένου στην εισαγωγή PDF (κύκλος 2, βήμα 5α, 23/11/2026). ΚΛΕΙΣΤΟ μέχρι να
+# μετρηθεί: docs/INJECTION_PREREG_2026-11-23.md. Επηρεάζει ΜΟΝΟ νέες εισαγωγές (ή rebuild του store).
+STRIP_HIDDEN_TEXT = os.getenv("STRIP_HIDDEN_TEXT", "0") in ("1", "true", "True")
 CORRECTIVE_MIN_SCORE = float(os.getenv("CORRECTIVE_MIN_SCORE", "-3.8"))
 
 # Ερωτήσεις ΔΥΟ ΕΓΓΡΑΦΩΝ (Φάση 2, 30/9/2026 — βλ. doc_routing.py): αν η ερώτηση ΟΝΟΜΑΖΕΙ ≥ 2
@@ -1728,11 +1732,26 @@ def ingest_pdf(
     documents, metadatas, ids = [], [], []
     # pymupdf: ενώνει σωστά τα text spans του PDF, ενώ το pypdf έβαζε κενά μέσα
     # στις λέξεις ("A WS", "distribu ted") -> λέξεις που δεν υπήρχαν πουθενά.
+    hidden = []
     with pymupdf.open(file_path) as doc:
-        pages = [(i + 1, _normalize_pdf_text(page.get_text() or "")) for i, page in enumerate(doc)]
+        if STRIP_HIDDEN_TEXT:
+            # Κρυμμένο κείμενο (λευκό σε λευκό, μικροσκοπικό, εκτός σελίδας) εκτός ευρετηρίου: εκεί
+            # κρύβονται οι εντολές προς LLM που βρέθηκαν σε άρθρα του arXiv (pdf_hidden.py). Σελίδα χωρίς
+            # κρυμμένο κείμενο -> ΑΚΡΙΒΩΣ το ίδιο get_text() με πριν.
+            pages = []
+            for i, page in enumerate(doc):
+                text, spans = pdf_hidden.visible_text(page)
+                pages.append((i + 1, _normalize_pdf_text(text)))
+                hidden += [i + 1] * len(spans)
+        else:
+            pages = [(i + 1, _normalize_pdf_text(page.get_text() or "")) for i, page in enumerate(doc)]
         image_pages = [i + 1 for i, page in enumerate(doc) if page.get_images()] if report is not None else []
+    if hidden:
+        logger.warning(f"---> '{filename}': {len(hidden)} κρυμμένα κομμάτια κειμένου αφαιρέθηκαν "
+                       f"(σελίδες {sorted(set(hidden))})")
     if report is not None:
         report.update(pdf_report.summarize([text for _no, text in pages], image_pages))
+        report["pages_hidden"] = sorted(set(hidden))
     pages = [(page_no, text) for page_no, text in pages if text and text.strip()]
 
     # Glossary ΤΟΥ ΕΓΓΡΑΦΟΥ (domain + terms): μία φορά, από ΟΛΑ τα chunks.
