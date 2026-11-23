@@ -68,13 +68,15 @@ jobs:
         # μοντέλων που ανακατευθύνονται σιωπηλά από 1/12/2026· μόνο stdlib (18/11/2026).
         # Το test_claim_support.py: ντετερμινιστικό μέρος του ελέγχου στήριξης ανά πρόταση (βήμα 5).
         # Το test_pdf_report.py: «Text extracted from X/Y pages» (κύκλος 2, βήμα 1).
+        # Το test_sufficiency.py: ο κριτής επάρκειας της δεύτερης αναζήτησης (κύκλος 2, βήμα 2β).
         run: |
           pytest tests/test_schemas.py tests/test_security.py \
                  tests/test_gemini_rest.py tests/test_api_endpoints.py \
                  tests/test_metrics.py tests/test_rate_limit.py \
                  tests/test_scope_domain.py tests/test_doc_routing.py \
                  tests/test_generate_once_finish.py tests/test_table_scoring.py \
-                 tests/test_model_guard.py tests/test_claim_support.py tests/test_pdf_report.py -v
+                 tests/test_model_guard.py tests/test_claim_support.py tests/test_pdf_report.py \
+                 tests/test_sufficiency.py -v
 
   core-tests:
     # Τα tests του RAG πυρήνα: el_tokenize, _has_greek, _build_where, _rrf_fuse
