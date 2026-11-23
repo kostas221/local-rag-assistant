@@ -37,6 +37,12 @@ class Document(Base):
     file_hash = Column(String, index=True, nullable=True)
     # processing | ready | empty (PDF χωρίς εξαγώγιμο κείμενο) | failed
     status = Column(String, default="processing")
+    # Από πόσες σελίδες εξήχθη κείμενο (pdf_report, 23/11/2026). nullable: έγγραφα πριν από τις
+    # στήλες (migrate_add_extraction_report.py). pages_empty/pages_scanned: «4,7».
+    pages_total = Column(Integer, nullable=True)
+    pages_text = Column(Integer, nullable=True)
+    pages_empty = Column(String, nullable=True)
+    pages_scanned = Column(String, nullable=True)
     user_id = Column(Integer, ForeignKey("users.id"))
 
     owner = relationship("User", back_populates="documents")
@@ -93,3 +99,26 @@ class RateLimit(Base):
     key = Column(String, primary_key=True)           # IP ή user_id
     window_start = Column(Integer, primary_key=True)  # unix, ευθυγραμμισμένο
     hits = Column(Integer, nullable=False, default=0)
+
+# Στήλες που προστέθηκαν ΜΕΤΑ τη δημιουργία του πίνακα documents (pdf_report, 23/11/2026).
+_DOCUMENT_COLUMNS_ADDED = {"pages_total": "INTEGER", "pages_text": "INTEGER",
+                           "pages_empty": "VARCHAR", "pages_scanned": "VARCHAR"}
+
+
+def ensure_document_columns(engine) -> list[str]:
+    """Προσθέτει στον πίνακα documents όσες από τις νέες στήλες λείπουν, και επιστρέφει ποιες.
+
+    ΓΙΑΤΙ: το create_all φτιάχνει μόνο νέους πίνακες, δεν προσθέτει στήλες σε υπάρχοντες. Χωρίς αυτό,
+    σε βάση που υπήρχε ήδη, κάθε SELECT στα documents σκάει (UndefinedColumn). Το καλούν το main.py στην
+    εκκίνηση ΚΑΙ το migrate_add_extraction_report.py: το δεύτερο έσκασε (23/11) γιατί έτρεξε ενώ το
+    backend φόρτωνε ακόμα τα μοντέλα και δεν είχε φτάσει να προσθέσει τις στήλες.
+    Idempotent, σε Postgres και SQLite."""
+    from sqlalchemy import inspect, text
+
+    have = {c["name"] for c in inspect(engine).get_columns("documents")}
+    missing = [(name, kind) for name, kind in _DOCUMENT_COLUMNS_ADDED.items() if name not in have]
+    if missing:
+        with engine.begin() as conn:
+            for name, kind in missing:
+                conn.execute(text(f"ALTER TABLE documents ADD COLUMN {name} {kind}"))
+    return [name for name, _ in missing]

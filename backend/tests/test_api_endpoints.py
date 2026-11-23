@@ -39,8 +39,11 @@ def _make_ai_core_stub():
     stub = types.ModuleType("ai_core")
     stub.calls = []
 
-    def ingest_pdf(file_path, filename, user_id, is_public=False, doc_id=None):
+    def ingest_pdf(file_path, filename, user_id, is_public=False, doc_id=None, report=None):
         stub.calls.append(("ingest_pdf", filename, user_id, doc_id))
+        if report is not None:      # ίδιο σχήμα με το pdf_report.summarize
+            report.update({"pages_total": 3, "pages_text": 2, "pages_empty": [2],
+                           "pages_scanned": [2]})
         return True
 
     def delete_file_from_db(filename, user_id=None, doc_id=None):
@@ -447,3 +450,29 @@ def test_chat_uses_stored_history_instead_of_client_supplied_history(app_env, al
     call = next(c for c in stub.calls if c[0] == "ask_ai")
     assert call[4] == [{"role": "user", "content": "first question"},
                        {"role": "assistant", "content": "stub answer"}]
+
+
+
+def test_documents_show_extraction_report_after_ingest(app_env, alice):
+    """Κύκλος 2, βήμα 1: μετά την εισαγωγή το /documents λέει από πόσες σελίδες εξήχθη κείμενο
+    (εδώ από το stub: 2/3, η σελίδα 2 χωρίς κείμενο)."""
+    client, _stub = app_env
+    import database
+    import main
+    import models
+
+    db = database.SessionLocal()
+    uid = db.query(models.User).filter(models.User.username == "alice").first().id
+    doc = models.Document(file_name="partial.pdf", file_path="uploaded_docs/partial.pdf",
+                          user_id=uid, status="processing")
+    db.add(doc)
+    db.commit()
+    db.refresh(doc)
+    doc_id = doc.id
+    db.close()
+
+    main.process_document(doc_id, "uploaded_docs/partial.pdf", "partial.pdf", uid)
+    res = client.get("/documents", headers=alice)
+    got = next(d for d in res.json() if d["id"] == doc_id)
+    assert (got["pages_total"], got["pages_text"], got["pages_empty"]) == (3, 2, [2])
+    assert got["extraction"] == "Text extracted from 2/3 pages · no text on p. 2"

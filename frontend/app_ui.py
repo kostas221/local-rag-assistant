@@ -330,6 +330,15 @@ def _library_body(headers, token, disabled=False):
                 if status == "empty"
                 else f"{doc['file_name']} — {status}"
             )
+            # «Text extracted from X/Y pages» (23/11/2026): αν κάποιες σελίδες δεν έδωσαν κείμενο,
+            # ο χρήστης πρέπει να ξέρει ότι μια απάντηση «δεν αναφέρεται» μπορεί να σημαίνει «δεν
+            # διαβάστηκε». Όχι «read»: εξαγωγή κειμένου δεν σημαίνει σωστή ανάγνωση πινάκων/σχημάτων.
+            extraction = doc.get("extraction") or ""
+            partial = bool(doc.get("pages_total")) and doc.get("pages_text") != doc.get("pages_total")
+            if extraction:
+                help_text += f" · {extraction}"
+                if doc.get("pages_scanned"):
+                    help_text += " (pages with images and no text: likely scanned, need OCR)"
 
             if f"check_{doc['id']}" not in st.session_state:
                 st.session_state[f"check_{doc['id']}"] = True
@@ -342,6 +351,8 @@ def _library_body(headers, token, disabled=False):
                     disabled=(disabled or status != "ready"),
                     help=help_text,
                 )
+                if partial and status == "ready":
+                    st.caption(f"⚠️ {extraction}")
             with col2:
                 if doc["is_mine"]:
                     with st.popover("⋮"):

@@ -157,3 +157,45 @@ def test_no_prompt_when_only_refusals():
     assert CS.build_check_prompt("q", cl, CS.label_texts(PAGES)) is None
     (c,) = CS.apply_check(cl, CS.label_texts(PAGES), None)
     assert (c.status, c.reason) == ("skipped", "refusal")
+
+
+# --- Κύκλος 2, βήμα 0 (23/11/2026): το νόημα των συμβόλων μένει στη σύγκριση -------------------
+
+
+def test_quote_rejects_wrong_sign_and_inequality():
+    """Οι δύο περιπτώσεις της εξωτερικής κριτικής: με τη μορφή «μόνο γράμματα και ψηφία» γίνονταν
+    δεκτές και οι δύο."""
+    assert not CS.quote_in_source("temperature of -5 degrees in the chamber",
+                                  "temperature of 5 degrees in the chamber")
+    assert not CS.quote_in_source("temperature of 5 degrees in the chamber",
+                                  "temperature of −5 degrees in the chamber")
+    assert not CS.quote_in_source("latency ≥20 milliseconds per call", "latency ≤20 milliseconds per call")
+    assert CS.quote_in_source("temperature of −5 degrees in the chamber",
+                              "the temperature of -5 degrees in the chamber was")
+
+
+def test_quote_number_must_match_whole():
+    """Ο αριθμός του χωρίου δεν μπορεί να είναι κομμάτι μεγαλύτερου αριθμού της σελίδας."""
+    page = "the cold start took 120 ms and 0.57 s in total, at most ≤20 ms per call"
+    assert not CS.quote_in_source("20 ms and 0.57 s in total", page)          # 20 μέσα στο 120
+    assert not CS.quote_in_source("took 120 ms and 0.5", page)                # 0.5 μέσα στο 0.57
+    assert not CS.quote_in_source("20 ms per call", page, min_len=5)          # χωρίς το ≤
+    assert CS.quote_in_source("took 120 ms and 0.57 s in total", page)
+
+
+def test_quote_formatting_tolerance_is_kept():
+    """Ό,τι δεχόταν η 1η απόκλιση για λόγους μορφής το δέχεται ακόμα."""
+    page = ("a recurring architectural anti-\npattern; each charged with encoding just 1⁄4 second, "
+            "or six frames. Latency (mean)\n10 −20ms")
+    assert CS.quote_in_source("a recurring architectural antipattern", page)
+    assert CS.quote_in_source("each charged with encoding just 1/4 second", page)
+    assert CS.quote_in_source("Latency (mean)\n\n10 –20ms", page, min_len=5)
+    assert CS.quote_in_source("“a recurring architectural anti-pattern”", page)
+
+
+def test_numbers_are_sign_aware_but_ranges_are_not_negative():
+    assert CS.unsupported_numbers("it was −5 degrees", ["it was 5 degrees"]) == ["-5"]
+    assert CS.unsupported_numbers("it was 5 degrees", ["it was -5 degrees"]) == ["5"]
+    assert CS.unsupported_numbers("mean latency of 10 to 20 ms", ["Latency (mean)\n10 −20ms"]) == []
+    assert CS.unsupported_numbers("ranges of 4–10 ms", ["4 −10ms"]) == []
+    assert CS.unsupported_numbers("a drop of -0.43", ["CI [-0.43, -0.05]"]) == []

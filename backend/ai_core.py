@@ -23,6 +23,7 @@ import corpus_glossary
 import doc_routing
 import gemini_rest
 import metrics
+import pdf_report
 import vector_store
 from genai_compat import genai  # deprecated SDK, τεκμηριωμένο: βλ. genai_compat.py
 
@@ -336,8 +337,38 @@ def _has_greek(text: str) -> bool:
 _translation_cache_path = os.path.join(db_path, "_translation_cache.json")
 _translation_lock = threading.Lock()
 
+# --- Ιδιωτικότητα των ερωτήσεων (κύκλος 2, βήμα 1, 23/11/2026) -------------------------------------
+# ΓΙΑΤΙ: οι ερωτήσεις των χρηστών γράφονταν αυτούσιες (α) στα logs επιπέδου INFO και (β) σε ΚΟΙΝΟ
+# αρχείο στο volume (_translation_cache.json), ίδιο για όλους τους χρήστες. Τα logs και το volume δεν
+# έχουν τον έλεγχο πρόσβασης της βάσης, όπου ζουν οι συνομιλίες. Τώρα:
+#   • logs: μήκος + σύντομο αποτύπωμα αντί για κείμενο· LOG_QUERY_TEXT=1 για τοπική ανάπτυξη.
+#   • μεταφράσεις: ΜΟΝΟ στη μνήμη της διεργασίας, με όριο. Ο μόνιμος δίσκος χρειαζόταν για να είναι
+#     συγκρίσιμα τα eval runs (Αύγουστος)· σήμερα αυτό το κάνει το πάγωμα των κλήσεων (scoreboard),
+#     οπότε το PERSIST_QUERY_CACHE=1 μένει μόνο για όποιον το θέλει ρητά.
+#   • query embeddings: μένουν στον δίσκο (γλιτώνουν ~1,2 s ανά ερώτηση), αλλά με κλειδί το
+#     αποτύπωμα SHA-256 της ερώτησης, όχι το κείμενό της.
+# ΤΙ ΔΕΝ ΚΑΛΥΠΤΕΙ: οι συνομιλίες μένουν στη βάση (είναι το ιστορικό του χρήστη, με έλεγχο πρόσβασης),
+# και ένα διάνυσμα embedding δεν είναι κείμενο αλλά δεν είναι και τέλεια ανώνυμο.
+LOG_QUERY_TEXT = os.getenv("LOG_QUERY_TEXT", "0") in ("1", "true", "True")
+PERSIST_QUERY_CACHE = os.getenv("PERSIST_QUERY_CACHE", "0") in ("1", "true", "True")
+TRANSLATION_CACHE_MAX = int(os.getenv("TRANSLATION_CACHE_MAX", "2000"))
+
+
+def _text_digest(text: str) -> str:
+    return hashlib.sha256((text or "").encode("utf-8")).hexdigest()
+
+
+def _for_log(text: str) -> str:
+    """Τι γράφεται στα logs για μια ερώτηση ή αναδιατύπωση: όχι το κείμενο, εκτός αν LOG_QUERY_TEXT=1.
+    Το αποτύπωμα αρκεί για να συνδέσεις δύο γραμμές του ίδιου αιτήματος."""
+    if LOG_QUERY_TEXT:
+        return repr((text or "")[:80])
+    return f"<{len(text or '')} χαρ. #{_text_digest(text)[:8]}>"
+
 
 def _load_translation_cache() -> dict:
+    if not PERSIST_QUERY_CACHE:
+        return {}
     try:
         with open(_translation_cache_path, encoding="utf-8") as f:
             return json.load(f)
@@ -353,7 +384,12 @@ logger.info(
 
 def _save_translation_cache() -> None:
     """Γράψιμο μέσω προσωρινού αρχείου + os.replace: ατομικό, ώστε ένα crash
-    στη μέση να μην αφήσει κατεστραμμένο JSON."""
+    στη μέση να μην αφήσει κατεστραμμένο JSON. Χωρίς PERSIST_QUERY_CACHE=1: τίποτα στον δίσκο,
+    μόνο όριο στη μνήμη (τα παλαιότερα φεύγουν πρώτα)."""
+    while len(_translation_cache) > TRANSLATION_CACHE_MAX:
+        _translation_cache.pop(next(iter(_translation_cache)))
+    if not PERSIST_QUERY_CACHE:
+        return
     try:
         with _translation_lock:
             tmp = _translation_cache_path + ".tmp"
@@ -406,11 +442,23 @@ def _load_query_emb_cache() -> dict:
                     f"Συνήθης αιτία: το έγραψε test με stubbed embedder. ---"
                 )
                 return {}
-            return dict(zip(z["queries"].tolist(), vecs))
+            loaded = dict(zip(z["queries"].tolist(), vecs))
     except (OSError, ValueError, KeyError):
         return {}
+    # Παλιό αρχείο με κλειδί το ΚΕΙΜΕΝΟ της ερώτησης (πριν από τις 23/11/2026): γίνεται αποτύπωμα.
+    # Το αρχείο ξαναγράφεται χωρίς κείμενο στην πρώτη αποθήκευση (_query_emb_cache_dirty).
+    global _query_emb_cache_dirty
+    out = {}
+    for key, vec in loaded.items():
+        if re.fullmatch(r"[0-9a-f]{64}", key):
+            out[key] = vec
+        else:
+            out[_text_digest(key)] = vec
+            _query_emb_cache_dirty = True
+    return out
 
 
+_query_emb_cache_dirty = False
 _query_emb_cache = _load_query_emb_cache()
 logger.info(
     f"---> Query embedding cache: {len(_query_emb_cache)} εγγραφές από {QUERY_EMB_CACHE_PATH}"
@@ -439,10 +487,15 @@ def _save_query_emb_cache() -> None:
 
 
 def _embed_query(query: str) -> np.ndarray:
-    """Κανονικοποιημένο embedding της ερώτησης, με μόνιμο cache.
+    """Κανονικοποιημένο embedding της ερώτησης, με μόνιμο cache (κλειδί: αποτύπωμα, όχι κείμενο).
     Το ΑΚΡΙΒΟΤΕΡΟ βήμα του pipeline. CPU-bound -> κάλεσέ το σε to_thread."""
-    cached = _query_emb_cache.get(query)
+    global _query_emb_cache_dirty
+    key = _text_digest(query)
+    cached = _query_emb_cache.get(key)
     if cached is not None:
+        if _query_emb_cache_dirty:          # παλιό αρχείο με κείμενα: ξαναγράφεται μία φορά
+            _query_emb_cache_dirty = False
+            _save_query_emb_cache()
         return cached
     v = np.asarray(sentence_transformer_ef([query])[0], dtype=np.float32)
     nrm = np.linalg.norm(v)
@@ -450,7 +503,8 @@ def _embed_query(query: str) -> np.ndarray:
         v = v / nrm
         # Μην αποθηκεύεις ό,τι δεν είναι έγκυρο διάνυσμα του μοντέλου.
     if v.shape == (EMBED_DIM,) and len(_query_emb_cache) < QUERY_EMB_CACHE_MAX:
-        _query_emb_cache[query] = v
+        _query_emb_cache[key] = v
+        _query_emb_cache_dirty = False
         _save_query_emb_cache()
     return v
 
@@ -560,7 +614,7 @@ async def optimize_query(query: str, domain: str | None = None, terms: str | Non
         _translation_cache[cache_key] = english_query
         _translation_cache[query] = english_query
         _save_translation_cache()
-        logger.info(f"---> Retrieval translate: '{query[:40]}...' -> '{english_query}'")
+        logger.info(f"---> Retrieval translate: {_for_log(query)} -> {_for_log(english_query)}")
         return english_query
     except Exception as e:
         logger.warning(f"--- Query translation failed: {e} ---")
@@ -591,7 +645,7 @@ async def _rewrite_query(question: str, history: list) -> str:
             await gemini_rest.generate_once(prompt, model=GEMINI_MODEL, api_key=GEMINI_API_KEY)
         ).strip(" \"'\n")
         if rewritten:
-            logger.info(f"---> Query rewrite: '{question[:40]}...' -> '{rewritten}'")
+            logger.info(f"---> Query rewrite: {_for_log(question)} -> {_for_log(rewritten)}")
             return rewritten
     except Exception as e:
         logger.warning(f"--- Query rewrite failed: {e} ---")
@@ -897,6 +951,59 @@ def _rrf_fuse(
     return [(s, t, m) for s, _id, t, m in fused[:top_n]]
 
 
+async def _rank(query: str, ids: list, idx: dict, dm: dict, use_bge: bool = False) -> list:
+    """Η ΜΙΑ αλυσίδα κατάταξης: dense + BM25 (+ BGE sparse) -> RRF -> reranker, μέσα στα `ids`.
+
+    Επιστρέφει [(rerank_score, text, meta)] φθίνουσα. Την καλούν το 1ο πέρασμα (ids = ό,τι
+    επιτρέπεται στον χρήστη), η 2η αναζήτηση (ίδια ids, νέο ερώτημα) και η αναζήτηση ανά έγγραφο
+    (ids = ένα έγγραφο). ΓΙΑΤΙ ΜΙΑ (23/11/2026): ήταν τρία αντίγραφα του ίδιου κώδικα· μια
+    αλλαγή στο ένα και όχι στα άλλα θα έκανε τις τρεις διαδρομές να κατατάσσουν διαφορετικά, σιωπηλά.
+    Η αλλαγή δεν άλλαξε συμπεριφορά: ίδιες κλήσεις με την ίδια σειρά (ο κατάσκοπος του reranker
+    στο eval_near_ooc βλέπει τα ίδια best1/best2) — έλεγχος με το scoreboard, ίδιες σελίδες.
+
+    use_bge: το τρίτο σκέλος (BGE-M3 sparse) ΜΟΝΟ στο 1ο πέρασμα, όπως ήταν πάντα· η 2η αναζήτηση
+    και η ανά έγγραφο ρυθμίστηκαν χωρίς αυτό."""
+    # Dense (bge-m3, ακριβής αναζήτηση) και BM25 (cached), μόνο στα ids. to_thread: CPU-bound.
+    dense_ids = await asyncio.to_thread(
+        _dense_exact_ids, dm, query, ids, min(DENSE_CANDIDATES, len(ids))
+    )
+    sparse_ids = await asyncio.to_thread(_bm25_sparse_ids, idx, query, ids, DENSE_CANDIDATES)
+
+    # BGE-M3 sparse — ΤΡΙΤΟ σκέλος. Αποτυγχάνει σε ΑΛΛΕΣ ερωτήσεις απ' ό,τι το BM25 (κερδίζει στα
+    # multi_hop, χάνει στα CLI flags), γι' αυτό προστίθεται αντί να το αντικαθιστά.
+    bge_ids = []
+    if use_bge:
+        sp = await asyncio.to_thread(_get_sparse_index)
+        bge_ids = await asyncio.to_thread(_bge_sparse_ids, sp, query, ids, DENSE_CANDIDATES)
+
+    # RRF -> top-15. Με το BGE sparse το lexical βάρος μοιράζεται (0.5 + 0.5), ώστε η προσθήκη
+    # του να ΜΗΝ υποβαθμίζει το dense.
+    rrf_sorted = _rrf_fuse(
+        dense_ids,
+        sparse_ids,
+        idx["ids"],
+        idx["texts"],
+        idx["metas"],
+        k=60,
+        top_n=RERANK_CANDIDATES,
+        extra_ids=bge_ids,
+        weights=[1.0, 0.5, 0.5] if bge_ids else None,
+        pos=idx["pos"],
+    )
+
+    # Cross-encoder — το βαρύτερο CPU κομμάτι, σε thread. `reranker.predict` διαβάζεται ΤΩΡΑ (όχι
+    # στο import), ώστε κατάσκοποι και stubs των tests να το βλέπουν.
+    pairs = [[query, item[1]] for item in rrf_sorted]
+    cross_scores = await asyncio.to_thread(
+        lambda: reranker.predict(pairs, batch_size=RERANK_BATCH_SIZE)
+    )
+    return sorted(
+        zip(cross_scores, [item[1] for item in rrf_sorted], [item[2] for item in rrf_sorted]),
+        key=lambda x: x[0],
+        reverse=True,
+    )
+
+
 PREVIEW_CHARS = 600
 
 
@@ -1079,32 +1186,9 @@ async def _corrective_retry(
         metrics.inc("rag_corrective_skipped_total", {"reason": "identical"})
         return None
 
-    logger.info(f"---> Corrective retry: '{query[:50]}' -> '{new_query}'")
-    dense_ids = await asyncio.to_thread(
-        _dense_exact_ids, dm, new_query, allowed_ids, min(DENSE_CANDIDATES, len(allowed_ids))
-    )
-    sparse_ids = await asyncio.to_thread(
-        _bm25_sparse_ids, idx, new_query, allowed_ids, DENSE_CANDIDATES
-    )
-    rrf_sorted = _rrf_fuse(
-        dense_ids,
-        sparse_ids,
-        idx["ids"],
-        idx["texts"],
-        idx["metas"],
-        k=60,
-        top_n=RERANK_CANDIDATES,
-        pos=idx["pos"],
-    )
-    pairs = [[new_query, item[1]] for item in rrf_sorted]
-    cross_scores = await asyncio.to_thread(
-        lambda: reranker.predict(pairs, batch_size=RERANK_BATCH_SIZE)
-    )
-    sorted_final = sorted(
-        zip(cross_scores, [it[1] for it in rrf_sorted], [it[2] for it in rrf_sorted]),
-        key=lambda x: x[0],
-        reverse=True,
-    )
+    logger.info(f"---> Corrective retry: {_for_log(query)} -> {_for_log(new_query)}")
+    # Χωρίς BGE sparse, όπως πάντα σε αυτό το πέρασμα: το κατώφλι του ρυθμίστηκε έτσι.
+    sorted_final = await _rank(new_query, allowed_ids, idx, dm)
 
     if sorted_final[0][0] < CORRECTIVE_MIN_SCORE:
         logger.info(
@@ -1135,22 +1219,7 @@ async def _add_perdoc_pages(raw_query, query, pages, allowed_ids, idx, dm, user_
     metrics.inc("rag_perdoc_total")
     legs = []
     for doc in docs:
-        ids = by_doc[doc]
-        dense_ids = await asyncio.to_thread(
-            _dense_exact_ids, dm, query, ids, min(DENSE_CANDIDATES, len(ids))
-        )
-        sparse_ids = await asyncio.to_thread(_bm25_sparse_ids, idx, query, ids, DENSE_CANDIDATES)
-        rrf_sorted = _rrf_fuse(
-            dense_ids, sparse_ids, idx["ids"], idx["texts"], idx["metas"],
-            k=60, top_n=RERANK_CANDIDATES, pos=idx["pos"],
-        )
-        cross_scores = await asyncio.to_thread(
-            reranker.predict, [[query, it[1]] for it in rrf_sorted], batch_size=RERANK_BATCH_SIZE
-        )
-        ranked = sorted(
-            zip(cross_scores, [it[1] for it in rrf_sorted], [it[2] for it in rrf_sorted]),
-            key=lambda x: x[0], reverse=True,
-        )
+        ranked = await _rank(query, by_doc[doc], idx, dm)
         legs.append(
             await asyncio.to_thread(_expand_to_pages, ranked[:EXPAND_INPUT], MAX_PAGES, user_id)
         )
@@ -1188,7 +1257,6 @@ async def search_documents(
 
     # Cached BM25 index πάνω σε ΟΛΟ το corpus (χτίζεται μία φορά ανά version).
     idx = await asyncio.to_thread(_get_bm25_index)
-    all_ids, all_texts, all_metadatas = idx["ids"], idx["texts"], idx["metas"]
 
     # 0. Κρυφή μετάφραση με glossary/domain ΤΩΝ in-scope αρχείων (assembled από τα
     # metadata που φόρτωσε ήδη το idx — μηδέν επιπλέον κλήση βάσης). Κενά (legacy
@@ -1198,52 +1266,9 @@ async def search_documents(
     )
     query = await optimize_query(raw_query, domain=scope_domain, terms=scope_terms)
 
-    # 2. Dense Search — bge-m3 (8 → 4)
-    # που έχουν ήδη περάσει το where φίλτρο. to_thread: CPU-bound embed + matmul.
+    # 2-5. Dense + BM25 (+ BGE sparse αν είναι ανοιχτό) -> RRF -> reranker, στα allowed_ids.
     dm = await asyncio.to_thread(_get_dense_matrix)
-    dense_ids = await asyncio.to_thread(
-        _dense_exact_ids, dm, query, allowed_ids, min(DENSE_CANDIDATES, len(allowed_ids))
-    )
-
-    # 3. Sparse Search (BM25 από το cache), περιορισμένο στα allowed_ids
-    sparse_ids = await asyncio.to_thread(
-        _bm25_sparse_ids, idx, query, allowed_ids, DENSE_CANDIDATES
-    )
-
-    # 3β. BGE-M3 sparse — ΤΡΙΤΟ σκέλος. Αποτυγχάνει σε ΑΛΛΕΣ ερωτήσεις απ' ό,τι
-    # το BM25 (κερδίζει στα multi_hop, χάνει στα CLI flags), γι' αυτό προστίθεται
-    # αντί να το αντικαθιστά. Το RRF συγχωνεύει χωρίς κοινή κλίμακα.
-    bge_ids = []
-    if USE_BGE_SPARSE:
-        sp = await asyncio.to_thread(_get_sparse_index)
-        bge_ids = await asyncio.to_thread(_bge_sparse_ids, sp, query, allowed_ids, DENSE_CANDIDATES)
-
-    # 4. Reciprocal Rank Fusion (RRF): ένωση των σκελών -> top-15
-    # Το συνολικό lexical βάρος (8 → 4)
-    # προσθήκη του BGE sparse να ΜΗΝ υποβαθμίζει το dense.
-    rrf_sorted = _rrf_fuse(
-        dense_ids,
-        sparse_ids,
-        all_ids,
-        all_texts,
-        all_metadatas,
-        k=60,
-        top_n=RERANK_CANDIDATES,
-        extra_ids=bge_ids,
-        weights=[1.0, 0.5, 0.5] if bge_ids else None,
-        pos=idx["pos"],
-    )
-
-    # 5. Reranking με τον Cross-Encoder — το βαρύτερο CPU κομμάτι, σε thread
-    pairs = [[query, item[1]] for item in rrf_sorted]
-    cross_scores = await asyncio.to_thread(
-        lambda: reranker.predict(pairs, batch_size=RERANK_BATCH_SIZE)
-    )
-
-    final_combined = list(
-        zip(cross_scores, [item[1] for item in rrf_sorted], [item[2] for item in rrf_sorted])
-    )
-    sorted_final = sorted(final_combined, key=lambda x: x[0], reverse=True)
+    sorted_final = await _rank(query, allowed_ids, idx, dm, use_bge=USE_BGE_SPARSE)
     # Η αναζήτηση ανά έγγραφο ΜΟΝΟ αν πέρασε το 1ο πέρασμα: ο φύλακας κρίνει την ερώτηση όπως
     # σήμερα, άρα ό,τι κόβεται μένει κομμένο — καμία νέα διαρροή.
     first_pass_ok = sorted_final[0][0] >= MIN_RERANK_SCORE
@@ -1622,14 +1647,23 @@ def _normalize_pdf_text(text: str) -> str:
 
 
 def ingest_pdf(
-    file_path: str, filename: str, user_id: int, is_public: bool = False, doc_id: int | None = None
+    file_path: str,
+    filename: str,
+    user_id: int,
+    is_public: bool = False,
+    doc_id: int | None = None,
+    report: dict | None = None,
 ) -> bool:
     """Διαβάζει το PDF ανά σελίδα, το κόβει σε chunks και τα αποθηκεύει ΜΑΖΙΚΑ
     (batch) στη ChromaDB μαζί με τον ιδιοκτήτη (user_id) για authorization.
 
     Επιστρέφει True αν γράφτηκε ΕΣΤΩ ΕΝΑ chunk, False αν το PDF δεν παρήγαγε
     καθόλου κείμενο. Ο καλών αποφασίζει τι status θα δείξει στον χρήστη — εδώ
-    δεν ξέρουμε αν πρόκειται για UI, batch reingest ή test."""
+    δεν ξέρουμε αν πρόκειται για UI, batch reingest ή test.
+
+    report (23/11/2026): αν δοθεί dict, γεμίζει με την αναφορά του pdf_report (σελίδες συνολικά, με
+    κείμενο, χωρίς κείμενο, πιθανώς σαρωμένες), υπολογισμένη πάνω στο ΙΔΙΟ κείμενο που ευρετηριάζεται.
+    Τα chunks δεν αλλάζουν, άρα ούτε η αναζήτηση."""
     # chunk_size=1500: ΕΠΙΚΥΡΩΘΗΚΕ 11/8/2026, 2 σετ x 2 μέθοδοι βαθών
     # (runs/chunk_{main,hard}_{scaled,fixed}.csv). Control 1500: MRR 0.7928 /
     # nDCG 0.8070 / coverage 98.52% σε ΤΡΙΑ ανεξάρτητα τρεξίματα.
@@ -1653,6 +1687,9 @@ def ingest_pdf(
     # στις λέξεις ("A WS", "distribu ted") -> λέξεις που δεν υπήρχαν πουθενά.
     with pymupdf.open(file_path) as doc:
         pages = [(i + 1, _normalize_pdf_text(page.get_text() or "")) for i, page in enumerate(doc)]
+        image_pages = [i + 1 for i, page in enumerate(doc) if page.get_images()] if report is not None else []
+    if report is not None:
+        report.update(pdf_report.summarize([text for _no, text in pages], image_pages))
     pages = [(page_no, text) for page_no, text in pages if text and text.strip()]
 
     # Glossary ΤΟΥ ΕΓΓΡΑΦΟΥ (domain + terms): μία φορά, από ΟΛΑ τα chunks.

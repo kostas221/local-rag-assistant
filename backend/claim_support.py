@@ -46,12 +46,54 @@ def normalize_for_match(text: str) -> str:
     return re.sub(r"\s+", " ", t).strip()
 
 
-def _alnum(text: str) -> str:
-    """Μόνο γράμματα και ψηφία, πεζά, χωρίς τόνους: η ΣΕΙΡΑ των γραμμάτων μένει ίδια, φεύγουν
-    κενά, παύλες, εισαγωγικά, αλλαγές γραμμής."""
+# Σύμβολα που ΑΛΛΑΖΟΥΝ το νόημα και μένουν στη σύγκριση (23/11/2026, βήμα 0 του κύκλου 2): η
+# 1η απόκλιση κρατούσε μόνο γράμματα και ψηφία, και έτσι δεχόταν «−5» για «5» και «≥20» για «≤20».
+_MEANINGFUL = set("-+±<>≤≥=%×/~∼")
+_EXTRA_DASHES = {ord("⁄"): "/"}             # «1⁄4» (fraction slash) -> «1/4»
+
+
+def _canon(text: str) -> str:
+    """Κανονική μορφή για τη σύγκριση χωρίου με σελίδα.
+
+    ΦΕΥΓΟΥΝ (μορφή, όχι νόημα): κενά και αλλαγές γραμμής, τόνοι, κεφαλαία, εισαγωγικά, παρενθέσεις,
+    τελείες και κόμματα που δεν είναι μέσα σε αριθμό, η παύλα ανάμεσα σε γράμματα («anti-pattern»,
+    «anti-⏎pattern» και «antipattern» γίνονται ίδια).
+    ΜΕΝΟΥΝ (νόημα): γράμματα, ψηφία, η υποδιαστολή μέσα σε αριθμό, το πρόσημο και οι ανισότητες
+    («−5» ≠ «5», «≥20» ≠ «≤20»), το «%»."""
     t = unicodedata.normalize("NFKD", text or "").lower()
     t = "".join(c for c in t if not unicodedata.combining(c))
-    return re.sub(r"[\W_]+", "", t)
+    t = t.translate(_DASHES).translate(_EXTRA_DASHES)
+    t = re.sub(r"([^\W\d_])-\s*([^\W\d_])", r"\1\2", t)      # παύλα ανάμεσα σε γράμματα
+    # Κενό ανάμεσα σε δύο αριθμούς: ΔΕΝ σβήνεται, αλλιώς τα κελιά «9.1 501.13» ενώνονται σε έναν
+    # αριθμό «9.1501.13». Γίνεται διαχωριστικό «|», ίδιο για κενό και για αλλαγή γραμμής.
+    t = re.sub(r"(?<=\d)\s+(?=\d)", "|", t)
+    out = []
+    for i, c in enumerate(t):
+        if c.isalnum() or c in _MEANINGFUL or c == "|":
+            out.append(c)
+        elif c in ".," and 0 < i < len(t) - 1 and t[i - 1].isdigit() and t[i + 1].isdigit():
+            out.append(".")                                    # 0,5 και 0.5 -> 0.5
+    return "".join(out)
+
+
+# Πριν και μετά από αριθμό: αν η σελίδα συνεχίζει με ψηφίο, υποδιαστολή ή πρόσημο, το χωρίο
+# έκοψε τον αριθμό («20» μέσα στο «≤20» ή στο «120», «0.5» μέσα στο «0.57»).
+_NUM_LEFT = set("0123456789.-+±<>≤≥=~∼")
+_NUM_RIGHT = set("0123456789.")
+
+
+def _found_whole(frag: str, page: str) -> bool:
+    """Το κομμάτι υπάρχει στη σελίδα, και όπου αρχίζει ή τελειώνει με ψηφίο, ο αριθμός δεν
+    συνεχίζεται στη σελίδα."""
+    start = page.find(frag)
+    while start != -1:
+        end = start + len(frag)
+        left_ok = not frag[0].isdigit() or start == 0 or page[start - 1] not in _NUM_LEFT
+        right_ok = not frag[-1].isdigit() or end == len(page) or page[end] not in _NUM_RIGHT
+        if left_ok and right_ok:
+            return True
+        start = page.find(frag, start + 1)
+    return False
 
 
 MIN_QUOTE_ALNUM = 15                       # «0.5» ή «the cloud» δεν δείχνουν σημείο
@@ -60,7 +102,13 @@ _FRAGMENT_SPLITS = (re.compile(r"\.\.\.|…|\n\s*\n"), re.compile(r"\.\.\.|…|\
 
 
 def quote_in_source(quote: str, source_text: str, min_len: int = MIN_QUOTE_ALNUM) -> bool:
-    """Το χωρίο υπάρχει αυτούσιο στη σελίδα, με σύγκριση ΜΟΝΟ γραμμάτων και ψηφίων.
+    """Το χωρίο υπάρχει αυτούσιο στη σελίδα, με σύγκριση στην κανονική μορφή του `_canon`.
+
+    3η ΑΛΛΑΓΗ 23/11/2026 (κύκλος 2, βήμα 0, μετά από εξωτερική κριτική): η σύγκριση κρατά πλέον
+    πρόσημα, ανισότητες και υποδιαστολές, και ένας αριθμός πρέπει να ταιριάζει ΟΛΟΚΛΗΡΟΣ. Πριν, το
+    «−5 degrees» γινόταν δεκτό απέναντι στο «5 degrees» και το «≥20 ms» απέναντι στο «≤20 ms». Η
+    απόφαση του βήματος 5 (μετρήθηκε με την προηγούμενη μορφή) δεν αλλάζει: αφορά την κρίση
+    full/partial/none, που απορρίφθηκε.
 
     ΑΠΟΚΛΙΣΗ 22/11/2026 (μετά το 1ο τρέξιμο, πριν από τις αλλοιώσεις): η σύγκριση με κενά και
     παύλες σημάδευε σωστά χωρία για λόγους μορφής: «anti-pattern» απέναντι σε «anti-⏎pattern»,
@@ -72,10 +120,12 @@ def quote_in_source(quote: str, source_text: str, min_len: int = MIN_QUOTE_ALNUM
     σωστά στοιχεία λίστας εντολής («--good», «--passes=2», q028), που στο 1ο τρέξιμο περνούσαν. Το
     `apply_check` περνά min_len = min(15, μήκος της ίδιας της πρότασης): ένα χωρίο δεν χρειάζεται
     να είναι μεγαλύτερο από αυτό που στηρίζει."""
-    page = _alnum(source_text)
+    page = _canon(source_text)
     for split in _FRAGMENT_SPLITS:
-        frags = [f for f in (_alnum(x) for x in split.split(quote or "")) if f]
-        if frags and max(map(len, frags)) >= min_len and all(f in page for f in frags):
+        frags = [f for f in (_canon(x) for x in split.split(quote or "")) if f]
+        # Χωρίο κομμένο στη μέση λέξης («...large la-»): η τελική παύλα δεν είναι πρόσημο.
+        frags = [re.sub(r"(?<=[^\W\d_])-$", "", f) for f in frags]
+        if frags and max(map(len, frags)) >= min_len and all(_found_whole(f, page) for f in frags):
             return True
     return False
 
@@ -84,12 +134,12 @@ def quote_cover(quote: str, pages) -> float:
     """Διάγνωση, όχι κρίση: το μεγαλύτερο ΣΥΝΕΧΕΣ κομμάτι του χωρίου (σε γράμματα/ψηφία) που
     υπάρχει σε κάποια σελίδα, ως ποσοστό του χωρίου. ~1.0 = σχεδόν αυτούσιο (λάθος μορφής),
     χαμηλό = ενωμένα μακρινά κομμάτια ή παράφραση."""
-    q = _alnum(quote)
+    q = _canon(quote)
     if not q:
         return 0.0
     best = 0
     for page in pages:
-        sm = difflib.SequenceMatcher(None, q, _alnum(page), autojunk=False)
+        sm = difflib.SequenceMatcher(None, q, _canon(page), autojunk=False)
         best = max(best, sm.find_longest_match(0, len(q), 0, len(sm.b)).size)
     return round(best / len(q), 2)
 
@@ -101,7 +151,9 @@ def quote_cover(quote: str, pages) -> float:
 # Χωρίς έλεγχο ΜΕΤΑ τον αριθμό (απόκλιση 22/11/2026): στο κείμενο των PDF η μονάδα κολλάει
 # («538Mbps», «7.5x», «100msincrements», «9.7s») και ο αριθμός χανόταν. Πριν από τον αριθμό
 # μένει ο έλεγχος: «S3», «EC2», «t3.nano» δεν είναι αριθμοί.
-_NUM_RE = re.compile(r"(?<![\w.,])\d+(?:[.,]\d+)*")
+# Το πρόσημο μετράει (23/11/2026): «−5» και «5» είναι διαφορετικοί αριθμοί. Η παύλα ανάμεσα σε δύο
+# αριθμούς («10–20», «10 −20ms» σε πίνακα) είναι εύρος, όχι αρνητικό πρόσημο.
+_NUM_RE = re.compile(r"(?<![\w.,])(?P<sign>-?)(?P<num>\d+(?:[.,]\d+)*)")
 _UNITS = ["zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten",
           "eleven", "twelve", "thirteen", "fourteen", "fifteen", "sixteen", "seventeen",
           "eighteen", "nineteen"]
@@ -124,11 +176,15 @@ def _number_forms(text: str) -> list[tuple[str, frozenset[str]]]:
     t = unicodedata.normalize("NFKC", text or "").translate(_DASHES)
     out = []
     for m in _NUM_RE.finditer(t):
-        raw = m.group(0)
+        raw = m.group("num")
+        negative = bool(m.group("sign")) and not t[: m.start()].rstrip().endswith(
+            tuple("0123456789"))
         forms = {raw.replace(",", ".")}
         if re.fullmatch(r"\d{1,3}([.,]\d{3})+", raw):
             forms.add(re.sub(r"[.,]", "", raw))
         forms |= {f.rstrip("0").rstrip(".") for f in list(forms) if "." in f}
+        if negative:
+            raw, forms = "-" + raw, {"-" + f for f in forms}
         out.append((raw, frozenset(forms)))
     return out
 
@@ -342,7 +398,7 @@ def apply_check(claims: list[Claim], texts: dict[str, str], verdicts: dict[int, 
         cited = [texts[lab] for lab in c.labels if lab in texts] if c.labels else list(texts.values())
         c.numbers_missing = unsupported_numbers(c.text, cited, allowed)
         v = (verdicts or {}).get(c.i)
-        min_len = max(4, min(MIN_QUOTE_ALNUM, len(_alnum(c.text))))
+        min_len = max(4, min(MIN_QUOTE_ALNUM, len(_canon(c.text))))
         if v:
             c.quote, c.quote_label, c.support, c.missing = (v["quote"], v["label"], v["support"],
                                                             v["missing"])

@@ -249,6 +249,34 @@ def _patch_search(monkeypatch, rerank_score):
     monkeypatch.setattr(ai_core, "ENABLE_CORRECTIVE", False)
 
 
+class _ByTextReranker:
+    """Score ανά κείμενο chunk + μετρητής κλήσεων (ο κατάσκοπος του eval_near_ooc υποθέτει ΜΙΑ
+    κλήση predict ανά πέρασμα: best1 = 1η, best2 = 2η)."""
+
+    def __init__(self, scores):
+        self.scores, self.calls = scores, 0
+
+    def predict(self, pairs, batch_size=None):
+        self.calls += 1
+        return [self.scores[text] for _query, text in pairs]
+
+
+def test_rank_stays_inside_ids_sorts_by_rerank_score_and_calls_reranker_once(monkeypatch):
+    """Η ΜΙΑ αλυσίδα κατάταξης (23/11/2026) που καλούν 1ο πέρασμα, 2η αναζήτηση και αναζήτηση
+    ανά έγγραφο: μόνο τα ids που της δίνονται, φθίνουσα κατά reranker, μία κλήση predict."""
+    _patch_search(monkeypatch, rerank_score=0.0)
+    stub = _ByTextReranker({"chunk zero": -1.0, "chunk one": 2.0, "chunk two": 0.5})
+    monkeypatch.setattr(ai_core, "reranker", stub)
+    idx, dm = ai_core._get_bm25_index(), ai_core._get_dense_matrix()
+
+    one_doc = asyncio.run(ai_core._rank("chunk", ["id1", "id2"], idx, dm))
+    assert [t for _s, t, _m in one_doc] == ["chunk one", "chunk two"]
+    assert stub.calls == 1
+
+    everything = asyncio.run(ai_core._rank("chunk", ["id0", "id1", "id2"], idx, dm))
+    assert [s for s, _t, _m in everything] == [2.0, 0.5, -1.0]
+
+
 def test_relevance_gate_blocks_below_threshold(monkeypatch):
     """Όλα τα chunks κάτω από το MIN_RERANK_SCORE -> επιστρέφει [] (το gate κόβει)."""
     _patch_search(monkeypatch, rerank_score=ai_core.MIN_RERANK_SCORE - 0.01)
@@ -352,3 +380,37 @@ def test_translation_cache_respects_domain_terms_and_model(monkeypatch):
     assert res5 == "cloud english query"
     assert len(calls) == 4
 
+
+
+# --- Ιδιωτικότητα των ερωτήσεων (κύκλος 2, βήμα 1, 23/11/2026) -------------------------------------
+
+
+def test_question_text_is_not_logged_by_default(monkeypatch):
+    monkeypatch.setattr(ai_core, "LOG_QUERY_TEXT", False)
+    out = ai_core._for_log("Ποιο είναι το κόστος του Lambda;")
+    assert "Lambda" not in out and "κόστος" not in out and out.startswith("<")
+    monkeypatch.setattr(ai_core, "LOG_QUERY_TEXT", True)
+    assert "Lambda" in ai_core._for_log("Ποιο είναι το κόστος του Lambda;")
+
+
+def test_translation_cache_stays_in_memory_and_is_capped(tmp_path, monkeypatch):
+    path = tmp_path / "_translation_cache.json"
+    monkeypatch.setattr(ai_core, "_translation_cache_path", str(path))
+    monkeypatch.setattr(ai_core, "PERSIST_QUERY_CACHE", False)
+    monkeypatch.setattr(ai_core, "TRANSLATION_CACHE_MAX", 2)
+    cache = {"a": "1", "b": "2", "c": "3"}
+    monkeypatch.setattr(ai_core, "_translation_cache", cache)
+    ai_core._save_translation_cache()
+    assert not path.exists()                     # τίποτα στον δίσκο
+    assert list(cache) == ["b", "c"]             # το παλαιότερο έφυγε
+
+
+def test_query_embedding_cache_is_keyed_by_digest_not_text(monkeypatch):
+    cache = {}
+    monkeypatch.setattr(ai_core, "_query_emb_cache", cache)
+    monkeypatch.setattr(ai_core, "_save_query_emb_cache", lambda: None)
+    vec = [1.0] + [0.0] * (ai_core.EMBED_DIM - 1)
+    monkeypatch.setattr(ai_core, "sentence_transformer_ef", lambda texts: [vec for _ in texts])
+    ai_core._embed_query("private question about my thesis")
+    assert list(cache) == [ai_core._text_digest("private question about my thesis")]
+    assert ai_core._embed_query("private question about my thesis") is cache[next(iter(cache))]

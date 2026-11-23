@@ -474,8 +474,13 @@ class Frozen:
     """Πάγωμα του generate_once με κλειδί ΟΛΟΚΛΗΡΟ το prompt. Τυλίγει τον κατάσκοπο του
     eval_near_ooc, ώστε το E.retrieve να βρίσκει την αναδιατύπωση και στα παγωμένα."""
 
-    def __init__(self, path: str, fresh: bool):
+    def __init__(self, path: str, fresh: bool, frozen_only: bool = False):
+        """frozen_only (23/11/2026): κλήση που λείπει από το πάγωμα ΔΕΝ γίνεται ποτέ — καταγράφεται
+        ως σφάλμα και η εφαρμογή συνεχίζει όπως σε αποτυχία του API. Για τρεξίματα που πρέπει να
+        αποδείξουν «δεν άλλαξε τίποτα»: χωρίς αυτό, ένα prompt που άλλαξε έστω και κατά ένα γράμμα
+        έκανε σιωπηλά νέα, πληρωμένη κλήση."""
         self.path = path
+        self.frozen_only = frozen_only
         self.data: dict = {}
         if not fresh and os.path.exists(path):
             with open(path, encoding="utf-8") as f:
@@ -497,6 +502,9 @@ class Frozen:
                 text = self.data[key]["out"]
                 E._prompts.append((prompt[:60], text.strip(" \"'\n")))
                 return text
+            if self.frozen_only:
+                self.errors.append(f"λείπει από το πάγωμα: «{prompt[-120:]}»")
+                raise RuntimeError("frozen-only: η κλήση δεν υπάρχει στο πάγωμα — δεν έγινε")
             try:
                 text = await inner(prompt, **kw)
             except Exception as e:
@@ -782,7 +790,10 @@ async def run(args) -> int:
                 old_trans.update(json.load(f))
     ai_core._translation_cache.clear()          # μεταφράσεις ΜΟΝΟ μέσα από το πάγωμα
     ai_core.ENABLE_CORRECTIVE = True            # όπως η παραγωγή
-    frozen = Frozen(FROZEN_PATH, args.fresh)
+    if args.frozen_only and args.fresh:
+        print("!! --frozen-only και --fresh μαζί δεν έχουν νόημα")
+        return 1
+    frozen = Frozen(FROZEN_PATH, args.fresh, frozen_only=args.frozen_only)
     frozen.install()
     gate = ai_core.MIN_RERANK_SCORE
     config = {"reranker": ai_core.RERANKER_MODEL, "embedder": ai_core.EMBED_MODEL_NAME,
@@ -808,6 +819,7 @@ async def run(args) -> int:
         print(f"\n===== {key}: {len(tests)} ερωτήσεις ({fname}) =====", flush=True)
         for t in tests:
             frozen.last_domain = ""
+            n_err_before = len(frozen.errors)
             question = t.get("question", "")
             if key == "conv":
                 history = [{"role": "user", "content": t["turn1_question"]},
@@ -823,6 +835,11 @@ async def run(args) -> int:
             rows.append(row)
             print(f"  {t['id']:<6}{row['state']:<26}best1 {E.fmt(b1):>6}  "
                   f"{row['sec']:>5.2f}s  {question[:60]}", flush=True)
+            if frozen.frozen_only and len(frozen.errors) > n_err_before:
+                # ΔΕΝ σταματά: η κλήση που λείπει δεν έγινε, και η εφαρμογή συνέχισε όπως σε κάθε
+                # αποτυχία του API (μετάφραση -> αμετάφραστη ερώτηση). Έτσι η g38b έχει ήδη μία τέτοια
+                # (v4, finishReason=None, δεν αποθηκεύτηκε ποτέ). Το compare_scoreboard_runs.py κρίνει.
+                print(f"     !! δεν υπάρχει στο πάγωμα — η κλήση ΔΕΝ έγινε: {frozen.errors[-1][:90]}")
 
     if not args.limit:
         frozen.save()
@@ -875,6 +892,8 @@ def main() -> int:
     ap.add_argument("--limit", type=int, default=0, help="μόνο N ανά σετ (δοκιμή, δεν σώζει)")
     ap.add_argument("--only", default="", help=f"μόνο αυτά τα σετ, με κόμμα: {[k for k, _ in SETS]}")
     ap.add_argument("--fresh", action="store_true", help="αγνοεί το πάγωμα του Gemini")
+    ap.add_argument("--frozen-only", action="store_true",
+                    help="μόνο αποθηκευμένες κλήσεις: σε κλήση που λείπει, σταματά ΧΩΡΙΣ να την κάνει")
     ap.add_argument("--rebuild", action="store_true", help="ξαναχτίζει το απομονωμένο store")
     args = ap.parse_args()
     if args.only and not set(args.only.split(",")) <= {k for k, _ in SETS}:

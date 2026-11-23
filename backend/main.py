@@ -32,6 +32,7 @@ import ai_core  # <-- ΤΟ ΑΦΗΝΟΥΜΕ ΜΟΝΟ ΕΔΩ (Top-level)
 import database
 import metrics
 import models
+import pdf_report
 import rate_limit
 import schemas
 import security
@@ -64,6 +65,12 @@ for logger_name in ("uvicorn.asgi", "uvicorn.access", "uvicorn"):
 # Αρχικοποίηση της Βάσης Δεδομένων
 
 models.Base.metadata.create_all(bind=database.engine)
+
+
+# Οι στήλες της αναφοράς εξαγωγής (23/11/2026) σε ΥΠΑΡΧΟΥΣΑ βάση: βλ. models.ensure_document_columns.
+_added = models.ensure_document_columns(database.engine)
+if _added:
+    logger.info(f"Στήλες που προστέθηκαν στο documents: {_added}")
 
 
 def _recover_orphaned_ingests():
@@ -350,11 +357,12 @@ def login(request: Request, form_data: OAuth2PasswordRequestForm = Depends(), db
 def process_document(doc_id: int, file_path: str, filename: str, user_id: int):
     """Τρέχει στο παρασκήνιο: κάνει ingest και ενημερώνει το status του εγγράφου."""
     db = database.SessionLocal()
+    report: dict = {}
     try:
         # ΜΗΔΕΝ chunks -> "empty", ΟΧΙ "ready" (θα φαινόταν έτοιμο και δεν θα
         # απαντούσε ποτέ) και ΟΧΙ "failed": το "failed" λέει στον χρήστη
         # «ξαναδοκίμασε», ενώ η επανάληψη θα δώσει ΑΚΡΙΒΩΣ το ίδιο. Θέλει OCR.
-        ok = ai_core.ingest_pdf(file_path, filename, user_id, doc_id=doc_id)
+        ok = ai_core.ingest_pdf(file_path, filename, user_id, doc_id=doc_id, report=report)
         new_status = "ready" if ok else "empty"
     except Exception as e:
         logger.error(f"Ingest απέτυχε για '{filename}': {e}")
@@ -364,6 +372,13 @@ def process_document(doc_id: int, file_path: str, filename: str, user_id: int):
             models.Document.id == doc_id).first()
         if doc:
             doc.status = new_status
+            if report:
+                # «Εξήχθη κείμενο από Χ/Υ σελίδες»: ώστε ο χρήστης να ξεχωρίζει το «δεν
+                # διαβάστηκε» από το «το άρθρο δεν το λέει» (pdf_report).
+                doc.pages_total = report["pages_total"]
+                doc.pages_text = report["pages_text"]
+                doc.pages_empty = pdf_report.pages_to_str(report["pages_empty"])
+                doc.pages_scanned = pdf_report.pages_to_str(report["pages_scanned"])
             db.commit()
         else:
             # RACE: το έγγραφο διαγράφηκε ΟΣΟ έτρεχε το ingest. Το delete_document
@@ -474,6 +489,13 @@ def get_documents(current_user: models.User = Depends(get_current_user), db: Ses
             "is_mine": doc.user_id == current_user.id,
             "uploader_name": doc.owner.username if doc.owner else "Unknown",
             "status": doc.status,
+            # Αναφορά εξαγωγής (None για έγγραφα πριν από τις στήλες)
+            "pages_total": doc.pages_total,
+            "pages_text": doc.pages_text,
+            "pages_empty": pdf_report.pages_from_str(doc.pages_empty),
+            "pages_scanned": pdf_report.pages_from_str(doc.pages_scanned),
+            "extraction": pdf_report.describe(doc.pages_total, doc.pages_text,
+                                              pdf_report.pages_from_str(doc.pages_empty)),
         }
         for doc in all_docs
     ]
