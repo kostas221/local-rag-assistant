@@ -268,3 +268,100 @@ def test_judge_ooc_accepts_refused_and_distractor_isolated():
     assert st[3, "full"]["n"] == 12
     assert st[2, "full"]["n_safe"] == 47
     assert st[3, "full"]["n_safe"] == 47
+
+
+# --- Δύο φάσεις (τροποποίηση 24/11/2026): Α = ποιότητα/κόστος/χρόνος, Β = ασφάλεια στα μεγέθη που πέρασαν ---
+
+def _phase(full: dict, arms: tuple, sizes: tuple = (1, 2, 3)) -> dict:
+    rows = [r for r in full["rows"]
+            if r["arm"] in arms and (r["arm"] != "safety" or r["size"] in sizes)]
+    meta = {"complete": True, "include_distract": False, "arms": list(arms), "safety_sizes": list(sizes)}
+    return {"meta": meta, "rows": rows, "live_timing": full["live_timing"] if "one" in arms else []}
+
+
+def test_phase_row_counts():
+    a = SPEC.expected_row_keys(arms=SPEC.PHASE_ARMS["A"])
+    assert len(a) == 52 * 2 * 2 + 29 * 2 * 2 + 12 * 2 * 2 == 372
+    b = SPEC.expected_row_keys(arms=SPEC.PHASE_ARMS["B"], safety_sizes=(2, 3))
+    assert len(b) == 47 * 2 * 2 == 188
+    assert {k[3] for k in b} == {2, 3}
+    assert a | SPEC.expected_row_keys(arms=SPEC.PHASE_ARMS["B"]) == SPEC.expected_row_keys()
+
+
+def test_validate_phase_files():
+    full = _synthetic_full_answers(include_distract=False, complete=True)
+    pa = _phase(full, SPEC.PHASE_ARMS["A"])
+    assert SPEC.validate_answers(pa, smoke=False) == []
+    # Χωρίς meta.arms το αρχείο υπόσχεται ΟΛΑ τα σκέλη -> λείπει η ασφάλεια
+    assert SPEC.validate_answers({**pa, "meta": {"complete": True}}, smoke=False)
+    pb = _phase(full, SPEC.PHASE_ARMS["B"], (2, 3))
+    assert SPEC.validate_answers(pb, smoke=False) == []
+    # Γραμμή ασφάλειας μεγέθους 1 σε Φάση Β μόνο για 2,3 -> πλεονάζει
+    extra = next(r for r in full["rows"] if r["arm"] == "safety" and r["size"] == 1)
+    assert SPEC.validate_answers({**pb, "rows": pb["rows"] + [extra]}, smoke=False)
+    assert SPEC.validate_answers({**pa, "meta": {**pa["meta"], "arms": ["bogus"]}}, smoke=False)
+
+
+def _judged(rows: list[dict], full_ok: bool, rag_ok: bool) -> list[dict]:
+    return [{**r, "labels": ["x"], "refused": False,
+             "ok": (full_ok if r["system"] == "full" else rag_ok) if r["arm"] != "safety" else True}
+            for r in rows]
+
+
+def test_decide_waits_for_phase_b_then_decides(capsys):
+    full = _synthetic_full_answers(include_distract=False, complete=True)
+    pa = _phase(full, SPEC.PHASE_ARMS["A"])
+    J.decide(J.stats(_judged(pa["rows"], full_ok=True, rag_ok=False)), smoke=False)
+    out = capsys.readouterr().out
+    assert "ΦΑΣΗ Α" in out and "--safety-sizes 1,2,3" in out and "ΑΠΟΦΑΣΗ" not in out
+
+    both = _judged(full["rows"], full_ok=True, rag_ok=False)
+    J.decide(J.stats(both), smoke=False)
+    out = capsys.readouterr().out
+    assert "ΑΠΟΦΑΣΗ: περνά στα μεγέθη [1, 2, 3]" in out
+
+    J.decide(J.stats(_judged(pa["rows"], full_ok=False, rag_ok=True)), smoke=False)
+    out = capsys.readouterr().out
+    assert "μένει το RAG" in out and "δεν χρειάζεται" in out
+
+
+def test_cost_and_time_use_draw_one_only():
+    base = {"arm": "one", "set": "main", "size": 1, "docs": "a.pdf", "cut": 0, "ok": True, "refused": False,
+            "in_tokens": 10000, "cached_tokens": 0, "search_s": None}
+    rows = []
+    for i in range(4):
+        for sysk in ("full", "rag"):
+            rows.append({**base, "id": f"q{i}", "system": sysk, "draw": 1,
+                         "cache_role": "first" if i == 0 else "next", "usd": 0.01, "ttft": 3.0})
+            rows.append({**base, "id": f"q{i}", "system": sysk, "draw": 2, "cache_role": "repeat",
+                         "usd": 0.0001, "cached_tokens": 9000, "ttft": 30.0})
+    st = J.stats(rows)
+    assert st[1, "full"]["usd"] == 0.01 and st[1, "full"]["p90"] == 3.0 and st[1, "full"]["cached"] == 0
+    assert st[1, "full"]["n"] == 4 and st[1, "full"]["draws"] == 2
+
+
+def test_judge_main_merges_phase_files(tmp_path, monkeypatch):
+    full = _synthetic_full_answers(include_distract=False, complete=True)
+    pa_path, pb_path = tmp_path / "answers_phaseA.json", tmp_path / "answers_phaseB.json"
+    pa_path.write_text(json.dumps(_phase(full, SPEC.PHASE_ARMS["A"])), encoding="utf-8")
+    pb_path.write_text(json.dumps(_phase(full, SPEC.PHASE_ARMS["B"], (2, 3))), encoding="utf-8")
+
+    class FakeJudge:
+        def __init__(self, *_a):
+            self.new = self.hits = 0
+            self.usd = 0.0
+
+        def __call__(self, _prompt):
+            return {"label": "correct", "paper_1": "correct", "paper_2": "correct", "paper_3": "correct"}
+
+        def save(self):
+            pass
+
+    monkeypatch.setattr(J, "LC_DIR", str(tmp_path))
+    monkeypatch.setattr(J.C, "api_key", lambda: "fake")
+    monkeypatch.setattr(J.C, "Judge", FakeJudge)
+    assert J.default_inputs(False) == [str(pa_path), str(pb_path)]
+    assert J.main([]) == 0
+    assert (tmp_path / "judged_phaseAB.json").exists()
+    # Η ίδια φάση δύο φορές -> κοινές γραμμές -> δεν κρίνεται
+    assert J.main(["--input", str(pa_path), "--input", str(pa_path)]) == 1

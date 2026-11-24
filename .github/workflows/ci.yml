@@ -39,7 +39,9 @@ jobs:
           pip install pydantic==2.14.1 "python-jose[cryptography]==3.5.0" \
                       passlib==1.7.4 bcrypt==4.0.1 python-dotenv pytest==8.3.4 \
                       httpx==0.28.1 loguru fastapi==0.162.0 \
-                      starlette==1.10.0 sqlalchemy python-multipart
+                      starlette==1.10.0 sqlalchemy python-multipart "numpy<2"
+      # numpy: το test_lc_vs_rag εισάγει το probe_lc_vs_rag -> scoreboard -> embedder_switch (numpy).
+      # Ίδιο όριο με το requirements.txt.
       # ΤΙ ΤΡΕΧΕΙ ΕΔΩ ΚΑΙ ΓΙΑΤΙ ΟΧΙ ΣΤΟ core-tests: και τα τέσσερα αρχεία
       # αποφεύγουν εντελώς το `import ai_core` (2.4GB μοντέλα, ~1 λεπτό):
       #   test_gemini_rest    — ψεύτικος httpx client, χωρίς δίκτυο/API key

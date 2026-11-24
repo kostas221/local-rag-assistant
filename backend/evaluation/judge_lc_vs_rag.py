@@ -19,7 +19,11 @@
     Σιωπή του φύλακα (RAG): στο κύριο «refused», στα 2/3 άρθρα «declared_missing», στην ασφάλεια σωστή.
 
     python backend/evaluation/judge_lc_vs_rag.py --smoke     # η δοκιμή (answers_smoke.json)
-    python backend/evaluation/judge_lc_vs_rag.py             # όλο (answers.json)
+    python backend/evaluation/judge_lc_vs_rag.py             # Φάση Α (+ Β αν υπάρχει) · αλλιώς answers.json
+
+ΔΥΟ ΦΑΣΕΙΣ (τροποποίηση 24/11/2026): μετά την Α ο κριτής λέει σε ποια μεγέθη χρειάζεται η Β (ασφάλεια).
+Απόφαση εκδίδεται μόνο όταν υπάρχει ασφάλεια για ΚΑΘΕ μέγεθος που πέρασε την Α. Κόστος και χρόνος του
+κανόνα από την κλήρωση 1 (η 2 ξαναστέλνει ίδιο prompt -> τεχνητό cache).
 """
 import argparse
 import json
@@ -148,6 +152,12 @@ def p90(xs: list) -> float | None:
     return xs[min(len(xs) - 1, math.ceil(0.9 * len(xs)) - 1)] if xs else None
 
 
+def is_draw1(r: dict) -> bool:
+    """Πρώτη ή επόμενη ερώτηση της κλήρωσης 1 — όχι επανάληψη ίδιου prompt (κλήρωση 2)."""
+    role = r.get("cache_role")
+    return role in ("first", "next") if role else int(r["draw"]) == 1
+
+
 def stats(rows: list[dict]) -> dict:
     """Ανά (μέγεθος, σύστημα): ποιότητα από το προκαταχωρισμένο σκέλος του μεγέθους (one/two/three),
     ασφάλεια από το σκέλος safety, κόστος/χρόνος από τις κλήσεις του σκέλους ποιότητας.
@@ -158,7 +168,10 @@ def stats(rows: list[dict]) -> dict:
         for sysk, _name in SYSTEMS:
             q = [r for r in rows if r["arm"] == QUALITY_ARM[s] and r["system"] == sysk]
             sa = [r for r in rows if r["arm"] == "safety" and r["size"] == s and r["system"] == sysk]
-            called = [r for r in q if not r["cut"]]
+            # Κόστος και χρόνος ΜΟΝΟ από την κλήρωση 1 (τροποποίηση 24/11, πριν από το πλήρες τρέξιμο): η
+            # κλήρωση 2 ξαναστέλνει το ΙΔΙΟ prompt και παίρνει cache που δεν υπάρχει στην πραγματική χρήση
+            # (στη δοκιμή, διαφορετική ερώτηση στα ίδια άρθρα: 0 tokens από το cache, 12/12).
+            called = [r for r in q if not r["cut"] and is_draw1(r)]
             draws = len({r["draw"] for r in q}) or 1
             tok = [r["in_tokens"] for r in called if r["in_tokens"]]
             tt = [r["ttft"] for r in called if r["ttft"] is not None]
@@ -349,35 +362,48 @@ def print_distractor(rows: list[dict]) -> None:
 
 
 def decide(S: dict, smoke: bool) -> None:
-    print("\nΚΑΝΟΝΑΣ (προκαταχώριση): το «όλο το κείμενο» περνά σε ένα μέγεθος αν ισχύουν ΚΑΙ τα τέσσερα")
-    passed = {}
+    print("\nΚΑΝΟΝΑΣ (προκαταχώριση): το «όλο το κείμενο» περνά σε ένα μέγεθος αν ισχύουν ΚΑΙ τα τέσσερα"
+          "\n  (Φάση Α: 1, 3, 4 · Φάση Β: 2, μόνο στα μεγέθη που πέρασαν την Α · κόστος/χρόνος από την κλήρωση 1)")
+    passed: dict = {}
+    phase_a: dict = {}
     for s in SIZES:
         rag, full = S[s, "rag"], S[s, "full"]
-        if not (rag["n"] and full["n"] and rag["n_safe"] and full["n_safe"]):
-            print(f"  {art(s)}: λείπουν δεδομένα")
+        if not (rag["n"] and full["n"]):
+            print(f"  {art(s)}: λείπουν δεδομένα ποιότητας")
             continue
         c1 = full["ok"] >= rag["ok"] + MIN_GAIN
-        c2 = full["safe"] >= rag["safe"] - SAFETY_SLACK
+        # 2: ασφάλεια — None = δεν έχει μετρηθεί ακόμα (Φάση Β)
+        c2 = (full["safe"] >= rag["safe"] - SAFETY_SLACK) if (rag["n_safe"] and full["n_safe"]) else None
         c3 = rag["usd"] is not None and full["usd"] is not None and full["usd"] <= MAX_COST_RATIO * rag["usd"]
         c4 = full["p90"] is not None and full["p90"] <= MAX_P90_TTFT
-        passed[s] = c1 and c2 and c3 and c4
+        phase_a[s] = c1 and c3 and c4
+        passed[s] = None if (phase_a[s] and c2 is None) else bool(phase_a[s] and c2)
         ratio = full["usd"] / rag["usd"] if (rag["usd"] and full["usd"]) else None
 
         def m(ok):
-            return "✓" if ok else "✗"
-        print(f"  {art(s)}: 1 ποιότητα {full['ok']:.1f} ≥ {rag['ok']:.1f}+{MIN_GAIN:g} {m(c1)} · "
-              f"2 ασφάλεια {full['safe']} ≥ {rag['safe']}−{SAFETY_SLACK} {m(c2)} · "
+            return "εκκρεμεί (Φάση Β)" if ok is None else ("✓" if ok else "✗")
+        verdict = {True: "ΠΕΡΝΑ", False: "όχι", None: "περνά τη Φάση Α -> χρειάζεται η Β"}[passed[s]]
+        safety = (f"2 ασφάλεια {full['safe']} ≥ {rag['safe']}−{SAFETY_SLACK} {m(c2)}" if c2 is not None
+                  else f"2 ασφάλεια {m(None)}")
+        print(f"  {art(s)}: 1 ποιότητα {full['ok']:.1f} ≥ {rag['ok']:.1f}+{MIN_GAIN:g} {m(c1)} · {safety} · "
               f"3 κόστος {fmt(ratio, '.1f')}× ≤ {MAX_COST_RATIO:g}× {m(c3)} · "
-              f"4 p90 {fmt(full['p90'], '.1f')} s ≤ {MAX_P90_TTFT:g} {m(c4)}  ->  {'ΠΕΡΝΑ' if passed[s] else 'όχι'}")
+              f"4 p90 {fmt(full['p90'], '.1f')} s ≤ {MAX_P90_TTFT:g} {m(c4)}  ->  {verdict}")
     if smoke:
         print("  (δοκιμή: λίγες ερωτήσεις — ο κανόνας ΔΕΝ εφαρμόζεται, μόνο ελέγχεται ότι όλα δουλεύουν)")
         return
     if len(passed) != len(SIZES):
         print("!! Λείπουν δεδομένα για ένα ή περισσότερα μεγέθη — ΔΕΝ εκδίδεται απόφαση.")
         return
+    pending = [s for s in SIZES if passed[s] is None]
+    if pending:
+        print(f"ΦΑΣΗ Α: το «όλο το κείμενο» περνά ποιότητα, κόστος και χρόνο στα μεγέθη {pending}. "
+              f"ΔΕΝ εκδίδεται απόφαση πριν από την ασφάλεια. Επόμενο (Docker): probe_lc_vs_rag.py --phase B "
+              f"--safety-sizes {','.join(map(str, pending))} --max-usd <πλαφόν>, και μετά ξανά αυτός ο κριτής.")
+        return
     ok_sizes = [s for s in SIZES if passed.get(s)]
     if not ok_sizes:
-        print("ΑΠΟΦΑΣΗ: σε κανένα μέγεθος -> μένει το RAG.")
+        print("ΑΠΟΦΑΣΗ: σε κανένα μέγεθος -> μένει το RAG."
+              + (" Η Φάση Β (ασφάλεια) δεν χρειάζεται." if not any(phase_a.values()) else ""))
         return
     top = max(ok_sizes)
     T = int(S[top, "full"]["max_tok"] // ROUND_TOKENS * ROUND_TOKENS)
@@ -434,29 +460,51 @@ def diagnose(rows: list[dict]) -> None:
         print(f"  μέρη σωστά μόνο {name}: η σελίδα-τεκμήριο έλειπε από το RAG σε {miss}, ήταν εκεί σε {had}")
 
 
+def default_inputs(smoke: bool) -> list[str]:
+    if smoke:
+        return [os.path.join(LC_DIR, "answers_smoke.json")]
+    a, b = (os.path.join(LC_DIR, f"answers_phase{x}.json") for x in "AB")
+    if os.path.exists(a):
+        return [a] + ([b] if os.path.exists(b) else [])
+    whole = os.path.join(LC_DIR, "answers.json")
+    return [whole] if os.path.exists(whole) else [a]
+
+
 def main(argv: list[str] | None = None) -> int:
     if hasattr(sys.stdout, "reconfigure"):      # κονσόλα Windows (cp1253): ≥ ✓ × δεν τυπώνονται αλλιώς
         sys.stdout.reconfigure(encoding="utf-8")
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--smoke", action="store_true", help="κρίνει το answers_smoke.json (δοκιμή)")
-    ap.add_argument("--input", default="", help="προαιρετική διαδρομή answers JSON αντί για το default")
+    ap.add_argument("--input", action="append", default=[],
+                    help="answers JSON (μπορεί πολλές φορές). Default: answers_phaseA.json (+ answers_phaseB.json "
+                         "αν υπάρχει), αλλιώς answers.json")
     ap.add_argument("--model", default="gpt-4.1")
     ap.add_argument("--max-usd", type=float, default=3.0)
     args = ap.parse_args(argv)
-    src = args.input or os.path.join(LC_DIR, "answers_smoke.json" if args.smoke else "answers.json")
-    if not os.path.exists(src):
-        print(f"!! Λείπει το {src} — τρέξε πρώτα το probe_lc_vs_rag.py")
+    srcs = args.input or default_inputs(args.smoke)
+    datas = []
+    for src in srcs:
+        if not os.path.exists(src):
+            print(f"!! Λείπει το {src} — τρέξε πρώτα το probe_lc_vs_rag.py")
+            return 1
+        with open(src, encoding="utf-8") as f:
+            d = json.load(f)
+        # Έλεγχος πληρότητας ΠΡΙΝ από οποιαδήποτε πληρωμένη κλήση κριτή ή έκδοση απόφασης
+        errs = SPEC.validate_answers(d, smoke=args.smoke)
+        if errs:
+            print(f"!! ΑΚΥΡΟ/ΗΜΙΤΕΛΕΣ {src} — ΔΕΝ κρίνεται και ΔΕΝ εκδίδεται απόφαση:")
+            for e in errs:
+                print(f"   - {e}")
+            return 1
+        datas.append(d)
+    keys = [SPEC.row_key(r) for d in datas for r in d["rows"]]
+    if len(keys) != len(set(keys)):
+        print("!! Τα αρχεία έχουν κοινές γραμμές (ίδια φάση δύο φορές;) — ΔΕΝ κρίνεται.")
         return 1
-    with open(src, encoding="utf-8") as f:
-        data = json.load(f)
-
-    # Έλεγχος πληρότητας ΠΡΙΝ από οποιαδήποτε πληρωμένη κλήση κριτή ή έκδοση απόφασης
-    errs = SPEC.validate_answers(data, smoke=args.smoke)
-    if errs:
-        print(f"!! ΑΚΥΡΟ/ΗΜΙΤΕΛΕΣ {src} — ΔΕΝ κρίνεται και ΔΕΝ εκδίδεται απόφαση:")
-        for e in errs:
-            print(f"   - {e}")
-        return 1
+    data = {"meta": {**datas[-1].get("meta", {}), "inputs": [os.path.basename(s) for s in srcs]},
+            "rows": [r for d in datas for r in d["rows"]],
+            "live_timing": [x for d in datas for x in (d.get("live_timing") or [])]}
+    src = srcs[0] if len(srcs) == 1 else os.path.join(LC_DIR, "answers_phaseAB.json")
 
     key = C.api_key()
     if not key:
@@ -483,7 +531,7 @@ def main(argv: list[str] | None = None) -> int:
     paired(out)
     diagnose(out)
     m = data.get("meta") or {}
-    print(f"\nGemini (μέρος 1): ~{m.get('spent_usd')} $ · κριτής: {judge.new} νέες / {judge.hits} παγωμένες "
+    print(f"\nGemini (μέρος 1, σωρευτικά): ~{m.get('spent_usd')} $ · κριτής: {judge.new} νέες / {judge.hits} παγωμένες "
           f"κρίσεις · ~{judge.usd:.3f} $ τώρα")
     dst = src.replace("answers", "judged") if "answers" in os.path.basename(src) else src + ".judged.json"
     with open(dst, "w", encoding="utf-8") as f:

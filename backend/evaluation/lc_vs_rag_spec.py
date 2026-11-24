@@ -26,6 +26,10 @@ PRIMARY_ARMS = tuple(PRIMARY_DRAWS)
 ALL_ARMS = tuple(DRAWS)
 QUALITY_ARMS = ("one", "two", "three")
 SYSTEMS = ("rag", "full")
+SAFETY_SIZES = (1, 2, 3)
+# Δύο φάσεις (τροποποίηση 24/11, πριν από το πλήρες τρέξιμο): Α = ποιότητα/κόστος/χρόνος, Β = ασφάλεια
+# ΜΟΝΟ στα μεγέθη που πέρασαν την Α. Ο κανόνας μένει ίδιος· αλλάζει μόνο η σειρά.
+PHASE_ARMS = {"A": QUALITY_ARMS, "B": ("safety",), "all": PRIMARY_ARMS}
 
 
 def _literal_from(path: str, name: str):
@@ -103,9 +107,17 @@ def distractor_selection(papers: dict[str, str], main: dict[str, dict], per_pape
     return chosen
 
 
-def build_items(files: list[str], *, include_distract: bool = True, base_dir: str = HERE) -> list[dict]:
+def build_items(
+    files: list[str],
+    *,
+    include_distract: bool = True,
+    arms: tuple[str, ...] = PRIMARY_ARMS,
+    safety_sizes: tuple[int, ...] = SAFETY_SIZES,
+    base_dir: str = HERE,
+) -> list[dict]:
     """Χτίζει τα 4 προκαταχωρισμένα σκέλη (234 items -> 654 γραμμές) και προαιρετικά το χωριστό σκέλος
-    distractor (28 items -> 56 γραμμές) στο ΤΕΛΟΣ, ώστε να μην αγγίζει ποτέ το προκαταχωρισμένο τεστ."""
+    distractor (28 items -> 56 γραμμές) στο ΤΕΛΟΣ, ώστε να μην αγγίζει ποτέ το προκαταχωρισμένο τεστ.
+    arms / safety_sizes: ποια προκαταχωρισμένα σκέλη (και ποια μεγέθη ασφάλειας) κρατιούνται — Φάση Α ή Β."""
     files = list(files)
     main = {t["id"]: t for t in load_jsonl("golden_set_50.jsonl", base_dir)}
     with open(os.path.join(base_dir, "main_set_papers.json"), encoding="utf-8") as f:
@@ -139,6 +151,9 @@ def build_items(files: list[str], *, include_distract: bool = True, base_dir: st
     for it in items:
         it["size"] = len(it["docs"])
         assert all(d in files for d in it["docs"]), (it["t"]["id"], it["docs"])
+    items = [it for it in items
+             if it["arm"] == "distract"
+             or (it["arm"] in arms and (it["arm"] != "safety" or it["size"] in safety_sizes))]
     return sorted(items, key=lambda it: (ALL_ARMS.index(it["arm"]), it["size"], it["docs"]))
 
 
@@ -150,9 +165,12 @@ def expected_row_keys(
     files: list[str] | None = None,
     *,
     include_distract: bool = False,
+    arms: tuple[str, ...] = PRIMARY_ARMS,
+    safety_sizes: tuple[int, ...] = SAFETY_SIZES,
     base_dir: str = HERE,
 ) -> set[tuple]:
-    items = build_items(files or CANONICAL_FILES, include_distract=include_distract, base_dir=base_dir)
+    items = build_items(files or CANONICAL_FILES, include_distract=include_distract, arms=arms,
+                        safety_sizes=safety_sizes, base_dir=base_dir)
     keys: set[tuple] = set()
     for it in items:
         docs_s = ";".join(it["docs"])
@@ -207,8 +225,16 @@ def validate_answers(
 
     has_distract = any(r.get("arm") == "distract" for r in rows if isinstance(r, dict))
     expect_distract = bool(meta.get("include_distract")) or has_distract
+    # Ποια σκέλη/μεγέθη υπόσχεται το αρχείο (Φάση Α ή Β)· παλιά αρχεία χωρίς τα πεδία = όλα.
+    arms = tuple(meta.get("arms") or PRIMARY_ARMS)
+    safety_sizes = tuple(int(x) for x in (meta.get("safety_sizes") or SAFETY_SIZES))
+    bad_arms = [a for a in arms if a not in PRIMARY_ARMS]
+    if bad_arms:
+        errors.append(f"meta.arms με άγνωστα σκέλη: {bad_arms}")
+        return errors
 
-    primary_exp = expected_row_keys(files, include_distract=False, base_dir=base_dir)
+    primary_exp = expected_row_keys(files, include_distract=False, arms=arms, safety_sizes=safety_sizes,
+                                    base_dir=base_dir)
     primary_got = {k for k in seen if k[0] in PRIMARY_ARMS}
     miss_p = sorted(primary_exp - primary_got)
     extra_p = sorted(primary_got - primary_exp)
@@ -222,7 +248,8 @@ def validate_answers(
         )
 
     if expect_distract:
-        all_exp = expected_row_keys(files, include_distract=True, base_dir=base_dir)
+        all_exp = expected_row_keys(files, include_distract=True, arms=arms, safety_sizes=safety_sizes,
+                                    base_dir=base_dir)
         dist_exp = all_exp - primary_exp
         dist_got = {k for k in seen if k[0] == "distract"}
         miss_d = sorted(dist_exp - dist_got)

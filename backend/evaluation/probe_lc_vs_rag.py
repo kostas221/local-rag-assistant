@@ -32,10 +32,15 @@ judge_lc_vs_rag.py, στον υπολογιστή.
     docker compose -f docker-compose.yml -f docker-compose.upgrade.yml run --rm --no-deps \\
         -e DATABASE_URL=sqlite:// -e GEMINI_MODEL=gemini-3.8-flash -v eval_tmp:/tmp backend \\
         python -u evaluation/probe_lc_vs_rag.py --limit 2
-    # όλο -> runs/longctx/answers.json
+    # Φάση Α (ποιότητα, κόστος, χρόνος) -> runs/longctx/answers_phaseA.json
     docker compose -f docker-compose.yml -f docker-compose.upgrade.yml run --rm --no-deps \\
         -e DATABASE_URL=sqlite:// -e GEMINI_MODEL=gemini-3.8-flash -v eval_tmp:/tmp backend \\
-        python -u evaluation/probe_lc_vs_rag.py
+        python -u evaluation/probe_lc_vs_rag.py --phase A --no-distract --live-timing 2 --max-usd 6
+    # Φάση Β (ασφάλεια) ΜΟΝΟ αν τη ζητήσει ο κριτής μετά την Α, στα μεγέθη που λέει (π.χ. 2,3)
+    #   ... python -u evaluation/probe_lc_vs_rag.py --phase B --safety-sizes 2,3 --max-usd <νέο πλαφόν>
+
+ΔΥΟ ΦΑΣΕΙΣ (τροποποίηση 24/11/2026, πριν από το πλήρες τρέξιμο — βλ. προκαταχώριση): Α = σκέλη one/two/three,
+Β = ασφάλεια μόνο στα μεγέθη που πέρασαν την Α. Ο κανόνας είναι ίδιος· αλλάζει μόνο η σειρά.
 """
 import argparse
 import asyncio
@@ -68,10 +73,12 @@ SEED = SPEC.SEED
 DRAWS = SPEC.DRAWS
 ARMS = SPEC.ALL_ARMS
 PRIMARY_ARMS = SPEC.PRIMARY_ARMS
+OUT_NAME = {"A": "answers_phaseA.json", "B": "answers_phaseB.json", "all": "answers.json"}
 
 
-def build_items(files: list[str], *, include_distract: bool = True) -> list[dict]:
-    return SPEC.build_items(files, include_distract=include_distract)
+def build_items(files: list[str], *, include_distract: bool = True, arms: tuple[str, ...] = PRIMARY_ARMS,
+                safety_sizes: tuple[int, ...] = SPEC.SAFETY_SIZES) -> list[dict]:
+    return SPEC.build_items(files, include_distract=include_distract, arms=arms, safety_sizes=safety_sizes)
 
 
 class DrawStream:
@@ -433,8 +440,13 @@ async def run(args) -> int:
             full_prep_s[key] = time.perf_counter() - t0
         return full_cache[key], full_prep_s[key]
 
-    include_distract = not args.no_distract
-    items = build_items(files, include_distract=include_distract)
+    arms = SPEC.PHASE_ARMS[args.phase]
+    safety_sizes = tuple(int(x) for x in args.safety_sizes.split(",") if x.strip())
+    if not set(safety_sizes) <= set(SPEC.SAFETY_SIZES):
+        print(f"!! --safety-sizes {args.safety_sizes}: επιτρέπονται μόνο 1, 2, 3")
+        return 1
+    include_distract = not args.no_distract and args.phase != "B"
+    items = build_items(files, include_distract=include_distract, arms=arms, safety_sizes=safety_sizes)
     if args.limit:
         # οι πρώτες N ερωτήσεις κάθε σκέλους (σε safety/distract: σε όλα τα μεγέθη τους)
         keep: dict = {}
@@ -458,7 +470,8 @@ async def run(args) -> int:
         flush=True,
     )
 
-    out_path = os.path.join(LC_DIR, "answers_smoke.json" if args.limit else "answers.json")
+    out_path = os.path.join(LC_DIR, "answers_smoke.json" if args.limit else OUT_NAME[args.phase])
+    args.arms, args.safety_list = arms, safety_sizes        # για το meta (validate_answers)
     rows: list[dict] = []
     live_rows: list[dict] = []
     seen_doc_sys: set[tuple[str, str, str]] = set()
@@ -650,6 +663,9 @@ def save_rows(
         "complete": complete,
         "aborted_reason": aborted_reason,
         "include_distract": include_distract,
+        "phase": getattr(args, "phase", "all"),
+        "arms": list(getattr(args, "arms", PRIMARY_ARMS)),
+        "safety_sizes": list(getattr(args, "safety_list", SPEC.SAFETY_SIZES)),
         "expected_rows": expected_rows,
         "expected_primary_rows": expected_primary_rows,
         "actual_rows": len(rows),
@@ -710,6 +726,10 @@ def main() -> int:
     ap.add_argument("--cached-share", type=float, default=0.10, help="τιμή των tokens από το cache, ως μέρος της εισόδου")
     ap.add_argument("--live-timing", type=int, default=4, help="ζωντανές ερωτήσεις ανά μέγεθος για πραγματικό E2E χρόνο (0=χωρίς)")
     ap.add_argument("--no-distract", action="store_true", help="παραλείπει το χωριστό σκέλος distractor")
+    ap.add_argument("--phase", choices=("A", "B", "all"), default="all",
+                    help="A = ποιότητα/κόστος/χρόνος (one, two, three) · B = ασφάλεια · all = όλα μαζί")
+    ap.add_argument("--safety-sizes", default="1,2,3",
+                    help="Φάση Β: μεγέθη ασφάλειας, π.χ. 2,3 = μόνο όσα πέρασαν τη Φάση Α")
     args = ap.parse_args()
     if not E.API_KEY:
         print("!! Λείπει GEMINI_API_KEY")
