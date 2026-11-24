@@ -21,6 +21,7 @@ from sentence_transformers import CrossEncoder
 
 import corpus_glossary
 import doc_routing
+import full_text
 import gemini_rest
 import metrics
 import pdf_hidden
@@ -239,6 +240,10 @@ ENABLE_SUFFICIENCY_VETO = os.getenv("ENABLE_SUFFICIENCY_VETO", "1") not in ("0",
 # Αφαίρεση κρυμμένου κειμένου στην εισαγωγή PDF (κύκλος 2, βήμα 5α, 23/11/2026). ΚΛΕΙΣΤΟ μέχρι να
 # μετρηθεί: docs/INJECTION_PREREG_2026-11-23.md. Επηρεάζει ΜΟΝΟ νέες εισαγωγές (ή rebuild του store).
 STRIP_HIDDEN_TEXT = os.getenv("STRIP_HIDDEN_TEXT", "0") in ("1", "true", "True")
+# Όλο το κείμενο αντί για αναζήτηση όταν ο χρήστης επέλεξε ≥ 2 έγγραφα που χωράνε (κύκλος 2, 24/11/2026).
+# Κανόνας και μετρήσεις: full_text.py και docs/LONGCONTEXT_VS_RAG_PREREG_2026-11-23.md. "0" -> μόνο RAG.
+ENABLE_FULL_TEXT = os.getenv("ENABLE_FULL_TEXT", "1") not in ("0", "false", "False")
+FULL_TEXT_MAX_TOKENS = int(os.getenv("FULL_TEXT_MAX_TOKENS", str(full_text.MAX_TOKENS)))
 CORRECTIVE_MIN_SCORE = float(os.getenv("CORRECTIVE_MIN_SCORE", "-3.8"))
 
 # Ερωτήσεις ΔΥΟ ΕΓΓΡΑΦΩΝ (Φάση 2, 30/9/2026 — βλ. doc_routing.py): αν η ερώτηση ΟΝΟΜΑΖΕΙ ≥ 2
@@ -1027,6 +1032,33 @@ def _source_preview(page_text: str, hit: str | None = None) -> str:
     return cut + "…"
 
 
+def _full_text_pages(target_filenames, user_id, target_doc_ids):
+    """Router (κύκλος 2, 24/11/2026): ΟΛΕΣ οι σελίδες των επιλεγμένων εγγράφων αν είναι ≥ 2 και χωράνε
+    (full_text.use_full_text), αλλιώς None -> RAG. CPU/IO -> κάλεσέ το σε to_thread.
+
+    AUTHZ: το ίδιο where με την αναζήτηση (_build_where με user_id) -> ένα έγγραφο που δεν ανήκει στον
+    χρήστη δεν φέρνει σελίδες, και αν μείνει < 2 έγγραφα ισχύει το RAG. Μόνο με doc_id: το legacy μονοπάτι
+    (μόνο ονόματα αρχείων) μένει όπως ήταν."""
+    if not ENABLE_FULL_TEXT or not target_doc_ids:
+        return None
+    doc_ids = list(dict.fromkeys(target_doc_ids))
+    if len(doc_ids) < full_text.MIN_DOCS:
+        return None
+    where = _build_where(target_filenames, user_id, target_doc_ids=doc_ids)
+    got = collection.get(where=where, include=["documents", "metadatas"])
+    if not got["ids"]:
+        return None
+    pages = full_text.assemble_pages(got["ids"], got["documents"], got["metadatas"], doc_ids)
+    n_docs = len({m["doc_id"] for _t, m in pages})
+    est = full_text.estimate_tokens([t for t, _m in pages])
+    if not full_text.use_full_text(n_docs, est, max_tokens=FULL_TEXT_MAX_TOKENS):
+        logger.info(f"Όλο το κείμενο: όχι ({n_docs} έγγραφα, ~{est} tokens) -> αναζήτηση")
+        return None
+    logger.info(f"Όλο το κείμενο: {n_docs} έγγραφα, {len(pages)} σελίδες, ~{est} tokens")
+    metrics.inc("rag_full_text_total")
+    return pages
+
+
 def _chunk_idx_from_id(chunk_id: str) -> int:
     """Βγάζει το chunk index από το ID (μορφή '..._p{page}_c{idx}_{uuid}') ώστε
     να ανασυνθέσουμε τη σελίδα με τη ΣΩΣΤΗ σειρά. Χωρίς re-ingest."""
@@ -1431,13 +1463,16 @@ async def ask_ai(
 
     # --- MLOps: μέτρηση χρόνου φάσης ανάκτησης (retrieval) ---
     t_retrieval = time.perf_counter()
-    top_3_data = (
-        precomputed
-        if precomputed is not None
-        else await search_documents(
+    if precomputed is not None:
+        top_3_data = precomputed
+    else:
+        # Κύκλος 2 (24/11/2026): ≥ 2 επιλεγμένα έγγραφα που χωράνε -> όλο το κείμενο, χωρίς αναζήτηση.
+        # Το precomputed (μόνο eval) δεν περνά ποτέ από εδώ, άρα οι παλιές μετρήσεις δεν αλλάζουν.
+        top_3_data = await asyncio.to_thread(
+            _full_text_pages, target_filenames, user_id, target_doc_ids
+        ) or await search_documents(
             retrieval_query, target_filenames, user_id=user_id, target_doc_ids=target_doc_ids
         )
-    )
     retrieval_time = time.perf_counter() - t_retrieval
     metrics.observe("rag_retrieval_seconds", retrieval_time)
 
@@ -1496,6 +1531,9 @@ async def ask_ai(
                 # Από τη δεύτερη αναζήτηση (βήμα 2 του κύκλου 2): ταξιδεύει με την πηγή, άρα σώζεται
                 # και στο ιστορικό της συνομιλίας μαζί με τις πηγές.
                 "second_search": bool(meta.get("second_search")),
+                # Όλο το κείμενο αντί για αναζήτηση (κύκλος 2, 24/11): το UI το λέει και αλλάζει τον τίτλο
+                # των σελίδων που δεν παρατέθηκαν («δόθηκαν», όχι «ψάχτηκαν»).
+                "full_text": bool(meta.get("full_text")),
             }
         )
 

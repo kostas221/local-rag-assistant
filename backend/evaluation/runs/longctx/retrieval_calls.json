@@ -1,0 +1,2239 @@
+{
+ "ede22af98a1ca0429f679ec700f3f260236701f08c0c76ef76fa6b254bd8cbf4": {
+  "tail": "User question: Ποιο είναι το μέγιστο όριο χρόνου εκτέλεσης για τις λειτουργίες Lambda που αναφέρεται στην εργασία PyWren, και πώς περιγράφει η Baldini et al. τις επιπτώσεις των ορίων πόρων στις λειτου",
+  "out": "maximum execution time limit Lambda functions PyWren paper Baldini resource limits effects serverless functions",
+  "usage": {
+   "promptTokenCount": 277,
+   "candidatesTokenCount": 18,
+   "totalTokenCount": 295,
+   "promptTokensDetails": [
+    {
+     "modality": "TEXT",
+     "tokenCount": 277
+    }
+   ],
+   "serviceTier": "standard"
+  },
+  "total_s": 1.97
+ },
+ "754253693648d1ddc8d375e56344326036e032ef612c2b1f5ac2907ac53562e6": {
+  "tail": "User question: Πώς περιγράφει η εργασία PyWren τις επιπτώσεις των stragglers κατά την ταξινόμηση δεδομένων, και τι προβλέπει η Baldini et al. σχετικά με την ανάγκη για διαφορετικές σημασιολογίες ανάκτ",
+  "out": "PyWren paper stragglers impact data sorting Baldini et al recovery semantics serverless functions",
+  "usage": {
+   "promptTokenCount": 278,
+   "candidatesTokenCount": 19,
+   "totalTokenCount": 297,
+   "promptTokensDetails": [
+    {
+     "modality": "TEXT",
+     "tokenCount": 278
+    }
+   ],
+   "serviceTier": "standard"
+  },
+  "total_s": 2.377
+ },
+ "c3a903922a351040af3e03c7a721610fc2108a64e930ae898e1d9a530137ec1e": {
+  "tail": "User question: Πόση μνήμη αναφέρουν ως όριο μιας συνάρτησης Lambda το PyWren, η κριτική του CIDR (Hellerstein et al.) και το Berkeley view του 2019;",
+  "out": "memory limit Lambda functions PyWren CIDR review Hellerstein Berkeley view 2019",
+  "usage": {
+   "promptTokenCount": 268,
+   "candidatesTokenCount": 19,
+   "totalTokenCount": 287,
+   "promptTokensDetails": [
+    {
+     "modality": "TEXT",
+     "tokenCount": 268
+    }
+   ],
+   "serviceTier": "standard"
+  },
+  "total_s": 2.512
+ },
+ "579d4271ac5108ad29c947b08195955c4f54a6baf4497a781a18dfa49f008d4e": {
+  "tail": "User question: Τι λένε για την απόδοση της απομακρυσμένης αποθήκευσης (π.χ. S3) για τις συναρτήσεις το PyWren, η κριτική του CIDR και το Berkeley view του 2019;",
+  "out": "remote storage performance S3 functions PyWren CIDR critique Berkeley view 2019",
+  "usage": {
+   "promptTokenCount": 279,
+   "candidatesTokenCount": 19,
+   "totalTokenCount": 298,
+   "promptTokensDetails": [
+    {
+     "modality": "TEXT",
+     "tokenCount": 279
+    }
+   ],
+   "serviceTier": "standard"
+  },
+  "total_s": 4.908
+ },
+ "e6ef4cedc4431fe9a3a0508a6d35a759fd28f7b5ec57ce6c5a0df56c65a84115": {
+  "tail": "User question: Πώς συγκρίνεται το OpenFaaS με το OpenWhisk όσον αφορά την ανάπτυξη serverless εφαρμογών;",
+  "out": "OpenFaaS OpenWhisk comparison serverless applications development",
+  "usage": {
+   "promptTokenCount": 215,
+   "candidatesTokenCount": 11,
+   "totalTokenCount": 226,
+   "promptTokensDetails": [
+    {
+     "modality": "TEXT",
+     "tokenCount": 215
+    }
+   ],
+   "serviceTier": "standard"
+  },
+  "total_s": 2.134
+ },
+ "ebb0be16f8008d9e49feb8d76631c14ce1a13a14258a0f457d48ae4ba6fbd600": {
+  "tail": "Original query: What is the typical cold start latency for a Python function on Google Cloud Functions?\nRewritten query:",
+  "out": "serverless function cold start latency Python Google Cloud Functions execution delay FaaS benchmarking",
+  "usage": {
+   "promptTokenCount": 130,
+   "candidatesTokenCount": 15,
+   "totalTokenCount": 145,
+   "promptTokensDetails": [
+    {
+     "modality": "TEXT",
+     "tokenCount": 130
+    }
+   ],
+   "serviceTier": "standard"
+  },
+  "total_s": 1.479
+ },
+ "e17db8b066f2e43706ecb57ddf54d4cf3a3f11528287baf38016c8007c655c03": {
+  "tail": "QUESTION: What is the typical cold start latency for a Python function on Google Cloud Functions?\n\nVERDICT:",
+  "out": "NO",
+  "usage": {
+   "promptTokenCount": 7262,
+   "candidatesTokenCount": 1,
+   "totalTokenCount": 7263,
+   "promptTokensDetails": [
+    {
+     "modality": "TEXT",
+     "tokenCount": 7262
+    }
+   ],
+   "serviceTier": "standard"
+  },
+  "total_s": 1.939
+ },
+ "763a970a8cde8e748a0174457809a33c2eeda4dcbeee423e62e6149d1a03033c": {
+  "tail": "User question: Πώς συγκρίνεται το OpenFaaS με το OpenWhisk όσον αφορά την ανάπτυξη serverless εφαρμογών;",
+  "out": "OpenFaaS OpenWhisk comparison serverless application development",
+  "usage": {
+   "promptTokenCount": 242,
+   "candidatesTokenCount": 11,
+   "totalTokenCount": 253,
+   "promptTokensDetails": [
+    {
+     "modality": "TEXT",
+     "tokenCount": 242
+    }
+   ],
+   "serviceTier": "standard"
+  },
+  "total_s": 2.131
+ },
+ "e4a96fb28f1e13c2c601a2edf1203c74cef78093daaa3a9a8285285e1d95c093": {
+  "tail": "User question: Πώς συγκρίνεται το OpenFaaS με το OpenWhisk όσον αφορά την ανάπτυξη serverless εφαρμογών;",
+  "out": "OpenFaaS OpenWhisk comparison serverless application development",
+  "usage": {
+   "promptTokenCount": 251,
+   "candidatesTokenCount": 11,
+   "totalTokenCount": 614,
+   "promptTokensDetails": [
+    {
+     "modality": "TEXT",
+     "tokenCount": 251
+    }
+   ],
+   "thoughtsTokenCount": 352,
+   "serviceTier": "standard"
+  },
+  "total_s": 5.255
+ },
+ "28476cf8736cb10f63d06a6bb638be559f870ae7c83c0e40b12c798659fe70ad": {
+  "tail": "User question: Ποια είναι τα κύρια αρχιτεκτονικά στοιχεία της πλατφόρμας IBM OpenWhisk;",
+  "out": "main architectural components IBM OpenWhisk platform",
+  "usage": {
+   "promptTokenCount": 213,
+   "candidatesTokenCount": 8,
+   "totalTokenCount": 221,
+   "promptTokensDetails": [
+    {
+     "modality": "TEXT",
+     "tokenCount": 213
+    }
+   ],
+   "serviceTier": "standard"
+  },
+  "total_s": 1.476
+ },
+ "e88f8286f18874db0514d9ade99b0cc6e3fc03fa7d61a6e3c48004dd1a3ea140": {
+  "tail": "User question: Τι αναφέρει το κείμενο για την επέκταση του serverless πέρα από τα παραδοσιακά cloud platforms;",
+  "out": "serverless extension traditional cloud platforms",
+  "usage": {
+   "promptTokenCount": 215,
+   "candidatesTokenCount": 6,
+   "totalTokenCount": 221,
+   "promptTokensDetails": [
+    {
+     "modality": "TEXT",
+     "tokenCount": 215
+    }
+   ],
+   "serviceTier": "standard"
+  },
+  "total_s": 2.207
+ },
+ "946d2321197e46e64beff23129d4ca364324d62e24e7460d0489ac1b869a6556": {
+  "tail": "User question: Γιατί το serverless απλοποιεί τον προγραμματισμό στο cloud;",
+  "out": "why serverless simplifies programming in the cloud",
+  "usage": {
+   "promptTokenCount": 204,
+   "candidatesTokenCount": 8,
+   "totalTokenCount": 212,
+   "promptTokensDetails": [
+    {
+     "modality": "TEXT",
+     "tokenCount": 204
+    }
+   ],
+   "serviceTier": "standard"
+  },
+  "total_s": 2.49
+ },
+ "1ca1b88a966a89f3c0545a7e0b8812ce59c3c3ceb3f78f476d260c138c3585ba": {
+  "tail": "User question: Τι προβλέπει το paper για το μέλλον του serverless computing;",
+  "out": "paper predictions future serverless computing",
+  "usage": {
+   "promptTokenCount": 204,
+   "candidatesTokenCount": 6,
+   "totalTokenCount": 210,
+   "promptTokensDetails": [
+    {
+     "modality": "TEXT",
+     "tokenCount": 204
+    }
+   ],
+   "serviceTier": "standard"
+  },
+  "total_s": 5.394
+ },
+ "3fbc5247bf65db52ef3538fdc8e6f8d6afc2d5266485813bf1fa2e85b028073b": {
+  "tail": "Original query: Which storage categories does the paper compare in its storage table, and what mean latency does each have?\nRewritten query:",
+  "out": "storage tiers classification comparative performance evaluation average latency table",
+  "usage": {
+   "promptTokenCount": 134,
+   "candidatesTokenCount": 9,
+   "totalTokenCount": 143,
+   "promptTokensDetails": [
+    {
+     "modality": "TEXT",
+     "tokenCount": 134
+    }
+   ],
+   "serviceTier": "standard"
+  },
+  "total_s": 1.7
+ },
+ "57f4d73fee675e5562a196dd2ce936c0177725453ada7b9a159dde361fdb47dd": {
+  "tail": "User question: Πώς απαντά το paper στον ισχυρισμό ότι οι cloud functions δεν μπορούν να εξυπηρετήσουν εφαρμογές χαμηλής καθυστέρησης;",
+  "out": "paper response claim cloud functions low latency applications",
+  "usage": {
+   "promptTokenCount": 224,
+   "candidatesTokenCount": 8,
+   "totalTokenCount": 232,
+   "promptTokensDetails": [
+    {
+     "modality": "TEXT",
+     "tokenCount": 224
+    }
+   ],
+   "serviceTier": "standard"
+  },
+  "total_s": 2.334
+ },
+ "094ca23d6a8784c74099a8ebed2b1468f9c267a3b6101ddc327b8e4fc715e91c": {
+  "tail": "User question: Τι είναι το utility computing;",
+  "out": "utility computing definition",
+  "usage": {
+   "promptTokenCount": 193,
+   "candidatesTokenCount": 3,
+   "totalTokenCount": 196,
+   "promptTokensDetails": [
+    {
+     "modality": "TEXT",
+     "tokenCount": 193
+    }
+   ],
+   "serviceTier": "standard"
+  },
+  "total_s": 1.613
+ },
+ "ef74eec7264a4d751ada27758e3337afb9415a1c20d31f652bc8948048226a1e": {
+  "tail": "User question: Ποια είναι τα 10 κύρια εμπόδια του cloud computing που αναφέρει το paper;",
+  "out": "10 main obstacles of cloud computing mentioned in paper",
+  "usage": {
+   "promptTokenCount": 209,
+   "candidatesTokenCount": 10,
+   "totalTokenCount": 219,
+   "promptTokensDetails": [
+    {
+     "modality": "TEXT",
+     "tokenCount": 209
+    }
+   ],
+   "serviceTier": "standard"
+  },
+  "total_s": 2.112
+ },
+ "8678913eea985c5c153caeb8a3af00826a24636f3bf32400f369690e0375a0b7": {
+  "tail": "User question: Πώς βοηθά η ελαστικότητα στη μεταφορά του ρίσκου πρόβλεψης ζήτησης;",
+  "out": "elasticity demand forecasting risk transfer",
+  "usage": {
+   "promptTokenCount": 214,
+   "candidatesTokenCount": 6,
+   "totalTokenCount": 220,
+   "promptTokensDetails": [
+    {
+     "modality": "TEXT",
+     "tokenCount": 214
+    }
+   ],
+   "serviceTier": "standard"
+  },
+  "total_s": 2.334
+ },
+ "2d3f8090764315b5f2a32a53337261a15dc8179d0839e252fcd78213fd1e3d80": {
+  "tail": "User question: Τι αναφέρει το paper για το reputation fate sharing;",
+  "out": "reputation fate sharing paper",
+  "usage": {
+   "promptTokenCount": 198,
+   "candidatesTokenCount": 5,
+   "totalTokenCount": 203,
+   "promptTokensDetails": [
+    {
+     "modality": "TEXT",
+     "tokenCount": 198
+    }
+   ],
+   "serviceTier": "standard"
+  },
+  "total_s": 2.016
+ },
+ "12ebdf0d66da0c1f1328e4596938a1f946b7ffca35ee5a98baabb0da0793cfd6": {
+  "tail": "User question: Ποιες τιμές ηλεκτρικού ρεύματος ανά κιλοβατώρα αναφέρει το paper και για ποιον λόγο διαφέρουν;",
+  "out": "electricity prices per kilowatt hour paper reasons difference",
+  "usage": {
+   "promptTokenCount": 217,
+   "candidatesTokenCount": 8,
+   "totalTokenCount": 225,
+   "promptTokensDetails": [
+    {
+     "modality": "TEXT",
+     "tokenCount": 217
+    }
+   ],
+   "serviceTier": "standard"
+  },
+  "total_s": 2.72
+ },
+ "d874031adf4c5c549d4711718cf198869c786a60781e0f1977810224d4f13ded": {
+  "tail": "User question: Γιατί το paper υποστηρίζει ότι η φράση pay as you go αποδίδει καλύτερα το οικονομικό όφελος από το CapEx to OpEx;",
+  "out": "why paper argues pay as you go better reflects financial economic benefit than CapEx to OpEx",
+  "usage": {
+   "promptTokenCount": 223,
+   "candidatesTokenCount": 18,
+   "totalTokenCount": 241,
+   "promptTokensDetails": [
+    {
+     "modality": "TEXT",
+     "tokenCount": 223
+    }
+   ],
+   "serviceTier": "standard"
+  },
+  "total_s": 4.044
+ },
+ "51f527b117936865d19bcdaa25c2a760b19b41cbc3d7c1e2269cc0c871de2d0f": {
+  "tail": "User question: Ποιο παράδειγμα κόστους αδειοδότησης λογισμικού δίνει το paper και πώς συγκρίνεται η τιμή του Windows στο EC2 με την έκδοση ανοιχτού κώδικα;",
+  "out": "software licensing cost example paper Windows EC2 price open source version comparison",
+  "usage": {
+   "promptTokenCount": 235,
+   "candidatesTokenCount": 13,
+   "totalTokenCount": 248,
+   "promptTokensDetails": [
+    {
+     "modality": "TEXT",
+     "tokenCount": 235
+    }
+   ],
+   "serviceTier": "standard"
+  },
+  "total_s": 2.28
+ },
+ "045db912e909f421b80793d243f282fdb680644101220a07529b71c9c8dc6d61": {
+  "tail": "User question: Πώς εγγυάται το MapReduce το ίδιο αποτέλεσμα παρά τις αστοχίες μηχανημάτων;",
+  "out": "MapReduce deterministic output machine failures fault tolerance",
+  "usage": {
+   "promptTokenCount": 213,
+   "candidatesTokenCount": 8,
+   "totalTokenCount": 221,
+   "promptTokensDetails": [
+    {
+     "modality": "TEXT",
+     "tokenCount": 213
+    }
+   ],
+   "serviceTier": "standard"
+  },
+  "total_s": 1.956
+ },
+ "310cbe5a4bf6e61661aa200ba5ca09438cdc7f3e9913a65b3f4f8d0c340c2d44": {
+  "tail": "User question: Πώς λειτουργεί ο μηχανισμός των counters στο MapReduce;",
+  "out": "how MapReduce counters mechanism works",
+  "usage": {
+   "promptTokenCount": 202,
+   "candidatesTokenCount": 6,
+   "totalTokenCount": 208,
+   "promptTokensDetails": [
+    {
+     "modality": "TEXT",
+     "tokenCount": 202
+    }
+   ],
+   "serviceTier": "standard"
+  },
+  "total_s": 2.747
+ },
+ "4c9b183a79f9c5ee73f6e8b6b54533735eb315f37f1e7386f339ab05bf095395": {
+  "tail": "User question: Πόσο επηρεάζουν οι backup tasks και οι αστοχίες μηχανημάτων τον χρόνο εκτέλεσης του sort;",
+  "out": "impact of backup tasks and machine failures on sort execution time",
+  "usage": {
+   "promptTokenCount": 217,
+   "candidatesTokenCount": 11,
+   "totalTokenCount": 228,
+   "promptTokensDetails": [
+    {
+     "modality": "TEXT",
+     "tokenCount": 217
+    }
+   ],
+   "serviceTier": "standard"
+  },
+  "total_s": 2.147
+ },
+ "0fadf7fc7c2e30a2164a7758685201428fc270baaba99fea1160d2520485056d": {
+  "tail": "User question: Το PyWren αναγνωρίζει τις καθυστερήσεις εκκίνησης ως σημαντικό μειονέκτημα της τρέχουσας υλοποίησής του. Πόσο χρόνο αναφέρει ότι μπορεί να διαρκέσει μια κλήση συνάρτησης και πώς το CIDR",
+  "out": "PyWren startup latency invocation duration CIDR critique function lifetime state statelessness",
+  "usage": {
+   "promptTokenCount": 310,
+   "candidatesTokenCount": 15,
+   "totalTokenCount": 325,
+   "promptTokensDetails": [
+    {
+     "modality": "TEXT",
+     "tokenCount": 310
+    }
+   ],
+   "serviceTier": "standard"
+  },
+  "total_s": 2.437
+ },
+ "9001125b97ec94377da68216ea3bd0ace286935a2fd41629933f76f1fca316e3": {
+  "tail": "User question: Πώς περιγράφει η εργασία του PyWren την προσέγγισή της στην ανοχή σφαλμάτων για τις stateless συναρτήσεις, και πώς συγκρίνεται αυτό με τον τρόπο που το 'Above the Clouds' περιγράφει την",
+  "out": "PyWren paper fault tolerance stateless functions Above the Clouds elasticity economic benefit risk transfer",
+  "usage": {
+   "promptTokenCount": 289,
+   "candidatesTokenCount": 16,
+   "totalTokenCount": 305,
+   "promptTokensDetails": [
+    {
+     "modality": "TEXT",
+     "tokenCount": 289
+    }
+   ],
+   "serviceTier": "standard"
+  },
+  "total_s": 2.479
+ },
+ "b3340bf4079b56d9e005edc85bf1bc47361e7a000f296e8dd5e6ba1c1268d9a8": {
+  "tail": "User question: Ποια είναι η τιμή ανά GB-ώρα εκτέλεσης της Lambda που αναφέρει η εργασία του PyWren, και πώς συγκρίνεται αυτό με το κόστος ανά ώρα για μια x86 ISA «φέτα» EC2 που αναφέρεται στο 'Above t",
+  "out": "price per GB hour execution Lambda PyWren paper cost per hour x86 ISA slice EC2 Above the Clouds 2009",
+  "usage": {
+   "promptTokenCount": 280,
+   "candidatesTokenCount": 28,
+   "totalTokenCount": 308,
+   "promptTokensDetails": [
+    {
+     "modality": "TEXT",
+     "tokenCount": 280
+    }
+   ],
+   "serviceTier": "standard"
+  },
+  "total_s": 2.655
+ },
+ "544a64934a9ef6c4b4f1759b3b7111cccea163bee5c9a46881ce242881a864fe": {
+  "tail": "User question: Ποιο είναι το μέγιστο όριο χρόνου εκτέλεσης για τις συναρτήσεις AWS Lambda που αναφέρει η PyWren, και πώς συγκρίνεται αυτό με το όριο που αναφέρει η ExCamera για τους workers της;",
+  "out": "maximum execution time limit aws lambda functions pywren excamera workers limit",
+  "usage": {
+   "promptTokenCount": 270,
+   "candidatesTokenCount": 14,
+   "totalTokenCount": 284,
+   "promptTokensDetails": [
+    {
+     "modality": "TEXT",
+     "tokenCount": 270
+    }
+   ],
+   "serviceTier": "standard"
+  },
+  "total_s": 2.254
+ },
+ "4ace1c5be6f7a587e463d0d7be2b970eac7c57f83b25a240097d0ebc7b1336b0": {
+  "tail": "User question: Η PyWren αναφέρει καθυστερήσεις εκκίνησης για τις συναρτήσεις της, ενώ η ExCamera αναγνωρίζει ότι οι κρύες εκκινήσεις μπορούν να εισάγουν καθυστερήσεις λεπτών. Ποια είναι η εκτιμώμενη κ",
+  "out": "PyWren functions startup latency without caching ExCamera cold start number of worker startups delayed over a minute",
+  "usage": {
+   "promptTokenCount": 330,
+   "candidatesTokenCount": 20,
+   "totalTokenCount": 677,
+   "promptTokensDetails": [
+    {
+     "modality": "TEXT",
+     "tokenCount": 330
+    }
+   ],
+   "thoughtsTokenCount": 327,
+   "serviceTier": "standard"
+  },
+  "total_s": 4.459
+ },
+ "7c1dcee51e83163803042ad8c8acbc9560ef840e956416df29745fb5d08c2f90": {
+  "tail": "User question: Ποια είναι η βασική αρχιτεκτονική αδυναμία των πλατφορμών FaaS που επισημαίνουν οι Hellerstein et al. σχετικά με την επεξεργασία δεδομένων, και πώς οι Jonas et al. αντιμετωπίζουν την πρ",
+  "out": "Hellerstein architectural weakness FaaS platforms data processing Jonas storage fine grained functions",
+  "usage": {
+   "promptTokenCount": 288,
+   "candidatesTokenCount": 15,
+   "totalTokenCount": 303,
+   "promptTokensDetails": [
+    {
+     "modality": "TEXT",
+     "tokenCount": 288
+    }
+   ],
+   "serviceTier": "standard"
+  },
+  "total_s": 2.507
+ },
+ "c5ccb829bfa9fb0d849f9322febe57dd6c9e4108366454c41e0cfd67368645f7": {
+  "tail": "User question: Τι αναφέρουν οι Hellerstein et al. για τη διαθεσιμότητα εξειδικευμένου υλικού στις σημερινές προσφορές FaaS, και ποιες λύσεις προτείνουν οι Jonas et al. για να υποστηρίξουν την ετερογέν",
+  "out": "Hellerstein et al specialized hardware availability today FaaS offerings Jonas et al solutions hardware heterogeneity serverless computing",
+  "usage": {
+   "promptTokenCount": 273,
+   "candidatesTokenCount": 21,
+   "totalTokenCount": 294,
+   "promptTokensDetails": [
+    {
+     "modality": "TEXT",
+     "tokenCount": 273
+    }
+   ],
+   "serviceTier": "standard"
+  },
+  "total_s": 2.369
+ },
+ "64131c124f5c41feadbb77b71429890daf64e38fec1c3315c9c12d4c2c84b1af": {
+  "tail": "User question: Πώς χαρακτηρίζει η κριτική του CIDR την έλλειψη εξειδικευμένου υλικού στις σημερινές προσφορές FaaS και πώς το ExCamera αξιοποιεί τις λειτουργίες cloud για να επιτύχει υψηλή υπολογιστικ",
+  "out": "CIDR review lack specialized hardware today FaaS offerings ExCamera cloud functions computing",
+  "usage": {
+   "promptTokenCount": 286,
+   "candidatesTokenCount": 15,
+   "totalTokenCount": 301,
+   "promptTokensDetails": [
+    {
+     "modality": "TEXT",
+     "tokenCount": 286
+    }
+   ],
+   "serviceTier": "standard"
+  },
+  "total_s": 2.611
+ },
+ "da2e6ab8151b76f1e78a129923be33b9d9808b2b24e4c63ffe1ea5a5ed1ab100": {
+  "tail": "User question: Ποιο είναι το κόστος ανά μονάδα χρέωσης για τις λειτουργίες cloud της AWS Lambda σύμφωνα με την προβολή του Berkeley (2019), και πώς αυτό συγκρίνεται με το κόστος που αναφέρει το ExCame",
+  "out": "cost per billing unit for AWS Lambda cloud functions Berkeley 2019 projection compared to ExCamera cost for encoding a 15-minute Sintel movie using the ExCamera encoder",
+  "usage": {
+   "promptTokenCount": 304,
+   "candidatesTokenCount": 37,
+   "totalTokenCount": 341,
+   "promptTokensDetails": [
+    {
+     "modality": "TEXT",
+     "tokenCount": 304
+    }
+   ],
+   "serviceTier": "standard"
+  },
+  "total_s": 3.24
+ },
+ "05735edfc50ce2cdd31b2428da9ae8802dd2a6b85217db062f0ce7976a8f06cb": {
+  "tail": "User question: Πώς χαρακτηρίζει η έκθεση 'Above the Clouds' (2009) την οικονομική ωφέλεια του μοντέλου πληρωμής ανά χρήση του cloud computing, και τι αναγνωρίζει η εργασία Baldini et al. (2017) ως βασ",
+  "out": "Above the Clouds 2009 economic benefit pay per use model cloud computing Baldini et al. 2017 key distinguishing characteristic serverless platforms",
+  "usage": {
+   "promptTokenCount": 291,
+   "candidatesTokenCount": 32,
+   "totalTokenCount": 323,
+   "promptTokensDetails": [
+    {
+     "modality": "TEXT",
+     "tokenCount": 291
+    }
+   ],
+   "serviceTier": "standard"
+  },
+  "total_s": 2.755
+ },
+ "47f18138875a007a4b99f3b95e6f1e4489cd1ee0a7c8ced6f90d6588b42fc611": {
+  "tail": "User question: Πώς χαρακτηρίζει η έκθεση 'Above the Clouds' (2009) την οικονομική αξία της ελαστικότητας του cloud computing, και πώς το 'Serverless Computing: One Step Forward, Two Steps Back' (2019)",
+  "out": "Above the Clouds 2009 economic value elasticity cloud computing Serverless Computing One Step Forward Two Steps Back 2019 cost faas machine learning model training scenarios",
+  "usage": {
+   "promptTokenCount": 297,
+   "candidatesTokenCount": 35,
+   "totalTokenCount": 332,
+   "promptTokensDetails": [
+    {
+     "modality": "TEXT",
+     "tokenCount": 297
+    }
+   ],
+   "serviceTier": "standard"
+  },
+  "total_s": 2.102
+ },
+ "71a03d8d00ec283ceac1e888bbf8a4eb7d8b0f61113042aa5e9ab7e3a20da55a": {
+  "tail": "User question: Τι αναγνωρίζει η έκθεση 'Above the Clouds' (2009) ως βασικό εμπόδιο στην ανάπτυξη του Cloud Computing όσον αφορά την απόδοση, και πώς οι Hellerstein et al. (2019) περιγράφουν τις επιδόσ",
+  "out": "Above the Clouds 2009 obstacle cloud computing performance Hellerstein 2019 network performance faas functions workload",
+  "usage": {
+   "promptTokenCount": 291,
+   "candidatesTokenCount": 25,
+   "totalTokenCount": 316,
+   "promptTokensDetails": [
+    {
+     "modality": "TEXT",
+     "tokenCount": 291
+    }
+   ],
+   "serviceTier": "standard"
+  },
+  "total_s": 17.668
+ },
+ "23f9fd10a1bcb7cd8fe873d617e57f53d8ddf11ffefc7781ef0fa44eef12161d": {
+  "tail": "User question: Πώς ορίζει το 'Above the Clouds' (2009) το μοντέλο χρέωσης «pay-as-you-go» και πώς το 'Cloud Programming Simplified: A Berkeley View on Serverless Computing' (2019) περιγράφει τη μονάδα",
+  "out": "Above the Clouds 2009 pay-as-you-go cost billing model Cloud Programming Simplified A Berkeley View on Serverless Computing 2019 accounting unit serverless cloud functions",
+  "usage": {
+   "promptTokenCount": 276,
+   "candidatesTokenCount": 39,
+   "totalTokenCount": 315,
+   "promptTokensDetails": [
+    {
+     "modality": "TEXT",
+     "tokenCount": 276
+    }
+   ],
+   "serviceTier": "standard"
+  },
+  "total_s": 2.374
+ },
+ "ee045c53318073dc3aa5513797e39cd395fb0fa3074825967521094d1cbebf65": {
+  "tail": "User question: Ποιο είναι ένα βασικό πρόβλημα με την κοινή χρήση I/O μεταξύ εικονικών μηχανών που αναφέρεται στο 'Above the Clouds' (2009) ως εμπόδιο στην προβλέψιμη απόδοση, και ποια είναι μια πρόκλη",
+  "out": "problem I/O sharing between virtual machines Above the Clouds 2009 predictable performance challenge serverless cloud functions inadequate storage Cloud Programming Simplified A Berkeley View on Serverless Computing 2019",
+  "usage": {
+   "promptTokenCount": 313,
+   "candidatesTokenCount": 40,
+   "totalTokenCount": 353,
+   "promptTokensDetails": [
+    {
+     "modality": "TEXT",
+     "tokenCount": 313
+    }
+   ],
+   "serviceTier": "standard"
+  },
+  "total_s": 2.137
+ },
+ "98ecdc24322d73787ba0b03ffd4f05b635a25ef2e54362f3d3f59a2dfb4952b7": {
+  "tail": "User question: Ποιο είναι το κύριο πρόβλημα που εντοπίζει το 'Above the Clouds' όσον αφορά την απρόβλεπτη απόδοση, και πώς το MapReduce αντιμετωπίζει το ζήτημα των 'stragglers' που επιβραδύνουν την ολ",
+  "out": "Above the Clouds main problem unpredictable performance MapReduce address stragglers slow down tasks completion",
+  "usage": {
+   "promptTokenCount": 288,
+   "candidatesTokenCount": 17,
+   "totalTokenCount": 305,
+   "promptTokensDetails": [
+    {
+     "modality": "TEXT",
+     "tokenCount": 288
+    }
+   ],
+   "serviceTier": "standard"
+  },
+  "total_s": 1.923
+ },
+ "9a28eb78162fe9fa7d6e28c82a2bbfd6882ff101eb322bdb2e5cc37d80054491": {
+  "tail": "User question: Ποια είναι η κύρια τεχνική που χρησιμοποιεί το ExCamera για να επιτύχει λεπτομερή παραλληλισμό στην κωδικοποίηση βίντεο χωρίς να θυσιάζει την αποδοτικότητα συμπίεσης, και τι αναγνωρίζει",
+  "out": "ExCamera fine grained parallel video encoding compression Berkeley 2019 communication serverless platforms",
+  "usage": {
+   "promptTokenCount": 315,
+   "candidatesTokenCount": 18,
+   "totalTokenCount": 333,
+   "promptTokensDetails": [
+    {
+     "modality": "TEXT",
+     "tokenCount": 315
+    }
+   ],
+   "serviceTier": "standard"
+  },
+  "total_s": 2.032
+ },
+ "34d61b8c69f3aabf0f9888db2542188cb60cf94e17223b985a13dc6381fe39c7": {
+  "tail": "User question: Ποιο είναι το κύριο όφελος που αναφέρει η εργασία του MapReduce από την περιορισμένη αρχιτεκτονική προγραμματισμού της, και πώς το PyWren χρησιμοποιεί μια παρόμοια προσέγγιση για να απλ",
+  "out": "main benefit MapReduce restricted programming model PyWren similar approach simplify deployment users",
+  "usage": {
+   "promptTokenCount": 285,
+   "candidatesTokenCount": 15,
+   "totalTokenCount": 300,
+   "promptTokensDetails": [
+    {
+     "modality": "TEXT",
+     "tokenCount": 285
+    }
+   ],
+   "serviceTier": "standard"
+  },
+  "total_s": 1.88
+ },
+ "36580b5b51658ba9948d431a5651796c665eb80b70e8ef1a14a802b584ca15cb": {
+  "tail": "User question: Ποια είναι η κύρια προσέγγιση για την ανοχή σε σφάλματα εργαζομένων που περιγράφεται στο MapReduce, και πώς αντιμετωπίζει η εργασία του Baldini et al. το θέμα της ανάκτησης σε serverles",
+  "out": "worker fault tolerance main approach MapReduce Baldini et al recovery serverless platforms",
+  "usage": {
+   "promptTokenCount": 283,
+   "candidatesTokenCount": 15,
+   "totalTokenCount": 298,
+   "promptTokensDetails": [
+    {
+     "modality": "TEXT",
+     "tokenCount": 283
+    }
+   ],
+   "serviceTier": "standard"
+  },
+  "total_s": 2.081
+ },
+ "9f88ace291a6694d4b34fc307751a5016875bbd079e7d2acfdf23c40efd908a8": {
+  "tail": "User question: Πώς διαχειρίζεται το MapReduce την επαναπροσδιορισμένη εργασία λόγω αποτυχίας εργάτη σε σχέση με την έξοδο των εργασιών Map και Reduce, και πώς χειρίζεται το ExCamera την επαναπροσδιορι",
+  "out": "MapReduce worker failure rescheduled task map reduce tasks output ExCamera worker failure rescheduled task",
+  "usage": {
+   "promptTokenCount": 286,
+   "candidatesTokenCount": 16,
+   "totalTokenCount": 302,
+   "promptTokensDetails": [
+    {
+     "modality": "TEXT",
+     "tokenCount": 286
+    }
+   ],
+   "serviceTier": "standard"
+  },
+  "total_s": 1.85
+ },
+ "a75528ab252919454d3a32f9a6ab3f9299e4c30d355ae9dbe679b10ad6ea964f": {
+  "tail": "User question: Ποιο είναι το πρωτεύον μέσο επικοινωνίας μεταξύ των workers που χρησιμοποιεί το MapReduce, και πώς χειρίζεται το πλαίσιο mu του ExCamera την επικοινωνία μεταξύ των threads;",
+  "out": "MapReduce primary communication medium between workers and how ExCamera mu framework handles communication between threads",
+  "usage": {
+   "promptTokenCount": 263,
+   "candidatesTokenCount": 17,
+   "totalTokenCount": 280,
+   "promptTokensDetails": [
+    {
+     "modality": "TEXT",
+     "tokenCount": 263
+    }
+   ],
+   "serviceTier": "standard"
+  },
+  "total_s": 2.32
+ },
+ "db4e53a015646f52e01c426c6da06a0480b85234ffcd7a540c57b42cb5e3fff2": {
+  "tail": "User question: Πώς ορίζουν το serverless computing οι Baldini et al., το Berkeley view του 2019 και η κριτική του CIDR;",
+  "out": "how do Baldini et al. the 2019 Berkeley view and CIDR critique define serverless computing",
+  "usage": {
+   "promptTokenCount": 249,
+   "candidatesTokenCount": 23,
+   "totalTokenCount": 272,
+   "promptTokensDetails": [
+    {
+     "modality": "TEXT",
+     "tokenCount": 249
+    }
+   ],
+   "serviceTier": "standard"
+  },
+  "total_s": 2.148
+ },
+ "a967a519fa7c5f0020bbe897610b0affc371adc440ca7c780a0a3f7362b9b71c": {
+  "tail": "User question: Τι λένε για τον κίνδυνο εξάρτησης από τον πάροχο (lock-in) το 'Above the Clouds', οι Baldini et al. και το Berkeley view του 2019;",
+  "out": "vendor lock-in Above the Clouds Baldini et al Berkeley view 2019",
+  "usage": {
+   "promptTokenCount": 269,
+   "candidatesTokenCount": 18,
+   "totalTokenCount": 287,
+   "promptTokensDetails": [
+    {
+     "modality": "TEXT",
+     "tokenCount": 269
+    }
+   ],
+   "serviceTier": "standard"
+  },
+  "total_s": 2.399
+ },
+ "2f8bb8cd78305165c58536c90bce02db74ebfc6c063787b1cb9053d6fdf0c94d": {
+  "tail": "User question: Πού αποθηκεύονται τα ενδιάμεσα δεδομένα ανάμεσα στα στάδια ενός υπολογισμού στο MapReduce, στο PyWren και στο Berkeley view του 2019;",
+  "out": "intermediate data storage between computation stages MapReduce PyWren Berkeley view 2019",
+  "usage": {
+   "promptTokenCount": 276,
+   "candidatesTokenCount": 18,
+   "totalTokenCount": 294,
+   "promptTokensDetails": [
+    {
+     "modality": "TEXT",
+     "tokenCount": 276
+    }
+   ],
+   "serviceTier": "standard"
+  },
+  "total_s": 1.837
+ },
+ "37cadc7152c76be6eb5ea65b0776711eea1ca409c22916be96fe250fecb04b07": {
+  "tail": "User question: Πώς χειρίζονται την αποτυχία ενός worker το MapReduce, το PyWren και το ExCamera;",
+  "out": "MapReduce PyWren ExCamera worker failure handling",
+  "usage": {
+   "promptTokenCount": 266,
+   "candidatesTokenCount": 10,
+   "totalTokenCount": 276,
+   "promptTokensDetails": [
+    {
+     "modality": "TEXT",
+     "tokenCount": 266
+    }
+   ],
+   "serviceTier": "standard"
+  },
+  "total_s": 1.952
+ },
+ "ad13141d49ed6374482b5832cb0c8cdfc94596b773d62f382d320128506a852b": {
+  "tail": "User question: Ποια είναι τα κύρια χαρακτηριστικά της πλατφόρμας Vercel Edge Functions για την ανάπτυξη serverless εφαρμογών;",
+  "out": "Vercel Edge Functions platform serverless application development main features",
+  "usage": {
+   "promptTokenCount": 247,
+   "candidatesTokenCount": 12,
+   "totalTokenCount": 259,
+   "promptTokensDetails": [
+    {
+     "modality": "TEXT",
+     "tokenCount": 247
+    }
+   ],
+   "serviceTier": "standard"
+  },
+  "total_s": 5.471
+ },
+ "870eaf710dfe1190824d66154cda1ba38058f81caf80c1cfc5c8dad960f98e61": {
+  "tail": "User question: Ποια είναι η τρέχουσα υιοθέτηση του Knative στις επιχειρήσεις;",
+  "out": "today Knative enterprise adoption",
+  "usage": {
+   "promptTokenCount": 225,
+   "candidatesTokenCount": 5,
+   "totalTokenCount": 230,
+   "promptTokensDetails": [
+    {
+     "modality": "TEXT",
+     "tokenCount": 225
+    }
+   ],
+   "serviceTier": "standard"
+  },
+  "total_s": 2.363
+ },
+ "03e943d0b3a5ff69f12eb5502784beda9eaa29bacd65b9c8fbf6c4e3a80c0bfa": {
+  "tail": "Original query: today Knative enterprise adoption\nRewritten query:",
+  "out": "Knative serverless enterprise adoption production deployment Kubernetes",
+  "usage": {
+   "promptTokenCount": 119,
+   "candidatesTokenCount": 9,
+   "totalTokenCount": 128,
+   "promptTokensDetails": [
+    {
+     "modality": "TEXT",
+     "tokenCount": 119
+    }
+   ],
+   "serviceTier": "standard"
+  },
+  "total_s": 3.011
+ },
+ "b03e058309bf12467bac7de1f0ef0f1893329e46acda03e72e4671e10663528b": {
+  "tail": "QUESTION: today Knative enterprise adoption\n\nVERDICT:",
+  "out": "NO",
+  "usage": {
+   "promptTokenCount": 6149,
+   "candidatesTokenCount": 1,
+   "totalTokenCount": 6150,
+   "promptTokensDetails": [
+    {
+     "modality": "TEXT",
+     "tokenCount": 6149
+    }
+   ],
+   "serviceTier": "standard"
+  },
+  "total_s": 7.591
+ },
+ "3ca1c4db61496ebd843ecfddbd3c7a1faaa4a5ff3e1700cd8a144e51bdd13364": {
+  "tail": "User question: Ποιο είναι το μέσο κόστος ανά εκτέλεση για μια λειτουργία Azure με 128MB μνήμης;",
+  "out": "average cost per execution Azure function 128MB memory",
+  "usage": {
+   "promptTokenCount": 234,
+   "candidatesTokenCount": 12,
+   "totalTokenCount": 246,
+   "promptTokensDetails": [
+    {
+     "modality": "TEXT",
+     "tokenCount": 234
+    }
+   ],
+   "serviceTier": "standard"
+  },
+  "total_s": 2.55
+ },
+ "d409810b07010c4106956532d0c18d026a01880ae25684de0a09df17c45ae748": {
+  "tail": "Original query: average cost per execution Azure function 128MB memory\nRewritten query:",
+  "out": "serverless function cost per execution memory allocation Azure Functions FaaS billing model",
+  "usage": {
+   "promptTokenCount": 126,
+   "candidatesTokenCount": 14,
+   "totalTokenCount": 140,
+   "promptTokensDetails": [
+    {
+     "modality": "TEXT",
+     "tokenCount": 126
+    }
+   ],
+   "serviceTier": "standard"
+  },
+  "total_s": 2.598
+ },
+ "27f3d45d34226863c643a94a79bbf68f678ef434c728a24f90860e317b8cefa9": {
+  "tail": "QUESTION: average cost per execution Azure function 128MB memory\n\nVERDICT:",
+  "out": "NO",
+  "usage": {
+   "promptTokenCount": 7852,
+   "candidatesTokenCount": 1,
+   "totalTokenCount": 7853,
+   "promptTokensDetails": [
+    {
+     "modality": "TEXT",
+     "tokenCount": 7852
+    }
+   ],
+   "serviceTier": "standard"
+  },
+  "total_s": 7.323
+ },
+ "eeeb9b3032294303f856445dc0e8a2a12b848728d0719983a7db5d9abc64a599": {
+  "tail": "User question: Ποια είναι η κύρια λειτουργία του Red Hat OpenShift στην ανάπτυξη εφαρμογών serverless;",
+  "out": "Red Hat OpenShift main function serverless application development",
+  "usage": {
+   "promptTokenCount": 227,
+   "candidatesTokenCount": 10,
+   "totalTokenCount": 804,
+   "promptTokensDetails": [
+    {
+     "modality": "TEXT",
+     "tokenCount": 227
+    }
+   ],
+   "thoughtsTokenCount": 567,
+   "serviceTier": "standard"
+  },
+  "total_s": 6.21
+ },
+ "7b6fa6cf45b33f197263965537b7661b4af25ba22720b48b4d7331ec5e2894a5": {
+  "tail": "QUESTION: What benchmark results for GPU tensor cores are reported in these papers?\n\nVERDICT:",
+  "out": "NO",
+  "usage": {
+   "promptTokenCount": 12228,
+   "candidatesTokenCount": 1,
+   "totalTokenCount": 12229,
+   "promptTokensDetails": [
+    {
+     "modality": "TEXT",
+     "tokenCount": 12228
+    }
+   ],
+   "serviceTier": "standard"
+  },
+  "total_s": 3.006
+ },
+ "bdb309d07a1dc72edc36d9b9b94f4cfe767f07296953c44500e12316f5498819": {
+  "tail": "User question: Πώς έχουν αντιμετωπιστεί οι προκλήσεις της διαχείρισης δεδομένων σε distributed serverless συστήματα μετά το 2019;",
+  "out": "data management challenges distributed serverless systems post 2019",
+  "usage": {
+   "promptTokenCount": 237,
+   "candidatesTokenCount": 13,
+   "totalTokenCount": 250,
+   "promptTokensDetails": [
+    {
+     "modality": "TEXT",
+     "tokenCount": 237
+    }
+   ],
+   "serviceTier": "standard"
+  },
+  "total_s": 3.746
+ },
+ "a0dd3fa5c896e6a2c3bb7c9ab48b9b3fccbde12a5392b0062d8e9fa9ac493f3a": {
+  "tail": "User question: Πώς επηρεάζει η επιλογή της γλώσσας προγραμματισμού την autoscaling συμπεριφορά των serverless εφαρμογών στην AWS;",
+  "out": "programming language choice impact autoscaling behavior serverless applications AWS",
+  "usage": {
+   "promptTokenCount": 235,
+   "candidatesTokenCount": 11,
+   "totalTokenCount": 430,
+   "promptTokensDetails": [
+    {
+     "modality": "TEXT",
+     "tokenCount": 235
+    }
+   ],
+   "thoughtsTokenCount": 184,
+   "serviceTier": "standard"
+  },
+  "total_s": 3.184
+ },
+ "4bee0f0120019d9b4360d1258fb2b69c72c219deb51132fff93fedf140dd942e": {
+  "tail": "User question: Ποιο είναι το μέσο κόστος ανά GB-μήνα για την αποθήκευση δεδομένων σε AWS S3 Glacier Deep Archive το 2024;",
+  "out": "average cost per GB-month for data storage in AWS S3 Glacier Deep Archive 2024",
+  "usage": {
+   "promptTokenCount": 239,
+   "candidatesTokenCount": 21,
+   "totalTokenCount": 260,
+   "promptTokensDetails": [
+    {
+     "modality": "TEXT",
+     "tokenCount": 239
+    }
+   ],
+   "serviceTier": "standard"
+  },
+  "total_s": 3.994
+ },
+ "3a301602f1cb3f562d1bb3308d096f950521e54caaa308758f487b79ed088bf3": {
+  "tail": "User question: Ποιες εξελίξεις έχουν σημειωθεί στη βελτιστοποίηση της κατανάλωσης ενέργειας για λειτουργίες χωρίς διακομιστή μετά το 2021;",
+  "out": "developments energy consumption optimization serverless functions after 2021",
+  "usage": {
+   "promptTokenCount": 243,
+   "candidatesTokenCount": 14,
+   "totalTokenCount": 257,
+   "promptTokensDetails": [
+    {
+     "modality": "TEXT",
+     "tokenCount": 243
+    }
+   ],
+   "serviceTier": "standard"
+  },
+  "total_s": 3.18
+ },
+ "d6b912867aa9c758f6cf474be0db39d6ccd716d0a35b4c533ebe552d7e3505b8": {
+  "tail": "Original query: developments energy consumption optimization serverless functions after 2021\nRewritten query:",
+  "out": "energy efficiency power consumption optimization serverless computing function as a service FaaS green cloud computing",
+  "usage": {
+   "promptTokenCount": 127,
+   "candidatesTokenCount": 17,
+   "totalTokenCount": 144,
+   "promptTokensDetails": [
+    {
+     "modality": "TEXT",
+     "tokenCount": 127
+    }
+   ],
+   "serviceTier": "standard"
+  },
+  "total_s": 6.767
+ },
+ "558873c23e0de49c1bd41c6f14c393c74a2b9208fb563fc561388327d0434575": {
+  "tail": "QUESTION: developments energy consumption optimization serverless functions after 2021\n\nVERDICT:",
+  "out": "NO",
+  "usage": {
+   "promptTokenCount": 9981,
+   "candidatesTokenCount": 1,
+   "totalTokenCount": 9982,
+   "promptTokensDetails": [
+    {
+     "modality": "TEXT",
+     "tokenCount": 9981
+    }
+   ],
+   "serviceTier": "standard"
+  },
+  "total_s": 4.841
+ },
+ "17c3f60f7d94b6098df4468807589ea98cdaaea76b241fcb43b096f78c1d26bf": {
+  "tail": "User question: Ποιο είναι το μέσο κόστος ανά GB για αποθήκευση αντικειμένων σε μια υβριδική αρχιτεκτονική νέφους το 2023;",
+  "out": "average cost per GB object storage hybrid cloud architecture 2023",
+  "usage": {
+   "promptTokenCount": 246,
+   "candidatesTokenCount": 14,
+   "totalTokenCount": 260,
+   "promptTokensDetails": [
+    {
+     "modality": "TEXT",
+     "tokenCount": 246
+    }
+   ],
+   "serviceTier": "standard"
+  },
+  "total_s": 5.758
+ },
+ "d314255461fec081832227edb87954f27456fd29c7e506e4bfe554e52d97cbfe": {
+  "tail": "User question: Ποιες νέες προκλήσεις προέκυψαν στην ασφάλεια των λειτουργιών serverless μετά το 2020;",
+  "out": "new challenges security serverless functions after 2020",
+  "usage": {
+   "promptTokenCount": 235,
+   "candidatesTokenCount": 12,
+   "totalTokenCount": 247,
+   "promptTokensDetails": [
+    {
+     "modality": "TEXT",
+     "tokenCount": 235
+    }
+   ],
+   "serviceTier": "standard"
+  },
+  "total_s": 4.276
+ },
+ "01425d26217a31f3b0660af504ccdc176abaa2f5b6739116aeac577be99544b7": {
+  "tail": "User question: Ποια είναι η μέση καθυστέρηση δικτύου για την επικοινωνία μεταξύ λειτουργιών σε διαφορετικές περιοχές cloud;",
+  "out": "average network latency inter-region cloud functions communication",
+  "usage": {
+   "promptTokenCount": 234,
+   "candidatesTokenCount": 9,
+   "totalTokenCount": 243,
+   "promptTokensDetails": [
+    {
+     "modality": "TEXT",
+     "tokenCount": 234
+    }
+   ],
+   "serviceTier": "standard"
+  },
+  "total_s": 2.962
+ },
+ "6a5611163130dfec96afd75a9f8dcc67252e4d6b9f3c7c1d2aa7eb950f996b3f": {
+  "tail": "Original query: What new serverless orchestration patterns have emerged since 2020 to manage complex workflows?\nRewritten query:",
+  "out": "serverless workflow orchestration patterns Function-as-a-Service FaaS distributed state management composition",
+  "usage": {
+   "promptTokenCount": 133,
+   "candidatesTokenCount": 18,
+   "totalTokenCount": 151,
+   "promptTokensDetails": [
+    {
+     "modality": "TEXT",
+     "tokenCount": 133
+    }
+   ],
+   "serviceTier": "standard"
+  },
+  "total_s": 3.56
+ },
+ "8d61c50b87bb6ad18f34231b752671caf22dfabd4adc4e7e7f853c9b09bce57c": {
+  "tail": "QUESTION: What new serverless orchestration patterns have emerged since 2020 to manage complex workflows?\n\nVERDICT:",
+  "out": "NO",
+  "usage": {
+   "promptTokenCount": 7192,
+   "candidatesTokenCount": 1,
+   "totalTokenCount": 7193,
+   "promptTokensDetails": [
+    {
+     "modality": "TEXT",
+     "tokenCount": 7192
+    }
+   ],
+   "serviceTier": "standard"
+  },
+  "total_s": 3.359
+ },
+ "cc546a7a4df9691508cd4cec64c5d82e8829b4b7252796d90aaa9319ae860d6d": {
+  "tail": "User question: Πώς έχουν εξελιχθεί οι πολιτικές αποθήκευσης δεδομένων για serverless εφαρμογές μετά το 2021;",
+  "out": "evolution data storage policies serverless applications after 2021",
+  "usage": {
+   "promptTokenCount": 234,
+   "candidatesTokenCount": 13,
+   "totalTokenCount": 247,
+   "promptTokensDetails": [
+    {
+     "modality": "TEXT",
+     "tokenCount": 234
+    }
+   ],
+   "serviceTier": "standard"
+  },
+  "total_s": 2.939
+ },
+ "5ea6b6333fde399a1ab4bd0e404248c31bdab4559d0d7ee7e78df1346ae41042": {
+  "tail": "User question: Ποια αποτελέσματα κλινικών δοκιμών αναφέρονται στα έγγραφα;",
+  "out": "clinical trial results",
+  "usage": {
+   "promptTokenCount": 225,
+   "candidatesTokenCount": 3,
+   "totalTokenCount": 710,
+   "promptTokensDetails": [
+    {
+     "modality": "TEXT",
+     "tokenCount": 225
+    }
+   ],
+   "thoughtsTokenCount": 482,
+   "serviceTier": "standard"
+  },
+  "total_s": 6.241
+ },
+ "888bd7b49af5c756ca4343e03b81a02687c9da02b2f3640d748aae9a30eed0e2": {
+  "tail": "Original query: clinical trial results\nRewritten query:",
+  "out": "clinical trial results",
+  "usage": {
+   "promptTokenCount": 117,
+   "candidatesTokenCount": 3,
+   "totalTokenCount": 228,
+   "promptTokensDetails": [
+    {
+     "modality": "TEXT",
+     "tokenCount": 117
+    }
+   ],
+   "thoughtsTokenCount": 108,
+   "serviceTier": "standard"
+  },
+  "total_s": 3.036
+ },
+ "12f0193cadfa106ae932a44f01d3aca7d9d0ee53e1f6ce8b3c1c7fe2070da4ea": {
+  "tail": "QUESTION: What are the core principles behind the OpenStack cloud operating system?\n\nVERDICT:",
+  "out": "NO",
+  "usage": {
+   "promptTokenCount": 9628,
+   "candidatesTokenCount": 1,
+   "totalTokenCount": 9629,
+   "promptTokensDetails": [
+    {
+     "modality": "TEXT",
+     "tokenCount": 9628
+    }
+   ],
+   "serviceTier": "standard"
+  },
+  "total_s": 3.378
+ },
+ "a871a6d5d3a78ef2471a7874bc1fc8af39713b5c224918aca2135c8fc52404d0": {
+  "tail": "User question: Ποιες είναι οι κύριες προκλήσεις που αντιμετωπίζουν οι οργανισμοί στη διαχείριση της ασφάλειας σε περιβάλλοντα πολλαπλών cloud το 2024;",
+  "out": "challenges organizations security management multi cloud environments 2024",
+  "usage": {
+   "promptTokenCount": 261,
+   "candidatesTokenCount": 12,
+   "totalTokenCount": 273,
+   "promptTokensDetails": [
+    {
+     "modality": "TEXT",
+     "tokenCount": 261
+    }
+   ],
+   "serviceTier": "standard"
+  },
+  "total_s": 4.867
+ },
+ "0e8a06c32cef57ffc6c89cf9d787ce66fcfd2118e04bf6b7db3a3e1780c46e8a": {
+  "tail": "Original query: challenges organizations security management multi cloud environments 2024\nRewritten query:",
+  "out": "security governance multi-cloud environments enterprise challenges threats",
+  "usage": {
+   "promptTokenCount": 126,
+   "candidatesTokenCount": 9,
+   "totalTokenCount": 135,
+   "promptTokensDetails": [
+    {
+     "modality": "TEXT",
+     "tokenCount": 126
+    }
+   ],
+   "serviceTier": "standard"
+  },
+  "total_s": 5.597
+ },
+ "049cb9cddc682249358cc8e11380af0bbf326e25ae5c608547b2a8f6ed5b4dba": {
+  "tail": "User question: Ποια είναι η βασική αρχή λειτουργίας του Open Container Initiative;",
+  "out": "Open Container Initiative basic operating principle",
+  "usage": {
+   "promptTokenCount": 229,
+   "candidatesTokenCount": 6,
+   "totalTokenCount": 235,
+   "promptTokensDetails": [
+    {
+     "modality": "TEXT",
+     "tokenCount": 229
+    }
+   ],
+   "serviceTier": "standard"
+  },
+  "total_s": 3.306
+ },
+ "023c6f9402248117845ad8380c661cf60154f9e3f4c23b8887bf2009d3ccebe3": {
+  "tail": "Original query: Open Container Initiative basic operating principle\nRewritten query:",
+  "out": "Open Container Initiative architecture container runtime specification execution model",
+  "usage": {
+   "promptTokenCount": 120,
+   "candidatesTokenCount": 9,
+   "totalTokenCount": 129,
+   "promptTokensDetails": [
+    {
+     "modality": "TEXT",
+     "tokenCount": 120
+    }
+   ],
+   "serviceTier": "standard"
+  },
+  "total_s": 3.146
+ },
+ "c66ef9668c403d0e16a6b3c3b44eee7b9aa6afe7e194caeafa6edfb8f76ba800": {
+  "tail": "Original query: What new trends in serverless cold start optimization have emerged since 2021?\nRewritten query:",
+  "out": "serverless computing Function-as-a-Service FaaS cold start latency mitigation optimization techniques trends",
+  "usage": {
+   "promptTokenCount": 132,
+   "candidatesTokenCount": 19,
+   "totalTokenCount": 151,
+   "promptTokensDetails": [
+    {
+     "modality": "TEXT",
+     "tokenCount": 132
+    }
+   ],
+   "serviceTier": "standard"
+  },
+  "total_s": 5.832
+ },
+ "de7331bb452a8e36245c4079ea8e286f6d1500885e46fad7da364385371d9e50": {
+  "tail": "QUESTION: What new trends in serverless cold start optimization have emerged since 2021?\n\nVERDICT:",
+  "out": "NO",
+  "usage": {
+   "promptTokenCount": 9104,
+   "candidatesTokenCount": 1,
+   "totalTokenCount": 9189,
+   "promptTokensDetails": [
+    {
+     "modality": "TEXT",
+     "tokenCount": 9104
+    }
+   ],
+   "thoughtsTokenCount": 84,
+   "serviceTier": "standard"
+  },
+  "total_s": 3.316
+ },
+ "55290cbb624a7bd8f57e69eb4ebb9eafc017a4166b9002cd303905185f42c7bc": {
+  "tail": "User question: Ποια είναι η τιμή του Bitcoin σύμφωνα με τα έγγραφα;",
+  "out": "Bitcoin price documents",
+  "usage": {
+   "promptTokenCount": 229,
+   "candidatesTokenCount": 3,
+   "totalTokenCount": 232,
+   "promptTokensDetails": [
+    {
+     "modality": "TEXT",
+     "tokenCount": 229
+    }
+   ],
+   "serviceTier": "standard"
+  },
+  "total_s": 2.468
+ },
+ "364e1f301cfdc7f6e6008b6a5800173815215c20cf91b8d21cb2b47d489dcd88": {
+  "tail": "User question: Ποια είναι η επίδοση του Google Cloud Video Intelligence API σε σύγκριση με τις προσεγγίσεις που συζητούνται;",
+  "out": "performance of Google Cloud Video Intelligence API compared to the discussed approaches",
+  "usage": {
+   "promptTokenCount": 248,
+   "candidatesTokenCount": 12,
+   "totalTokenCount": 260,
+   "promptTokensDetails": [
+    {
+     "modality": "TEXT",
+     "tokenCount": 248
+    }
+   ],
+   "serviceTier": "standard"
+  },
+  "total_s": 3.053
+ },
+ "838d7e8d6d560e0519fdb9b1ae1fa5532f1f6cbf1d5db1f548bbcf34e5d6ed5e": {
+  "tail": "Original query: What is the average cost per hour for processing 8K VR video using a serverless architecture today?\nRewritten query:",
+  "out": "serverless video transcoding 8K virtual reality cost analysis function as a service FaaS processing evaluation",
+  "usage": {
+   "promptTokenCount": 135,
+   "candidatesTokenCount": 19,
+   "totalTokenCount": 154,
+   "promptTokensDetails": [
+    {
+     "modality": "TEXT",
+     "tokenCount": 135
+    }
+   ],
+   "serviceTier": "standard"
+  },
+  "total_s": 19.104
+ },
+ "e7d910583b2bc881cc5edb495eb396e89054ebaa8936cc729f87a1331380ccc5": {
+  "tail": "User question: Ποιο είναι το μέγιστο μέγεθος αρχείου βίντεο που μπορεί να επεξεργαστεί αποτελεσματικά το ExCamera με καθυστέρηση κάτω του ενός δευτερολέπτου;",
+  "out": "maximum video file size excamera process sub-second latency",
+  "usage": {
+   "promptTokenCount": 266,
+   "candidatesTokenCount": 11,
+   "totalTokenCount": 277,
+   "promptTokensDetails": [
+    {
+     "modality": "TEXT",
+     "tokenCount": 266
+    }
+   ],
+   "serviceTier": "standard"
+  },
+  "total_s": 3.165
+ },
+ "3757902071333e1d15201f6fdfe059ec1df7f161e45b6c8fbfe61b85efa5b0ec": {
+  "tail": "User question: Πώς έχουν εξελιχθεί οι προσεγγίσεις για την διαχείριση της κατάστασης σε serverless συναρτήσεις για επεξεργασία βίντεο μετά το 2019;",
+  "out": "serverless function state management video processing evolution after 2019",
+  "usage": {
+   "promptTokenCount": 264,
+   "candidatesTokenCount": 14,
+   "totalTokenCount": 278,
+   "promptTokensDetails": [
+    {
+     "modality": "TEXT",
+     "tokenCount": 264
+    }
+   ],
+   "serviceTier": "standard"
+  },
+  "total_s": 5.7
+ },
+ "e2ec8213b06b80bb6ff6e1606bb6c1feddad7890376c9132bc5c5737ca499c67": {
+  "tail": "User question: Πώς επηρεάζει η επιλογή διαφορετικών παρόχων cloud (π.χ. Google Cloud Functions έναντι AWS Lambda) την απόδοση του συστήματος ExCamera για μεγάλα σύνολα δεδομένων βίντεο;",
+  "out": "impact of different cloud providers Google Cloud Functions vs AWS Lambda on ExCamera system performance for large video data sets",
+  "usage": {
+   "promptTokenCount": 268,
+   "candidatesTokenCount": 21,
+   "totalTokenCount": 289,
+   "promptTokensDetails": [
+    {
+     "modality": "TEXT",
+     "tokenCount": 268
+    }
+   ],
+   "serviceTier": "standard"
+  },
+  "total_s": 3.255
+ },
+ "9333c4b9acfae1bc60cb5c16d09646e776b34b003f5718a2cca17f78c8f70eca": {
+  "tail": "User question: Ποιο είναι το μέσο κόστος ανά gigabyte-ώρα για αποθήκευση δεδομένων σε serverless βάσεις δεδομένων το 2023;",
+  "out": "average cost per gigabyte-hour serverless database data storage 2023",
+  "usage": {
+   "promptTokenCount": 252,
+   "candidatesTokenCount": 17,
+   "totalTokenCount": 269,
+   "promptTokensDetails": [
+    {
+     "modality": "TEXT",
+     "tokenCount": 252
+    }
+   ],
+   "serviceTier": "standard"
+  },
+  "total_s": 3.308
+ },
+ "65f598fcc4b8ee84183c0dc415747a4315ffa812e2137881c3da3428681385c0": {
+  "tail": "Original query: average cost per gigabyte-hour serverless database data storage 2023\nRewritten query:",
+  "out": "serverless database DBaaS cloud storage pricing model monetary cost analysis 2023",
+  "usage": {
+   "promptTokenCount": 131,
+   "candidatesTokenCount": 17,
+   "totalTokenCount": 581,
+   "promptTokensDetails": [
+    {
+     "modality": "TEXT",
+     "tokenCount": 131
+    }
+   ],
+   "thoughtsTokenCount": 433,
+   "serviceTier": "standard"
+  },
+  "total_s": 6.298
+ },
+ "abd9c9fa3224819cb8e46a8443aaf5c6b01a61e7e7250e2707408680e3262d73": {
+  "tail": "User question: Πώς έχει εξελιχθεί η υποστήριξη για μη-σχεσιακές βάσεις δεδομένων ως πηγές εισόδου/εξόδου για το MapReduce μετά το 2019;",
+  "out": "evolution non relational databases input output MapReduce post 2019",
+  "usage": {
+   "promptTokenCount": 265,
+   "candidatesTokenCount": 14,
+   "totalTokenCount": 279,
+   "promptTokensDetails": [
+    {
+     "modality": "TEXT",
+     "tokenCount": 265
+    }
+   ],
+   "serviceTier": "standard"
+  },
+  "total_s": 3.233
+ },
+ "01922c51760121d7c900585a640d8121fbef6d3ab52ef1c440b9626ccf44a87f": {
+  "tail": "Original query: evolution non relational databases input output MapReduce post 2019\nRewritten query:",
+  "out": "NoSQL database I/O performance MapReduce distributed data processing recent trends",
+  "usage": {
+   "promptTokenCount": 128,
+   "candidatesTokenCount": 14,
+   "totalTokenCount": 142,
+   "promptTokensDetails": [
+    {
+     "modality": "TEXT",
+     "tokenCount": 128
+    }
+   ],
+   "serviceTier": "standard"
+  },
+  "total_s": 4.128
+ },
+ "6869625c8b509a1141475140aa9ef1868d91bb3271e9172baf111740cd043b9f": {
+  "tail": "QUESTION: evolution non relational databases input output MapReduce post 2019\n\nVERDICT:",
+  "out": "NO",
+  "usage": {
+   "promptTokenCount": 10519,
+   "candidatesTokenCount": 1,
+   "totalTokenCount": 10520,
+   "promptTokensDetails": [
+    {
+     "modality": "TEXT",
+     "tokenCount": 10519
+    }
+   ],
+   "serviceTier": "standard"
+  },
+  "total_s": 3.315
+ },
+ "55b350db0afd9f4c6bd390d9245dc8d5a7f0be56289447886c31402484a05037": {
+  "tail": "User question: Ποια είναι τα κύρια χαρακτηριστικά της πλατφόρμας Vercel Edge Functions για την ανάπτυξη serverless εφαρμογών;",
+  "out": "features Vercel Edge Functions platform development serverless application",
+  "usage": {
+   "promptTokenCount": 256,
+   "candidatesTokenCount": 11,
+   "totalTokenCount": 267,
+   "promptTokensDetails": [
+    {
+     "modality": "TEXT",
+     "tokenCount": 256
+    }
+   ],
+   "serviceTier": "standard"
+  },
+  "total_s": 2.946
+ },
+ "51ac828799e2748cec90e51efda8014adafd51eab8989e7bcb235fc4eacc85ff": {
+  "tail": "User question: Ποια είναι η τρέχουσα υιοθέτηση του Knative στις επιχειρήσεις;",
+  "out": "current Knative adoption enterprise",
+  "usage": {
+   "promptTokenCount": 237,
+   "candidatesTokenCount": 5,
+   "totalTokenCount": 242,
+   "promptTokensDetails": [
+    {
+     "modality": "TEXT",
+     "tokenCount": 237
+    }
+   ],
+   "serviceTier": "standard"
+  },
+  "total_s": 3.24
+ },
+ "9091fe99290f0cbf29b9953b4dc546123b5b0d9b1678566bfd391970c98c5ca5": {
+  "tail": "Original query: current Knative adoption enterprise\nRewritten query:",
+  "out": "Knative serverless enterprise adoption Kubernetes cloud computing",
+  "usage": {
+   "promptTokenCount": 119,
+   "candidatesTokenCount": 9,
+   "totalTokenCount": 128,
+   "promptTokensDetails": [
+    {
+     "modality": "TEXT",
+     "tokenCount": 119
+    }
+   ],
+   "serviceTier": "standard"
+  },
+  "total_s": 3.536
+ },
+ "52d02a061b2361331583228400c432cc7ca39c66b6464ff7b98df78973f8d135": {
+  "tail": "QUESTION: current Knative adoption enterprise\n\nVERDICT:",
+  "out": "NO",
+  "usage": {
+   "promptTokenCount": 7187,
+   "candidatesTokenCount": 1,
+   "totalTokenCount": 7188,
+   "promptTokensDetails": [
+    {
+     "modality": "TEXT",
+     "tokenCount": 7187
+    }
+   ],
+   "serviceTier": "standard"
+  },
+  "total_s": 3.894
+ },
+ "fce342f3407e5a0edc9d2b8f36e0f20d1ede2620cacae14ef16879d1b118da44": {
+  "tail": "User question: Ποιο είναι το μέσο κόστος ανά εκτέλεση για μια λειτουργία Azure με 128MB μνήμης;",
+  "out": "average cost per execution Azure function 128MB memory",
+  "usage": {
+   "promptTokenCount": 246,
+   "candidatesTokenCount": 12,
+   "totalTokenCount": 258,
+   "promptTokensDetails": [
+    {
+     "modality": "TEXT",
+     "tokenCount": 246
+    }
+   ],
+   "serviceTier": "standard"
+  },
+  "total_s": 3.686
+ },
+ "d1f1a0591a6ea060d4f51932544b0b99a16b67e7ae68fe88e1d4ef0ac58236f2": {
+  "tail": "User question: Ποια είναι η κύρια λειτουργία του Red Hat OpenShift στην ανάπτυξη εφαρμογών serverless;",
+  "out": "main function Red Hat OpenShift serverless applications development",
+  "usage": {
+   "promptTokenCount": 239,
+   "candidatesTokenCount": 10,
+   "totalTokenCount": 249,
+   "promptTokensDetails": [
+    {
+     "modality": "TEXT",
+     "tokenCount": 239
+    }
+   ],
+   "serviceTier": "standard"
+  },
+  "total_s": 3.66
+ },
+ "abd3b1dca14069d8448a5789aabf6aee630ceaae8d21bd2d85244159c75bde9e": {
+  "tail": "User question: Πώς έχουν αντιμετωπιστεί οι προκλήσεις της διαχείρισης δεδομένων σε distributed serverless συστήματα μετά το 2019;",
+  "out": "data management challenges distributed serverless systems after 2019",
+  "usage": {
+   "promptTokenCount": 253,
+   "candidatesTokenCount": 13,
+   "totalTokenCount": 266,
+   "promptTokensDetails": [
+    {
+     "modality": "TEXT",
+     "tokenCount": 253
+    }
+   ],
+   "serviceTier": "standard"
+  },
+  "total_s": 3.168
+ },
+ "f54decbd411d73d787a05f896c1484ad7fb5dd3e971ad3d2c8c4704e58736578": {
+  "tail": "User question: Πώς επηρεάζει η επιλογή της γλώσσας προγραμματισμού την autoscaling συμπεριφορά των serverless εφαρμογών στην AWS;",
+  "out": "programming language selection autoscaling behavior serverless applications AWS",
+  "usage": {
+   "promptTokenCount": 251,
+   "candidatesTokenCount": 10,
+   "totalTokenCount": 261,
+   "promptTokensDetails": [
+    {
+     "modality": "TEXT",
+     "tokenCount": 251
+    }
+   ],
+   "serviceTier": "standard"
+  },
+  "total_s": 5.139
+ },
+ "e233a70f23a61e3d972e2aa05633c623e63d25a7a2547941180a53783c7d6a9d": {
+  "tail": "User question: Ποιο είναι το μέσο κόστος ανά GB-μήνα για την αποθήκευση δεδομένων σε AWS S3 Glacier Deep Archive το 2024;",
+  "out": "average cost per GB month data storage AWS S3 Glacier Deep Archive 2024",
+  "usage": {
+   "promptTokenCount": 255,
+   "candidatesTokenCount": 18,
+   "totalTokenCount": 273,
+   "promptTokensDetails": [
+    {
+     "modality": "TEXT",
+     "tokenCount": 255
+    }
+   ],
+   "serviceTier": "standard"
+  },
+  "total_s": 3.575
+ },
+ "f9e340e587cfc48c8920c8001ee74e0cb8ed19c8b578b6896555cd28613f6b1c": {
+  "tail": "User question: Ποιες εξελίξεις έχουν σημειωθεί στη βελτιστοποίηση της κατανάλωσης ενέργειας για λειτουργίες χωρίς διακομιστή μετά το 2021;",
+  "out": "developments energy consumption optimization serverless functions after 2021",
+  "usage": {
+   "promptTokenCount": 259,
+   "candidatesTokenCount": 14,
+   "totalTokenCount": 273,
+   "promptTokensDetails": [
+    {
+     "modality": "TEXT",
+     "tokenCount": 259
+    }
+   ],
+   "serviceTier": "standard"
+  },
+  "total_s": 3.568
+ },
+ "2889d0e7ecf7d24a8248816a4892be0a7f82a6fb4ad7db3a1ed4e57afa0bdc60": {
+  "tail": "QUESTION: developments energy consumption optimization serverless functions after 2021\n\nVERDICT:",
+  "out": "NO",
+  "usage": {
+   "promptTokenCount": 9981,
+   "candidatesTokenCount": 1,
+   "totalTokenCount": 9982,
+   "promptTokensDetails": [
+    {
+     "modality": "TEXT",
+     "tokenCount": 9981
+    }
+   ],
+   "serviceTier": "standard"
+  },
+  "total_s": 3.557
+ },
+ "197317f0f5ddbe0ee03e5504d85a2fd65c607d07188da2eda49855cb609d42b4": {
+  "tail": "User question: Ποιο είναι το μέσο κόστος ανά GB για αποθήκευση αντικειμένων σε μια υβριδική αρχιτεκτονική νέφους το 2023;",
+  "out": "average cost per GB object storage hybrid cloud architecture 2023",
+  "usage": {
+   "promptTokenCount": 273,
+   "candidatesTokenCount": 14,
+   "totalTokenCount": 287,
+   "promptTokensDetails": [
+    {
+     "modality": "TEXT",
+     "tokenCount": 273
+    }
+   ],
+   "serviceTier": "standard"
+  },
+  "total_s": 2.291
+ },
+ "171f6c0d584d471e534c2f2e565a11f8029a54870171ea57aef0dcf4459eb08b": {
+  "tail": "User question: Ποιες νέες προκλήσεις προέκυψαν στην ασφάλεια των λειτουργιών serverless μετά το 2020;",
+  "out": "new security challenges serverless functions after 2020",
+  "usage": {
+   "promptTokenCount": 262,
+   "candidatesTokenCount": 12,
+   "totalTokenCount": 274,
+   "promptTokensDetails": [
+    {
+     "modality": "TEXT",
+     "tokenCount": 262
+    }
+   ],
+   "serviceTier": "standard"
+  },
+  "total_s": 4.294
+ },
+ "5af3be28103a66078c87e15faadfb4837b9c487db4aee0b10290d167870e8255": {
+  "tail": "User question: Ποια είναι η μέση καθυστέρηση δικτύου για την επικοινωνία μεταξύ λειτουργιών σε διαφορετικές περιοχές cloud;",
+  "out": "average network latency communication functions cross-region cloud",
+  "usage": {
+   "promptTokenCount": 261,
+   "candidatesTokenCount": 9,
+   "totalTokenCount": 270,
+   "promptTokensDetails": [
+    {
+     "modality": "TEXT",
+     "tokenCount": 261
+    }
+   ],
+   "serviceTier": "standard"
+  },
+  "total_s": 2.801
+ },
+ "2b62d8154f4fde927a626a2fcd26b25d8190ab37b7fa60f88a63edd4629c87bf": {
+  "tail": "User question: Πώς έχουν εξελιχθεί οι πολιτικές αποθήκευσης δεδομένων για serverless εφαρμογές μετά το 2021;",
+  "out": "serverless applications data storage policies evolution after 2021",
+  "usage": {
+   "promptTokenCount": 261,
+   "candidatesTokenCount": 13,
+   "totalTokenCount": 274,
+   "promptTokensDetails": [
+    {
+     "modality": "TEXT",
+     "tokenCount": 261
+    }
+   ],
+   "serviceTier": "standard"
+  },
+  "total_s": 3.501
+ },
+ "9085757d353535d279863d7a0ec9f5d57f13f4414c90b3887a7db22fa2da6bfd": {
+  "tail": "User question: Ποια αποτελέσματα κλινικών δοκιμών αναφέρονται στα έγγραφα;",
+  "out": "clinical trial results reported in documents",
+  "usage": {
+   "promptTokenCount": 252,
+   "candidatesTokenCount": 6,
+   "totalTokenCount": 258,
+   "promptTokensDetails": [
+    {
+     "modality": "TEXT",
+     "tokenCount": 252
+    }
+   ],
+   "serviceTier": "standard"
+  },
+  "total_s": 3.166
+ },
+ "66934bcf4cf43e0881de3955c49e260fe527dcd29a75e530659153fd71f3ac07": {
+  "tail": "Original query: clinical trial results reported in documents\nRewritten query:",
+  "out": "clinical trial results reported in documents",
+  "usage": {
+   "promptTokenCount": 120,
+   "candidatesTokenCount": 6,
+   "totalTokenCount": 126,
+   "promptTokensDetails": [
+    {
+     "modality": "TEXT",
+     "tokenCount": 120
+    }
+   ],
+   "serviceTier": "standard"
+  },
+  "total_s": 3.018
+ },
+ "ba5ad941212c44ee2a7a4abd7cbc45bc8337be1ddc29bb08b233eb7bd5c0bde1": {
+  "tail": "QUESTION: What are the core principles behind the OpenStack cloud operating system?\n\nVERDICT:",
+  "out": "NO",
+  "usage": {
+   "promptTokenCount": 9839,
+   "candidatesTokenCount": 1,
+   "totalTokenCount": 9840,
+   "promptTokensDetails": [
+    {
+     "modality": "TEXT",
+     "tokenCount": 9839
+    }
+   ],
+   "serviceTier": "standard"
+  },
+  "total_s": 2.165
+ },
+ "9051c570e433f46ad848d9a24c06fbb7713e3a932b00a924c44f23bb8b960d98": {
+  "tail": "User question: Ποιες είναι οι κύριες προκλήσεις που αντιμετωπίζουν οι οργανισμοί στη διαχείριση της ασφάλειας σε περιβάλλοντα πολλαπλών cloud το 2024;",
+  "out": "challenges security management multi cloud environments 2024",
+  "usage": {
+   "promptTokenCount": 288,
+   "candidatesTokenCount": 11,
+   "totalTokenCount": 299,
+   "promptTokensDetails": [
+    {
+     "modality": "TEXT",
+     "tokenCount": 288
+    }
+   ],
+   "serviceTier": "standard"
+  },
+  "total_s": 4.16
+ },
+ "4cc748b29ca8f07f4960f8effda9bff7c39f7e9f41464662afbac0954de5ba5a": {
+  "tail": "Original query: challenges security management multi cloud environments 2024\nRewritten query:",
+  "out": "multi-cloud security governance compliance challenges identity access management distributed environments",
+  "usage": {
+   "promptTokenCount": 125,
+   "candidatesTokenCount": 12,
+   "totalTokenCount": 137,
+   "promptTokensDetails": [
+    {
+     "modality": "TEXT",
+     "tokenCount": 125
+    }
+   ],
+   "serviceTier": "standard"
+  },
+  "total_s": 3.448
+ },
+ "1374a8c13b5772411cc717b0ee07a44d83009acd6144eb3d9574bf7d1cfc0d79": {
+  "tail": "User question: Ποια είναι η βασική αρχή λειτουργίας του Open Container Initiative;",
+  "out": "Open Container Initiative working principle",
+  "usage": {
+   "promptTokenCount": 256,
+   "candidatesTokenCount": 5,
+   "totalTokenCount": 261,
+   "promptTokensDetails": [
+    {
+     "modality": "TEXT",
+     "tokenCount": 256
+    }
+   ],
+   "serviceTier": "standard"
+  },
+  "total_s": 2.713
+ },
+ "0afd4573e88ceaa612c2a826aad1e95dd20afbd71d62f92eb3a8075075a3e069": {
+  "tail": "Original query: Open Container Initiative working principle\nRewritten query:",
+  "out": "Open Container Initiative OCI specifications runtime image architecture mechanism containerization operating system level virtualization",
+  "usage": {
+   "promptTokenCount": 119,
+   "candidatesTokenCount": 16,
+   "totalTokenCount": 135,
+   "promptTokensDetails": [
+    {
+     "modality": "TEXT",
+     "tokenCount": 119
+    }
+   ],
+   "serviceTier": "standard"
+  },
+  "total_s": 3.078
+ },
+ "f0b7e1505d2d032e103333174e04bd0933ac6a68880062297d41732ba1201db7": {
+  "tail": "QUESTION: What new trends in serverless cold start optimization have emerged since 2021?\n\nVERDICT:",
+  "out": "NO",
+  "usage": {
+   "promptTokenCount": 10487,
+   "candidatesTokenCount": 1,
+   "totalTokenCount": 10488,
+   "promptTokensDetails": [
+    {
+     "modality": "TEXT",
+     "tokenCount": 10487
+    }
+   ],
+   "serviceTier": "standard"
+  },
+  "total_s": 2.967
+ },
+ "aea857f0839023a1d94e774feb15b6d24852fd1c3f6434fbfb91de29f9ca7625": {
+  "tail": "User question: Ποια είναι η τιμή του Bitcoin σύμφωνα με τα έγγραφα;",
+  "out": "Bitcoin cost",
+  "usage": {
+   "promptTokenCount": 256,
+   "candidatesTokenCount": 2,
+   "totalTokenCount": 737,
+   "promptTokensDetails": [
+    {
+     "modality": "TEXT",
+     "tokenCount": 256
+    }
+   ],
+   "thoughtsTokenCount": 479,
+   "serviceTier": "standard"
+  },
+  "total_s": 6.625
+ },
+ "031928eaba7c95bcd9d713186576a0628ab63deb33160f7d31008c79799bc35f": {
+  "tail": "Original query: Bitcoin cost\nRewritten query:",
+  "out": "blockchain cryptocurrency energy consumption proof of work mining resource overhead cost analysis",
+  "usage": {
+   "promptTokenCount": 116,
+   "candidatesTokenCount": 12,
+   "totalTokenCount": 128,
+   "promptTokensDetails": [
+    {
+     "modality": "TEXT",
+     "tokenCount": 116
+    }
+   ],
+   "serviceTier": "standard"
+  },
+  "total_s": 2.345
+ },
+ "7c0a5df73f74af6fcc1951b4a2f0b062caa6ba2ca79ee1af22a4d0bfee5f51fb": {
+  "tail": "User question: Ποια είναι η επίδοση του Google Cloud Video Intelligence API σε σύγκριση με τις προσεγγίσεις που συζητούνται;",
+  "out": "performance Google Cloud Video Intelligence API comparison discussed approaches",
+  "usage": {
+   "promptTokenCount": 274,
+   "candidatesTokenCount": 9,
+   "totalTokenCount": 283,
+   "promptTokensDetails": [
+    {
+     "modality": "TEXT",
+     "tokenCount": 274
+    }
+   ],
+   "serviceTier": "standard"
+  },
+  "total_s": 4.069
+ },
+ "d066a3f43c9148136fe6772ba350bb020a087da310d81fee003b529c0a20e1d7": {
+  "tail": "User question: Ποιο είναι το μέγιστο μέγεθος αρχείου βίντεο που μπορεί να επεξεργαστεί αποτελεσματικά το ExCamera με καθυστέρηση κάτω του ενός δευτερολέπτου;",
+  "out": "maximum video file size excamera processing sub-second latency",
+  "usage": {
+   "promptTokenCount": 292,
+   "candidatesTokenCount": 11,
+   "totalTokenCount": 303,
+   "promptTokensDetails": [
+    {
+     "modality": "TEXT",
+     "tokenCount": 292
+    }
+   ],
+   "serviceTier": "standard"
+  },
+  "total_s": 1.868
+ },
+ "2378b2f5a7078f1698f0c38b892fd948d8f008384fab48ff82dbc235a5d73c6e": {
+  "tail": "User question: Πώς έχουν εξελιχθεί οι προσεγγίσεις για την διαχείριση της κατάστασης σε serverless συναρτήσεις για επεξεργασία βίντεο μετά το 2019;",
+  "out": "state management serverless functions video processing post 2019",
+  "usage": {
+   "promptTokenCount": 290,
+   "candidatesTokenCount": 13,
+   "totalTokenCount": 303,
+   "promptTokensDetails": [
+    {
+     "modality": "TEXT",
+     "tokenCount": 290
+    }
+   ],
+   "serviceTier": "standard"
+  },
+  "total_s": 2.977
+ },
+ "4d050e047838729bc0da45d9623898bb508b81be0d92e9d666d8fdee14eb77aa": {
+  "tail": "User question: Πώς επηρεάζει η επιλογή διαφορετικών παρόχων cloud (π.χ. Google Cloud Functions έναντι AWS Lambda) την απόδοση του συστήματος ExCamera για μεγάλα σύνολα δεδομένων βίντεο;",
+  "out": "cloud providers Google Cloud Functions AWS Lambda performance ExCamera system large video data sets",
+  "usage": {
+   "promptTokenCount": 294,
+   "candidatesTokenCount": 15,
+   "totalTokenCount": 309,
+   "promptTokensDetails": [
+    {
+     "modality": "TEXT",
+     "tokenCount": 294
+    }
+   ],
+   "serviceTier": "standard"
+  },
+  "total_s": 1.89
+ },
+ "5eff51fb9ea977ef9bb14a9278a4b34e194cbf36aa55e7db582d135aee717f17": {
+  "tail": "User question: Ποιο είναι το μέσο κόστος ανά gigabyte-ώρα για αποθήκευση δεδομένων σε serverless βάσεις δεδομένων το 2023;",
+  "out": "average cost per gigabyte-hour data storage serverless databases 2023",
+  "usage": {
+   "promptTokenCount": 278,
+   "candidatesTokenCount": 17,
+   "totalTokenCount": 295,
+   "promptTokensDetails": [
+    {
+     "modality": "TEXT",
+     "tokenCount": 278
+    }
+   ],
+   "serviceTier": "standard"
+  },
+  "total_s": 4.016
+ },
+ "5bae25c94f34d64f58120e62c032be946738f0d823805efa9c4a6bad74661241": {
+  "tail": "User question: Πώς έχει εξελιχθεί η υποστήριξη για μη-σχεσιακές βάσεις δεδομένων ως πηγές εισόδου/εξόδου για το MapReduce μετά το 2019;",
+  "out": "evolution non-relational database support input output mapreduce after 2019",
+  "usage": {
+   "promptTokenCount": 292,
+   "candidatesTokenCount": 17,
+   "totalTokenCount": 309,
+   "promptTokensDetails": [
+    {
+     "modality": "TEXT",
+     "tokenCount": 292
+    }
+   ],
+   "serviceTier": "standard"
+  },
+  "total_s": 3.838
+ },
+ "58a433b0bd4ae8869c612a9859bf29f9206084d747cd36bb3029eefc06c01118": {
+  "tail": "User question: Ποια είναι τα κύρια αρχιτεκτονικά στοιχεία της πλατφόρμας IBM OpenWhisk;",
+  "out": "main architectural components IBM OpenWhisk platform",
+  "usage": {
+   "promptTokenCount": 230,
+   "candidatesTokenCount": 8,
+   "totalTokenCount": 238,
+   "promptTokensDetails": [
+    {
+     "modality": "TEXT",
+     "tokenCount": 230
+    }
+   ],
+   "serviceTier": "standard"
+  },
+  "total_s": 3.915
+ },
+ "801459cdfb60f93900d9654e975b36c72407215ad3df1641d1ca0b8c2afc973a": {
+  "tail": "User question: Γιατί το serverless απλοποιεί τον προγραμματισμό στο cloud;",
+  "out": "why serverless simplifies cloud programming",
+  "usage": {
+   "promptTokenCount": 220,
+   "candidatesTokenCount": 6,
+   "totalTokenCount": 226,
+   "promptTokensDetails": [
+    {
+     "modality": "TEXT",
+     "tokenCount": 220
+    }
+   ],
+   "serviceTier": "standard"
+  },
+  "total_s": 4.1
+ },
+ "039f5a6b3c751ee9e70f2b5b7d1a74eb52e18e3b8883324bd7e83d42ac80fc22": {
+  "tail": "User question: Τι είναι το utility computing;",
+  "out": "utility computing definition",
+  "usage": {
+   "promptTokenCount": 220,
+   "candidatesTokenCount": 3,
+   "totalTokenCount": 223,
+   "promptTokensDetails": [
+    {
+     "modality": "TEXT",
+     "tokenCount": 220
+    }
+   ],
+   "serviceTier": "standard"
+  },
+  "total_s": 4.365
+ },
+ "074c2ad2dbdd4647ca7e373010673e816bb242c57f67edecb7a67ac09ff1e212": {
+  "tail": "User question: Πώς εγγυάται το MapReduce το ίδιο αποτέλεσμα παρά τις αστοχίες μηχανημάτων;",
+  "out": "MapReduce output machines failures",
+  "usage": {
+   "promptTokenCount": 243,
+   "candidatesTokenCount": 5,
+   "totalTokenCount": 248,
+   "promptTokensDetails": [
+    {
+     "modality": "TEXT",
+     "tokenCount": 243
+    }
+   ],
+   "serviceTier": "standard"
+  },
+  "total_s": 6.768
+ },
+ "85e335f169cad03f9f7c2c47b3f7b2b75f4ff22cfb8132b97293531d7917c8c3": {
+  "tail": "User question: Πώς λειτουργεί ο μηχανισμός των counters στο MapReduce;",
+  "out": "how MapReduce counters mechanism works",
+  "usage": {
+   "promptTokenCount": 232,
+   "candidatesTokenCount": 6,
+   "totalTokenCount": 238,
+   "promptTokensDetails": [
+    {
+     "modality": "TEXT",
+     "tokenCount": 232
+    }
+   ],
+   "serviceTier": "standard"
+  },
+  "total_s": 6.053
+ },
+ "2f8d7231958cb2f9984036200f2335e0b4be46214abf41a7a6f4be35960712b1": {
+  "tail": "User question: Ποια είναι τα κύρια αρχιτεκτονικά στοιχεία της πλατφόρμας IBM OpenWhisk;",
+  "out": "main architectural components IBM OpenWhisk platform",
+  "usage": {
+   "promptTokenCount": 242,
+   "candidatesTokenCount": 8,
+   "totalTokenCount": 250,
+   "promptTokensDetails": [
+    {
+     "modality": "TEXT",
+     "tokenCount": 242
+    }
+   ],
+   "serviceTier": "standard"
+  },
+  "total_s": 3.127
+ },
+ "63e73953f1eb6fae7e7668dc321458274f697680250d6706b5d2c1ff6f9368b0": {
+  "tail": "User question: Γιατί το serverless απλοποιεί τον προγραμματισμό στο cloud;",
+  "out": "why serverless simplifies cloud programming",
+  "usage": {
+   "promptTokenCount": 247,
+   "candidatesTokenCount": 6,
+   "totalTokenCount": 622,
+   "promptTokensDetails": [
+    {
+     "modality": "TEXT",
+     "tokenCount": 247
+    }
+   ],
+   "thoughtsTokenCount": 369,
+   "serviceTier": "standard"
+  },
+  "total_s": 5.639
+ },
+ "ec61d6c144c87629730a378a63957888d27c92cbc3f7c31b1f1dbc1cf9faf3fd": {
+  "tail": "User question: Τι είναι το utility computing;",
+  "out": "utility computing definition",
+  "usage": {
+   "promptTokenCount": 247,
+   "candidatesTokenCount": 3,
+   "totalTokenCount": 250,
+   "promptTokensDetails": [
+    {
+     "modality": "TEXT",
+     "tokenCount": 247
+    }
+   ],
+   "serviceTier": "standard"
+  },
+  "total_s": 3.967
+ },
+ "09fd35185d7eb86484ef9b4842d0fd809ee101ec4cff1e571a1ab4736d74e0ad": {
+  "tail": "User question: Πώς εγγυάται το MapReduce το ίδιο αποτέλεσμα παρά τις αστοχίες μηχανημάτων;",
+  "out": "MapReduce consistent output machine failures",
+  "usage": {
+   "promptTokenCount": 270,
+   "candidatesTokenCount": 6,
+   "totalTokenCount": 276,
+   "promptTokensDetails": [
+    {
+     "modality": "TEXT",
+     "tokenCount": 270
+    }
+   ],
+   "serviceTier": "standard"
+  },
+  "total_s": 2.481
+ },
+ "52d97eea38fb0d7f6df3b2925f0f7f3d21194ab62f302bf6d919884d62aa6b64": {
+  "tail": "User question: Πώς λειτουργεί ο μηχανισμός των counters στο MapReduce;",
+  "out": "how counters mechanism works in mapreduce",
+  "usage": {
+   "promptTokenCount": 259,
+   "candidatesTokenCount": 7,
+   "totalTokenCount": 266,
+   "promptTokensDetails": [
+    {
+     "modality": "TEXT",
+     "tokenCount": 259
+    }
+   ],
+   "serviceTier": "standard"
+  },
+  "total_s": 1.976
+ }
+}

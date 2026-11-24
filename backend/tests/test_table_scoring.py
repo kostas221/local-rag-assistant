@@ -84,3 +84,12 @@ def test_stored_baseline_answers_all_pass():
         rows = {r["id"]: r for r in csv.DictReader(f)}
     for qid, q in GOLDEN.items():
         assert all(TS.check_strict(rows[qid]["answer"], q["facts"])), qid
+
+
+def test_citation_labels_are_not_read_as_table_rows():
+    """24/11/2026: στο «όλο το κείμενο» η σελίδα 3 πήρε ετικέτα [S3], ίδια με τη γραμμή «S3» (Amazon S3) του
+    πίνακα του PyWren. Σωστή απάντηση με [S3] μετρήθηκε λάθος. Η ετικέτα είναι παραπομπή, όχι κείμενο."""
+    answer = ("S3 reaches a write speed of 501.13 MB/s [S3]. In comparison, a single SSD on a "
+              "c3.8xlarge instance reaches a write speed of 208.73 MB/s [S3].")
+    assert all(TS.check_strict(answer, facts("t009")))
+    assert all(TS.check_strict(answer.replace("[S3]", "[S1]"), facts("t009")))

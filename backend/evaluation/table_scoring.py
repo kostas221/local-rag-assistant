@@ -36,9 +36,18 @@ _AND = re.compile(r"\band\b")
 _SPLIT_WORDS = re.compile(r"\b(?:whereas|while|compared (?:to|with)|versus|vs\.)\s*")
 
 
+_CITATION = re.compile(r"\[S\d+\]")
+
+
 def normalize(text: str) -> str:
-    """Πεζά, NFKC, χωρίς markdown έμφαση, ενιαίοι αριθμοί. Κρατά τις αλλαγές γραμμής."""
-    s = unicodedata.normalize("NFKC", text or "").lower()
+    """Πεζά, NFKC, χωρίς markdown έμφαση και χωρίς ετικέτες πηγών, ενιαίοι αριθμοί. Κρατά τις αλλαγές
+    γραμμής.
+
+    Ετικέτες πηγών (24/11/2026): το «[S3]» είναι παραπομπή, όχι κείμενο. Στο πείραμα RAG / όλο το κείμενο
+    η σελίδα 3 του PyWren πήρε ετικέτα [S3] και ο έλεγχος τη διάβασε ως τη γραμμή «S3» (Amazon S3) του
+    ίδιου του πίνακα: δύο σωστές απαντήσεις (t009, t014) μετρήθηκαν λάθος."""
+    s = _CITATION.sub("", text or "")
+    s = unicodedata.normalize("NFKC", s).lower()
     s = s.replace("−", "-").replace("–", "-")
     s = re.sub(r"\*\*|__|`", "", s)
     s = re.sub(r"(?<=\d),(?=\d{3}(?!\d))", "", s)          # 29,423 -> 29423

@@ -237,6 +237,12 @@ def render_sources(sources, answer: str | None = None):
     if any(isinstance(s, dict) and s.get("second_search") for s in sources):
         st.caption("🔁 Second search used: the first search found no close match, "
                    "so the question was rephrased and searched again.")
+    # Κύκλος 2 (24/11/2026): ≥ 2 επιλεγμένα έγγραφα που χωράνε -> το μοντέλο διάβασε ΟΛΟ το κείμενο.
+    full = any(isinstance(s, dict) and s.get("full_text") for s in sources)
+    if full:
+        n_docs = len({(s.get("doc_id"), s.get("file")) for s in sources if isinstance(s, dict)})
+        st.caption(f"📖 Full text used: the {n_docs} selected documents were short enough for the model "
+                   f"to read in full ({len(sources)} pages), so no search was needed.")
     cited = cited_labels(answer)
     if answer is None or not all(isinstance(s, dict) for s in sources):
         with st.expander(f"📚 Sources ({len(sources)})"):
@@ -250,8 +256,9 @@ def render_sources(sources, answer: str | None = None):
             for i, src in enumerate(used):
                 _render_source_item(i, src)
     if rest:
-        title = (f"📄 Other pages searched ({len(rest)})" if used
-                 else f"📄 Pages searched ({len(rest)}) — none cited in the answer")
+        what = "given to the model" if full else "searched"
+        title = (f"📄 Other pages {what} ({len(rest)})" if used
+                 else f"📄 Pages {what} ({len(rest)}) — none cited in the answer")
         with st.expander(title):
             for i, src in enumerate(rest):
                 _render_source_item(i, src)
