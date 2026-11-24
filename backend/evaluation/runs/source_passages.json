@@ -1,0 +1,201 @@
+{
+ "rows": [
+  {
+   "id": "m004",
+   "arm": "two",
+   "status": "done",
+   "sec": 2.855,
+   "counts": {
+    "found": 2
+   }
+  },
+  {
+   "id": "m006",
+   "arm": "two",
+   "status": "done",
+   "sec": 2.993,
+   "counts": {
+    "found": 3
+   }
+  },
+  {
+   "id": "m010",
+   "arm": "two",
+   "status": "done",
+   "sec": 4.714,
+   "counts": {
+    "found": 7
+   }
+  },
+  {
+   "id": "m012",
+   "arm": "two",
+   "status": "done",
+   "sec": 4.255,
+   "counts": {
+    "found": 5,
+    "not_found": 1
+   }
+  },
+  {
+   "id": "m016",
+   "arm": "two",
+   "status": "done",
+   "sec": 3.626,
+   "counts": {
+    "found": 5
+   }
+  },
+  {
+   "id": "m022",
+   "arm": "two",
+   "status": "done",
+   "sec": 5.63,
+   "counts": {
+    "found": 6
+   }
+  },
+  {
+   "id": "m024",
+   "arm": "two",
+   "status": "done",
+   "sec": 3.88,
+   "counts": {
+    "found": 5
+   }
+  },
+  {
+   "id": "m037",
+   "arm": "two",
+   "status": "done",
+   "sec": 4.093,
+   "counts": {
+    "found": 6
+   }
+  },
+  {
+   "id": "m039",
+   "arm": "two",
+   "status": "done",
+   "sec": 4.774,
+   "counts": {
+    "found": 5
+   }
+  },
+  {
+   "id": "m040",
+   "arm": "two",
+   "status": "done",
+   "sec": 6.813,
+   "counts": {
+    "found": 5
+   }
+  },
+  {
+   "id": "t3p01",
+   "arm": "three",
+   "status": "done",
+   "sec": 6.818,
+   "counts": {
+    "found": 3
+   }
+  },
+  {
+   "id": "t3p02",
+   "arm": "three",
+   "status": "done",
+   "sec": 3.023,
+   "counts": {
+    "found": 3
+   }
+  },
+  {
+   "id": "t3p03",
+   "arm": "three",
+   "status": "done",
+   "sec": 6.385,
+   "counts": {
+    "found": 9
+   }
+  },
+  {
+   "id": "t3p04",
+   "arm": "three",
+   "status": "done",
+   "sec": 5.697,
+   "counts": {
+    "found": 8,
+    "not_found": 1
+   }
+  },
+  {
+   "id": "t3p05",
+   "arm": "three",
+   "status": "done",
+   "sec": 4.192,
+   "counts": {
+    "found": 6
+   }
+  },
+  {
+   "id": "t3p06",
+   "arm": "three",
+   "status": "done",
+   "sec": 8.29,
+   "counts": {
+    "found": 10
+   }
+  },
+  {
+   "id": "t3p07",
+   "arm": "three",
+   "status": "done",
+   "sec": 6.81,
+   "counts": {
+    "found": 12,
+    "not_found": 1
+   }
+  },
+  {
+   "id": "t3p08",
+   "arm": "three",
+   "status": "done",
+   "sec": 7.388,
+   "counts": {
+    "found": 11,
+    "absence": 1,
+    "not_found": 1
+   }
+  },
+  {
+   "id": "t3p09",
+   "arm": "three",
+   "status": "done",
+   "sec": 7.436,
+   "counts": {
+    "not_found": 1,
+    "found": 8,
+    "absence": 1
+   }
+  },
+  {
+   "id": "t3p10",
+   "arm": "three",
+   "status": "done",
+   "sec": 7.387,
+   "counts": {
+    "not_found": 2,
+    "found": 9
+   }
+  }
+ ],
+ "totals": {
+  "found": 128,
+  "not_found": 7,
+  "absence": 2
+ },
+ "found_rate": 0.9481,
+ "p90_s": 7.388,
+ "failures": [],
+ "pass": true
+}
