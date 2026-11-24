@@ -73,7 +73,8 @@ SEED = SPEC.SEED
 DRAWS = SPEC.DRAWS
 ARMS = SPEC.ALL_ARMS
 PRIMARY_ARMS = SPEC.PRIMARY_ARMS
-OUT_NAME = {"A": "answers_phaseA.json", "B": "answers_phaseB.json", "all": "answers.json"}
+OUT_NAME = {"A": "answers_phaseA.json", "B": "answers_phaseB.json", "D": "answers_distract.json",
+            "all": "answers.json"}
 
 
 def build_items(files: list[str], *, include_distract: bool = True, arms: tuple[str, ...] = PRIMARY_ARMS,
@@ -445,7 +446,7 @@ async def run(args) -> int:
     if not set(safety_sizes) <= set(SPEC.SAFETY_SIZES):
         print(f"!! --safety-sizes {args.safety_sizes}: επιτρέπονται μόνο 1, 2, 3")
         return 1
-    include_distract = not args.no_distract and args.phase != "B"
+    include_distract = args.phase == "D" or (not args.no_distract and args.phase in ("A", "all"))
     items = build_items(files, include_distract=include_distract, arms=arms, safety_sizes=safety_sizes)
     if args.limit:
         # οι πρώτες N ερωτήσεις κάθε σκέλους (σε safety/distract: σε όλα τα μεγέθη τους)
@@ -726,8 +727,9 @@ def main() -> int:
     ap.add_argument("--cached-share", type=float, default=0.10, help="τιμή των tokens από το cache, ως μέρος της εισόδου")
     ap.add_argument("--live-timing", type=int, default=4, help="ζωντανές ερωτήσεις ανά μέγεθος για πραγματικό E2E χρόνο (0=χωρίς)")
     ap.add_argument("--no-distract", action="store_true", help="παραλείπει το χωριστό σκέλος distractor")
-    ap.add_argument("--phase", choices=("A", "B", "all"), default="all",
-                    help="A = ποιότητα/κόστος/χρόνος (one, two, three) · B = ασφάλεια · all = όλα μαζί")
+    ap.add_argument("--phase", choices=("A", "B", "D", "all"), default="all",
+                    help="A = ποιότητα/κόστος/χρόνος (one, two, three) · B = ασφάλεια · D = μόνο distractor · "
+                         "all = όλα μαζί")
     ap.add_argument("--safety-sizes", default="1,2,3",
                     help="Φάση Β: μεγέθη ασφάλειας, π.χ. 2,3 = μόνο όσα πέρασαν τη Φάση Α")
     args = ap.parse_args()

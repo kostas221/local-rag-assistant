@@ -365,3 +365,20 @@ def test_judge_main_merges_phase_files(tmp_path, monkeypatch):
     assert (tmp_path / "judged_phaseAB.json").exists()
     # Η ίδια φάση δύο φορές -> κοινές γραμμές -> δεν κρίνεται
     assert J.main(["--input", str(pa_path), "--input", str(pa_path)]) == 1
+
+
+def test_distractor_only_phase_and_judge_picks_it_up(tmp_path, monkeypatch):
+    full = _synthetic_full_answers(include_distract=True, complete=True)
+    dist_rows = [r for r in full["rows"] if r["arm"] == "distract"]
+    pd = {"meta": {"complete": True, "include_distract": True, "arms": [], "safety_sizes": [1, 2, 3]},
+          "rows": dist_rows, "live_timing": []}
+    # Κενή λίστα σκελών = μόνο distractor (όχι «όλα»)
+    assert SPEC.validate_answers(pd, smoke=False) == []
+    assert len(dist_rows) == 56
+    assert SPEC.validate_answers({**pd, "rows": dist_rows[:-1]}, smoke=False)
+
+    pa = _phase({**full, "rows": [r for r in full["rows"] if r["arm"] != "distract"]}, SPEC.PHASE_ARMS["A"])
+    for name, payload in (("answers_phaseA.json", pa), ("answers_distract.json", pd)):
+        (tmp_path / name).write_text(json.dumps(payload), encoding="utf-8")
+    monkeypatch.setattr(J, "LC_DIR", str(tmp_path))
+    assert J.default_inputs(False) == [str(tmp_path / "answers_phaseA.json"), str(tmp_path / "answers_distract.json")]

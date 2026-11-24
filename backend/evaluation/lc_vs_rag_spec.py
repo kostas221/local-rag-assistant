@@ -29,7 +29,8 @@ SYSTEMS = ("rag", "full")
 SAFETY_SIZES = (1, 2, 3)
 # Δύο φάσεις (τροποποίηση 24/11, πριν από το πλήρες τρέξιμο): Α = ποιότητα/κόστος/χρόνος, Β = ασφάλεια
 # ΜΟΝΟ στα μεγέθη που πέρασαν την Α. Ο κανόνας μένει ίδιος· αλλάζει μόνο η σειρά.
-PHASE_ARMS = {"A": QUALITY_ARMS, "B": ("safety",), "all": PRIMARY_ARMS}
+# D (24/11, μετά τη Φάση Α): ΜΟΝΟ το διαγνωστικό σκέλος distractor — κανένα προκαταχωρισμένο σκέλος.
+PHASE_ARMS = {"A": QUALITY_ARMS, "B": ("safety",), "D": (), "all": PRIMARY_ARMS}
 
 
 def _literal_from(path: str, name: str):
@@ -225,8 +226,9 @@ def validate_answers(
 
     has_distract = any(r.get("arm") == "distract" for r in rows if isinstance(r, dict))
     expect_distract = bool(meta.get("include_distract")) or has_distract
-    # Ποια σκέλη/μεγέθη υπόσχεται το αρχείο (Φάση Α ή Β)· παλιά αρχεία χωρίς τα πεδία = όλα.
-    arms = tuple(meta.get("arms") or PRIMARY_ARMS)
+    # Ποια σκέλη/μεγέθη υπόσχεται το αρχείο (Φάση Α, Β ή D)· παλιά αρχεία χωρίς τα πεδία = όλα.
+    # ΠΡΟΣΟΧΗ: κενή λίστα (Φάση D) σημαίνει «κανένα προκαταχωρισμένο», όχι «όλα».
+    arms = tuple(meta["arms"]) if meta.get("arms") is not None else PRIMARY_ARMS
     safety_sizes = tuple(int(x) for x in (meta.get("safety_sizes") or SAFETY_SIZES))
     bad_arms = [a for a in arms if a not in PRIMARY_ARMS]
     if bad_arms:

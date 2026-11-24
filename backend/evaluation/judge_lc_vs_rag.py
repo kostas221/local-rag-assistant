@@ -464,8 +464,9 @@ def default_inputs(smoke: bool) -> list[str]:
     if smoke:
         return [os.path.join(LC_DIR, "answers_smoke.json")]
     a, b = (os.path.join(LC_DIR, f"answers_phase{x}.json") for x in "AB")
+    d = os.path.join(LC_DIR, "answers_distract.json")
     if os.path.exists(a):
-        return [a] + ([b] if os.path.exists(b) else [])
+        return [a] + [p for p in (b, d) if os.path.exists(p)]
     whole = os.path.join(LC_DIR, "answers.json")
     return [whole] if os.path.exists(whole) else [a]
 
