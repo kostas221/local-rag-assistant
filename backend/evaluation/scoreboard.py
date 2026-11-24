@@ -493,7 +493,7 @@ class Frozen:
     eval_near_ooc, ώστε το E.retrieve να βρίσκει την αναδιατύπωση και στα παγωμένα."""
 
     def __init__(self, path: str, fresh: bool, frozen_only: bool = False,
-                 allow_new: tuple[str, ...] = ()):
+                 allow_new: tuple[str, ...] = (), reuse_translations: bool = False):
         """frozen_only (23/11/2026): κλήση που λείπει από το πάγωμα ΔΕΝ γίνεται ποτέ — καταγράφεται
         ως σφάλμα και η εφαρμογή συνεχίζει όπως σε αποτυχία του API. Για τρεξίματα που πρέπει να
         αποδείξουν «δεν άλλαξε τίποτα»: χωρίς αυτό, ένα prompt που άλλαξε έστω και κατά ένα γράμμα
@@ -510,6 +510,15 @@ class Frozen:
         self.hits = self.misses = 0
         self.errors: list[str] = []
         self.last_domain = ""   # «The corpus is about: X» του τελευταίου prompt ΜΕΤΑΦΡΑΣΗΣ
+        # reuse_translations (24/11/2026, βήμα 5α κανόνας Α3): η αφαίρεση κρυμμένου κειμένου αλλάζει τη
+        # ΣΕΙΡΑ δύο όρων στο γλωσσάρι του MapReduce (ίδιοι 15 όροι), άρα το prompt μετάφρασης ΚΑΘΕ
+        # ερώτησης. Χωρίς αυτό, κάθε ερώτηση θα ξαναμεταφραζόταν (νέα, μη ντετερμινιστική κλήση) και ο
+        # έλεγχος «αλλάζει μόνο η σελίδα 9» θα έβλεπε θόρυβο παντού. Με αυτό: μετάφραση που λείπει
+        # ξαναχρησιμοποιείται από την ΙΔΙΑ ερώτηση (ουρά «User question: …», μοναδική: 101/101).
+        self.reuse_translations = reuse_translations
+        self.reused = 0
+        self._tr_by_tail = {v["tail"]: v["out"] for v in self.data.values()
+                            if (v.get("tail") or "").startswith("User question:")}
 
     def install(self) -> None:
         inner = gemini_rest.generate_once
@@ -524,6 +533,13 @@ class Frozen:
                 text = self.data[key]["out"]
                 E._prompts.append((prompt[:60], text.strip(" \"'\n")))
                 return text
+            if self.reuse_translations and prompt.startswith("You are a translation assistant"):
+                tail = safe_tail(prompt)
+                if tail in self._tr_by_tail:
+                    self.reused += 1
+                    text = self._tr_by_tail[tail]
+                    E._prompts.append((prompt[:60], text.strip(" \"'\n")))
+                    return text
             if self.frozen_only and not (self.allow_new and prompt.startswith(self.allow_new)):
                 self.errors.append(f"λείπει από το πάγωμα: «{prompt[-120:]}»")
                 raise RuntimeError("frozen-only: η κλήση δεν υπάρχει στο πάγωμα — δεν έγινε")
@@ -816,7 +832,7 @@ async def run(args) -> int:
         print("!! --frozen-only και --fresh μαζί δεν έχουν νόημα")
         return 1
     frozen = Frozen(FROZEN_PATH, args.fresh, frozen_only=args.frozen_only,
-                    allow_new=tuple(args.allow_new))
+                    allow_new=tuple(args.allow_new), reuse_translations=args.reuse_translations)
     frozen.install()
     gate = ai_core.MIN_RERANK_SCORE
     config = {"reranker": ai_core.RERANKER_MODEL, "embedder": ai_core.EMBED_MODEL_NAME,
@@ -889,7 +905,8 @@ async def run(args) -> int:
     translation_drift(rows, old_trans)
 
     print(f"\nGemini: {frozen.misses} νέες κλήσεις · {frozen.hits} από το πάγωμα"
-          f"{'' if args.limit else ' -> ' + FROZEN_PATH}")
+          + (f" · {frozen.reused} μεταφράσεις ξαναχρησιμοποιήθηκαν (ίδια ερώτηση)" if frozen.reused else "")
+          + f"{'' if args.limit else ' -> ' + FROZEN_PATH}")
     if frozen.errors:
         print(f"!! {len(frozen.errors)} κλήσεις Gemini ΑΠΕΤΥΧΑΝ (π.χ. {frozen.errors[0]}) — "
               f"οι αντίστοιχες ερωτήσεις έψαξαν ΑΜΕΤΑΦΡΑΣΤΕΣ. ΤΟ ΤΡΕΞΙΜΟ ΔΕΝ ΣΥΓΚΡΙΝΕΤΑΙ.")
@@ -926,6 +943,9 @@ def main() -> int:
     ap.add_argument("--frozen-only", action="store_true",
                     help="μόνο αποθηκευμένες κλήσεις: σε κλήση που λείπει, σταματά ΧΩΡΙΣ να την κάνει")
     ap.add_argument("--rebuild", action="store_true", help="ξαναχτίζει το απομονωμένο store")
+    ap.add_argument("--reuse-translations", action="store_true",
+                    help="μετάφραση που λείπει -> η αποθηκευμένη της ΙΔΙΑΣ ερώτησης (βλ. Frozen· κανόνας Α3 "
+                         "του 5α, όπου αλλάζει μόνο η σειρά όρων στο γλωσσάρι)")
     args = ap.parse_args()
     if args.only and not set(args.only.split(",")) <= {k for k, _ in SETS}:
         print(f"!! --only από {[k for k, _ in SETS]}")
