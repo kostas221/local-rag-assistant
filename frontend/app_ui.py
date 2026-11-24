@@ -264,6 +264,67 @@ def render_sources(sources, answer: str | None = None):
                 _render_source_item(i, src)
 
 
+# Κύκλος 2, βήμα 6 (docs/SOURCE_PASSAGES_PREREG_2026-11-24.md): τι λέει η οθόνη ανά πρόταση. ΠΟΤΕ
+# «επαληθευμένο»: χωρίο που βρέθηκε δείχνει πού να κοιτάξεις, δεν αποδεικνύει ότι στηρίζει όλη την πρόταση.
+_PASSAGE_NOTE = {
+    "found_elsewhere": "Found on a different page than the one this sentence cites.",
+    "not_found": "No exact passage found on the cited page(s). This does not mean the sentence is "
+                 "wrong: open the page to check.",
+    "no_citation": "This sentence cites no source.",
+    "absence": "This sentence says what the sources do not contain, so there is nothing to quote.",
+}
+PASSAGES_TIMEOUT = (5, 90)        # μία κλήση ελέγχου: διάμεσος ~4 s, με περιθώριο για retries
+
+
+def render_passages(data):
+    items = data.get("items") or []
+    with st.expander(f"🔎 Source passages ({len(items)} sentences)", expanded=True):
+        st.caption("For each sentence, the passage it comes from, copied exactly from the page. A passage "
+                   "shows where to look; it does not prove that the page supports every part of the "
+                   "sentence.")
+        for n, it in enumerate(items, 1):
+            st.markdown(f"**{n}.** {html.escape(it.get('sentence') or '')}")
+            status = it.get("status")
+            if status in ("found", "found_elsewhere") and it.get("quote"):
+                st.caption(f"**[{it.get('label')}]** {it.get('file')} — Page {it.get('page')}")
+                st.markdown(
+                    "<div style='border-left:2px solid #4b9fff; padding:4px 10px; "
+                    "margin:2px 0 6px; color:#9aa0ac; font-size:0.85em;'>"
+                    f"“{html.escape(it['quote'])}”</div>",
+                    unsafe_allow_html=True,
+                )
+            if status in _PASSAGE_NOTE:
+                st.caption(_PASSAGE_NOTE[status])
+
+
+def render_passages_block(message, headers, generating):
+    """Το κουμπί «Source passages» και το αποτέλεσμα. Αποθηκευμένο (στο μήνυμα) -> εμφανίζεται κατευθείαν·
+    αποτυχία -> μήνυμα και ξανά το κουμπί. Η κλήση γίνεται ΜΟΝΟ με κλικ (κόστος μόνο όταν ζητηθεί)."""
+    msg_id = message["id"]
+    data = None
+    if message.get("passages"):
+        try:
+            data = json.loads(message["passages"])
+        except (TypeError, json.JSONDecodeError):
+            data = None
+    data = data or st.session_state.get(f"passages_{msg_id}")
+    if data and data.get("status") == "done":
+        render_passages(data)
+        return
+    if data and data.get("status") == "no_pages":
+        st.caption("Source passages: the cited pages are no longer available (was the document deleted?).")
+        return
+    if data and data.get("status") == "failed":
+        st.caption("⚠️ The passage check did not complete. You can try again.")
+    if st.button("🔎 Source passages", key=f"passages_btn_{msg_id}", disabled=generating,
+                 help="Show the exact passage behind each sentence (one extra model call)."):
+        with st.spinner("Finding the passage for each sentence…"):
+            res = api("POST", f"/messages/{msg_id}/passages", headers=headers, timeout=PASSAGES_TIMEOUT)
+        ok = res is not None and res.status_code == 200
+        st.session_state[f"passages_{msg_id}"] = res.json() if ok else {"status": "failed", "items": []}
+        st.rerun()
+
+
 def render_metrics(m, total_s=None):
     """Per-phase latency + token usage κάτω από την απάντηση.
 
@@ -589,6 +650,9 @@ def app_main(token):
                 ):
                     render_metrics(last["metrics"], last["total_s"])
                 render_sources(sources, message.get("content", ""))
+                # Κύκλος 2, βήμα 6: απόσπασμα πηγής ανά πρόταση, μόνο όταν ο χρήστης το ζητήσει.
+                if message.get("id") and cited_labels(message.get("content", "")):
+                    render_passages_block(message, headers, generating)
 
                 # Feedback ΜΟΝΟ στις απαντήσεις του AI — στέλνεται πραγματικά στο backend.
                 # disabled όσο streamάρει: ένα κλικ εδώ = rerun -> κόβει την απάντηση.

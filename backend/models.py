@@ -71,6 +71,9 @@ class Message(Base):
     content = Column(String)
     # Εδώ θα σώζουμε τις πηγές/Citations
     sources = Column(String, nullable=True)
+    # Απόσπασμα πηγής ανά πρόταση (κύκλος 2, βήμα 6): JSON, γεμίζει ΜΟΝΟ όταν ο χρήστης πατήσει «Source
+    # passages». Σώζεται ώστε το ιστορικό να το δείχνει χωρίς νέα κλήση.
+    passages = Column(String, nullable=True)
 
 
 class Feedback(Base):
@@ -121,4 +124,21 @@ def ensure_document_columns(engine) -> list[str]:
         with engine.begin() as conn:
             for name, kind in missing:
                 conn.execute(text(f"ALTER TABLE documents ADD COLUMN {name} {kind}"))
+    return [name for name, _ in missing]
+
+
+# Στήλες που προστέθηκαν ΜΕΤΑ τη δημιουργία του πίνακα messages (βήμα 6, 24/11/2026).
+_MESSAGE_COLUMNS_ADDED = {"passages": "VARCHAR"}
+
+
+def ensure_message_columns(engine) -> list[str]:
+    """Όπως το ensure_document_columns, για τον πίνακα messages. Idempotent, Postgres και SQLite."""
+    from sqlalchemy import inspect, text
+
+    have = {c["name"] for c in inspect(engine).get_columns("messages")}
+    missing = [(name, kind) for name, kind in _MESSAGE_COLUMNS_ADDED.items() if name not in have]
+    if missing:
+        with engine.begin() as conn:
+            for name, kind in missing:
+                conn.execute(text(f"ALTER TABLE messages ADD COLUMN {name} {kind}"))
     return [name for name, _ in missing]

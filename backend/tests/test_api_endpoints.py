@@ -55,9 +55,19 @@ def _make_ai_core_stub():
         yield {"type": "sources", "data": []}
         yield {"type": "text", "data": "stub answer"}
 
+    stub.passages_fail = False
+
+    async def get_source_passages(question, answer, sources, user_id):
+        stub.calls.append(("get_source_passages", question, answer, user_id))
+        if stub.passages_fail:
+            raise RuntimeError("check failed")
+        return {"status": "done", "items": [{"i": 1, "sentence": answer, "status": "found",
+                                             "quote": "q", "label": "S1", "file": "a.pdf", "page": 1}]}
+
     stub.ingest_pdf = ingest_pdf
     stub.delete_file_from_db = delete_file_from_db
     stub.ask_ai = ask_ai
+    stub.get_source_passages = get_source_passages
     return stub
 
 
@@ -175,6 +185,7 @@ def test_health_needs_no_auth(app_env):
     ("get", "/conversations"),
     ("post", "/conversations"),
     ("delete", "/documents/1"),
+    ("post", "/messages/1/passages"),
 ])
 def test_protected_endpoints_reject_anonymous(app_env, method, path):
     """Κάθε endpoint που αγγίζει δεδομένα χρήστη ΠΡΕΠΕΙ να θέλει token."""
@@ -476,3 +487,59 @@ def test_documents_show_extraction_report_after_ingest(app_env, alice):
     got = next(d for d in res.json() if d["id"] == doc_id)
     assert (got["pages_total"], got["pages_text"], got["pages_empty"]) == (3, 2, [2])
     assert got["extraction"] == "Text extracted from 2/3 pages · no text on p. 2"
+
+
+# --- Απόσπασμα πηγής ανά πρόταση (κύκλος 2, βήμα 6) ------------------------------
+
+def _assistant_message_id(client, headers, question):
+    conv_id = client.post("/conversations", headers=headers, json={"title": "passages"}).json()["id"]
+    client.post("/chat", headers=headers, json={"conversation_id": conv_id, "question": question})
+    msgs = client.get(f"/conversations/{conv_id}/messages", headers=headers).json()
+    return conv_id, next(m["id"] for m in msgs if m["role"] == "assistant")
+
+
+def test_passages_are_computed_once_then_served_from_the_message(app_env, alice):
+    client, stub = app_env
+    conv_id, mid = _assistant_message_id(client, alice, "τι λέει το άρθρο;")
+    stub.calls.clear()
+    first = client.post(f"/messages/{mid}/passages", headers=alice)
+    assert first.status_code == 200 and first.json()["status"] == "done"
+    call = next(c for c in stub.calls if c[0] == "get_source_passages")
+    assert call[1] == "τι λέει το άρθρο;" and call[2] == "stub answer" and call[3] is not None
+    stub.calls.clear()
+    second = client.post(f"/messages/{mid}/passages", headers=alice)
+    assert second.json() == first.json()
+    assert not [c for c in stub.calls if c[0] == "get_source_passages"], "ξαναπληρώθηκε ο έλεγχος"
+    # Το ιστορικό φέρνει το αποθηκευμένο αποτέλεσμα, χωρίς νέα κλήση
+    msgs = client.get(f"/conversations/{conv_id}/messages", headers=alice).json()
+    assert '"status": "done"' in next(m for m in msgs if m["id"] == mid)["passages"]
+
+
+def test_passages_of_another_users_message_are_refused(app_env, alice, bob):
+    client, stub = app_env
+    _conv, mid = _assistant_message_id(client, alice, "ιδιωτική ερώτηση")
+    stub.calls.clear()
+    res = client.post(f"/messages/{mid}/passages", headers=bob)
+    assert res.status_code == 404
+    assert not [c for c in stub.calls if c[0] == "get_source_passages"]
+
+
+def test_passages_of_a_question_are_refused(app_env, alice):
+    client, _stub = app_env
+    conv_id, _mid = _assistant_message_id(client, alice, "ερώτηση")
+    msgs = client.get(f"/conversations/{conv_id}/messages", headers=alice).json()
+    user_mid = next(m["id"] for m in msgs if m["role"] == "user")
+    assert client.post(f"/messages/{user_mid}/passages", headers=alice).status_code == 404
+
+
+def test_failed_check_is_not_stored(app_env, alice):
+    client, stub = app_env
+    _conv, mid = _assistant_message_id(client, alice, "αποτυχία")
+    stub.passages_fail = True
+    try:
+        res = client.post(f"/messages/{mid}/passages", headers=alice)
+        assert res.status_code == 200 and res.json()["status"] == "failed"
+    finally:
+        stub.passages_fail = False
+    retry = client.post(f"/messages/{mid}/passages", headers=alice)
+    assert retry.json()["status"] == "done"

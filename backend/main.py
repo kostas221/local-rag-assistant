@@ -71,6 +71,10 @@ models.Base.metadata.create_all(bind=database.engine)
 _added = models.ensure_document_columns(database.engine)
 if _added:
     logger.info(f"Στήλες που προστέθηκαν στο documents: {_added}")
+# Το απόσπασμα πηγής ανά πρόταση (κύκλος 2, βήμα 6, 24/11/2026): βλ. models.ensure_message_columns.
+_added = models.ensure_message_columns(database.engine)
+if _added:
+    logger.info(f"Στήλες που προστέθηκαν στο messages: {_added}")
 
 
 def _recover_orphaned_ingests():
@@ -641,6 +645,52 @@ async def chat_with_ai(query: schemas.ChatMessage,
                 db.commit()
 
     return StreamingResponse(event_stream(), media_type="application/x-ndjson")
+
+
+@app.post("/messages/{message_id}/passages")
+async def message_passages(message_id: int,
+                           current_user: models.User = Depends(get_current_user),
+                           db: Session = Depends(get_db)):
+    """Απόσπασμα πηγής ανά πρόταση (κύκλος 2, βήμα 6, docs/SOURCE_PASSAGES_PREREG_2026-11-24.md).
+
+    Μία κλήση ελέγχου ΜΟΝΟ όταν ο χρήστης πατήσει το κουμπί· το αποτέλεσμα σώζεται στο μήνυμα, άρα δεύτερο
+    αίτημα (ή το ιστορικό) δεν ξαναπληρώνει. Αποτυχία δεν σώζεται: ο χρήστης μπορεί να ξαναδοκιμάσει."""
+    rate_limit.check(db, "passages", str(current_user.id),
+                     CHAT_MAX_REQUESTS, CHAT_WINDOW_SEC,
+                     "Πολλά αιτήματα. Περίμενε λίγο πριν ξαναδοκιμάσεις.")
+    # ΑΣΦΑΛΕΙΑ: μόνο απαντήσεις από συνομιλίες του τρέχοντος χρήστη (όπως στο /feedback).
+    msg = (
+        db.query(models.Message)
+        .join(models.Conversation, models.Message.conversation_id == models.Conversation.id)
+        .filter(models.Message.id == message_id, models.Conversation.user_id == current_user.id,
+                models.Message.role == "assistant")
+        .first()
+    )
+    if not msg:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
+                            detail="Message not found or not authorized")
+    if msg.passages:
+        return json.loads(msg.passages)
+    question_msg = (
+        db.query(models.Message)
+        .filter(models.Message.conversation_id == msg.conversation_id, models.Message.id < msg.id,
+                models.Message.role == "user")
+        .order_by(models.Message.id.desc())
+        .first()
+    )
+    try:
+        sources = json.loads(msg.sources or "[]")
+    except json.JSONDecodeError:
+        sources = []
+    try:
+        result = await ai_core.get_source_passages(
+            question_msg.content if question_msg else "", msg.content or "", sources, current_user.id)
+    except Exception as e:
+        logger.warning(f"Source passages: ο έλεγχος απέτυχε ({type(e).__name__})")
+        return {"status": "failed", "items": []}
+    msg.passages = json.dumps(result)
+    db.commit()
+    return result
 
 
 @app.post("/feedback")

@@ -19,6 +19,7 @@ from loguru import logger
 from rank_bm25 import BM25Okapi
 from sentence_transformers import CrossEncoder
 
+import claim_support
 import corpus_glossary
 import doc_routing
 import full_text
@@ -26,6 +27,7 @@ import gemini_rest
 import metrics
 import pdf_hidden
 import pdf_report
+import source_passages
 import sufficiency
 import vector_store
 from genai_compat import genai  # deprecated SDK, τεκμηριωμένο: βλ. genai_compat.py
@@ -1057,6 +1059,56 @@ def _full_text_pages(target_filenames, user_id, target_doc_ids):
     logger.info(f"Όλο το κείμενο: {n_docs} έγγραφα, {len(pages)} σελίδες, ~{est} tokens")
     metrics.inc("rag_full_text_total")
     return pages
+
+
+def _page_texts_for(sources: list[dict], user_id: int | None) -> dict[str, str]:
+    """Ετικέτα -> κείμενο σελίδας για τις ΠΑΡΑΤΕΘΕΙΜΕΝΕΣ πηγές μιας αποθηκευμένης απάντησης (βήμα 6).
+
+    AUTHZ: κάθε ανάγνωση έχει ΡΗΤΑ το φίλτρο πρόσβασης (δικά μου ή public), και με doc_id και στο legacy
+    μονοπάτι. Οι πηγές έρχονται από τη βάση του χρήστη, αλλά ένα έγγραφο μπορεί να έχει διαγραφεί ή να
+    άλλαξε ιδιοκτήτη: τότε η σελίδα απλώς λείπει, ποτέ δεν διαβάζεται ξένη. CPU/IO -> to_thread."""
+    texts = {}
+    for s in sources:
+        page, doc_id, label = s.get("page"), s.get("doc_id"), s.get("label")
+        if page is None or not label:
+            continue
+        clauses = [{"page": page}]
+        clauses.append({"doc_id": doc_id} if doc_id is not None and doc_id != -1
+                       else {"file_name": s.get("file")})
+        if user_id is not None:
+            clauses.append({"$or": [{"user_id": user_id}, {"is_public": True}]})
+        pg = collection.get(where={"$and": clauses})
+        if pg["ids"]:
+            ordered = sorted(zip(pg["ids"], pg["documents"]), key=lambda p: _chunk_idx_from_id(p[0]))
+            texts[label] = "\n".join(d for _i, d in ordered)
+    return texts
+
+
+async def get_source_passages(question: str, answer: str, sources: list, user_id: int | None) -> dict:
+    """Απόσπασμα πηγής ανά πρόταση (κύκλος 2, βήμα 6, docs/SOURCE_PASSAGES_PREREG_2026-11-24.md).
+
+    ΜΙΑ κλήση: ο έλεγχος του βήματος 5 (ίδιο prompt, ίδιες ρυθμίσεις), μόνο στις σελίδες που παραθέτει η
+    απάντηση. Το χωρίο επαληθεύεται αυτούσιο από κώδικα. Η κρίση full/partial/none ΔΕΝ επιστρέφεται.
+    Σφάλμα κλήσης ή άκυρο JSON -> εξαίρεση (ο καλών το δείχνει ως «δεν ολοκληρώθηκε», χωρίς να το σώσει)."""
+    cited = set(source_passages.cited_labels(answer))
+    srcs = {s["label"]: s for s in sources if isinstance(s, dict) and s.get("label") in cited}
+    texts = await asyncio.to_thread(_page_texts_for, list(srcs.values()), user_id)
+    if cited and not texts:
+        # Παλιό μήνυμα (πηγές χωρίς ετικέτες) ή έγγραφα που διαγράφηκαν: τίποτα να ελεγχθεί, καμία κλήση.
+        return {"status": "no_pages", "items": []}
+    claims, prompt = source_passages.prepare(question, answer, texts)
+    verdicts = None
+    t0 = time.perf_counter()
+    if prompt is not None:
+        raw = await gemini_rest.generate_once(prompt, model=GEMINI_MODEL, api_key=GEMINI_API_KEY,
+                                              **source_passages.CHECK_KW)
+        verdicts = claim_support.parse_check(raw)
+        if not verdicts:
+            raise ValueError("ο έλεγχος δεν επέστρεψε έγκυρο JSON")
+    claims = claim_support.apply_check(claims, texts, verdicts, question)
+    metrics.inc("rag_source_passages_total")
+    return {"status": "done", "items": source_passages.to_items(claims, srcs),
+            "seconds": round(time.perf_counter() - t0, 2)}
 
 
 def _chunk_idx_from_id(chunk_id: str) -> int:
