@@ -519,6 +519,15 @@ class Frozen:
         self.reused = 0
         self._tr_by_tail = {v["tail"]: v["out"] for v in self.data.values()
                             if (v.get("tail") or "").startswith("User question:")}
+        # Παλιά μορφή (πριν από το safe_tail, 23/11): «tail» = οι τελευταίοι 200 χαρακτήρες του prompt. Σε
+        # ερώτηση > ~185 χαρακτήρων δεν περιέχει το «User question:». Το τέλος του prompt μετάφρασης είναι
+        # σταθερό κείμενο + ερώτηση, άρα οι τελευταίοι 200 χαρακτήρες δεν αγγίζουν ποτέ το γλωσσάρι.
+        ends: dict = {}
+        for v in self.data.values():
+            t = v.get("tail") or ""
+            if len(t) == 200 and not t.startswith(_TAIL_MARKERS):
+                ends.setdefault(t, set()).add(v["out"])
+        self._tr_by_end = {t: next(iter(o)) for t, o in ends.items() if len(o) == 1}
 
     def install(self) -> None:
         inner = gemini_rest.generate_once
@@ -534,10 +543,9 @@ class Frozen:
                 E._prompts.append((prompt[:60], text.strip(" \"'\n")))
                 return text
             if self.reuse_translations and prompt.startswith("You are a translation assistant"):
-                tail = safe_tail(prompt)
-                if tail in self._tr_by_tail:
+                text = self._tr_by_tail.get(safe_tail(prompt)) or self._tr_by_end.get(prompt[-200:])
+                if text is not None:
                     self.reused += 1
-                    text = self._tr_by_tail[tail]
                     E._prompts.append((prompt[:60], text.strip(" \"'\n")))
                     return text
             if self.frozen_only and not (self.allow_new and prompt.startswith(self.allow_new)):
