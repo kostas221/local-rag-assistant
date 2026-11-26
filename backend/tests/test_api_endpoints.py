@@ -489,6 +489,82 @@ def test_documents_show_extraction_report_after_ingest(app_env, alice):
     assert got["extraction"] == "Text extracted from 2/3 pages · no text on p. 2"
 
 
+# --- Σελίδα PDF με το χωρίο υπογραμμισμένο (26/11/2026) ----------------------------
+
+def _doc_for(username, tmp_path, name, is_public=False, exists=True):
+    import database
+    import models
+
+    path = tmp_path / name
+    if exists:
+        path.write_bytes(b"%PDF-1.4 test")
+    db = database.SessionLocal()
+    uid = db.query(models.User).filter(models.User.username == username).first().id
+    doc = models.Document(file_name=name, file_path=str(path), user_id=uid, status="ready",
+                          is_public=is_public)
+    db.add(doc)
+    db.commit()
+    doc_id = doc.id
+    db.close()
+    return doc_id, str(path)
+
+
+@pytest.fixture
+def fake_render(monkeypatch):
+    import main
+
+    calls = []
+
+    def render(path, page, quote=None):
+        calls.append((path, page, quote))
+        if page > 3:
+            raise main.page_view.PageNotFound(page)
+        return b"\x89PNG fake", "highlighted" if quote else "none"
+
+    monkeypatch.setattr(main.page_view, "render", render)
+    return calls
+
+
+def test_page_image_for_own_document(app_env, alice, tmp_path, fake_render):
+    client, _ = app_env
+    doc_id, path = _doc_for("alice", tmp_path, "own.pdf")
+    res = client.post(f"/documents/{doc_id}/page-image", headers=alice,
+                      json={"page": 2, "quote": "scales to zero"})
+    assert res.status_code == 200
+    assert res.headers["content-type"] == "image/png" and res.headers["x-highlight"] == "highlighted"
+    assert "no-store" in res.headers["cache-control"]
+    assert fake_render == [(path, 2, "scales to zero")]
+
+
+def test_page_image_of_another_users_private_document_is_refused(app_env, alice, bob, tmp_path, fake_render):
+    client, _ = app_env
+    doc_id, _path = _doc_for("alice", tmp_path, "private.pdf")
+    res = client.post(f"/documents/{doc_id}/page-image", headers=bob, json={"page": 1})
+    assert res.status_code == 404
+    assert fake_render == [], "η σελίδα δεν πρέπει καν να ανοίξει"
+
+
+def test_page_image_of_a_public_document_is_allowed(app_env, alice, bob, tmp_path, fake_render):
+    client, _ = app_env
+    doc_id, _path = _doc_for("alice", tmp_path, "public.pdf", is_public=True)
+    assert client.post(f"/documents/{doc_id}/page-image", headers=bob, json={"page": 1}).status_code == 200
+
+
+def test_page_image_missing_file_or_page(app_env, alice, tmp_path, fake_render):
+    client, _ = app_env
+    gone, _ = _doc_for("alice", tmp_path, "gone.pdf", exists=False)
+    assert client.post(f"/documents/{gone}/page-image", headers=alice, json={"page": 1}).status_code == 404
+    doc_id, _ = _doc_for("alice", tmp_path, "short.pdf")
+    assert client.post(f"/documents/{doc_id}/page-image", headers=alice, json={"page": 9}).status_code == 404
+    assert client.post(f"/documents/{doc_id}/page-image", headers=alice, json={"page": 0}).status_code == 422
+    assert client.post("/documents/999999/page-image", headers=alice, json={"page": 1}).status_code == 404
+
+
+def test_page_image_needs_login(app_env, tmp_path):
+    client, _ = app_env
+    assert client.post("/documents/1/page-image", json={"page": 1}).status_code == 401
+
+
 # --- Απόσπασμα πηγής ανά πρόταση (κύκλος 2, βήμα 6) ------------------------------
 
 def _assistant_message_id(client, headers, question):

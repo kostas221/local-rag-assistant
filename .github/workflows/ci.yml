@@ -74,6 +74,7 @@ jobs:
         # Το test_full_text.py: ο router «όλο το κείμενο ή RAG» και η βαθμονόμηση tokens (24/11/2026).
         # Το test_source_passages.py: απόσπασμα πηγής ανά πρόταση (κύκλος 2, βήμα 6).
         # Το test_heldout.py: οι κανόνες της τελικής μέτρησης στο κλειστό σετ (κύκλος 2, βήμα 7).
+        # Το test_page_view.py: πού μπαίνει το κίτρινο στη σελίδα PDF (η εικόνα θέλει pymupdf -> core-tests).
         run: |
           pytest tests/test_schemas.py tests/test_security.py \
                  tests/test_gemini_rest.py tests/test_api_endpoints.py \
@@ -83,7 +84,7 @@ jobs:
                  tests/test_model_guard.py tests/test_claim_support.py tests/test_pdf_report.py \
                  tests/test_sufficiency.py tests/test_lc_vs_rag.py tests/test_full_text.py \
                  tests/test_source_passages.py tests/test_scoreboard_frozen.py \
-                 tests/test_heldout.py -v
+                 tests/test_heldout.py tests/test_page_view.py -v
 
   core-tests:
     # Τα tests του RAG πυρήνα: el_tokenize, _has_greek, _build_where, _rrf_fuse
@@ -139,4 +140,4 @@ jobs:
           pytest tests/test_rag_core.py tests/test_corpus_signature.py \
                  tests/test_corrective_retrieval.py tests/test_citations.py \
                  tests/test_vector_store.py tests/test_ingestion.py tests/test_pdf_hidden.py \
-                 tests/test_full_text_path.py -v
+                 tests/test_full_text_path.py tests/test_page_view.py -v

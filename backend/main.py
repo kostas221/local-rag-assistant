@@ -25,6 +25,7 @@ from fastapi.responses import JSONResponse, Response, StreamingResponse
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from jose import JWTError, jwt
 from loguru import logger
+from pydantic import BaseModel, Field
 from sqlalchemy import or_, text
 from sqlalchemy.orm import Session, joinedload
 
@@ -32,6 +33,7 @@ import ai_core  # <-- ΤΟ ΑΦΗΝΟΥΜΕ ΜΟΝΟ ΕΔΩ (Top-level)
 import database
 import metrics
 import models
+import page_view
 import pdf_report
 import rate_limit
 import schemas
@@ -289,6 +291,9 @@ REGISTER_WINDOW_SEC = int(os.getenv("REGISTER_WINDOW_SEC", "3600"))
 # το API quota όλων.
 CHAT_MAX_REQUESTS = int(os.getenv("CHAT_MAX_REQUESTS", "20"))
 CHAT_WINDOW_SEC = int(os.getenv("CHAT_WINDOW_SEC", "60"))
+# Εικόνα σελίδας: ~0,1–0,3 s CPU ανά σελίδα, καμία κλήση API. Το όριο κόβει μόνο κατάχρηση.
+PAGE_IMAGE_MAX_REQUESTS = int(os.getenv("PAGE_IMAGE_MAX_REQUESTS", "60"))
+PAGE_IMAGE_WINDOW_SEC = int(os.getenv("PAGE_IMAGE_WINDOW_SEC", "60"))
 
 
 def _client_ip(request: Request) -> str:
@@ -524,6 +529,40 @@ def delete_document(doc_id: int, current_user: models.User = Depends(get_current
     db.delete(doc)
     db.commit()
     return {"message": "Document deleted"}
+
+
+class PageImageRequest(BaseModel):
+    page: int = Field(ge=1, le=10_000)
+    # Το χωρίο προς υπογράμμιση: σώμα POST, όχι query string, ώστε κείμενο να μη γράφεται σε access logs.
+    quote: str | None = Field(default=None, max_length=page_view.MAX_QUOTE_CHARS)
+
+
+@app.post("/documents/{doc_id}/page-image")
+def document_page_image(doc_id: int, req: PageImageRequest,
+                        current_user: models.User = Depends(get_current_user),
+                        db: Session = Depends(get_db)):
+    """Εικόνα της σελίδας του PDF, με το χωρίο υπογραμμισμένο όταν το σημείο είναι μοναδικό (26/11/2026,
+    προβολή μετά την παγωμένη έκδοση: δεν αλλάζει αναζήτηση ή απαντήσεις). Κατάσταση στο X-Highlight.
+
+    ΑΣΦΑΛΕΙΑ: ο έλεγχος πρόσβασης γίνεται σε ΚΑΘΕ άνοιγμα, ίδιος με το /documents (δικά μου ή public). Μια
+    παλιά συνομιλία δεν δίνει πρόσβαση σε έγγραφο που σβήστηκε ή έπαψε να είναι δημόσιο. Η διαδρομή του
+    αρχείου έρχεται ΜΟΝΟ από τη βάση, ποτέ από τον χρήστη."""
+    rate_limit.check(db, "page_image", str(current_user.id),
+                     PAGE_IMAGE_MAX_REQUESTS, PAGE_IMAGE_WINDOW_SEC,
+                     "Πολλά αιτήματα. Περίμενε λίγο πριν ξαναδοκιμάσεις.")
+    doc = (db.query(models.Document)
+             .filter(models.Document.id == doc_id,
+                     or_(models.Document.user_id == current_user.id,
+                         models.Document.is_public == True))
+             .first())
+    if not doc or not doc.file_path or not os.path.exists(doc.file_path):
+        raise HTTPException(status_code=404, detail="Document not found or not available")
+    try:
+        png, highlight = page_view.render(doc.file_path, req.page, req.quote)
+    except page_view.PageNotFound:
+        raise HTTPException(status_code=404, detail="Page not found") from None
+    return Response(content=png, media_type="image/png",
+                    headers={"X-Highlight": highlight, "Cache-Control": "private, no-store"})
 
 
 @app.post("/conversations")

@@ -203,7 +203,55 @@ def cited_labels(answer: str | None) -> set:
     return {lab for group in _CITE_GROUP.findall(answer or "") for lab in _CITE_LABEL.findall(group)}
 
 
-def _render_source_item(i, src):
+# --- Σελίδα του PDF με το χωρίο υπογραμμισμένο (26/11/2026, μόνο προβολή) ---------------------------
+# Η εικόνα φτιάχνεται στον backend (page_view.py), με έλεγχο πρόσβασης σε κάθε άνοιγμα. Κίτρινο μόνο όταν το
+# σημείο είναι μοναδικό· αλλιώς η σελίδα χωρίς κίτρινο και το χωρίο ως κείμενο από κάτω.
+PAGE_TIMEOUT = (5, 30)
+_HIGHLIGHT_NOTE = {
+    "highlighted": "The passage is highlighted in yellow. Use the image's full-screen button to zoom in.",
+    "ambiguous": "No unique location to highlight: the same text appears more than once on this page. "
+                 "The passage is shown below.",
+    "not_found": "The passage could not be located on the page image. It is shown below.",
+}
+
+
+def _has_page(src) -> bool:
+    return (isinstance(src, dict) and src.get("doc_id") not in (None, -1)
+            and isinstance(src.get("page"), int))
+
+
+@st.dialog("Source page", width="large")
+def show_page_dialog(headers, doc_id, page, file_name, quote=None, note=None):
+    """Η πραγματική σελίδα του άρθρου. Κλείνει με το × και ο χρήστης επιστρέφει στην ίδια απάντηση."""
+    if note:
+        st.info(note)
+    with st.spinner("Loading the page…"):
+        res = api("POST", f"/documents/{doc_id}/page-image", headers=headers,
+                  json={"page": page, "quote": quote}, timeout=PAGE_TIMEOUT)
+    if res is None or res.status_code != 200:
+        st.warning("This page is no longer available: the document may have been deleted or is no longer "
+                   "shared." if res is not None and res.status_code == 404
+                   else "Could not load the page. Please try again.")
+        return
+    st.caption(f"{file_name} — Page {page}")
+    st.image(res.content)
+    if quote:
+        highlight = res.headers.get("X-Highlight", "none")
+        st.caption(_HIGHLIGHT_NOTE.get(highlight, ""))
+        if highlight != "highlighted":
+            st.markdown(
+                "<div style='border-left:2px solid #4b9fff; padding:4px 10px; margin:2px 0 6px; "
+                f"color:#9aa0ac; font-size:0.85em;'>“{html.escape(quote)}”</div>",
+                unsafe_allow_html=True,
+            )
+
+
+def _page_button(headers, src, key, text, quote=None, note=None):
+    if headers and _has_page(src) and st.button(text, key=key):
+        show_page_dialog(headers, src["doc_id"], src["page"], src.get("file"), quote, note)
+
+
+def _render_source_item(i, src, headers=None, key=""):
     if isinstance(src, dict):
         # Η ετικέτα έρχεται από τον server και είναι ΑΥΤΗ που γράφει η
         # απάντηση μέσα στο κείμενο. Το enumerate μένει ΜΟΝΟ ως fallback
@@ -211,6 +259,7 @@ def _render_source_item(i, src):
         # θα έδειχνε [2] για μια παραπομπή που λέει [S3].
         label = src.get("label") or f"{i + 1}"
         st.caption(f"**[{label}]** {src.get('file')} — Page {src.get('page')}")
+        _page_button(headers, src, f"pg_{key}_{label}_{i}", f"📄 Open page {src.get('page')}")
         preview = src.get("preview")
         if preview:
             st.markdown(
@@ -223,7 +272,7 @@ def _render_source_item(i, src):
         st.caption(f"**[{i + 1}]** {src}")
 
 
-def render_sources(sources, answer: str | None = None):
+def render_sources(sources, answer: str | None = None, headers=None, key=""):
     """Πηγές με preview αποσπάσματος. Από 19/11/2026 το preview είναι το κομμάτι που ΕΦΕΡΕ τη σελίδα
     (ai_core._source_preview)· σε παλιά μηνύματα είναι η αρχή της σελίδας. Συμβατό και με ΠΑΛΙΑ
     μηνύματα όπου οι πηγές ήταν σκέτα strings (backward compatibility).
@@ -247,21 +296,27 @@ def render_sources(sources, answer: str | None = None):
     if answer is None or not all(isinstance(s, dict) for s in sources):
         with st.expander(f"📚 Sources ({len(sources)})"):
             for i, src in enumerate(sources):
-                _render_source_item(i, src)
+                _render_source_item(i, src, headers, key)
         return
     used = [s for s in sources if s.get("label") in cited]
     rest = [s for s in sources if s.get("label") not in cited]
+    # Σημείωση για συγκρίσεις (26/11/2026, μόνο κείμενο): εμφανίζεται ΜΟΝΟ όταν η απάντηση παρέθεσε 2+
+    # διαφορετικά άρθρα μέσω αναζήτησης, δηλαδή εκεί που μετράει. Κλειστό σετ: δύο άρθρων με επιλογή 12/12,
+    # χωρίς επιλογή 9/12. Κοιτά τι ΕΚΑΝΕ η απάντηση, όχι λέξεις της ερώτησης: όπου πέσει έξω, απλώς περισσεύει.
+    if not full and len({s.get("file") for s in used}) >= 2:
+        st.caption("💡 This answer draws on several papers. To compare them, leave only those papers checked "
+                   "in the library: if they are short enough, they are read in full instead of searched.")
     if used:
         with st.expander(f"📚 Cited in the answer ({len(used)})"):
             for i, src in enumerate(used):
-                _render_source_item(i, src)
+                _render_source_item(i, src, headers, key)
     if rest:
         what = "given to the model" if full else "searched"
         title = (f"📄 Other pages {what} ({len(rest)})" if used
                  else f"📄 Pages {what} ({len(rest)}) — none cited in the answer")
         with st.expander(title):
             for i, src in enumerate(rest):
-                _render_source_item(i, src)
+                _render_source_item(i, src, headers, key)
 
 
 # Κύκλος 2, βήμα 6 (docs/SOURCE_PASSAGES_PREREG_2026-11-24.md): τι λέει η οθόνη ανά πρόταση. ΠΟΤΕ
@@ -276,8 +331,9 @@ _PASSAGE_NOTE = {
 PASSAGES_TIMEOUT = (5, 90)        # μία κλήση ελέγχου: διάμεσος ~4 s, με περιθώριο για retries
 
 
-def render_passages(data):
+def render_passages(data, sources=None, headers=None, key=""):
     items = data.get("items") or []
+    by_label = {s.get("label"): s for s in sources or [] if isinstance(s, dict)}
     with st.expander(f"🔎 Source passages ({len(items)} sentences)", expanded=True):
         st.caption("For each sentence, the passage it comes from, copied exactly from the page. A passage "
                    "shows where to look; it does not prove that the page supports every part of the "
@@ -285,6 +341,9 @@ def render_passages(data):
         for n, it in enumerate(items, 1):
             st.markdown(f"**{n}.** {html.escape(it.get('sentence') or '')}")
             status = it.get("status")
+            quote_src = by_label.get(it.get("label"))
+            # Οι σελίδες που ΠΑΡΑΘΕΤΕΙ η πρόταση (μπορεί να διαφέρουν από αυτή όπου βρέθηκε το χωρίο).
+            cited = [by_label[lab] for lab in dict.fromkeys(it.get("labels") or []) if lab in by_label]
             if status in ("found", "found_elsewhere") and it.get("quote"):
                 st.caption(f"**[{it.get('label')}]** {it.get('file')} — Page {it.get('page')}")
                 st.markdown(
@@ -293,8 +352,25 @@ def render_passages(data):
                     f"“{html.escape(it['quote'])}”</div>",
                     unsafe_allow_html=True,
                 )
-            if status in _PASSAGE_NOTE:
+            if status == "found_elsewhere" and it.get("quote") and cited:
+                # Λάθος σελίδα στην παραπομπή: φαίνεται η διαφορά, και ανοίγουν και οι δύο σελίδες· κίτρινο μόνο
+                # εκεί όπου βρέθηκε το χωρίο.
+                cites = ", ".join(f"{s.get('file')} p. {s.get('page')}" for s in cited)
+                diff = (f"This sentence cites {cites}; the passage was found on "
+                        f"{it.get('file')} p. {it.get('page')}.")
+                st.caption(diff)
+                _page_button(headers, quote_src, f"pp_{key}_{n}_q",
+                             f"📄 See the passage on page {it.get('page')}", it["quote"], diff)
+                for j, s in enumerate(cited):
+                    _page_button(headers, s, f"pp_{key}_{n}_c{j}", f"📄 Open the cited page {s.get('page')}")
+            elif status == "found" and it.get("quote"):
+                _page_button(headers, quote_src, f"pp_{key}_{n}_q",
+                             f"📄 See the passage on page {it.get('page')}", it["quote"])
+            elif status in _PASSAGE_NOTE:
                 st.caption(_PASSAGE_NOTE[status])
+                if status == "not_found":
+                    for j, s in enumerate(cited):
+                        _page_button(headers, s, f"pp_{key}_{n}_c{j}", f"📄 Open page {s.get('page')}")
 
 
 def render_passages_block(message, headers, generating):
@@ -309,7 +385,13 @@ def render_passages_block(message, headers, generating):
             data = None
     data = data or st.session_state.get(f"passages_{msg_id}")
     if data and data.get("status") == "done":
-        render_passages(data)
+        sources = message.get("sources") or []
+        if isinstance(sources, str):
+            try:
+                sources = json.loads(sources)
+            except json.JSONDecodeError:
+                sources = []
+        render_passages(data, sources, None if generating else headers, f"m{msg_id}")
         return
     if data and data.get("status") == "no_pages":
         st.caption("Source passages: the cited pages are no longer available (was the document deleted?).")
@@ -369,6 +451,12 @@ def _library_body(headers, token, disabled=False):
             return
 
         st.caption("Select sources to search:")
+        # Σημείωση για συγκρίσεις (26/11/2026). ΜΟΝΟ κείμενο: δεν αλλάζει αναζήτηση ή απαντήσεις. Στηρίζεται
+        # στο κλειστό σετ (docs/HELDOUT_RUN_PREREG_2026-11-26.md): ερωτήσεις δύο άρθρων με επιλεγμένα μόνο τα
+        # δύο άρθρα 12/12, με όλα τσεκαρισμένα 9/12 (3 βελτιώθηκαν, 0 χειροτέρεψαν).
+        st.caption("💡 Comparing papers? Leave only those 2–3 papers checked. If they are short enough, "
+                   "they are read in full instead of searched, which answered more comparison questions "
+                   "correctly in our tests.")
         col1, col2 = st.columns(2)
         with col1:
             if st.button("Select all", use_container_width=True, disabled=disabled):
@@ -649,7 +737,9 @@ def app_main(token):
                     and last.get("conv_id") == st.session_state.current_conv_id
                 ):
                     render_metrics(last["metrics"], last["total_s"])
-                render_sources(sources, message.get("content", ""))
+                # Κουμπιά σελίδας ΜΟΝΟ όταν δεν γράφεται απάντηση (ένα κλικ = rerun -> θα έκοβε το streaming).
+                render_sources(sources, message.get("content", ""),
+                               None if generating else headers, f"m{message.get('id') or index}")
                 # Κύκλος 2, βήμα 6: απόσπασμα πηγής ανά πρόταση, μόνο όταν ο χρήστης το ζητήσει.
                 if message.get("id") and cited_labels(message.get("content", "")):
                     render_passages_block(message, headers, generating)
