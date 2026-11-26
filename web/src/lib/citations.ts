@@ -19,11 +19,14 @@ export interface NumberedCitations {
    * ποια πρόταση ανήκει το κουμπί, γιατί η ίδια πηγή μπορεί να παρατίθεται από πολλές προτάσεις.
    */
   contexts: string[]
+  /** Κάθε παραπομπή χωριστά (και μέσα σε «[S1, S3]»), με τη σειρά που φαίνεται: για το `[` / `]` στο πάνελ. */
+  refs: CitationRef[]
 }
 
 export function numberCitations(answer: string): NumberedCitations {
   const order: string[] = []
   const contexts: string[] = []
+  const refs: CitationRef[] = []
   const numberOf = (label: string): number => {
     let i = order.indexOf(label)
     if (i < 0) {
@@ -35,9 +38,14 @@ export function numberCitations(answer: string): NumberedCitations {
   const markdown = answer.replace(GROUP, (_whole, inner: string, offset: number) => {
     const occurrence = contexts.length
     contexts.push(answer.slice(answer.lastIndexOf('\n', offset - 1) + 1, offset))
-    return (inner.match(LABEL) ?? []).map((label) => `[${numberOf(label)}](#cite-${label}-${occurrence})`).join('')
+    return (inner.match(LABEL) ?? [])
+      .map((label) => {
+        refs.push({ label, occurrence })
+        return `[${numberOf(label)}](#cite-${label}-${occurrence})`
+      })
+      .join('')
   })
-  return { markdown, order, contexts }
+  return { markdown, order, contexts, refs }
 }
 
 /** Οι ετικέτες που παραθέτει πραγματικά η απάντηση (ίδιο με το `cited_labels` του Streamlit). */

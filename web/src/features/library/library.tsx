@@ -44,6 +44,8 @@ interface LibraryState {
   toggle: (id: number) => void
   selectAll: () => void
   clearAll: () => void
+  /** Τσεκάρει ΜΟΝΟ αυτά (π.χ. «Compare only these»). */
+  selectOnly: (ids: number[]) => void
   /** Τα έτοιμα και τσεκαρισμένα: αυτά πάνε στην ερώτηση. */
   selected: LibraryDocument[]
   readyCount: number
@@ -74,6 +76,7 @@ export function LibraryProvider({ children }: { children: ReactNode }) {
       },
       selectAll: () => update(new Set()),
       clearAll: () => update(new Set(docs.map((d) => d.id))),
+      selectOnly: (ids) => update(new Set(docs.filter((d) => !ids.includes(d.id)).map((d) => d.id))),
       selected: ready.filter((d) => !unchecked.has(d.id)),
       readyCount: ready.length,
     }

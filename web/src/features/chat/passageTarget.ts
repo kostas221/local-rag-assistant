@@ -60,6 +60,7 @@ export function findSentence(items: PassageItem[], label: string, context: strin
 export type ViewerNoteKind =
   | 'other_source' // το χωρίο της πρότασης είναι σε άλλη από τις πηγές της
   | 'elsewhere' // το χωρίο βρέθηκε σε σελίδα που η πρόταση δεν παραθέτει
+  | 'cited_here' // η σελίδα που παραθέτει η πρόταση, όταν το χωρίο βρέθηκε αλλού (η άλλη όψη του elsewhere)
   | 'not_found'
   | 'absence'
   | 'unsure' // δεν ξέρουμε με σιγουριά ποια πρόταση είναι

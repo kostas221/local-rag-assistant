@@ -10,7 +10,7 @@ import { createContext, useCallback, useContext, useEffect, useMemo, useRef, use
 import { useNavigate } from 'react-router'
 import { ApiError } from '@/api/client'
 import { createConversation, getMessages, streamChat } from '@/api/endpoints'
-import { PERSONAS, type Message, type Metrics, type Persona } from '@/api/types'
+import { PERSONAS, type LibraryDocument, type Message, type Metrics, type Persona } from '@/api/types'
 import { useLibrary } from '@/features/library/library'
 import { strings } from '@/i18n/en'
 import { applyEvent, finishLive, isRunning, startLive, titleFrom, type LiveAnswer } from './liveAnswer'
@@ -39,7 +39,8 @@ interface ChatState {
   failure: ChatFailure | null
   persona: Persona
   setPersona: (p: Persona) => void
-  send: (question: string, convId: number | null) => void
+  /** `docs`: συγκεκριμένα έγγραφα για αυτή την ερώτηση (π.χ. «Compare only these»), αντί για την τρέχουσα επιλογή. */
+  send: (question: string, convId: number | null, docs?: LibraryDocument[]) => void
   stop: () => void
 }
 
@@ -117,8 +118,8 @@ export function ChatProvider({ children }: { children: ReactNode }) {
   )
 
   const send = useCallback(
-    (question: string, convId: number | null) => {
-      const docs = selectedRef.current
+    (question: string, convId: number | null, only?: LibraryDocument[]) => {
+      const docs = only ?? selectedRef.current
       if (busyRef.current || !question.trim() || docs.length === 0) return
       busyRef.current = true
       const controller = new AbortController()

@@ -33,6 +33,9 @@ export const strings = {
     rateLimited: 'Too many requests. Please wait a moment and try again.',
     server: 'The server had a problem. Please try again.',
     generic: 'Something went wrong. Please try again.',
+    crashTitle: 'Something went wrong on this screen.',
+    crashBody: 'Your conversations and documents are safe on the server. Reloading the page usually fixes it.',
+    reload: 'Reload',
   },
   app: {
     newChat: 'New chat',
@@ -76,7 +79,14 @@ export const strings = {
     fullText: (docs: number, pages: number) =>
       `Full text used: the ${docs} selected documents were short enough for the model to read in full (${pages} pages), so no search was needed.`,
     compareHint:
-      'This answer draws on several papers. To compare them, leave only those papers checked in the library: if they are short enough, they are read in full instead of searched.',
+      'This answer draws on several papers. To compare them, ask again with only those papers checked: if they are short enough, they are read in full instead of searched.',
+    compareOnly: 'Compare only these',
+    compareTitle: 'Ask again, comparing only these papers?',
+    compareBody: (files: string[]) =>
+      `The question will be asked again with only ${files.join(', ')} checked in the library. If they are short enough, they are read in full. This is one new model call.`,
+    copy: 'Copy answer with sources',
+    copied: 'Answer copied with its sources.',
+    copyFailed: 'Could not copy. Please select the text instead.',
     findPassages: 'Find exact passages',
     passagesTitle: (n: number) => `Source passages (${n} ${n === 1 ? 'sentence' : 'sentences'})`,
     passagesIntro:
@@ -94,6 +104,29 @@ export const strings = {
         'No exact passage found on the cited page(s). This does not mean the sentence is wrong: open the page to check.',
       no_citation: 'This sentence cites no source.',
       absence: 'This sentence says what the sources do not contain, so there is nothing to quote.',
+    },
+    evidence: {
+      show: 'Show evidence',
+      hide: 'Hide evidence',
+      cost: 'Marks each citation with where its passage was found (one extra model call per answer; the result is saved).',
+      status: {
+        found: 'Passage found on a page this sentence cites.',
+        found_elsewhere: 'Passage found, but on a page this sentence does not cite.',
+        not_found: 'No exact passage found on the cited page(s). This does not mean the sentence is wrong.',
+        absence: 'This sentence says what the sources do not contain.',
+        no_citation: 'This sentence cites no source.',
+        unsure: 'Could not tell for sure which sentence this citation belongs to.',
+      },
+      summary: (found: number, total: number) =>
+        `${found} of ${total} cited ${total === 1 ? 'sentence has' : 'sentences have'} a passage on a cited page`,
+      elsewhere: (n: number) => `${n} on another page`,
+      missing: (n: number) => `${n} without an exact passage`,
+      absence: (n: number) => `${n} about what the sources lack`,
+      uncited: (n: number) => `${n} ${n === 1 ? 'sentence cites' : 'sentences cite'} no source`,
+      caveat: 'A passage shows where to look; it does not prove that the page supports every part of the sentence.',
+      legendFound: 'on a cited page',
+      legendElsewhere: 'on another page',
+      legendMissing: 'no exact passage',
     },
     details: 'Details',
     route: 'Route',
@@ -126,7 +159,13 @@ export const strings = {
     zoomIn: 'Zoom in',
     zoomOut: 'Zoom out',
     loadingPage: 'Loading the page…',
-    citedPageNote: (page: number) => `cited: page ${page}`,
+    backToPage: (page: number) => `Back to p. ${page}`,
+    // Λάθος σελίδα στην παραπομπή: οι δύο όψεις, με τις σελίδες γραμμένες.
+    pageNote: {
+      elsewhere: (cited: string) => `This sentence cites ${cited}, but its passage was found on this page.`,
+      cited_here: (found: string) => `This is the page the sentence cites. Its passage was found on ${found}.`,
+      other_source: (found: string) => `The passage for this sentence comes from another of its sources: ${found}.`,
+    },
     highlight: {
       highlighted: 'The passage is highlighted in yellow.',
       ambiguous:
@@ -136,6 +175,7 @@ export const strings = {
     viewerNote: {
       other_source: 'The passage for this sentence comes from another of its sources.',
       elsewhere: 'This sentence cites a different page; the passage was found on this one.',
+      cited_here: 'This is the page the sentence cites; its passage was found on another page.',
       not_found:
         'No exact passage was found on this page for this sentence. This does not mean the sentence is wrong: read the page to check.',
       absence: 'This sentence says what the sources do not contain, so there is nothing to highlight.',
@@ -153,10 +193,23 @@ export const strings = {
     style: 'Answer style',
     theme: 'Toggle theme',
     menu: 'Menu',
+    palette: {
+      open: 'Search conversations and documents',
+      title: 'Search',
+      description: 'Search conversations and documents, or run an action.',
+      placeholder: 'Search conversations, documents, actions…',
+      empty: 'Nothing found.',
+      actions: 'Actions',
+      askOnly: 'Ask only this document',
+      only: 'only',
+      onlyChecked: (name: string) => `Only “${name}” is checked now. Use “Select all” in the library to search everything again.`,
+    },
     emptyTitle: 'How can I assist your research?',
     emptyBody: 'Ask questions across your uploaded scientific papers. Every answer cites the pages it uses.',
     examples: ['What is serverless computing?', 'Ποια είναι τα εμπόδια υιοθέτησης του cloud;'],
     retry: 'Retry',
+    unanswered: 'No answer was saved: it was stopped before the first words were written, or it failed.',
+    askAgain: 'Ask again',
     errorTitle: 'The answer could not be completed.',
   },
 } as const

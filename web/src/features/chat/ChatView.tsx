@@ -27,6 +27,22 @@ function UserBubble({ text }: { text: string }) {
   )
 }
 
+/**
+ * Ερώτηση χωρίς απάντηση στο ιστορικό. Ο backend σώζει την ερώτηση ΠΡΙΝ απαντήσει, και την απάντηση μόνο αν γράφτηκε
+ * έστω μία λέξη. Ένα Stop στην αναζήτηση, ή ένα σφάλμα πριν από το κείμενο, αφήνει λοιπόν μόνη την ερώτηση· χωρίς
+ * σημείωση θα έμοιαζε ότι κάτι ακόμα περιμένει.
+ */
+function UnansweredNote({ onAskAgain }: { onAskAgain: () => void }) {
+  return (
+    <p className="flex flex-wrap items-center justify-end gap-2 text-xs text-muted-foreground">
+      {s.unanswered}
+      <Button variant="outline" size="xs" onClick={onAskAgain}>
+        {s.askAgain}
+      </Button>
+    </p>
+  )
+}
+
 function EmptyState({ onExample }: { onExample: (q: string) => void }) {
   const { docs } = useLibrary()
   const { isPending } = useDocuments()
@@ -122,9 +138,15 @@ export function ChatView() {
               </p>
             )}
             {messages.isError && !gone && <p className="text-sm text-muted-foreground">{strings.errors.network}</p>}
-            {shown.map((m) =>
+            {shown.map((m, i) =>
               m.role === 'user' ? (
-                <UserBubble key={m.id} text={m.content} />
+                <div key={m.id} className="space-y-2">
+                  <UserBubble text={m.content} />
+                  {/* Χωρίς απάντηση μετά: η επόμενη είναι πάλι ερώτηση, ή είναι η τελευταία (εκτός αν το σφάλμα φαίνεται ήδη). */}
+                  {shown[i + 1]?.role !== 'assistant' && !(i === shown.length - 1 && !live && failure) && (
+                    <UnansweredNote onAskAgain={() => setDraft(m.content)} />
+                  )}
+                </div>
               ) : (
                 <AssistantMessage
                   key={m.id}
@@ -133,6 +155,8 @@ export function ChatView() {
                   messageId={m.id}
                   savedPassages={m.passages}
                   meta={chat.meta.get(m.id)}
+                  question={shown[i - 1]?.role === 'user' ? shown[i - 1]?.content : null}
+                  convId={convId}
                 />
               ),
             )}

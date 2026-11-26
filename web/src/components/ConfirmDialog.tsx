@@ -18,10 +18,12 @@ interface Props {
   body: ReactNode
   confirm: string
   onConfirm: () => void
+  /** false για επιβεβαίωση που δεν σβήνει τίποτα (π.χ. νέα ερώτηση με κόστος). */
+  destructive?: boolean
 }
 
-/** Επιβεβαίωση πριν από κάτι που δεν αναιρείται (διαγραφή). */
-export function ConfirmDialog({ open, onOpenChange, title, body, confirm, onConfirm }: Props) {
+/** Επιβεβαίωση πριν από κάτι που δεν αναιρείται (διαγραφή) ή που κοστίζει (νέα κλήση μοντέλου). */
+export function ConfirmDialog({ open, onOpenChange, title, body, confirm, onConfirm, destructive = true }: Props) {
   return (
     <AlertDialog open={open} onOpenChange={onOpenChange}>
       <AlertDialogContent>
@@ -31,7 +33,7 @@ export function ConfirmDialog({ open, onOpenChange, title, body, confirm, onConf
         </AlertDialogHeader>
         <AlertDialogFooter>
           <AlertDialogCancel>{strings.app.cancel}</AlertDialogCancel>
-          <AlertDialogAction variant="destructive" onClick={onConfirm}>
+          <AlertDialogAction variant={destructive ? 'destructive' : 'default'} onClick={onConfirm}>
             {confirm}
           </AlertDialogAction>
         </AlertDialogFooter>

@@ -29,6 +29,10 @@ function setTheme(next: Theme) {
   for (const l of listeners) l()
 }
 
+export function toggleTheme(): void {
+  setTheme(current === 'dark' ? 'light' : 'dark')
+}
+
 export function useTheme(): Theme {
   return useSyncExternalStore(
     (l) => {

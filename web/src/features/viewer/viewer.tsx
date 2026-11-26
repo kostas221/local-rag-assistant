@@ -5,7 +5,7 @@
  * στο μήνυμα). Το κίτρινο έρχεται όταν βρεθεί. Απόφαση μετά το πρωτότυπο (26/11/2026): κανένα κουμπί δεν χρειάζεται.
  */
 import { useQueryClient } from '@tanstack/react-query'
-import { createContext, useCallback, useContext, useMemo, useRef, useState, type ReactNode } from 'react'
+import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState, type ReactNode } from 'react'
 import type { Message, PassageItem, Source } from '@/api/types'
 import { ensurePassages } from '@/features/chat/passages'
 import {
@@ -41,6 +41,14 @@ export interface CitationClick {
   /** Το κείμενο της γραμμής πριν από την παραπομπή (βλ. lib/citations). */
   context: string
   activeKey: string
+  /** Όλες οι παραπομπές της ίδιας απάντησης, με τη σειρά: με `[` / `]` το πάνελ πάει στην προηγούμενη / επόμενη. */
+  siblings?: CitationClick[]
+}
+
+/** Τα πλήκτρα του πάνελ δεν ενεργούν όσο ο χρήστης γράφει. */
+function typing(target: EventTarget | null): boolean {
+  const el = target as HTMLElement | null
+  return Boolean(el && (el.isContentEditable || ['INPUT', 'TEXTAREA', 'SELECT'].includes(el.tagName)))
 }
 
 interface ViewerApi {
@@ -83,6 +91,7 @@ export function ViewerProvider({ children }: { children: ReactNode }) {
   const [state, setState] = useState<ViewerState | null>(null)
   // Κάθε άνοιγμα παίρνει αριθμό: αποτέλεσμα που αργεί για παλιό κλικ δεν αλλάζει το πάνελ ενός νεότερου.
   const ticket = useRef(0)
+  const siblings = useRef<CitationClick[]>([])
 
   const openSource = useCallback<ViewerApi['openSource']>((source, extra) => {
     ticket.current++
@@ -90,9 +99,11 @@ export function ViewerProvider({ children }: { children: ReactNode }) {
   }, [])
 
   const openCitation = useCallback(
-    ({ message, sources, label, context, activeKey }: CitationClick) => {
+    (click: CitationClick) => {
+      const { message, sources, label, context, activeKey } = click
       const source = sources.find((s) => s.label === label)
       if (!source) return
+      if (click.siblings) siblings.current = click.siblings
       const mine = ++ticket.current
       // Απάντηση που γράφεται ακόμα: δεν έχει id, άρα ούτε χωρία. Ανοίγει μόνο η σελίδα.
       if (message.id === null) {
@@ -124,6 +135,23 @@ export function ViewerProvider({ children }: { children: ReactNode }) {
     ticket.current++
     setState(apply(target, sources, first, null))
   }, [])
+
+  // `[` / `]`: προηγούμενη / επόμενη παραπομπή της απάντησης, με το χωρίο της (όχι απλώς άλλη πηγή).
+  const activeKey = state?.activeKey ?? null
+  useEffect(() => {
+    if (!activeKey) return
+    const onKey = (e: KeyboardEvent) => {
+      if ((e.key !== '[' && e.key !== ']') || e.ctrlKey || e.metaKey || e.altKey || typing(e.target)) return
+      const list = siblings.current
+      const i = list.findIndex((c) => c.activeKey === activeKey)
+      const next = i < 0 ? undefined : list[e.key === ']' ? i + 1 : i - 1]
+      if (!next) return
+      e.preventDefault()
+      openCitation({ ...next, siblings: list })
+    }
+    window.addEventListener('keydown', onKey)
+    return () => window.removeEventListener('keydown', onKey)
+  }, [activeKey, openCitation])
 
   const setPage = useCallback((page: number) => setState((s) => (s ? { ...s, page } : s)), [])
   const close = useCallback(() => {

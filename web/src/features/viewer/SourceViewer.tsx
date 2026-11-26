@@ -2,6 +2,7 @@ import { keepPreviousData, useQuery } from '@tanstack/react-query'
 import { ChevronLeft, ChevronRight, Loader2, X, ZoomIn, ZoomOut } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { ApiError } from '@/api/client'
+import type { Source } from '@/api/types'
 import { getPageImage } from '@/api/endpoints'
 import { Button } from '@/components/ui/button'
 import { Skeleton } from '@/components/ui/skeleton'
@@ -58,6 +59,26 @@ export function SourceViewer({ state }: { state: ViewerState }) {
   const gone = image.error instanceof ApiError && image.error.status === 404
   const noView = docId === null || docId === -1
 
+  // Οι σημειώσεις γράφουν ΠΟΙΑ σελίδα (και ποιο άρθρο, αν διαφέρει), όχι απλώς «άλλη σελίδα».
+  const where = (x: Source) => (x.file === source.file ? `p. ${x.page ?? '?'}` : `${x.file}, p. ${x.page ?? '?'}`)
+  const noteText =
+    note && alternate && (note === 'elsewhere' || note === 'cited_here' || note === 'other_source')
+      ? s.pageNote[note](where(alternate.source))
+      : note
+        ? s.viewerNote[note]
+        : null
+  // Εναλλαγή ανάμεσα στη σελίδα του χωρίου και στη σελίδα της παραπομπής, και προς τις δύο κατευθύνσεις.
+  const swapped = note === 'elsewhere' ? 'cited_here' : note === 'cited_here' ? 'elsewhere' : null
+  const openAlternate = () => {
+    if (!alternate) return
+    openSource(alternate.source, {
+      quote: alternate.quote,
+      note: swapped,
+      alternate: swapped ? { source, quote: state.quote } : null,
+      activeKey: state.activeKey,
+    })
+  }
+
   return (
     <section aria-label={s.sourceViewer} className="flex h-full min-h-0 flex-col bg-card">
       <header className="flex items-center gap-2 border-b px-3 py-2">
@@ -68,8 +89,12 @@ export function SourceViewer({ state }: { state: ViewerState }) {
           <p className="text-xs text-muted-foreground">
             {s.page} {page}
             {pagesTotal ? ` / ${pagesTotal}` : ''}
-            {citedPage !== null && citedPage !== page && ` · ${s.citedPageNote(citedPage)}`}
           </p>
+          {citedPage !== null && citedPage !== page && (
+            <button type="button" className="text-xs text-brand underline-offset-2 hover:underline" onClick={() => setPage(citedPage)}>
+              {s.backToPage(citedPage)}
+            </button>
+          )}
         </div>
         <Button variant="ghost" size="icon-sm" aria-label={s.zoomOut} onClick={() => setZoom((z) => Math.max(0.75, z - 0.25))}>
           <ZoomOut />
@@ -84,13 +109,9 @@ export function SourceViewer({ state }: { state: ViewerState }) {
 
       {(note || alternate) && page === citedPage && (
         <div className="space-y-2 border-b bg-muted/40 px-3 py-2 text-xs">
-          {note && <p className="text-muted-foreground">{s.viewerNote[note]}</p>}
+          {noteText && <p className="text-muted-foreground">{noteText}</p>}
           {alternate && (
-            <Button
-              variant="outline"
-              size="xs"
-              onClick={() => openSource(alternate.source, { quote: alternate.quote, activeKey: state.activeKey })}
-            >
+            <Button variant="outline" size="xs" onClick={openAlternate}>
               {alternate.quote ? s.seePassage(alternate.source.page) : s.openCitedPage(alternate.source.page)}
             </Button>
           )}

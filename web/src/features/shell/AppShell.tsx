@@ -1,4 +1,4 @@
-import { LogOut, Plus } from 'lucide-react'
+import { LogOut, Plus, Search } from 'lucide-react'
 import { useEffect, useMemo, useState } from 'react'
 import { Outlet, useNavigate } from 'react-router'
 import { ZLogo } from '@/components/brand'
@@ -16,19 +16,34 @@ import { SourceViewer } from '@/features/viewer/SourceViewer'
 import { useViewer, ViewerProvider } from '@/features/viewer/viewer'
 import { strings } from '@/i18n/en'
 import { useMediaQuery } from '@/lib/useMediaQuery'
-import { ShellContext } from './shell'
+import { CommandPalette } from './CommandPalette'
+import { ShellContext, useShell } from './shell'
 
 const s = strings.app
 
 function Sidebar({ onNavigate }: { onNavigate?: () => void }) {
   const { username, signOut } = useAuth()
   const chat = useChat()
+  const shell = useShell()
   const navigate = useNavigate()
   return (
     <div className="flex h-full min-h-0 flex-col">
       <div className="flex items-center gap-2 px-4 py-3">
         <ZLogo size={26} />
         <span className="font-semibold tracking-wide">{strings.brand}</span>
+        <Button
+          variant="ghost"
+          size="icon-sm"
+          className="ml-auto"
+          aria-label={s.palette.open}
+          title={`${s.palette.open} (Ctrl+K)`}
+          onClick={() => {
+            onNavigate?.()
+            shell.openPalette()
+          }}
+        >
+          <Search />
+        </Button>
       </div>
       <div className="px-3">
         <Button
@@ -105,7 +120,19 @@ function ViewerPane() {
 
 function Layout() {
   const [menuOpen, setMenuOpen] = useState(false)
-  const shell = useMemo(() => ({ openMenu: () => setMenuOpen(true) }), [])
+  const [paletteOpen, setPaletteOpen] = useState(false)
+  const shell = useMemo(() => ({ openMenu: () => setMenuOpen(true), openPalette: () => setPaletteOpen(true) }), [])
+  // Ctrl+K / ⌘K από οπουδήποτε, και μέσα από το πεδίο ερώτησης (δεν είναι χαρακτήρας που θα πληκτρολογούσε κανείς).
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') {
+        e.preventDefault()
+        setPaletteOpen((o) => !o)
+      }
+    }
+    window.addEventListener('keydown', onKey)
+    return () => window.removeEventListener('keydown', onKey)
+  }, [])
   return (
     <ShellContext.Provider value={shell}>
       <div className="flex h-svh overflow-hidden bg-background">
@@ -123,6 +150,7 @@ function Layout() {
         </main>
         <ViewerPane />
       </div>
+      <CommandPalette open={paletteOpen} onOpenChange={setPaletteOpen} />
     </ShellContext.Provider>
   )
 }

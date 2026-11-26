@@ -1,5 +1,6 @@
 import type { ReactNode } from 'react'
 import { createBrowserRouter, Navigate, RouterProvider } from 'react-router'
+import { ErrorPage } from '@/components/ErrorPage'
 import { useAuth } from '@/features/auth/auth'
 import { LoginPage } from '@/features/auth/LoginPage'
 import { ChatView } from '@/features/chat/ChatView'
@@ -11,7 +12,7 @@ function RequireAuth({ children }: { children: ReactNode }) {
 }
 
 const router = createBrowserRouter([
-  { path: '/login', element: <LoginPage /> },
+  { path: '/login', element: <LoginPage />, errorElement: <ErrorPage /> },
   {
     path: '/',
     element: (
@@ -19,6 +20,7 @@ const router = createBrowserRouter([
         <AppShell />
       </RequireAuth>
     ),
+    errorElement: <ErrorPage />,
     children: [
       { index: true, element: <ChatView /> },
       { path: 'c/:convId', element: <ChatView /> },
