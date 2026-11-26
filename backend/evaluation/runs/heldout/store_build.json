@@ -1,0 +1,82 @@
+{
+ "when": "2026-11-26 13:20",
+ "docs": [
+  {
+   "file": "2007.01937v1.pdf",
+   "ok": true,
+   "pages_text": 7,
+   "pages_total": 7,
+   "seconds": 107.3
+  },
+  {
+   "file": "2111.02856v2.pdf",
+   "ok": true,
+   "pages_text": 12,
+   "pages_total": 12,
+   "seconds": 298.5
+  },
+  {
+   "file": "2309.15217v2.pdf",
+   "ok": true,
+   "pages_text": 8,
+   "pages_total": 8,
+   "seconds": 136.5
+  },
+  {
+   "file": "2310.11511v1.pdf",
+   "ok": true,
+   "pages_text": 30,
+   "pages_total": 30,
+   "seconds": 522.8
+  },
+  {
+   "file": "2311.05482v2.pdf",
+   "ok": true,
+   "pages_text": 45,
+   "pages_total": 45,
+   "seconds": 489.7
+  },
+  {
+   "file": "2311.09476v2.pdf",
+   "ok": true,
+   "pages_text": 17,
+   "pages_total": 17,
+   "seconds": 299.2
+  },
+  {
+   "file": "2401.05856v1.pdf",
+   "ok": true,
+   "pages_text": 6,
+   "pages_total": 6,
+   "seconds": 129.1
+  },
+  {
+   "file": "2402.18859v1.pdf",
+   "ok": true,
+   "pages_text": 31,
+   "pages_total": 31,
+   "seconds": 449.8
+  },
+  {
+   "file": "2405.10857v1.pdf",
+   "ok": true,
+   "pages_text": 6,
+   "pages_total": 6,
+   "seconds": 98.9
+  },
+  {
+   "file": "2408.08067v2.pdf",
+   "ok": true,
+   "pages_text": 27,
+   "pages_total": 27,
+   "seconds": 413.5
+  },
+  {
+   "file": "2411.06037v3.pdf",
+   "ok": true,
+   "pages_text": 25,
+   "pages_total": 25,
+   "seconds": 324.0
+  }
+ ]
+}

@@ -1,0 +1,4447 @@
+{
+ "mode": "heldout",
+ "when": "2026-11-26 16:22",
+ "judge_models": [
+  "gpt-4.1-2025-04-14"
+ ],
+ "config": {
+  "GEMINI_MODEL": "gemini-3.8-flash",
+  "TEMPERATURE": 0.1,
+  "MAX_OUTPUT_TOKENS": 4096,
+  "THINKING_BUDGET": 512,
+  "USE_REST_GENERATION": true,
+  "EMBED_MODEL_NAME": "BAAI/bge-m3",
+  "RERANKER_MODEL": "cross-encoder/ms-marco-MiniLM-L-12-v2",
+  "MIN_RERANK_SCORE": -2.6,
+  "CORRECTIVE_MIN_SCORE": -3.8,
+  "ENABLE_CORRECTIVE": true,
+  "ENABLE_SUFFICIENCY_VETO": true,
+  "STRIP_HIDDEN_TEXT": false,
+  "ENABLE_FULL_TEXT": true,
+  "FULL_TEXT_MAX_TOKENS": 70000,
+  "ENABLE_PERDOC": true,
+  "PERDOC_EXTRA": 4,
+  "RERANK_CANDIDATES": 15,
+  "DENSE_CANDIDATES": 30,
+  "EXPAND_INPUT": 12,
+  "MAX_PAGES": 8,
+  "PAGE_SCORE_TOP_K": 1,
+  "MAX_PAGES_PER_FILE": 8,
+  "USE_BGE_SPARSE": false,
+  "CITATION_RULE_SET": true
+ },
+ "headline_alpha": {
+  "correct": 37,
+  "not_correct": 3,
+  "technical": 0,
+  "n": 40,
+  "rate": 0.925,
+  "wilson95": [
+   0.801,
+   0.974
+  ]
+ },
+ "by_category": {
+  "single": {
+   "correct": 12,
+   "not_correct": 0,
+   "technical": 0,
+   "n": 12,
+   "rate": 1.0,
+   "wilson95": [
+    0.758,
+    1.0
+   ]
+  },
+  "two_papers_a": {
+   "correct": 9,
+   "not_correct": 3,
+   "technical": 0,
+   "n": 12,
+   "rate": 0.75,
+   "wilson95": [
+    0.468,
+    0.911
+   ]
+  },
+  "two_papers_b": {
+   "correct": 12,
+   "not_correct": 0,
+   "technical": 0,
+   "n": 12,
+   "rate": 1.0,
+   "wilson95": [
+    0.758,
+    1.0
+   ]
+  },
+  "near": {
+   "correct": 8,
+   "not_correct": 0,
+   "technical": 0,
+   "n": 8,
+   "rate": 1.0,
+   "wilson95": [
+    0.676,
+    1.0
+   ]
+  },
+  "table": {
+   "correct": 8,
+   "not_correct": 0,
+   "technical": 0,
+   "n": 8,
+   "rate": 1.0,
+   "wilson95": [
+    0.676,
+    1.0
+   ]
+  }
+ },
+ "alpha_by_lang": {
+  "el": {
+   "correct": 19,
+   "not_correct": 1,
+   "technical": 0,
+   "n": 20,
+   "rate": 0.95,
+   "wilson95": [
+    0.764,
+    0.991
+   ]
+  },
+  "en": {
+   "correct": 18,
+   "not_correct": 2,
+   "technical": 0,
+   "n": 20,
+   "rate": 0.9,
+   "wilson95": [
+    0.699,
+    0.972
+   ]
+  }
+ },
+ "alpha_by_topic": {
+  "battery": {
+   "correct": 18,
+   "not_correct": 2,
+   "technical": 0,
+   "n": 20,
+   "rate": 0.9,
+   "wilson95": [
+    0.699,
+    0.972
+   ]
+  },
+  "rag": {
+   "correct": 19,
+   "not_correct": 1,
+   "technical": 0,
+   "n": 20,
+   "rate": 0.95,
+   "wilson95": [
+    0.764,
+    0.991
+   ]
+  }
+ },
+ "alpha_by_category_lang": {
+  "single/el": {
+   "correct": 6,
+   "not_correct": 0,
+   "technical": 0,
+   "n": 6,
+   "rate": 1.0,
+   "wilson95": [
+    0.61,
+    1.0
+   ]
+  },
+  "single/en": {
+   "correct": 6,
+   "not_correct": 0,
+   "technical": 0,
+   "n": 6,
+   "rate": 1.0,
+   "wilson95": [
+    0.61,
+    1.0
+   ]
+  },
+  "two_papers_a/el": {
+   "correct": 5,
+   "not_correct": 1,
+   "technical": 0,
+   "n": 6,
+   "rate": 0.833,
+   "wilson95": [
+    0.436,
+    0.97
+   ]
+  },
+  "two_papers_a/en": {
+   "correct": 4,
+   "not_correct": 2,
+   "technical": 0,
+   "n": 6,
+   "rate": 0.667,
+   "wilson95": [
+    0.3,
+    0.903
+   ]
+  },
+  "near/el": {
+   "correct": 4,
+   "not_correct": 0,
+   "technical": 0,
+   "n": 4,
+   "rate": 1.0,
+   "wilson95": [
+    0.51,
+    1.0
+   ]
+  },
+  "near/en": {
+   "correct": 4,
+   "not_correct": 0,
+   "technical": 0,
+   "n": 4,
+   "rate": 1.0,
+   "wilson95": [
+    0.51,
+    1.0
+   ]
+  },
+  "table/el": {
+   "correct": 4,
+   "not_correct": 0,
+   "technical": 0,
+   "n": 4,
+   "rate": 1.0,
+   "wilson95": [
+    0.51,
+    1.0
+   ]
+  },
+  "table/en": {
+   "correct": 4,
+   "not_correct": 0,
+   "technical": 0,
+   "n": 4,
+   "rate": 1.0,
+   "wilson95": [
+    0.51,
+    1.0
+   ]
+  }
+ },
+ "beta_vs_alpha": {
+  "n": 12,
+  "improved": [
+   "h014",
+   "h020",
+   "h023"
+  ],
+  "worsened": [],
+  "both_correct": 9,
+  "neither": 0,
+  "beta_full_text": 12
+ },
+ "closed_book": {
+  "single": {
+   "correct": 6,
+   "not_correct": 6,
+   "technical": 0,
+   "n": 12,
+   "rate": 0.5,
+   "wilson95": [
+    0.254,
+    0.746
+   ]
+  },
+  "two_papers": {
+   "correct": 0,
+   "not_correct": 12,
+   "technical": 0,
+   "n": 12,
+   "rate": 0.0,
+   "wilson95": [
+    0.0,
+    0.242
+   ]
+  },
+  "table": {
+   "correct": 0,
+   "not_correct": 8,
+   "technical": 0,
+   "n": 8,
+   "rate": 0.0,
+   "wilson95": [
+    0.0,
+    0.324
+   ]
+  }
+ },
+ "closed_book_by_topic": {
+  "battery": {
+   "correct": 1,
+   "not_correct": 15,
+   "technical": 0,
+   "n": 16,
+   "rate": 0.062,
+   "wilson95": [
+    0.011,
+    0.283
+   ]
+  },
+  "rag": {
+   "correct": 5,
+   "not_correct": 11,
+   "technical": 0,
+   "n": 16,
+   "rate": 0.312,
+   "wilson95": [
+    0.142,
+    0.556
+   ]
+  }
+ },
+ "closed_vs_alpha": {
+  "n": 32,
+  "both": 6,
+  "only_rag": 23,
+  "only_closed": 0,
+  "neither": 3
+ },
+ "false_refusals": {
+  "alpha": {
+   "count": 1,
+   "answerable": 32,
+   "ids": [
+    "h014"
+   ]
+  },
+  "beta": {
+   "count": 0,
+   "answerable": 12,
+   "ids": []
+  }
+ },
+ "routes": {
+  "alpha": {
+   "passed_gate": 39,
+   "passed_corrective": 1
+  },
+  "beta": {
+   "full_text": 12
+  }
+ },
+ "latency_s": {
+  "alpha": {
+   "wall": {
+    "median": 16.41,
+    "p95": 39.02,
+    "n": 40
+   },
+   "generation": {
+    "median": 4.23,
+    "p95": 7.71,
+    "n": 40
+   }
+  },
+  "beta": {
+   "wall": {
+    "median": 6.59,
+    "p95": 9.58,
+    "n": 12
+   },
+   "generation": {
+    "median": 6.58,
+    "p95": 9.56,
+    "n": 12
+   }
+  }
+ },
+ "cost_estimate_usd": {
+  "alpha": {
+   "total": 0.256,
+   "per_answer": 0.0064,
+   "prompt_tokens_median": 9919.0
+  },
+  "beta": {
+   "total": 0.205,
+   "per_answer": 0.017,
+   "prompt_tokens_median": 41181.0
+  },
+  "closed": {
+   "total": 0.033,
+   "per_answer": 0.001,
+   "prompt_tokens_median": null
+  }
+ },
+ "citations": {
+  "sentences": 222,
+  "with_citation": 218,
+  "passage_found_on_cited_page": 210,
+  "found_on_other_cited_page": 1,
+  "not_found": 7,
+  "pct_with_citation": 0.982,
+  "pct_found_of_cited": 0.963,
+  "answers_with_number_missing_from_cited_page": 2
+ },
+ "evidence_pages": {
+  "alpha": {
+   "pages": 48,
+   "reached_model": 36,
+   "cited": 36
+  },
+  "beta": {
+   "pages": 24,
+   "reached_model": 24,
+   "cited": 24
+  }
+ },
+ "failure_stage_alpha_evidence_pages": {
+  "dropped_after_reranker": 2,
+  "reached_model": 2,
+  "not_in_candidates": 2
+ },
+ "critical_candidates": {
+  "c1": [
+   "alpha:h011",
+   "alpha:h014",
+   "alpha:h018",
+   "alpha:h021",
+   "alpha:h025",
+   "beta:h018",
+   "beta:h019",
+   "beta:h021"
+  ],
+  "c2": [],
+  "c3": [],
+  "c4": []
+ },
+ "review_flags": {
+  "other_paper_cited": [],
+  "non_plain_value": [
+   "alpha:h038",
+   "alpha:h039"
+  ],
+  "passage_check_missing": []
+ },
+ "technical_failures": [],
+ "rows": [
+  {
+   "key": "alpha:h001",
+   "arm": "alpha",
+   "id": "h001",
+   "type": "single",
+   "behaviour": "answer",
+   "lang": "el",
+   "topic": "rag",
+   "category": "single",
+   "status": "ok",
+   "attempts": 1,
+   "correct": true,
+   "why": "",
+   "judge": {
+    "main": "correct"
+   },
+   "false_refusal": false,
+   "outcome": "passed_gate",
+   "full_text": false,
+   "second_search": false,
+   "n_pages": 8,
+   "evidence": [
+    {
+     "file": "2309.15217v2.pdf",
+     "page": 3,
+     "in_candidates_first": true,
+     "in_candidates_any": true,
+     "in_final": true,
+     "cited": true
+    }
+   ],
+   "n_cited": 1,
+   "other_papers_cited": [],
+   "passages_status": "done",
+   "passage_statuses": {
+    "found": 5
+   },
+   "numbers_missing": 0,
+   "critical": [],
+   "flags": [],
+   "wall_s": 17.82,
+   "generation_s": 6.12,
+   "prompt_tokens": 9254,
+   "completion_tokens": 385,
+   "thinking_tokens": 0,
+   "est_usd": 0.00646
+  },
+  {
+   "key": "alpha:h002",
+   "arm": "alpha",
+   "id": "h002",
+   "type": "single",
+   "behaviour": "answer",
+   "lang": "en",
+   "topic": "rag",
+   "category": "single",
+   "status": "ok",
+   "attempts": 1,
+   "correct": true,
+   "why": "",
+   "judge": {
+    "main": "correct"
+   },
+   "false_refusal": false,
+   "outcome": "passed_gate",
+   "full_text": false,
+   "second_search": false,
+   "n_pages": 7,
+   "evidence": [
+    {
+     "file": "2311.09476v2.pdf",
+     "page": 4,
+     "in_candidates_first": true,
+     "in_candidates_any": true,
+     "in_final": true,
+     "cited": true
+    }
+   ],
+   "n_cited": 5,
+   "other_papers_cited": [],
+   "passages_status": "done",
+   "passage_statuses": {
+    "found": 6
+   },
+   "numbers_missing": 0,
+   "critical": [],
+   "flags": [],
+   "wall_s": 15.7,
+   "generation_s": 4.75,
+   "prompt_tokens": 9538,
+   "completion_tokens": 235,
+   "thinking_tokens": 0,
+   "est_usd": 0.00674
+  },
+  {
+   "key": "alpha:h003",
+   "arm": "alpha",
+   "id": "h003",
+   "type": "single",
+   "behaviour": "answer",
+   "lang": "el",
+   "topic": "rag",
+   "category": "single",
+   "status": "ok",
+   "attempts": 1,
+   "correct": true,
+   "why": "",
+   "judge": {
+    "main": "correct"
+   },
+   "false_refusal": false,
+   "outcome": "passed_gate",
+   "full_text": false,
+   "second_search": false,
+   "n_pages": 6,
+   "evidence": [
+    {
+     "file": "2408.08067v2.pdf",
+     "page": 5,
+     "in_candidates_first": true,
+     "in_candidates_any": true,
+     "in_final": true,
+     "cited": true
+    }
+   ],
+   "n_cited": 1,
+   "other_papers_cited": [],
+   "passages_status": "done",
+   "passage_statuses": {
+    "found": 6
+   },
+   "numbers_missing": 0,
+   "critical": [],
+   "flags": [],
+   "wall_s": 15.99,
+   "generation_s": 5.54,
+   "prompt_tokens": 7462,
+   "completion_tokens": 430,
+   "thinking_tokens": 0,
+   "est_usd": 0.00607
+  },
+  {
+   "key": "alpha:h004",
+   "arm": "alpha",
+   "id": "h004",
+   "type": "single",
+   "behaviour": "answer",
+   "lang": "en",
+   "topic": "rag",
+   "category": "single",
+   "status": "ok",
+   "attempts": 1,
+   "correct": true,
+   "why": "",
+   "judge": {
+    "main": "correct"
+   },
+   "false_refusal": false,
+   "outcome": "passed_gate",
+   "full_text": false,
+   "second_search": false,
+   "n_pages": 8,
+   "evidence": [
+    {
+     "file": "2411.06037v3.pdf",
+     "page": 2,
+     "in_candidates_first": true,
+     "in_candidates_any": true,
+     "in_final": true,
+     "cited": true
+    }
+   ],
+   "n_cited": 3,
+   "other_papers_cited": [],
+   "passages_status": "done",
+   "passage_statuses": {
+    "found": 6
+   },
+   "numbers_missing": 0,
+   "critical": [],
+   "flags": [],
+   "wall_s": 13.57,
+   "generation_s": 4.61,
+   "prompt_tokens": 10310,
+   "completion_tokens": 203,
+   "thinking_tokens": 0,
+   "est_usd": 0.00608
+  },
+  {
+   "key": "alpha:h005",
+   "arm": "alpha",
+   "id": "h005",
+   "type": "single",
+   "behaviour": "answer",
+   "lang": "el",
+   "topic": "rag",
+   "category": "single",
+   "status": "ok",
+   "attempts": 1,
+   "correct": true,
+   "why": "",
+   "judge": {
+    "main": "correct"
+   },
+   "false_refusal": false,
+   "outcome": "passed_gate",
+   "full_text": false,
+   "second_search": false,
+   "n_pages": 7,
+   "evidence": [
+    {
+     "file": "2401.05856v1.pdf",
+     "page": 4,
+     "in_candidates_first": true,
+     "in_candidates_any": true,
+     "in_final": true,
+     "cited": true
+    }
+   ],
+   "n_cited": 1,
+   "other_papers_cited": [],
+   "passages_status": "done",
+   "passage_statuses": {
+    "absence": 2,
+    "found": 1
+   },
+   "numbers_missing": 0,
+   "critical": [],
+   "flags": [],
+   "wall_s": 15.26,
+   "generation_s": 4.24,
+   "prompt_tokens": 11839,
+   "completion_tokens": 208,
+   "thinking_tokens": 0,
+   "est_usd": 0.00691
+  },
+  {
+   "key": "alpha:h006",
+   "arm": "alpha",
+   "id": "h006",
+   "type": "single",
+   "behaviour": "answer",
+   "lang": "en",
+   "topic": "rag",
+   "category": "single",
+   "status": "ok",
+   "attempts": 1,
+   "correct": true,
+   "why": "",
+   "judge": {
+    "main": "correct"
+   },
+   "false_refusal": false,
+   "outcome": "passed_gate",
+   "full_text": false,
+   "second_search": false,
+   "n_pages": 8,
+   "evidence": [
+    {
+     "file": "2310.11511v1.pdf",
+     "page": 2,
+     "in_candidates_first": true,
+     "in_candidates_any": true,
+     "in_final": true,
+     "cited": true
+    }
+   ],
+   "n_cited": 6,
+   "other_papers_cited": [],
+   "passages_status": "done",
+   "passage_statuses": {
+    "found": 4,
+    "absence": 1
+   },
+   "numbers_missing": 0,
+   "critical": [],
+   "flags": [],
+   "wall_s": 12.63,
+   "generation_s": 3.95,
+   "prompt_tokens": 10733,
+   "completion_tokens": 242,
+   "thinking_tokens": 0,
+   "est_usd": 0.00742
+  },
+  {
+   "key": "alpha:h007",
+   "arm": "alpha",
+   "id": "h007",
+   "type": "single",
+   "behaviour": "answer",
+   "lang": "en",
+   "topic": "battery",
+   "category": "single",
+   "status": "ok",
+   "attempts": 1,
+   "correct": true,
+   "why": "",
+   "judge": {
+    "main": "correct"
+   },
+   "false_refusal": false,
+   "outcome": "passed_gate",
+   "full_text": false,
+   "second_search": false,
+   "n_pages": 7,
+   "evidence": [
+    {
+     "file": "2405.10857v1.pdf",
+     "page": 5,
+     "in_candidates_first": true,
+     "in_candidates_any": true,
+     "in_final": true,
+     "cited": true
+    }
+   ],
+   "n_cited": 2,
+   "other_papers_cited": [],
+   "passages_status": "done",
+   "passage_statuses": {
+    "found": 4
+   },
+   "numbers_missing": 0,
+   "critical": [],
+   "flags": [],
+   "wall_s": 13.88,
+   "generation_s": 3.9,
+   "prompt_tokens": 10569,
+   "completion_tokens": 163,
+   "thinking_tokens": 0,
+   "est_usd": 0.00551
+  },
+  {
+   "key": "alpha:h008",
+   "arm": "alpha",
+   "id": "h008",
+   "type": "single",
+   "behaviour": "answer",
+   "lang": "el",
+   "topic": "battery",
+   "category": "single",
+   "status": "ok",
+   "attempts": 1,
+   "correct": true,
+   "why": "",
+   "judge": {
+    "main": "correct"
+   },
+   "false_refusal": false,
+   "outcome": "passed_gate",
+   "full_text": false,
+   "second_search": false,
+   "n_pages": 8,
+   "evidence": [
+    {
+     "file": "2311.05482v2.pdf",
+     "page": 6,
+     "in_candidates_first": true,
+     "in_candidates_any": true,
+     "in_final": true,
+     "cited": true
+    }
+   ],
+   "n_cited": 1,
+   "other_papers_cited": [],
+   "passages_status": "done",
+   "passage_statuses": {
+    "found": 4
+   },
+   "numbers_missing": 0,
+   "critical": [],
+   "flags": [],
+   "wall_s": 17.9,
+   "generation_s": 4.68,
+   "prompt_tokens": 7488,
+   "completion_tokens": 307,
+   "thinking_tokens": 0,
+   "est_usd": 0.00543
+  },
+  {
+   "key": "alpha:h009",
+   "arm": "alpha",
+   "id": "h009",
+   "type": "single",
+   "behaviour": "answer",
+   "lang": "en",
+   "topic": "battery",
+   "category": "single",
+   "status": "ok",
+   "attempts": 1,
+   "correct": true,
+   "why": "",
+   "judge": {
+    "main": "correct"
+   },
+   "false_refusal": false,
+   "outcome": "passed_gate",
+   "full_text": false,
+   "second_search": false,
+   "n_pages": 8,
+   "evidence": [
+    {
+     "file": "2402.18859v1.pdf",
+     "page": 7,
+     "in_candidates_first": false,
+     "in_candidates_any": false,
+     "in_final": false,
+     "cited": false
+    }
+   ],
+   "n_cited": 2,
+   "other_papers_cited": [],
+   "passages_status": "done",
+   "passage_statuses": {
+    "found": 4
+   },
+   "numbers_missing": 0,
+   "critical": [],
+   "flags": [],
+   "wall_s": 44.99,
+   "generation_s": 4.61,
+   "prompt_tokens": 9694,
+   "completion_tokens": 161,
+   "thinking_tokens": 0,
+   "est_usd": 0.00506
+  },
+  {
+   "key": "alpha:h010",
+   "arm": "alpha",
+   "id": "h010",
+   "type": "single",
+   "behaviour": "answer",
+   "lang": "el",
+   "topic": "battery",
+   "category": "single",
+   "status": "ok",
+   "attempts": 1,
+   "correct": true,
+   "why": "",
+   "judge": {
+    "main": "correct"
+   },
+   "false_refusal": false,
+   "outcome": "passed_gate",
+   "full_text": false,
+   "second_search": false,
+   "n_pages": 7,
+   "evidence": [
+    {
+     "file": "2111.02856v2.pdf",
+     "page": 3,
+     "in_candidates_first": true,
+     "in_candidates_any": true,
+     "in_final": true,
+     "cited": true
+    }
+   ],
+   "n_cited": 1,
+   "other_papers_cited": [],
+   "passages_status": "done",
+   "passage_statuses": {
+    "found": 3
+   },
+   "numbers_missing": 0,
+   "critical": [],
+   "flags": [],
+   "wall_s": 38.71,
+   "generation_s": 4.7,
+   "prompt_tokens": 14587,
+   "completion_tokens": 212,
+   "thinking_tokens": 0,
+   "est_usd": 0.00777
+  },
+  {
+   "key": "alpha:h011",
+   "arm": "alpha",
+   "id": "h011",
+   "type": "single",
+   "behaviour": "answer",
+   "lang": "en",
+   "topic": "battery",
+   "category": "single",
+   "status": "ok",
+   "attempts": 1,
+   "correct": true,
+   "why": "",
+   "judge": {
+    "main": "correct"
+   },
+   "false_refusal": false,
+   "outcome": "passed_gate",
+   "full_text": false,
+   "second_search": false,
+   "n_pages": 8,
+   "evidence": [
+    {
+     "file": "2007.01937v1.pdf",
+     "page": 5,
+     "in_candidates_first": true,
+     "in_candidates_any": true,
+     "in_final": false,
+     "cited": false
+    }
+   ],
+   "n_cited": 2,
+   "other_papers_cited": [],
+   "passages_status": "done",
+   "passage_statuses": {
+    "found": 5
+   },
+   "numbers_missing": 1,
+   "critical": [
+    "c1"
+   ],
+   "flags": [],
+   "wall_s": 22.04,
+   "generation_s": 6.17,
+   "prompt_tokens": 10146,
+   "completion_tokens": 249,
+   "thinking_tokens": 0,
+   "est_usd": 0.00566
+  },
+  {
+   "key": "alpha:h012",
+   "arm": "alpha",
+   "id": "h012",
+   "type": "single",
+   "behaviour": "answer",
+   "lang": "el",
+   "topic": "battery",
+   "category": "single",
+   "status": "ok",
+   "attempts": 1,
+   "correct": true,
+   "why": "",
+   "judge": {
+    "main": "correct"
+   },
+   "false_refusal": false,
+   "outcome": "passed_gate",
+   "full_text": false,
+   "second_search": false,
+   "n_pages": 8,
+   "evidence": [
+    {
+     "file": "2402.18859v1.pdf",
+     "page": 6,
+     "in_candidates_first": false,
+     "in_candidates_any": false,
+     "in_final": false,
+     "cited": false
+    }
+   ],
+   "n_cited": 1,
+   "other_papers_cited": [],
+   "passages_status": "done",
+   "passage_statuses": {
+    "found": 3
+   },
+   "numbers_missing": 0,
+   "critical": [],
+   "flags": [],
+   "wall_s": 19.49,
+   "generation_s": 4.06,
+   "prompt_tokens": 10681,
+   "completion_tokens": 224,
+   "thinking_tokens": 0,
+   "est_usd": 0.00635
+  },
+  {
+   "key": "alpha:h013",
+   "arm": "alpha",
+   "id": "h013",
+   "type": "two_papers",
+   "behaviour": "answer",
+   "lang": "el",
+   "topic": "rag",
+   "category": "two_papers_a",
+   "status": "ok",
+   "attempts": 1,
+   "correct": true,
+   "why": "",
+   "judge": {
+    "mh": {
+     "paper_1": "correct",
+     "paper_2": "correct"
+    }
+   },
+   "false_refusal": false,
+   "outcome": "passed_gate",
+   "full_text": false,
+   "second_search": false,
+   "n_pages": 8,
+   "evidence": [
+    {
+     "file": "2309.15217v2.pdf",
+     "page": 3,
+     "in_candidates_first": false,
+     "in_candidates_any": false,
+     "in_final": false,
+     "cited": false
+    },
+    {
+     "file": "2311.09476v2.pdf",
+     "page": 5,
+     "in_candidates_first": true,
+     "in_candidates_any": true,
+     "in_final": true,
+     "cited": true
+    }
+   ],
+   "n_cited": 7,
+   "other_papers_cited": [],
+   "passages_status": "done",
+   "passage_statuses": {
+    "found": 4
+   },
+   "numbers_missing": 0,
+   "critical": [],
+   "flags": [],
+   "wall_s": 20.45,
+   "generation_s": 5.01,
+   "prompt_tokens": 11957,
+   "completion_tokens": 300,
+   "thinking_tokens": 0,
+   "est_usd": 0.00942
+  },
+  {
+   "key": "alpha:h014",
+   "arm": "alpha",
+   "id": "h014",
+   "type": "two_papers",
+   "behaviour": "answer",
+   "lang": "en",
+   "topic": "rag",
+   "category": "two_papers_a",
+   "status": "ok",
+   "attempts": 1,
+   "correct": false,
+   "why": "judge:declared_missing/correct",
+   "judge": {
+    "mh": {
+     "paper_1": "declared_missing",
+     "paper_2": "correct"
+    }
+   },
+   "false_refusal": true,
+   "outcome": "passed_gate",
+   "full_text": false,
+   "second_search": false,
+   "n_pages": 8,
+   "evidence": [
+    {
+     "file": "2311.09476v2.pdf",
+     "page": 8,
+     "in_candidates_first": true,
+     "in_candidates_any": true,
+     "in_final": false,
+     "cited": false
+    },
+    {
+     "file": "2408.08067v2.pdf",
+     "page": 8,
+     "in_candidates_first": true,
+     "in_candidates_any": true,
+     "in_final": true,
+     "cited": true
+    }
+   ],
+   "n_cited": 2,
+   "other_papers_cited": [],
+   "passages_status": "done",
+   "passage_statuses": {
+    "not_found": 1,
+    "found": 2,
+    "absence": 1
+   },
+   "numbers_missing": 0,
+   "critical": [
+    "c1"
+   ],
+   "flags": [],
+   "wall_s": 17.9,
+   "generation_s": 4.22,
+   "prompt_tokens": 9461,
+   "completion_tokens": 182,
+   "thinking_tokens": 0,
+   "est_usd": 0.00527
+  },
+  {
+   "key": "alpha:h015",
+   "arm": "alpha",
+   "id": "h015",
+   "type": "two_papers",
+   "behaviour": "answer",
+   "lang": "el",
+   "topic": "rag",
+   "category": "two_papers_a",
+   "status": "ok",
+   "attempts": 1,
+   "correct": true,
+   "why": "",
+   "judge": {
+    "mh": {
+     "paper_1": "correct",
+     "paper_2": "correct"
+    }
+   },
+   "false_refusal": false,
+   "outcome": "passed_gate",
+   "full_text": false,
+   "second_search": false,
+   "n_pages": 8,
+   "evidence": [
+    {
+     "file": "2309.15217v2.pdf",
+     "page": 3,
+     "in_candidates_first": false,
+     "in_candidates_any": false,
+     "in_final": false,
+     "cited": false
+    },
+    {
+     "file": "2408.08067v2.pdf",
+     "page": 5,
+     "in_candidates_first": false,
+     "in_candidates_any": false,
+     "in_final": false,
+     "cited": false
+    }
+   ],
+   "n_cited": 4,
+   "other_papers_cited": [],
+   "passages_status": "done",
+   "passage_statuses": {
+    "found": 7
+   },
+   "numbers_missing": 0,
+   "critical": [],
+   "flags": [],
+   "wall_s": 25.06,
+   "generation_s": 7.56,
+   "prompt_tokens": 9859,
+   "completion_tokens": 579,
+   "thinking_tokens": 0,
+   "est_usd": 0.00797
+  },
+  {
+   "key": "alpha:h016",
+   "arm": "alpha",
+   "id": "h016",
+   "type": "two_papers",
+   "behaviour": "answer",
+   "lang": "en",
+   "topic": "rag",
+   "category": "two_papers_a",
+   "status": "ok",
+   "attempts": 1,
+   "correct": true,
+   "why": "",
+   "judge": {
+    "mh": {
+     "paper_1": "correct",
+     "paper_2": "correct"
+    }
+   },
+   "false_refusal": false,
+   "outcome": "passed_corrective",
+   "full_text": false,
+   "second_search": true,
+   "n_pages": 8,
+   "evidence": [
+    {
+     "file": "2411.06037v3.pdf",
+     "page": 9,
+     "in_candidates_first": true,
+     "in_candidates_any": true,
+     "in_final": true,
+     "cited": true
+    },
+    {
+     "file": "2310.11511v1.pdf",
+     "page": 6,
+     "in_candidates_first": false,
+     "in_candidates_any": true,
+     "in_final": true,
+     "cited": true
+    }
+   ],
+   "n_cited": 2,
+   "other_papers_cited": [],
+   "passages_status": "done",
+   "passage_statuses": {
+    "found": 7
+   },
+   "numbers_missing": 0,
+   "critical": [],
+   "flags": [],
+   "wall_s": 51.07,
+   "generation_s": 4.88,
+   "prompt_tokens": 11220,
+   "completion_tokens": 312,
+   "thinking_tokens": 0,
+   "est_usd": 0.01166
+  },
+  {
+   "key": "alpha:h017",
+   "arm": "alpha",
+   "id": "h017",
+   "type": "two_papers",
+   "behaviour": "answer",
+   "lang": "el",
+   "topic": "rag",
+   "category": "two_papers_a",
+   "status": "ok",
+   "attempts": 1,
+   "correct": true,
+   "why": "",
+   "judge": {
+    "mh": {
+     "paper_1": "correct",
+     "paper_2": "correct"
+    }
+   },
+   "false_refusal": false,
+   "outcome": "passed_gate",
+   "full_text": false,
+   "second_search": false,
+   "n_pages": 8,
+   "evidence": [
+    {
+     "file": "2401.05856v1.pdf",
+     "page": 4,
+     "in_candidates_first": true,
+     "in_candidates_any": true,
+     "in_final": true,
+     "cited": true
+    },
+    {
+     "file": "2408.08067v2.pdf",
+     "page": 5,
+     "in_candidates_first": false,
+     "in_candidates_any": false,
+     "in_final": false,
+     "cited": false
+    }
+   ],
+   "n_cited": 2,
+   "other_papers_cited": [],
+   "passages_status": "done",
+   "passage_statuses": {
+    "found": 3
+   },
+   "numbers_missing": 0,
+   "critical": [],
+   "flags": [],
+   "wall_s": 29.35,
+   "generation_s": 6.45,
+   "prompt_tokens": 11359,
+   "completion_tokens": 219,
+   "thinking_tokens": 0,
+   "est_usd": 0.00719
+  },
+  {
+   "key": "alpha:h018",
+   "arm": "alpha",
+   "id": "h018",
+   "type": "two_papers",
+   "behaviour": "answer",
+   "lang": "en",
+   "topic": "rag",
+   "category": "two_papers_a",
+   "status": "ok",
+   "attempts": 1,
+   "correct": true,
+   "why": "",
+   "judge": {
+    "mh": {
+     "paper_1": "correct",
+     "paper_2": "correct"
+    }
+   },
+   "false_refusal": false,
+   "outcome": "passed_gate",
+   "full_text": false,
+   "second_search": false,
+   "n_pages": 8,
+   "evidence": [
+    {
+     "file": "2411.06037v3.pdf",
+     "page": 7,
+     "in_candidates_first": false,
+     "in_candidates_any": false,
+     "in_final": false,
+     "cited": false
+    },
+    {
+     "file": "2401.05856v1.pdf",
+     "page": 4,
+     "in_candidates_first": true,
+     "in_candidates_any": true,
+     "in_final": true,
+     "cited": true
+    }
+   ],
+   "n_cited": 4,
+   "other_papers_cited": [],
+   "passages_status": "done",
+   "passage_statuses": {
+    "absence": 2,
+    "found": 3
+   },
+   "numbers_missing": 2,
+   "critical": [
+    "c1"
+   ],
+   "flags": [],
+   "wall_s": 25.28,
+   "generation_s": 5.88,
+   "prompt_tokens": 9979,
+   "completion_tokens": 299,
+   "thinking_tokens": 0,
+   "est_usd": 0.00656
+  },
+  {
+   "key": "alpha:h019",
+   "arm": "alpha",
+   "id": "h019",
+   "type": "two_papers",
+   "behaviour": "answer",
+   "lang": "el",
+   "topic": "battery",
+   "category": "two_papers_a",
+   "status": "ok",
+   "attempts": 1,
+   "correct": true,
+   "why": "",
+   "judge": {
+    "mh": {
+     "paper_1": "correct",
+     "paper_2": "correct"
+    }
+   },
+   "false_refusal": false,
+   "outcome": "passed_gate",
+   "full_text": false,
+   "second_search": false,
+   "n_pages": 8,
+   "evidence": [
+    {
+     "file": "2405.10857v1.pdf",
+     "page": 1,
+     "in_candidates_first": true,
+     "in_candidates_any": true,
+     "in_final": true,
+     "cited": true
+    },
+    {
+     "file": "2311.05482v2.pdf",
+     "page": 3,
+     "in_candidates_first": true,
+     "in_candidates_any": true,
+     "in_final": true,
+     "cited": true
+    }
+   ],
+   "n_cited": 4,
+   "other_papers_cited": [],
+   "passages_status": "done",
+   "passage_statuses": {
+    "found": 3
+   },
+   "numbers_missing": 0,
+   "critical": [],
+   "flags": [],
+   "wall_s": 32.75,
+   "generation_s": 13.94,
+   "prompt_tokens": 9106,
+   "completion_tokens": 307,
+   "thinking_tokens": 0,
+   "est_usd": 0.00707
+  },
+  {
+   "key": "alpha:h020",
+   "arm": "alpha",
+   "id": "h020",
+   "type": "two_papers",
+   "behaviour": "answer",
+   "lang": "en",
+   "topic": "battery",
+   "category": "two_papers_a",
+   "status": "ok",
+   "attempts": 1,
+   "correct": false,
+   "why": "judge:correct/partial",
+   "judge": {
+    "mh": {
+     "paper_1": "correct",
+     "paper_2": "partial"
+    }
+   },
+   "false_refusal": false,
+   "outcome": "passed_gate",
+   "full_text": false,
+   "second_search": false,
+   "n_pages": 8,
+   "evidence": [
+    {
+     "file": "2311.05482v2.pdf",
+     "page": 10,
+     "in_candidates_first": true,
+     "in_candidates_any": true,
+     "in_final": true,
+     "cited": true
+    },
+    {
+     "file": "2402.18859v1.pdf",
+     "page": 7,
+     "in_candidates_first": true,
+     "in_candidates_any": true,
+     "in_final": false,
+     "cited": false
+    }
+   ],
+   "n_cited": 2,
+   "other_papers_cited": [],
+   "passages_status": "done",
+   "passage_statuses": {
+    "found": 4
+   },
+   "numbers_missing": 0,
+   "critical": [],
+   "flags": [],
+   "wall_s": 16.14,
+   "generation_s": 3.85,
+   "prompt_tokens": 8204,
+   "completion_tokens": 216,
+   "thinking_tokens": 0,
+   "est_usd": 0.00471
+  },
+  {
+   "key": "alpha:h021",
+   "arm": "alpha",
+   "id": "h021",
+   "type": "two_papers",
+   "behaviour": "answer",
+   "lang": "el",
+   "topic": "battery",
+   "category": "two_papers_a",
+   "status": "ok",
+   "attempts": 1,
+   "correct": true,
+   "why": "",
+   "judge": {
+    "mh": {
+     "paper_1": "correct",
+     "paper_2": "correct"
+    }
+   },
+   "false_refusal": false,
+   "outcome": "passed_gate",
+   "full_text": false,
+   "second_search": false,
+   "n_pages": 8,
+   "evidence": [
+    {
+     "file": "2402.18859v1.pdf",
+     "page": 4,
+     "in_candidates_first": true,
+     "in_candidates_any": true,
+     "in_final": true,
+     "cited": true
+    },
+    {
+     "file": "2007.01937v1.pdf",
+     "page": 3,
+     "in_candidates_first": true,
+     "in_candidates_any": true,
+     "in_final": true,
+     "cited": true
+    }
+   ],
+   "n_cited": 4,
+   "other_papers_cited": [],
+   "passages_status": "done",
+   "passage_statuses": {
+    "found": 3,
+    "not_found": 1
+   },
+   "numbers_missing": 0,
+   "critical": [
+    "c1"
+   ],
+   "flags": [],
+   "wall_s": 25.49,
+   "generation_s": 10.51,
+   "prompt_tokens": 7805,
+   "completion_tokens": 388,
+   "thinking_tokens": 0,
+   "est_usd": 0.00651
+  },
+  {
+   "key": "alpha:h022",
+   "arm": "alpha",
+   "id": "h022",
+   "type": "two_papers",
+   "behaviour": "answer",
+   "lang": "en",
+   "topic": "battery",
+   "category": "two_papers_a",
+   "status": "ok",
+   "attempts": 1,
+   "correct": true,
+   "why": "",
+   "judge": {
+    "mh": {
+     "paper_1": "correct",
+     "paper_2": "correct"
+    }
+   },
+   "false_refusal": false,
+   "outcome": "passed_gate",
+   "full_text": false,
+   "second_search": false,
+   "n_pages": 7,
+   "evidence": [
+    {
+     "file": "2007.01937v1.pdf",
+     "page": 5,
+     "in_candidates_first": true,
+     "in_candidates_any": true,
+     "in_final": true,
+     "cited": true
+    },
+    {
+     "file": "2111.02856v2.pdf",
+     "page": 3,
+     "in_candidates_first": true,
+     "in_candidates_any": true,
+     "in_final": true,
+     "cited": true
+    }
+   ],
+   "n_cited": 2,
+   "other_papers_cited": [],
+   "passages_status": "done",
+   "passage_statuses": {
+    "found": 2
+   },
+   "numbers_missing": 0,
+   "critical": [],
+   "flags": [],
+   "wall_s": 16.68,
+   "generation_s": 2.8,
+   "prompt_tokens": 9652,
+   "completion_tokens": 87,
+   "thinking_tokens": 0,
+   "est_usd": 0.005
+  },
+  {
+   "key": "alpha:h023",
+   "arm": "alpha",
+   "id": "h023",
+   "type": "two_papers",
+   "behaviour": "answer",
+   "lang": "el",
+   "topic": "battery",
+   "category": "two_papers_a",
+   "status": "ok",
+   "attempts": 1,
+   "correct": false,
+   "why": "judge:correct/partial",
+   "judge": {
+    "mh": {
+     "paper_1": "correct",
+     "paper_2": "partial"
+    }
+   },
+   "false_refusal": false,
+   "outcome": "passed_gate",
+   "full_text": false,
+   "second_search": false,
+   "n_pages": 8,
+   "evidence": [
+    {
+     "file": "2111.02856v2.pdf",
+     "page": 5,
+     "in_candidates_first": false,
+     "in_candidates_any": false,
+     "in_final": false,
+     "cited": false
+    },
+    {
+     "file": "2405.10857v1.pdf",
+     "page": 4,
+     "in_candidates_first": false,
+     "in_candidates_any": false,
+     "in_final": false,
+     "cited": false
+    }
+   ],
+   "n_cited": 7,
+   "other_papers_cited": [],
+   "passages_status": "done",
+   "passage_statuses": {
+    "found": 6
+   },
+   "numbers_missing": 0,
+   "critical": [],
+   "flags": [],
+   "wall_s": 21.56,
+   "generation_s": 6.8,
+   "prompt_tokens": 15249,
+   "completion_tokens": 545,
+   "thinking_tokens": 0,
+   "est_usd": 0.01167
+  },
+  {
+   "key": "alpha:h024",
+   "arm": "alpha",
+   "id": "h024",
+   "type": "two_papers",
+   "behaviour": "answer",
+   "lang": "en",
+   "topic": "battery",
+   "category": "two_papers_a",
+   "status": "ok",
+   "attempts": 1,
+   "correct": true,
+   "why": "",
+   "judge": {
+    "mh": {
+     "paper_1": "correct",
+     "paper_2": "correct"
+    }
+   },
+   "false_refusal": false,
+   "outcome": "passed_gate",
+   "full_text": false,
+   "second_search": false,
+   "n_pages": 8,
+   "evidence": [
+    {
+     "file": "2402.18859v1.pdf",
+     "page": 4,
+     "in_candidates_first": true,
+     "in_candidates_any": true,
+     "in_final": true,
+     "cited": true
+    },
+    {
+     "file": "2405.10857v1.pdf",
+     "page": 2,
+     "in_candidates_first": true,
+     "in_candidates_any": true,
+     "in_final": true,
+     "cited": true
+    }
+   ],
+   "n_cited": 2,
+   "other_papers_cited": [],
+   "passages_status": "done",
+   "passage_statuses": {
+    "found": 8
+   },
+   "numbers_missing": 0,
+   "critical": [],
+   "flags": [],
+   "wall_s": 15.46,
+   "generation_s": 5.28,
+   "prompt_tokens": 8877,
+   "completion_tokens": 260,
+   "thinking_tokens": 0,
+   "est_usd": 0.00529
+  },
+  {
+   "key": "alpha:h025",
+   "arm": "alpha",
+   "id": "h025",
+   "type": "near",
+   "behaviour": "partial",
+   "lang": "en",
+   "topic": "rag",
+   "category": "near",
+   "status": "ok",
+   "attempts": 1,
+   "correct": true,
+   "why": "",
+   "judge": {
+    "main": "correct",
+    "near": "correct"
+   },
+   "false_refusal": false,
+   "outcome": "passed_gate",
+   "full_text": false,
+   "second_search": false,
+   "n_pages": 8,
+   "evidence": [
+    {
+     "file": "2309.15217v2.pdf",
+     "page": 5,
+     "in_candidates_first": true,
+     "in_candidates_any": true,
+     "in_final": true,
+     "cited": true
+    }
+   ],
+   "n_cited": 3,
+   "other_papers_cited": [
+    "2408.08067v2.pdf"
+   ],
+   "passages_status": "done",
+   "passage_statuses": {
+    "not_found": 1,
+    "found": 7,
+    "absence": 1
+   },
+   "numbers_missing": 0,
+   "critical": [
+    "c1"
+   ],
+   "flags": [],
+   "wall_s": 16.02,
+   "generation_s": 5.92,
+   "prompt_tokens": 10617,
+   "completion_tokens": 551,
+   "thinking_tokens": 0,
+   "est_usd": 0.00676
+  },
+  {
+   "key": "alpha:h026",
+   "arm": "alpha",
+   "id": "h026",
+   "type": "near",
+   "behaviour": "partial",
+   "lang": "el",
+   "topic": "rag",
+   "category": "near",
+   "status": "ok",
+   "attempts": 1,
+   "correct": true,
+   "why": "",
+   "judge": {
+    "main": "correct",
+    "near": "correct"
+   },
+   "false_refusal": false,
+   "outcome": "passed_gate",
+   "full_text": false,
+   "second_search": false,
+   "n_pages": 6,
+   "evidence": [
+    {
+     "file": "2311.09476v2.pdf",
+     "page": 8,
+     "in_candidates_first": true,
+     "in_candidates_any": true,
+     "in_final": true,
+     "cited": true
+    }
+   ],
+   "n_cited": 1,
+   "other_papers_cited": [],
+   "passages_status": "done",
+   "passage_statuses": {
+    "found": 2,
+    "absence": 3
+   },
+   "numbers_missing": 0,
+   "critical": [],
+   "flags": [],
+   "wall_s": 17.98,
+   "generation_s": 5.12,
+   "prompt_tokens": 8866,
+   "completion_tokens": 313,
+   "thinking_tokens": 0,
+   "est_usd": 0.0062
+  },
+  {
+   "key": "alpha:h027",
+   "arm": "alpha",
+   "id": "h027",
+   "type": "near",
+   "behaviour": "refuse",
+   "lang": "en",
+   "topic": "rag",
+   "category": "near",
+   "status": "ok",
+   "attempts": 1,
+   "correct": true,
+   "why": "",
+   "judge": {
+    "near": "correct"
+   },
+   "false_refusal": false,
+   "outcome": "passed_gate",
+   "full_text": false,
+   "second_search": false,
+   "n_pages": 8,
+   "evidence": [
+    null
+   ],
+   "n_cited": 4,
+   "other_papers_cited": [],
+   "passages_status": "done",
+   "passage_statuses": {
+    "absence": 2,
+    "found": 1
+   },
+   "numbers_missing": 0,
+   "critical": [],
+   "flags": [],
+   "wall_s": 13.85,
+   "generation_s": 3.98,
+   "prompt_tokens": 9375,
+   "completion_tokens": 121,
+   "thinking_tokens": 0,
+   "est_usd": 0.00565
+  },
+  {
+   "key": "alpha:h028",
+   "arm": "alpha",
+   "id": "h028",
+   "type": "near",
+   "behaviour": "refuse",
+   "lang": "el",
+   "topic": "rag",
+   "category": "near",
+   "status": "ok",
+   "attempts": 1,
+   "correct": true,
+   "why": "",
+   "judge": {
+    "near": "correct"
+   },
+   "false_refusal": false,
+   "outcome": "passed_gate",
+   "full_text": false,
+   "second_search": false,
+   "n_pages": 7,
+   "evidence": [
+    null
+   ],
+   "n_cited": 0,
+   "other_papers_cited": [],
+   "passages_status": "done",
+   "passage_statuses": {
+    "absence": 1
+   },
+   "numbers_missing": 0,
+   "critical": [],
+   "flags": [],
+   "wall_s": 15.51,
+   "generation_s": 3.24,
+   "prompt_tokens": 10256,
+   "completion_tokens": 43,
+   "thinking_tokens": 0,
+   "est_usd": 0.00433
+  },
+  {
+   "key": "alpha:h029",
+   "arm": "alpha",
+   "id": "h029",
+   "type": "near",
+   "behaviour": "partial",
+   "lang": "en",
+   "topic": "battery",
+   "category": "near",
+   "status": "ok",
+   "attempts": 1,
+   "correct": true,
+   "why": "",
+   "judge": {
+    "main": "correct",
+    "near": "correct"
+   },
+   "false_refusal": false,
+   "outcome": "passed_gate",
+   "full_text": false,
+   "second_search": false,
+   "n_pages": 8,
+   "evidence": [
+    {
+     "file": "2405.10857v1.pdf",
+     "page": 6,
+     "in_candidates_first": true,
+     "in_candidates_any": true,
+     "in_final": true,
+     "cited": true
+    }
+   ],
+   "n_cited": 3,
+   "other_papers_cited": [],
+   "passages_status": "done",
+   "passage_statuses": {
+    "found": 2,
+    "absence": 2
+   },
+   "numbers_missing": 0,
+   "critical": [],
+   "flags": [],
+   "wall_s": 15.69,
+   "generation_s": 3.89,
+   "prompt_tokens": 12091,
+   "completion_tokens": 133,
+   "thinking_tokens": 0,
+   "est_usd": 0.00628
+  },
+  {
+   "key": "alpha:h030",
+   "arm": "alpha",
+   "id": "h030",
+   "type": "near",
+   "behaviour": "refuse",
+   "lang": "el",
+   "topic": "battery",
+   "category": "near",
+   "status": "ok",
+   "attempts": 1,
+   "correct": true,
+   "why": "",
+   "judge": {
+    "near": "correct"
+   },
+   "false_refusal": false,
+   "outcome": "passed_gate",
+   "full_text": false,
+   "second_search": false,
+   "n_pages": 8,
+   "evidence": [
+    null
+   ],
+   "n_cited": 2,
+   "other_papers_cited": [],
+   "passages_status": "done",
+   "passage_statuses": {
+    "absence": 1
+   },
+   "numbers_missing": 0,
+   "critical": [],
+   "flags": [],
+   "wall_s": 15.73,
+   "generation_s": 4.08,
+   "prompt_tokens": 9197,
+   "completion_tokens": 62,
+   "thinking_tokens": 0,
+   "est_usd": 0.00568
+  },
+  {
+   "key": "alpha:h031",
+   "arm": "alpha",
+   "id": "h031",
+   "type": "near",
+   "behaviour": "partial",
+   "lang": "en",
+   "topic": "battery",
+   "category": "near",
+   "status": "ok",
+   "attempts": 1,
+   "correct": true,
+   "why": "",
+   "judge": {
+    "main": "correct",
+    "near": "correct"
+   },
+   "false_refusal": false,
+   "outcome": "passed_gate",
+   "full_text": false,
+   "second_search": false,
+   "n_pages": 8,
+   "evidence": [
+    {
+     "file": "2111.02856v2.pdf",
+     "page": 9,
+     "in_candidates_first": true,
+     "in_candidates_any": true,
+     "in_final": true,
+     "cited": true
+    }
+   ],
+   "n_cited": 2,
+   "other_papers_cited": [],
+   "passages_status": "done",
+   "passage_statuses": {
+    "absence": 2,
+    "found": 1
+   },
+   "numbers_missing": 0,
+   "critical": [],
+   "flags": [],
+   "wall_s": 13.5,
+   "generation_s": 3.44,
+   "prompt_tokens": 14373,
+   "completion_tokens": 88,
+   "thinking_tokens": 0,
+   "est_usd": 0.00663
+  },
+  {
+   "key": "alpha:h032",
+   "arm": "alpha",
+   "id": "h032",
+   "type": "near",
+   "behaviour": "refuse",
+   "lang": "el",
+   "topic": "battery",
+   "category": "near",
+   "status": "ok",
+   "attempts": 1,
+   "correct": true,
+   "why": "",
+   "judge": {
+    "near": "correct"
+   },
+   "false_refusal": false,
+   "outcome": "passed_gate",
+   "full_text": false,
+   "second_search": false,
+   "n_pages": 7,
+   "evidence": [
+    null
+   ],
+   "n_cited": 4,
+   "other_papers_cited": [],
+   "passages_status": "done",
+   "passage_statuses": {
+    "absence": 1,
+    "found": 2
+   },
+   "numbers_missing": 0,
+   "critical": [],
+   "flags": [],
+   "wall_s": 14.75,
+   "generation_s": 4.06,
+   "prompt_tokens": 9792,
+   "completion_tokens": 169,
+   "thinking_tokens": 0,
+   "est_usd": 0.00697
+  },
+  {
+   "key": "alpha:h033",
+   "arm": "alpha",
+   "id": "h033",
+   "type": "table",
+   "behaviour": "answer",
+   "lang": "el",
+   "topic": "rag",
+   "category": "table",
+   "status": "ok",
+   "attempts": 1,
+   "correct": true,
+   "why": "",
+   "judge": {
+    "main": "correct",
+    "table": {
+     "plain_total": 2,
+     "plain_found": 2,
+     "plain_ok": true,
+     "non_plain": 0
+    }
+   },
+   "false_refusal": false,
+   "outcome": "passed_gate",
+   "full_text": false,
+   "second_search": false,
+   "n_pages": 8,
+   "evidence": [
+    {
+     "file": "2408.08067v2.pdf",
+     "page": 8,
+     "in_candidates_first": true,
+     "in_candidates_any": true,
+     "in_final": true,
+     "cited": true
+    }
+   ],
+   "n_cited": 1,
+   "other_papers_cited": [],
+   "passages_status": "done",
+   "passage_statuses": {
+    "found": 3
+   },
+   "numbers_missing": 0,
+   "critical": [],
+   "flags": [],
+   "wall_s": 16.72,
+   "generation_s": 3.41,
+   "prompt_tokens": 15792,
+   "completion_tokens": 173,
+   "thinking_tokens": 0,
+   "est_usd": 0.00788
+  },
+  {
+   "key": "alpha:h034",
+   "arm": "alpha",
+   "id": "h034",
+   "type": "table",
+   "behaviour": "answer",
+   "lang": "en",
+   "topic": "rag",
+   "category": "table",
+   "status": "ok",
+   "attempts": 1,
+   "correct": true,
+   "why": "",
+   "judge": {
+    "main": "correct",
+    "table": {
+     "plain_total": 2,
+     "plain_found": 2,
+     "plain_ok": true,
+     "non_plain": 0
+    }
+   },
+   "false_refusal": false,
+   "outcome": "passed_gate",
+   "full_text": false,
+   "second_search": false,
+   "n_pages": 6,
+   "evidence": [
+    {
+     "file": "2311.09476v2.pdf",
+     "page": 7,
+     "in_candidates_first": true,
+     "in_candidates_any": true,
+     "in_final": true,
+     "cited": true
+    }
+   ],
+   "n_cited": 1,
+   "other_papers_cited": [],
+   "passages_status": "done",
+   "passage_statuses": {
+    "found": 4
+   },
+   "numbers_missing": 0,
+   "critical": [],
+   "flags": [],
+   "wall_s": 12.6,
+   "generation_s": 3.55,
+   "prompt_tokens": 9222,
+   "completion_tokens": 149,
+   "thinking_tokens": 0,
+   "est_usd": 0.00465
+  },
+  {
+   "key": "alpha:h035",
+   "arm": "alpha",
+   "id": "h035",
+   "type": "table",
+   "behaviour": "answer",
+   "lang": "el",
+   "topic": "rag",
+   "category": "table",
+   "status": "ok",
+   "attempts": 1,
+   "correct": true,
+   "why": "",
+   "judge": {
+    "main": "correct",
+    "table": {
+     "plain_total": 2,
+     "plain_found": 2,
+     "plain_ok": true,
+     "non_plain": 0
+    }
+   },
+   "false_refusal": false,
+   "outcome": "passed_gate",
+   "full_text": false,
+   "second_search": false,
+   "n_pages": 8,
+   "evidence": [
+    {
+     "file": "2310.11511v1.pdf",
+     "page": 8,
+     "in_candidates_first": true,
+     "in_candidates_any": true,
+     "in_final": true,
+     "cited": true
+    }
+   ],
+   "n_cited": 1,
+   "other_papers_cited": [],
+   "passages_status": "done",
+   "passage_statuses": {
+    "found": 2
+   },
+   "numbers_missing": 0,
+   "critical": [],
+   "flags": [],
+   "wall_s": 15.16,
+   "generation_s": 3.59,
+   "prompt_tokens": 11796,
+   "completion_tokens": 124,
+   "thinking_tokens": 0,
+   "est_usd": 0.00646
+  },
+  {
+   "key": "alpha:h036",
+   "arm": "alpha",
+   "id": "h036",
+   "type": "table",
+   "behaviour": "answer",
+   "lang": "en",
+   "topic": "rag",
+   "category": "table",
+   "status": "ok",
+   "attempts": 1,
+   "correct": true,
+   "why": "",
+   "judge": {
+    "main": "correct",
+    "table": {
+     "plain_total": 2,
+     "plain_found": 2,
+     "plain_ok": true,
+     "non_plain": 0
+    }
+   },
+   "false_refusal": false,
+   "outcome": "passed_gate",
+   "full_text": false,
+   "second_search": false,
+   "n_pages": 8,
+   "evidence": [
+    {
+     "file": "2411.06037v3.pdf",
+     "page": 5,
+     "in_candidates_first": true,
+     "in_candidates_any": true,
+     "in_final": true,
+     "cited": true
+    }
+   ],
+   "n_cited": 2,
+   "other_papers_cited": [],
+   "passages_status": "done",
+   "passage_statuses": {
+    "found": 3
+   },
+   "numbers_missing": 0,
+   "critical": [],
+   "flags": [],
+   "wall_s": 13.21,
+   "generation_s": 3.04,
+   "prompt_tokens": 10581,
+   "completion_tokens": 104,
+   "thinking_tokens": 0,
+   "est_usd": 0.00541
+  },
+  {
+   "key": "alpha:h037",
+   "arm": "alpha",
+   "id": "h037",
+   "type": "table",
+   "behaviour": "answer",
+   "lang": "el",
+   "topic": "battery",
+   "category": "table",
+   "status": "ok",
+   "attempts": 1,
+   "correct": true,
+   "why": "",
+   "judge": {
+    "main": "correct",
+    "table": {
+     "plain_total": 2,
+     "plain_found": 2,
+     "plain_ok": true,
+     "non_plain": 0
+    }
+   },
+   "false_refusal": false,
+   "outcome": "passed_gate",
+   "full_text": false,
+   "second_search": false,
+   "n_pages": 7,
+   "evidence": [
+    {
+     "file": "2402.18859v1.pdf",
+     "page": 9,
+     "in_candidates_first": true,
+     "in_candidates_any": true,
+     "in_final": true,
+     "cited": true
+    }
+   ],
+   "n_cited": 2,
+   "other_papers_cited": [],
+   "passages_status": "done",
+   "passage_statuses": {
+    "found": 4
+   },
+   "numbers_missing": 0,
+   "critical": [],
+   "flags": [],
+   "wall_s": 13.73,
+   "generation_s": 3.09,
+   "prompt_tokens": 5983,
+   "completion_tokens": 210,
+   "thinking_tokens": 0,
+   "est_usd": 0.00514
+  },
+  {
+   "key": "alpha:h038",
+   "arm": "alpha",
+   "id": "h038",
+   "type": "table",
+   "behaviour": "answer",
+   "lang": "en",
+   "topic": "battery",
+   "category": "table",
+   "status": "ok",
+   "attempts": 1,
+   "correct": true,
+   "why": "",
+   "judge": {
+    "main": "correct",
+    "table": {
+     "plain_total": 2,
+     "plain_found": 2,
+     "plain_ok": true,
+     "non_plain": 1
+    }
+   },
+   "false_refusal": false,
+   "outcome": "passed_gate",
+   "full_text": false,
+   "second_search": false,
+   "n_pages": 5,
+   "evidence": [
+    {
+     "file": "2405.10857v1.pdf",
+     "page": 6,
+     "in_candidates_first": true,
+     "in_candidates_any": true,
+     "in_final": true,
+     "cited": true
+    }
+   ],
+   "n_cited": 1,
+   "other_papers_cited": [],
+   "passages_status": "done",
+   "passage_statuses": {
+    "found": 3
+   },
+   "numbers_missing": 0,
+   "critical": [],
+   "flags": [
+    "non_plain_value"
+   ],
+   "wall_s": 13.48,
+   "generation_s": 3.19,
+   "prompt_tokens": 7801,
+   "completion_tokens": 117,
+   "thinking_tokens": 0,
+   "est_usd": 0.00422
+  },
+  {
+   "key": "alpha:h039",
+   "arm": "alpha",
+   "id": "h039",
+   "type": "table",
+   "behaviour": "answer",
+   "lang": "el",
+   "topic": "battery",
+   "category": "table",
+   "status": "ok",
+   "attempts": 1,
+   "correct": true,
+   "why": "",
+   "judge": {
+    "main": "correct",
+    "table": {
+     "plain_total": 1,
+     "plain_found": 1,
+     "plain_ok": true,
+     "non_plain": 2
+    }
+   },
+   "false_refusal": false,
+   "outcome": "passed_gate",
+   "full_text": false,
+   "second_search": false,
+   "n_pages": 8,
+   "evidence": [
+    {
+     "file": "2007.01937v1.pdf",
+     "page": 3,
+     "in_candidates_first": true,
+     "in_candidates_any": true,
+     "in_final": true,
+     "cited": true
+    }
+   ],
+   "n_cited": 1,
+   "other_papers_cited": [],
+   "passages_status": "done",
+   "passage_statuses": {
+    "found": 5
+   },
+   "numbers_missing": 0,
+   "critical": [],
+   "flags": [
+    "non_plain_value"
+   ],
+   "wall_s": 26.7,
+   "generation_s": 4.19,
+   "prompt_tokens": 11841,
+   "completion_tokens": 187,
+   "thinking_tokens": 0,
+   "est_usd": 0.00663
+  },
+  {
+   "key": "alpha:h040",
+   "arm": "alpha",
+   "id": "h040",
+   "type": "table",
+   "behaviour": "answer",
+   "lang": "en",
+   "topic": "battery",
+   "category": "table",
+   "status": "ok",
+   "attempts": 1,
+   "correct": true,
+   "why": "",
+   "judge": {
+    "main": "correct",
+    "table": {
+     "plain_total": 3,
+     "plain_found": 3,
+     "plain_ok": true,
+     "non_plain": 0
+    }
+   },
+   "false_refusal": false,
+   "outcome": "passed_gate",
+   "full_text": false,
+   "second_search": false,
+   "n_pages": 8,
+   "evidence": [
+    {
+     "file": "2311.05482v2.pdf",
+     "page": 5,
+     "in_candidates_first": true,
+     "in_candidates_any": true,
+     "in_final": true,
+     "cited": true
+    }
+   ],
+   "n_cited": 1,
+   "other_papers_cited": [],
+   "passages_status": "done",
+   "passage_statuses": {
+    "found": 3
+   },
+   "numbers_missing": 0,
+   "critical": [],
+   "flags": [],
+   "wall_s": 23.63,
+   "generation_s": 3.24,
+   "prompt_tokens": 5360,
+   "completion_tokens": 100,
+   "thinking_tokens": 0,
+   "est_usd": 0.00314
+  },
+  {
+   "key": "beta:h013",
+   "arm": "beta",
+   "id": "h013",
+   "type": "two_papers",
+   "behaviour": "answer",
+   "lang": "el",
+   "topic": "rag",
+   "category": "two_papers_b",
+   "status": "ok",
+   "attempts": 1,
+   "correct": true,
+   "why": "",
+   "judge": {
+    "mh": {
+     "paper_1": "correct",
+     "paper_2": "correct"
+    }
+   },
+   "false_refusal": false,
+   "outcome": "full_text",
+   "full_text": true,
+   "second_search": false,
+   "n_pages": 25,
+   "evidence": [
+    {
+     "file": "2309.15217v2.pdf",
+     "page": 3,
+     "in_candidates_first": null,
+     "in_candidates_any": null,
+     "in_final": true,
+     "cited": true
+    },
+    {
+     "file": "2311.09476v2.pdf",
+     "page": 5,
+     "in_candidates_first": null,
+     "in_candidates_any": null,
+     "in_final": true,
+     "cited": true
+    }
+   ],
+   "n_cited": 4,
+   "other_papers_cited": [],
+   "passages_status": "done",
+   "passage_statuses": {
+    "found": 4
+   },
+   "numbers_missing": 0,
+   "critical": [],
+   "flags": [],
+   "wall_s": 4.9,
+   "generation_s": 4.86,
+   "prompt_tokens": 30295,
+   "completion_tokens": 238,
+   "thinking_tokens": 0,
+   "est_usd": 0.01249
+  },
+  {
+   "key": "beta:h014",
+   "arm": "beta",
+   "id": "h014",
+   "type": "two_papers",
+   "behaviour": "answer",
+   "lang": "en",
+   "topic": "rag",
+   "category": "two_papers_b",
+   "status": "ok",
+   "attempts": 1,
+   "correct": true,
+   "why": "",
+   "judge": {
+    "mh": {
+     "paper_1": "correct",
+     "paper_2": "correct"
+    }
+   },
+   "false_refusal": false,
+   "outcome": "full_text",
+   "full_text": true,
+   "second_search": false,
+   "n_pages": 44,
+   "evidence": [
+    {
+     "file": "2311.09476v2.pdf",
+     "page": 8,
+     "in_candidates_first": null,
+     "in_candidates_any": null,
+     "in_final": true,
+     "cited": true
+    },
+    {
+     "file": "2408.08067v2.pdf",
+     "page": 8,
+     "in_candidates_first": null,
+     "in_candidates_any": null,
+     "in_final": true,
+     "cited": true
+    }
+   ],
+   "n_cited": 3,
+   "other_papers_cited": [],
+   "passages_status": "done",
+   "passage_statuses": {
+    "found": 5
+   },
+   "numbers_missing": 0,
+   "critical": [],
+   "flags": [],
+   "wall_s": 5.55,
+   "generation_s": 5.52,
+   "prompt_tokens": 57875,
+   "completion_tokens": 278,
+   "thinking_tokens": 0,
+   "est_usd": 0.02049
+  },
+  {
+   "key": "beta:h015",
+   "arm": "beta",
+   "id": "h015",
+   "type": "two_papers",
+   "behaviour": "answer",
+   "lang": "el",
+   "topic": "rag",
+   "category": "two_papers_b",
+   "status": "ok",
+   "attempts": 1,
+   "correct": true,
+   "why": "",
+   "judge": {
+    "mh": {
+     "paper_1": "correct",
+     "paper_2": "correct"
+    }
+   },
+   "false_refusal": false,
+   "outcome": "full_text",
+   "full_text": true,
+   "second_search": false,
+   "n_pages": 35,
+   "evidence": [
+    {
+     "file": "2309.15217v2.pdf",
+     "page": 3,
+     "in_candidates_first": null,
+     "in_candidates_any": null,
+     "in_final": true,
+     "cited": true
+    },
+    {
+     "file": "2408.08067v2.pdf",
+     "page": 5,
+     "in_candidates_first": null,
+     "in_candidates_any": null,
+     "in_final": true,
+     "cited": true
+    }
+   ],
+   "n_cited": 5,
+   "other_papers_cited": [],
+   "passages_status": "done",
+   "passage_statuses": {
+    "found": 6
+   },
+   "numbers_missing": 0,
+   "critical": [],
+   "flags": [],
+   "wall_s": 8.87,
+   "generation_s": 8.85,
+   "prompt_tokens": 47712,
+   "completion_tokens": 564,
+   "thinking_tokens": 0,
+   "est_usd": 0.0185
+  },
+  {
+   "key": "beta:h016",
+   "arm": "beta",
+   "id": "h016",
+   "type": "two_papers",
+   "behaviour": "answer",
+   "lang": "en",
+   "topic": "rag",
+   "category": "two_papers_b",
+   "status": "ok",
+   "attempts": 1,
+   "correct": true,
+   "why": "",
+   "judge": {
+    "mh": {
+     "paper_1": "correct",
+     "paper_2": "correct"
+    }
+   },
+   "false_refusal": false,
+   "outcome": "full_text",
+   "full_text": true,
+   "second_search": false,
+   "n_pages": 55,
+   "evidence": [
+    {
+     "file": "2411.06037v3.pdf",
+     "page": 9,
+     "in_candidates_first": null,
+     "in_candidates_any": null,
+     "in_final": true,
+     "cited": true
+    },
+    {
+     "file": "2310.11511v1.pdf",
+     "page": 6,
+     "in_candidates_first": null,
+     "in_candidates_any": null,
+     "in_final": true,
+     "cited": true
+    }
+   ],
+   "n_cited": 6,
+   "other_papers_cited": [],
+   "passages_status": "done",
+   "passage_statuses": {
+    "no_citation": 2,
+    "found": 9
+   },
+   "numbers_missing": 0,
+   "critical": [],
+   "flags": [],
+   "wall_s": 7.75,
+   "generation_s": 7.72,
+   "prompt_tokens": 58894,
+   "completion_tokens": 477,
+   "thinking_tokens": 0,
+   "est_usd": 0.02231
+  },
+  {
+   "key": "beta:h017",
+   "arm": "beta",
+   "id": "h017",
+   "type": "two_papers",
+   "behaviour": "answer",
+   "lang": "el",
+   "topic": "rag",
+   "category": "two_papers_b",
+   "status": "ok",
+   "attempts": 1,
+   "correct": true,
+   "why": "",
+   "judge": {
+    "mh": {
+     "paper_1": "correct",
+     "paper_2": "correct"
+    }
+   },
+   "false_refusal": false,
+   "outcome": "full_text",
+   "full_text": true,
+   "second_search": false,
+   "n_pages": 33,
+   "evidence": [
+    {
+     "file": "2401.05856v1.pdf",
+     "page": 4,
+     "in_candidates_first": null,
+     "in_candidates_any": null,
+     "in_final": true,
+     "cited": true
+    },
+    {
+     "file": "2408.08067v2.pdf",
+     "page": 5,
+     "in_candidates_first": null,
+     "in_candidates_any": null,
+     "in_final": true,
+     "cited": true
+    }
+   ],
+   "n_cited": 5,
+   "other_papers_cited": [],
+   "passages_status": "done",
+   "passage_statuses": {
+    "found": 5
+   },
+   "numbers_missing": 0,
+   "critical": [],
+   "flags": [],
+   "wall_s": 7.0,
+   "generation_s": 6.98,
+   "prompt_tokens": 46908,
+   "completion_tokens": 447,
+   "thinking_tokens": 0,
+   "est_usd": 0.01822
+  },
+  {
+   "key": "beta:h018",
+   "arm": "beta",
+   "id": "h018",
+   "type": "two_papers",
+   "behaviour": "answer",
+   "lang": "en",
+   "topic": "rag",
+   "category": "two_papers_b",
+   "status": "ok",
+   "attempts": 1,
+   "correct": true,
+   "why": "",
+   "judge": {
+    "mh": {
+     "paper_1": "correct",
+     "paper_2": "correct"
+    }
+   },
+   "false_refusal": false,
+   "outcome": "full_text",
+   "full_text": true,
+   "second_search": false,
+   "n_pages": 31,
+   "evidence": [
+    {
+     "file": "2411.06037v3.pdf",
+     "page": 7,
+     "in_candidates_first": null,
+     "in_candidates_any": null,
+     "in_final": true,
+     "cited": true
+    },
+    {
+     "file": "2401.05856v1.pdf",
+     "page": 4,
+     "in_candidates_first": null,
+     "in_candidates_any": null,
+     "in_final": true,
+     "cited": true
+    }
+   ],
+   "n_cited": 6,
+   "other_papers_cited": [],
+   "passages_status": "done",
+   "passage_statuses": {
+    "not_found": 2,
+    "found": 5,
+    "absence": 1
+   },
+   "numbers_missing": 0,
+   "critical": [
+    "c1"
+   ],
+   "flags": [],
+   "wall_s": 7.06,
+   "generation_s": 7.05,
+   "prompt_tokens": 34279,
+   "completion_tokens": 331,
+   "thinking_tokens": 0,
+   "est_usd": 0.01472
+  },
+  {
+   "key": "beta:h019",
+   "arm": "beta",
+   "id": "h019",
+   "type": "two_papers",
+   "behaviour": "answer",
+   "lang": "el",
+   "topic": "battery",
+   "category": "two_papers_b",
+   "status": "ok",
+   "attempts": 1,
+   "correct": true,
+   "why": "",
+   "judge": {
+    "mh": {
+     "paper_1": "correct",
+     "paper_2": "correct"
+    }
+   },
+   "false_refusal": false,
+   "outcome": "full_text",
+   "full_text": true,
+   "second_search": false,
+   "n_pages": 51,
+   "evidence": [
+    {
+     "file": "2405.10857v1.pdf",
+     "page": 1,
+     "in_candidates_first": null,
+     "in_candidates_any": null,
+     "in_final": true,
+     "cited": true
+    },
+    {
+     "file": "2311.05482v2.pdf",
+     "page": 3,
+     "in_candidates_first": null,
+     "in_candidates_any": null,
+     "in_final": true,
+     "cited": true
+    }
+   ],
+   "n_cited": 6,
+   "other_papers_cited": [],
+   "passages_status": "done",
+   "passage_statuses": {
+    "found": 5,
+    "not_found": 1
+   },
+   "numbers_missing": 0,
+   "critical": [
+    "c1"
+   ],
+   "flags": [],
+   "wall_s": 3.98,
+   "generation_s": 3.97,
+   "prompt_tokens": 44359,
+   "completion_tokens": 279,
+   "thinking_tokens": 0,
+   "est_usd": 0.01667
+  },
+  {
+   "key": "beta:h020",
+   "arm": "beta",
+   "id": "h020",
+   "type": "two_papers",
+   "behaviour": "answer",
+   "lang": "en",
+   "topic": "battery",
+   "category": "two_papers_b",
+   "status": "ok",
+   "attempts": 1,
+   "correct": true,
+   "why": "",
+   "judge": {
+    "mh": {
+     "paper_1": "correct",
+     "paper_2": "correct"
+    }
+   },
+   "false_refusal": false,
+   "outcome": "full_text",
+   "full_text": true,
+   "second_search": false,
+   "n_pages": 76,
+   "evidence": [
+    {
+     "file": "2311.05482v2.pdf",
+     "page": 10,
+     "in_candidates_first": null,
+     "in_candidates_any": null,
+     "in_final": true,
+     "cited": true
+    },
+    {
+     "file": "2402.18859v1.pdf",
+     "page": 7,
+     "in_candidates_first": null,
+     "in_candidates_any": null,
+     "in_final": true,
+     "cited": true
+    }
+   ],
+   "n_cited": 4,
+   "other_papers_cited": [],
+   "passages_status": "done",
+   "passage_statuses": {
+    "found": 6,
+    "found_elsewhere": 1
+   },
+   "numbers_missing": 0,
+   "critical": [],
+   "flags": [],
+   "wall_s": 6.22,
+   "generation_s": 6.2,
+   "prompt_tokens": 64125,
+   "completion_tokens": 325,
+   "thinking_tokens": 0,
+   "est_usd": 0.02234
+  },
+  {
+   "key": "beta:h021",
+   "arm": "beta",
+   "id": "h021",
+   "type": "two_papers",
+   "behaviour": "answer",
+   "lang": "el",
+   "topic": "battery",
+   "category": "two_papers_b",
+   "status": "ok",
+   "attempts": 1,
+   "correct": true,
+   "why": "",
+   "judge": {
+    "mh": {
+     "paper_1": "correct",
+     "paper_2": "correct"
+    }
+   },
+   "false_refusal": false,
+   "outcome": "full_text",
+   "full_text": true,
+   "second_search": false,
+   "n_pages": 38,
+   "evidence": [
+    {
+     "file": "2402.18859v1.pdf",
+     "page": 4,
+     "in_candidates_first": null,
+     "in_candidates_any": null,
+     "in_final": true,
+     "cited": true
+    },
+    {
+     "file": "2007.01937v1.pdf",
+     "page": 3,
+     "in_candidates_first": null,
+     "in_candidates_any": null,
+     "in_final": true,
+     "cited": true
+    }
+   ],
+   "n_cited": 8,
+   "other_papers_cited": [],
+   "passages_status": "done",
+   "passage_statuses": {
+    "not_found": 1,
+    "found": 7
+   },
+   "numbers_missing": 0,
+   "critical": [
+    "c1"
+   ],
+   "flags": [],
+   "wall_s": 6.55,
+   "generation_s": 6.54,
+   "prompt_tokens": 36789,
+   "completion_tokens": 530,
+   "thinking_tokens": 0,
+   "est_usd": 0.01577
+  },
+  {
+   "key": "beta:h022",
+   "arm": "beta",
+   "id": "h022",
+   "type": "two_papers",
+   "behaviour": "answer",
+   "lang": "en",
+   "topic": "battery",
+   "category": "two_papers_b",
+   "status": "ok",
+   "attempts": 1,
+   "correct": true,
+   "why": "",
+   "judge": {
+    "mh": {
+     "paper_1": "correct",
+     "paper_2": "correct"
+    }
+   },
+   "false_refusal": false,
+   "outcome": "full_text",
+   "full_text": true,
+   "second_search": false,
+   "n_pages": 19,
+   "evidence": [
+    {
+     "file": "2007.01937v1.pdf",
+     "page": 5,
+     "in_candidates_first": null,
+     "in_candidates_any": null,
+     "in_final": true,
+     "cited": true
+    },
+    {
+     "file": "2111.02856v2.pdf",
+     "page": 3,
+     "in_candidates_first": null,
+     "in_candidates_any": null,
+     "in_final": true,
+     "cited": true
+    }
+   ],
+   "n_cited": 2,
+   "other_papers_cited": [],
+   "passages_status": "done",
+   "passage_statuses": {
+    "found": 2
+   },
+   "numbers_missing": 0,
+   "critical": [],
+   "flags": [],
+   "wall_s": 4.22,
+   "generation_s": 4.2,
+   "prompt_tokens": 27503,
+   "completion_tokens": 126,
+   "thinking_tokens": 0,
+   "est_usd": 0.01046
+  },
+  {
+   "key": "beta:h023",
+   "arm": "beta",
+   "id": "h023",
+   "type": "two_papers",
+   "behaviour": "answer",
+   "lang": "el",
+   "topic": "battery",
+   "category": "two_papers_b",
+   "status": "ok",
+   "attempts": 1,
+   "correct": true,
+   "why": "",
+   "judge": {
+    "mh": {
+     "paper_1": "correct",
+     "paper_2": "correct"
+    }
+   },
+   "false_refusal": false,
+   "outcome": "full_text",
+   "full_text": true,
+   "second_search": false,
+   "n_pages": 18,
+   "evidence": [
+    {
+     "file": "2111.02856v2.pdf",
+     "page": 5,
+     "in_candidates_first": null,
+     "in_candidates_any": null,
+     "in_final": true,
+     "cited": true
+    },
+    {
+     "file": "2405.10857v1.pdf",
+     "page": 4,
+     "in_candidates_first": null,
+     "in_candidates_any": null,
+     "in_final": true,
+     "cited": true
+    }
+   ],
+   "n_cited": 10,
+   "other_papers_cited": [],
+   "passages_status": "done",
+   "passage_statuses": {
+    "found": 6
+   },
+   "numbers_missing": 0,
+   "critical": [],
+   "flags": [],
+   "wall_s": 10.44,
+   "generation_s": 10.43,
+   "prompt_tokens": 28799,
+   "completion_tokens": 899,
+   "thinking_tokens": 0,
+   "est_usd": 0.01666
+  },
+  {
+   "key": "beta:h024",
+   "arm": "beta",
+   "id": "h024",
+   "type": "two_papers",
+   "behaviour": "answer",
+   "lang": "en",
+   "topic": "battery",
+   "category": "two_papers_b",
+   "status": "ok",
+   "attempts": 1,
+   "correct": true,
+   "why": "",
+   "judge": {
+    "mh": {
+     "paper_1": "correct",
+     "paper_2": "correct"
+    }
+   },
+   "false_refusal": false,
+   "outcome": "full_text",
+   "full_text": true,
+   "second_search": false,
+   "n_pages": 37,
+   "evidence": [
+    {
+     "file": "2402.18859v1.pdf",
+     "page": 4,
+     "in_candidates_first": null,
+     "in_candidates_any": null,
+     "in_final": true,
+     "cited": true
+    },
+    {
+     "file": "2405.10857v1.pdf",
+     "page": 2,
+     "in_candidates_first": null,
+     "in_candidates_any": null,
+     "in_final": true,
+     "cited": true
+    }
+   ],
+   "n_cited": 7,
+   "other_papers_cited": [],
+   "passages_status": "done",
+   "passage_statuses": {
+    "no_citation": 2,
+    "found": 5,
+    "absence": 1
+   },
+   "numbers_missing": 0,
+   "critical": [],
+   "flags": [],
+   "wall_s": 6.64,
+   "generation_s": 6.62,
+   "prompt_tokens": 38003,
+   "completion_tokens": 358,
+   "thinking_tokens": 0,
+   "est_usd": 0.01595
+  },
+  {
+   "key": "closed:h001",
+   "arm": "closed",
+   "id": "h001",
+   "type": "single",
+   "behaviour": "answer",
+   "lang": "el",
+   "topic": "rag",
+   "category": null,
+   "status": "ok",
+   "attempts": 1,
+   "correct": true,
+   "why": "",
+   "judge": {
+    "main": "correct"
+   },
+   "false_refusal": false,
+   "outcome": "closed_book",
+   "full_text": null,
+   "second_search": null,
+   "n_pages": null,
+   "evidence": null,
+   "n_cited": 0,
+   "other_papers_cited": [],
+   "passages_status": null,
+   "passage_statuses": {},
+   "numbers_missing": 0,
+   "critical": [],
+   "flags": [],
+   "wall_s": 3.22,
+   "generation_s": null,
+   "prompt_tokens": null,
+   "completion_tokens": null,
+   "thinking_tokens": null,
+   "est_usd": 0.00102
+  },
+  {
+   "key": "closed:h002",
+   "arm": "closed",
+   "id": "h002",
+   "type": "single",
+   "behaviour": "answer",
+   "lang": "en",
+   "topic": "rag",
+   "category": null,
+   "status": "ok",
+   "attempts": 1,
+   "correct": true,
+   "why": "",
+   "judge": {
+    "main": "correct"
+   },
+   "false_refusal": false,
+   "outcome": "closed_book",
+   "full_text": null,
+   "second_search": null,
+   "n_pages": null,
+   "evidence": null,
+   "n_cited": 0,
+   "other_papers_cited": [],
+   "passages_status": null,
+   "passage_statuses": {},
+   "numbers_missing": 0,
+   "critical": [],
+   "flags": [],
+   "wall_s": 2.43,
+   "generation_s": null,
+   "prompt_tokens": null,
+   "completion_tokens": null,
+   "thinking_tokens": null,
+   "est_usd": 0.00102
+  },
+  {
+   "key": "closed:h003",
+   "arm": "closed",
+   "id": "h003",
+   "type": "single",
+   "behaviour": "answer",
+   "lang": "el",
+   "topic": "rag",
+   "category": null,
+   "status": "ok",
+   "attempts": 1,
+   "correct": true,
+   "why": "",
+   "judge": {
+    "main": "correct"
+   },
+   "false_refusal": false,
+   "outcome": "closed_book",
+   "full_text": null,
+   "second_search": null,
+   "n_pages": null,
+   "evidence": null,
+   "n_cited": 0,
+   "other_papers_cited": [],
+   "passages_status": null,
+   "passage_statuses": {},
+   "numbers_missing": 0,
+   "critical": [],
+   "flags": [],
+   "wall_s": 4.35,
+   "generation_s": null,
+   "prompt_tokens": null,
+   "completion_tokens": null,
+   "thinking_tokens": null,
+   "est_usd": 0.00102
+  },
+  {
+   "key": "closed:h004",
+   "arm": "closed",
+   "id": "h004",
+   "type": "single",
+   "behaviour": "answer",
+   "lang": "en",
+   "topic": "rag",
+   "category": null,
+   "status": "ok",
+   "attempts": 1,
+   "correct": false,
+   "why": "judge:wrong",
+   "judge": {
+    "main": "wrong"
+   },
+   "false_refusal": false,
+   "outcome": "closed_book",
+   "full_text": null,
+   "second_search": null,
+   "n_pages": null,
+   "evidence": null,
+   "n_cited": 0,
+   "other_papers_cited": [],
+   "passages_status": null,
+   "passage_statuses": {},
+   "numbers_missing": 0,
+   "critical": [],
+   "flags": [],
+   "wall_s": 3.04,
+   "generation_s": null,
+   "prompt_tokens": null,
+   "completion_tokens": null,
+   "thinking_tokens": null,
+   "est_usd": 0.00103
+  },
+  {
+   "key": "closed:h005",
+   "arm": "closed",
+   "id": "h005",
+   "type": "single",
+   "behaviour": "answer",
+   "lang": "el",
+   "topic": "rag",
+   "category": null,
+   "status": "ok",
+   "attempts": 1,
+   "correct": true,
+   "why": "",
+   "judge": {
+    "main": "correct"
+   },
+   "false_refusal": false,
+   "outcome": "closed_book",
+   "full_text": null,
+   "second_search": null,
+   "n_pages": null,
+   "evidence": null,
+   "n_cited": 0,
+   "other_papers_cited": [],
+   "passages_status": null,
+   "passage_statuses": {},
+   "numbers_missing": 0,
+   "critical": [],
+   "flags": [],
+   "wall_s": 3.79,
+   "generation_s": null,
+   "prompt_tokens": null,
+   "completion_tokens": null,
+   "thinking_tokens": null,
+   "est_usd": 0.00103
+  },
+  {
+   "key": "closed:h006",
+   "arm": "closed",
+   "id": "h006",
+   "type": "single",
+   "behaviour": "answer",
+   "lang": "en",
+   "topic": "rag",
+   "category": null,
+   "status": "ok",
+   "attempts": 1,
+   "correct": true,
+   "why": "",
+   "judge": {
+    "main": "correct"
+   },
+   "false_refusal": false,
+   "outcome": "closed_book",
+   "full_text": null,
+   "second_search": null,
+   "n_pages": null,
+   "evidence": null,
+   "n_cited": 0,
+   "other_papers_cited": [],
+   "passages_status": null,
+   "passage_statuses": {},
+   "numbers_missing": 0,
+   "critical": [],
+   "flags": [],
+   "wall_s": 2.92,
+   "generation_s": null,
+   "prompt_tokens": null,
+   "completion_tokens": null,
+   "thinking_tokens": null,
+   "est_usd": 0.00102
+  },
+  {
+   "key": "closed:h007",
+   "arm": "closed",
+   "id": "h007",
+   "type": "single",
+   "behaviour": "answer",
+   "lang": "en",
+   "topic": "battery",
+   "category": null,
+   "status": "ok",
+   "attempts": 1,
+   "correct": true,
+   "why": "",
+   "judge": {
+    "main": "correct"
+   },
+   "false_refusal": false,
+   "outcome": "closed_book",
+   "full_text": null,
+   "second_search": null,
+   "n_pages": null,
+   "evidence": null,
+   "n_cited": 0,
+   "other_papers_cited": [],
+   "passages_status": null,
+   "passage_statuses": {},
+   "numbers_missing": 0,
+   "critical": [],
+   "flags": [],
+   "wall_s": 3.46,
+   "generation_s": null,
+   "prompt_tokens": null,
+   "completion_tokens": null,
+   "thinking_tokens": null,
+   "est_usd": 0.00102
+  },
+  {
+   "key": "closed:h008",
+   "arm": "closed",
+   "id": "h008",
+   "type": "single",
+   "behaviour": "answer",
+   "lang": "el",
+   "topic": "battery",
+   "category": null,
+   "status": "ok",
+   "attempts": 1,
+   "correct": false,
+   "why": "judge:partial",
+   "judge": {
+    "main": "partial"
+   },
+   "false_refusal": false,
+   "outcome": "closed_book",
+   "full_text": null,
+   "second_search": null,
+   "n_pages": null,
+   "evidence": null,
+   "n_cited": 0,
+   "other_papers_cited": [],
+   "passages_status": null,
+   "passage_statuses": {},
+   "numbers_missing": 0,
+   "critical": [],
+   "flags": [],
+   "wall_s": 5.68,
+   "generation_s": null,
+   "prompt_tokens": null,
+   "completion_tokens": null,
+   "thinking_tokens": null,
+   "est_usd": 0.00103
+  },
+  {
+   "key": "closed:h009",
+   "arm": "closed",
+   "id": "h009",
+   "type": "single",
+   "behaviour": "answer",
+   "lang": "en",
+   "topic": "battery",
+   "category": null,
+   "status": "ok",
+   "attempts": 1,
+   "correct": false,
+   "why": "judge:wrong",
+   "judge": {
+    "main": "wrong"
+   },
+   "false_refusal": false,
+   "outcome": "closed_book",
+   "full_text": null,
+   "second_search": null,
+   "n_pages": null,
+   "evidence": null,
+   "n_cited": 0,
+   "other_papers_cited": [],
+   "passages_status": null,
+   "passage_statuses": {},
+   "numbers_missing": 0,
+   "critical": [],
+   "flags": [],
+   "wall_s": 4.15,
+   "generation_s": null,
+   "prompt_tokens": null,
+   "completion_tokens": null,
+   "thinking_tokens": null,
+   "est_usd": 0.00103
+  },
+  {
+   "key": "closed:h010",
+   "arm": "closed",
+   "id": "h010",
+   "type": "single",
+   "behaviour": "answer",
+   "lang": "el",
+   "topic": "battery",
+   "category": null,
+   "status": "ok",
+   "attempts": 1,
+   "correct": false,
+   "why": "judge:wrong",
+   "judge": {
+    "main": "wrong"
+   },
+   "false_refusal": false,
+   "outcome": "closed_book",
+   "full_text": null,
+   "second_search": null,
+   "n_pages": null,
+   "evidence": null,
+   "n_cited": 0,
+   "other_papers_cited": [],
+   "passages_status": null,
+   "passage_statuses": {},
+   "numbers_missing": 0,
+   "critical": [],
+   "flags": [],
+   "wall_s": 3.94,
+   "generation_s": null,
+   "prompt_tokens": null,
+   "completion_tokens": null,
+   "thinking_tokens": null,
+   "est_usd": 0.00103
+  },
+  {
+   "key": "closed:h011",
+   "arm": "closed",
+   "id": "h011",
+   "type": "single",
+   "behaviour": "answer",
+   "lang": "en",
+   "topic": "battery",
+   "category": null,
+   "status": "ok",
+   "attempts": 1,
+   "correct": false,
+   "why": "judge:refused",
+   "judge": {
+    "main": "refused"
+   },
+   "false_refusal": true,
+   "outcome": "closed_book",
+   "full_text": null,
+   "second_search": null,
+   "n_pages": null,
+   "evidence": null,
+   "n_cited": 0,
+   "other_papers_cited": [],
+   "passages_status": null,
+   "passage_statuses": {},
+   "numbers_missing": 0,
+   "critical": [],
+   "flags": [],
+   "wall_s": 2.13,
+   "generation_s": null,
+   "prompt_tokens": null,
+   "completion_tokens": null,
+   "thinking_tokens": null,
+   "est_usd": 0.00103
+  },
+  {
+   "key": "closed:h012",
+   "arm": "closed",
+   "id": "h012",
+   "type": "single",
+   "behaviour": "answer",
+   "lang": "el",
+   "topic": "battery",
+   "category": null,
+   "status": "ok",
+   "attempts": 1,
+   "correct": false,
+   "why": "judge:refused",
+   "judge": {
+    "main": "refused"
+   },
+   "false_refusal": true,
+   "outcome": "closed_book",
+   "full_text": null,
+   "second_search": null,
+   "n_pages": null,
+   "evidence": null,
+   "n_cited": 0,
+   "other_papers_cited": [],
+   "passages_status": null,
+   "passage_statuses": {},
+   "numbers_missing": 0,
+   "critical": [],
+   "flags": [],
+   "wall_s": 2.91,
+   "generation_s": null,
+   "prompt_tokens": null,
+   "completion_tokens": null,
+   "thinking_tokens": null,
+   "est_usd": 0.00103
+  },
+  {
+   "key": "closed:h013",
+   "arm": "closed",
+   "id": "h013",
+   "type": "two_papers",
+   "behaviour": "answer",
+   "lang": "el",
+   "topic": "rag",
+   "category": null,
+   "status": "ok",
+   "attempts": 1,
+   "correct": false,
+   "why": "judge:partial/correct",
+   "judge": {
+    "mh": {
+     "paper_1": "partial",
+     "paper_2": "correct"
+    }
+   },
+   "false_refusal": false,
+   "outcome": "closed_book",
+   "full_text": null,
+   "second_search": null,
+   "n_pages": null,
+   "evidence": null,
+   "n_cited": 0,
+   "other_papers_cited": [],
+   "passages_status": null,
+   "passage_statuses": {},
+   "numbers_missing": 0,
+   "critical": [],
+   "flags": [],
+   "wall_s": 4.75,
+   "generation_s": null,
+   "prompt_tokens": null,
+   "completion_tokens": null,
+   "thinking_tokens": null,
+   "est_usd": 0.00102
+  },
+  {
+   "key": "closed:h014",
+   "arm": "closed",
+   "id": "h014",
+   "type": "two_papers",
+   "behaviour": "answer",
+   "lang": "en",
+   "topic": "rag",
+   "category": null,
+   "status": "ok",
+   "attempts": 1,
+   "correct": false,
+   "why": "judge:declared_missing/declared_missing",
+   "judge": {
+    "mh": {
+     "paper_1": "declared_missing",
+     "paper_2": "declared_missing"
+    }
+   },
+   "false_refusal": true,
+   "outcome": "closed_book",
+   "full_text": null,
+   "second_search": null,
+   "n_pages": null,
+   "evidence": null,
+   "n_cited": 0,
+   "other_papers_cited": [],
+   "passages_status": null,
+   "passage_statuses": {},
+   "numbers_missing": 0,
+   "critical": [],
+   "flags": [],
+   "wall_s": 2.33,
+   "generation_s": null,
+   "prompt_tokens": null,
+   "completion_tokens": null,
+   "thinking_tokens": null,
+   "est_usd": 0.00102
+  },
+  {
+   "key": "closed:h015",
+   "arm": "closed",
+   "id": "h015",
+   "type": "two_papers",
+   "behaviour": "answer",
+   "lang": "el",
+   "topic": "rag",
+   "category": null,
+   "status": "ok",
+   "attempts": 1,
+   "correct": false,
+   "why": "judge:partial/partial",
+   "judge": {
+    "mh": {
+     "paper_1": "partial",
+     "paper_2": "partial"
+    }
+   },
+   "false_refusal": false,
+   "outcome": "closed_book",
+   "full_text": null,
+   "second_search": null,
+   "n_pages": null,
+   "evidence": null,
+   "n_cited": 0,
+   "other_papers_cited": [],
+   "passages_status": null,
+   "passage_statuses": {},
+   "numbers_missing": 0,
+   "critical": [],
+   "flags": [],
+   "wall_s": 5.29,
+   "generation_s": null,
+   "prompt_tokens": null,
+   "completion_tokens": null,
+   "thinking_tokens": null,
+   "est_usd": 0.00102
+  },
+  {
+   "key": "closed:h016",
+   "arm": "closed",
+   "id": "h016",
+   "type": "two_papers",
+   "behaviour": "answer",
+   "lang": "en",
+   "topic": "rag",
+   "category": null,
+   "status": "ok",
+   "attempts": 1,
+   "correct": false,
+   "why": "judge:declared_missing/declared_missing",
+   "judge": {
+    "mh": {
+     "paper_1": "declared_missing",
+     "paper_2": "declared_missing"
+    }
+   },
+   "false_refusal": true,
+   "outcome": "closed_book",
+   "full_text": null,
+   "second_search": null,
+   "n_pages": null,
+   "evidence": null,
+   "n_cited": 0,
+   "other_papers_cited": [],
+   "passages_status": null,
+   "passage_statuses": {},
+   "numbers_missing": 0,
+   "critical": [],
+   "flags": [],
+   "wall_s": 2.21,
+   "generation_s": null,
+   "prompt_tokens": null,
+   "completion_tokens": null,
+   "thinking_tokens": null,
+   "est_usd": 0.00103
+  },
+  {
+   "key": "closed:h017",
+   "arm": "closed",
+   "id": "h017",
+   "type": "two_papers",
+   "behaviour": "answer",
+   "lang": "el",
+   "topic": "rag",
+   "category": null,
+   "status": "ok",
+   "attempts": 1,
+   "correct": false,
+   "why": "judge:correct/partial",
+   "judge": {
+    "mh": {
+     "paper_1": "correct",
+     "paper_2": "partial"
+    }
+   },
+   "false_refusal": false,
+   "outcome": "closed_book",
+   "full_text": null,
+   "second_search": null,
+   "n_pages": null,
+   "evidence": null,
+   "n_cited": 0,
+   "other_papers_cited": [],
+   "passages_status": null,
+   "passage_statuses": {},
+   "numbers_missing": 0,
+   "critical": [],
+   "flags": [],
+   "wall_s": 3.7,
+   "generation_s": null,
+   "prompt_tokens": null,
+   "completion_tokens": null,
+   "thinking_tokens": null,
+   "est_usd": 0.00103
+  },
+  {
+   "key": "closed:h018",
+   "arm": "closed",
+   "id": "h018",
+   "type": "two_papers",
+   "behaviour": "answer",
+   "lang": "en",
+   "topic": "rag",
+   "category": null,
+   "status": "ok",
+   "attempts": 1,
+   "correct": false,
+   "why": "judge:declared_missing/declared_missing",
+   "judge": {
+    "mh": {
+     "paper_1": "declared_missing",
+     "paper_2": "declared_missing"
+    }
+   },
+   "false_refusal": true,
+   "outcome": "closed_book",
+   "full_text": null,
+   "second_search": null,
+   "n_pages": null,
+   "evidence": null,
+   "n_cited": 0,
+   "other_papers_cited": [],
+   "passages_status": null,
+   "passage_statuses": {},
+   "numbers_missing": 0,
+   "critical": [],
+   "flags": [],
+   "wall_s": 2.31,
+   "generation_s": null,
+   "prompt_tokens": null,
+   "completion_tokens": null,
+   "thinking_tokens": null,
+   "est_usd": 0.00102
+  },
+  {
+   "key": "closed:h019",
+   "arm": "closed",
+   "id": "h019",
+   "type": "two_papers",
+   "behaviour": "answer",
+   "lang": "el",
+   "topic": "battery",
+   "category": null,
+   "status": "ok",
+   "attempts": 1,
+   "correct": false,
+   "why": "judge:partial/partial",
+   "judge": {
+    "mh": {
+     "paper_1": "partial",
+     "paper_2": "partial"
+    }
+   },
+   "false_refusal": false,
+   "outcome": "closed_book",
+   "full_text": null,
+   "second_search": null,
+   "n_pages": null,
+   "evidence": null,
+   "n_cited": 0,
+   "other_papers_cited": [],
+   "passages_status": null,
+   "passage_statuses": {},
+   "numbers_missing": 0,
+   "critical": [],
+   "flags": [],
+   "wall_s": 3.56,
+   "generation_s": null,
+   "prompt_tokens": null,
+   "completion_tokens": null,
+   "thinking_tokens": null,
+   "est_usd": 0.00103
+  },
+  {
+   "key": "closed:h020",
+   "arm": "closed",
+   "id": "h020",
+   "type": "two_papers",
+   "behaviour": "answer",
+   "lang": "en",
+   "topic": "battery",
+   "category": null,
+   "status": "ok",
+   "attempts": 1,
+   "correct": false,
+   "why": "judge:declared_missing/declared_missing",
+   "judge": {
+    "mh": {
+     "paper_1": "declared_missing",
+     "paper_2": "declared_missing"
+    }
+   },
+   "false_refusal": true,
+   "outcome": "closed_book",
+   "full_text": null,
+   "second_search": null,
+   "n_pages": null,
+   "evidence": null,
+   "n_cited": 0,
+   "other_papers_cited": [],
+   "passages_status": null,
+   "passage_statuses": {},
+   "numbers_missing": 0,
+   "critical": [],
+   "flags": [],
+   "wall_s": 1.83,
+   "generation_s": null,
+   "prompt_tokens": null,
+   "completion_tokens": null,
+   "thinking_tokens": null,
+   "est_usd": 0.00103
+  },
+  {
+   "key": "closed:h021",
+   "arm": "closed",
+   "id": "h021",
+   "type": "two_papers",
+   "behaviour": "answer",
+   "lang": "el",
+   "topic": "battery",
+   "category": null,
+   "status": "ok",
+   "attempts": 1,
+   "correct": false,
+   "why": "judge:omitted/omitted",
+   "judge": {
+    "mh": {
+     "paper_1": "omitted",
+     "paper_2": "omitted"
+    }
+   },
+   "false_refusal": false,
+   "outcome": "closed_book",
+   "full_text": null,
+   "second_search": null,
+   "n_pages": null,
+   "evidence": null,
+   "n_cited": 0,
+   "other_papers_cited": [],
+   "passages_status": null,
+   "passage_statuses": {},
+   "numbers_missing": 0,
+   "critical": [],
+   "flags": [],
+   "wall_s": 3.1,
+   "generation_s": null,
+   "prompt_tokens": null,
+   "completion_tokens": null,
+   "thinking_tokens": null,
+   "est_usd": 0.00102
+  },
+  {
+   "key": "closed:h022",
+   "arm": "closed",
+   "id": "h022",
+   "type": "two_papers",
+   "behaviour": "answer",
+   "lang": "en",
+   "topic": "battery",
+   "category": null,
+   "status": "ok",
+   "attempts": 1,
+   "correct": false,
+   "why": "judge:declared_missing/declared_missing",
+   "judge": {
+    "mh": {
+     "paper_1": "declared_missing",
+     "paper_2": "declared_missing"
+    }
+   },
+   "false_refusal": true,
+   "outcome": "closed_book",
+   "full_text": null,
+   "second_search": null,
+   "n_pages": null,
+   "evidence": null,
+   "n_cited": 0,
+   "other_papers_cited": [],
+   "passages_status": null,
+   "passage_statuses": {},
+   "numbers_missing": 0,
+   "critical": [],
+   "flags": [],
+   "wall_s": 3.9,
+   "generation_s": null,
+   "prompt_tokens": null,
+   "completion_tokens": null,
+   "thinking_tokens": null,
+   "est_usd": 0.00103
+  },
+  {
+   "key": "closed:h023",
+   "arm": "closed",
+   "id": "h023",
+   "type": "two_papers",
+   "behaviour": "answer",
+   "lang": "el",
+   "topic": "battery",
+   "category": null,
+   "status": "ok",
+   "attempts": 1,
+   "correct": false,
+   "why": "judge:declared_missing/declared_missing",
+   "judge": {
+    "mh": {
+     "paper_1": "declared_missing",
+     "paper_2": "declared_missing"
+    }
+   },
+   "false_refusal": true,
+   "outcome": "closed_book",
+   "full_text": null,
+   "second_search": null,
+   "n_pages": null,
+   "evidence": null,
+   "n_cited": 0,
+   "other_papers_cited": [],
+   "passages_status": null,
+   "passage_statuses": {},
+   "numbers_missing": 0,
+   "critical": [],
+   "flags": [],
+   "wall_s": 3.04,
+   "generation_s": null,
+   "prompt_tokens": null,
+   "completion_tokens": null,
+   "thinking_tokens": null,
+   "est_usd": 0.00103
+  },
+  {
+   "key": "closed:h024",
+   "arm": "closed",
+   "id": "h024",
+   "type": "two_papers",
+   "behaviour": "answer",
+   "lang": "en",
+   "topic": "battery",
+   "category": null,
+   "status": "ok",
+   "attempts": 1,
+   "correct": false,
+   "why": "judge:declared_missing/declared_missing",
+   "judge": {
+    "mh": {
+     "paper_1": "declared_missing",
+     "paper_2": "declared_missing"
+    }
+   },
+   "false_refusal": true,
+   "outcome": "closed_book",
+   "full_text": null,
+   "second_search": null,
+   "n_pages": null,
+   "evidence": null,
+   "n_cited": 0,
+   "other_papers_cited": [],
+   "passages_status": null,
+   "passage_statuses": {},
+   "numbers_missing": 0,
+   "critical": [],
+   "flags": [],
+   "wall_s": 2.67,
+   "generation_s": null,
+   "prompt_tokens": null,
+   "completion_tokens": null,
+   "thinking_tokens": null,
+   "est_usd": 0.00102
+  },
+  {
+   "key": "closed:h033",
+   "arm": "closed",
+   "id": "h033",
+   "type": "table",
+   "behaviour": "answer",
+   "lang": "el",
+   "topic": "rag",
+   "category": null,
+   "status": "ok",
+   "attempts": 1,
+   "correct": false,
+   "why": "value:0/2",
+   "judge": {
+    "main": "wrong",
+    "table": {
+     "plain_total": 2,
+     "plain_found": 0,
+     "plain_ok": false,
+     "non_plain": 0
+    }
+   },
+   "false_refusal": false,
+   "outcome": "closed_book",
+   "full_text": null,
+   "second_search": null,
+   "n_pages": null,
+   "evidence": null,
+   "n_cited": 0,
+   "other_papers_cited": [],
+   "passages_status": null,
+   "passage_statuses": {},
+   "numbers_missing": 0,
+   "critical": [],
+   "flags": [],
+   "wall_s": 2.34,
+   "generation_s": null,
+   "prompt_tokens": null,
+   "completion_tokens": null,
+   "thinking_tokens": null,
+   "est_usd": 0.00103
+  },
+  {
+   "key": "closed:h034",
+   "arm": "closed",
+   "id": "h034",
+   "type": "table",
+   "behaviour": "answer",
+   "lang": "en",
+   "topic": "rag",
+   "category": null,
+   "status": "ok",
+   "attempts": 1,
+   "correct": false,
+   "why": "value:0/2",
+   "judge": {
+    "main": "wrong",
+    "table": {
+     "plain_total": 2,
+     "plain_found": 0,
+     "plain_ok": false,
+     "non_plain": 0
+    }
+   },
+   "false_refusal": false,
+   "outcome": "closed_book",
+   "full_text": null,
+   "second_search": null,
+   "n_pages": null,
+   "evidence": null,
+   "n_cited": 0,
+   "other_papers_cited": [],
+   "passages_status": null,
+   "passage_statuses": {},
+   "numbers_missing": 0,
+   "critical": [],
+   "flags": [],
+   "wall_s": 3.2,
+   "generation_s": null,
+   "prompt_tokens": null,
+   "completion_tokens": null,
+   "thinking_tokens": null,
+   "est_usd": 0.00102
+  },
+  {
+   "key": "closed:h035",
+   "arm": "closed",
+   "id": "h035",
+   "type": "table",
+   "behaviour": "answer",
+   "lang": "el",
+   "topic": "rag",
+   "category": null,
+   "status": "ok",
+   "attempts": 1,
+   "correct": false,
+   "why": "value:1/2",
+   "judge": {
+    "main": "partial",
+    "table": {
+     "plain_total": 2,
+     "plain_found": 1,
+     "plain_ok": false,
+     "non_plain": 0
+    }
+   },
+   "false_refusal": false,
+   "outcome": "closed_book",
+   "full_text": null,
+   "second_search": null,
+   "n_pages": null,
+   "evidence": null,
+   "n_cited": 0,
+   "other_papers_cited": [],
+   "passages_status": null,
+   "passage_statuses": {},
+   "numbers_missing": 0,
+   "critical": [],
+   "flags": [],
+   "wall_s": 2.75,
+   "generation_s": null,
+   "prompt_tokens": null,
+   "completion_tokens": null,
+   "thinking_tokens": null,
+   "est_usd": 0.00102
+  },
+  {
+   "key": "closed:h036",
+   "arm": "closed",
+   "id": "h036",
+   "type": "table",
+   "behaviour": "answer",
+   "lang": "en",
+   "topic": "rag",
+   "category": null,
+   "status": "ok",
+   "attempts": 1,
+   "correct": false,
+   "why": "value:0/2",
+   "judge": {
+    "main": "refused",
+    "table": {
+     "plain_total": 2,
+     "plain_found": 0,
+     "plain_ok": false,
+     "non_plain": 0
+    }
+   },
+   "false_refusal": true,
+   "outcome": "closed_book",
+   "full_text": null,
+   "second_search": null,
+   "n_pages": null,
+   "evidence": null,
+   "n_cited": 0,
+   "other_papers_cited": [],
+   "passages_status": null,
+   "passage_statuses": {},
+   "numbers_missing": 0,
+   "critical": [],
+   "flags": [],
+   "wall_s": 2.62,
+   "generation_s": null,
+   "prompt_tokens": null,
+   "completion_tokens": null,
+   "thinking_tokens": null,
+   "est_usd": 0.00102
+  },
+  {
+   "key": "closed:h037",
+   "arm": "closed",
+   "id": "h037",
+   "type": "table",
+   "behaviour": "answer",
+   "lang": "el",
+   "topic": "battery",
+   "category": null,
+   "status": "ok",
+   "attempts": 1,
+   "correct": false,
+   "why": "value:0/2",
+   "judge": {
+    "main": "refused",
+    "table": {
+     "plain_total": 2,
+     "plain_found": 0,
+     "plain_ok": false,
+     "non_plain": 0
+    }
+   },
+   "false_refusal": true,
+   "outcome": "closed_book",
+   "full_text": null,
+   "second_search": null,
+   "n_pages": null,
+   "evidence": null,
+   "n_cited": 0,
+   "other_papers_cited": [],
+   "passages_status": null,
+   "passage_statuses": {},
+   "numbers_missing": 0,
+   "critical": [],
+   "flags": [],
+   "wall_s": 2.36,
+   "generation_s": null,
+   "prompt_tokens": null,
+   "completion_tokens": null,
+   "thinking_tokens": null,
+   "est_usd": 0.00102
+  },
+  {
+   "key": "closed:h038",
+   "arm": "closed",
+   "id": "h038",
+   "type": "table",
+   "behaviour": "answer",
+   "lang": "en",
+   "topic": "battery",
+   "category": null,
+   "status": "ok",
+   "attempts": 1,
+   "correct": false,
+   "why": "value:0/2",
+   "judge": {
+    "main": "refused",
+    "table": {
+     "plain_total": 2,
+     "plain_found": 0,
+     "plain_ok": false,
+     "non_plain": 1
+    }
+   },
+   "false_refusal": true,
+   "outcome": "closed_book",
+   "full_text": null,
+   "second_search": null,
+   "n_pages": null,
+   "evidence": null,
+   "n_cited": 0,
+   "other_papers_cited": [],
+   "passages_status": null,
+   "passage_statuses": {},
+   "numbers_missing": 0,
+   "critical": [],
+   "flags": [],
+   "wall_s": 3.09,
+   "generation_s": null,
+   "prompt_tokens": null,
+   "completion_tokens": null,
+   "thinking_tokens": null,
+   "est_usd": 0.00103
+  },
+  {
+   "key": "closed:h039",
+   "arm": "closed",
+   "id": "h039",
+   "type": "table",
+   "behaviour": "answer",
+   "lang": "el",
+   "topic": "battery",
+   "category": null,
+   "status": "ok",
+   "attempts": 1,
+   "correct": false,
+   "why": "value:0/1",
+   "judge": {
+    "main": "refused",
+    "table": {
+     "plain_total": 1,
+     "plain_found": 0,
+     "plain_ok": false,
+     "non_plain": 2
+    }
+   },
+   "false_refusal": true,
+   "outcome": "closed_book",
+   "full_text": null,
+   "second_search": null,
+   "n_pages": null,
+   "evidence": null,
+   "n_cited": 0,
+   "other_papers_cited": [],
+   "passages_status": null,
+   "passage_statuses": {},
+   "numbers_missing": 0,
+   "critical": [],
+   "flags": [],
+   "wall_s": 3.62,
+   "generation_s": null,
+   "prompt_tokens": null,
+   "completion_tokens": null,
+   "thinking_tokens": null,
+   "est_usd": 0.00103
+  },
+  {
+   "key": "closed:h040",
+   "arm": "closed",
+   "id": "h040",
+   "type": "table",
+   "behaviour": "answer",
+   "lang": "en",
+   "topic": "battery",
+   "category": null,
+   "status": "ok",
+   "attempts": 1,
+   "correct": false,
+   "why": "value:0/3",
+   "judge": {
+    "main": "refused",
+    "table": {
+     "plain_total": 3,
+     "plain_found": 0,
+     "plain_ok": false,
+     "non_plain": 0
+    }
+   },
+   "false_refusal": true,
+   "outcome": "closed_book",
+   "full_text": null,
+   "second_search": null,
+   "n_pages": null,
+   "evidence": null,
+   "n_cited": 0,
+   "other_papers_cited": [],
+   "passages_status": null,
+   "passage_statuses": {},
+   "numbers_missing": 0,
+   "critical": [],
+   "flags": [],
+   "wall_s": 2.56,
+   "generation_s": null,
+   "prompt_tokens": null,
+   "completion_tokens": null,
+   "thinking_tokens": null,
+   "est_usd": 0.00102
+  }
+ ]
+}
