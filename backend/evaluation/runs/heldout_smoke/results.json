@@ -1,0 +1,1203 @@
+{
+ "mode": "smoke",
+ "when": "2026-11-26 02:08",
+ "judge_models": [
+  "gpt-4.1-2025-04-14"
+ ],
+ "config": {
+  "GEMINI_MODEL": "gemini-3.8-flash",
+  "TEMPERATURE": 0.1,
+  "MAX_OUTPUT_TOKENS": 4096,
+  "THINKING_BUDGET": 512,
+  "USE_REST_GENERATION": true,
+  "EMBED_MODEL_NAME": "BAAI/bge-m3",
+  "RERANKER_MODEL": "cross-encoder/ms-marco-MiniLM-L-12-v2",
+  "MIN_RERANK_SCORE": -2.6,
+  "CORRECTIVE_MIN_SCORE": -3.8,
+  "ENABLE_CORRECTIVE": true,
+  "ENABLE_SUFFICIENCY_VETO": true,
+  "STRIP_HIDDEN_TEXT": false,
+  "ENABLE_FULL_TEXT": true,
+  "FULL_TEXT_MAX_TOKENS": 70000,
+  "ENABLE_PERDOC": true,
+  "PERDOC_EXTRA": 4,
+  "RERANK_CANDIDATES": 15,
+  "DENSE_CANDIDATES": 30,
+  "EXPAND_INPUT": 12,
+  "MAX_PAGES": 8,
+  "PAGE_SCORE_TOP_K": 1,
+  "MAX_PAGES_PER_FILE": 8,
+  "USE_BGE_SPARSE": false,
+  "CITATION_RULE_SET": true
+ },
+ "headline_alpha": {
+  "correct": 9,
+  "not_correct": 0,
+  "technical": 0,
+  "n": 9,
+  "rate": 1.0,
+  "wilson95": [
+   0.701,
+   1.0
+  ]
+ },
+ "by_category": {
+  "single": {
+   "correct": 1,
+   "not_correct": 0,
+   "technical": 0,
+   "n": 1,
+   "rate": 1.0,
+   "wilson95": [
+    0.207,
+    1.0
+   ]
+  },
+  "two_papers_a": {
+   "correct": 2,
+   "not_correct": 0,
+   "technical": 0,
+   "n": 2,
+   "rate": 1.0,
+   "wilson95": [
+    0.342,
+    1.0
+   ]
+  },
+  "two_papers_b": {
+   "correct": 2,
+   "not_correct": 0,
+   "technical": 0,
+   "n": 2,
+   "rate": 1.0,
+   "wilson95": [
+    0.342,
+    1.0
+   ]
+  },
+  "near": {
+   "correct": 3,
+   "not_correct": 0,
+   "technical": 0,
+   "n": 3,
+   "rate": 1.0,
+   "wilson95": [
+    0.439,
+    1.0
+   ]
+  },
+  "table": {
+   "correct": 3,
+   "not_correct": 0,
+   "technical": 0,
+   "n": 3,
+   "rate": 1.0,
+   "wilson95": [
+    0.439,
+    1.0
+   ]
+  }
+ },
+ "alpha_by_lang": {
+  "el": {
+   "correct": 3,
+   "not_correct": 0,
+   "technical": 0,
+   "n": 3,
+   "rate": 1.0,
+   "wilson95": [
+    0.439,
+    1.0
+   ]
+  },
+  "en": {
+   "correct": 6,
+   "not_correct": 0,
+   "technical": 0,
+   "n": 6,
+   "rate": 1.0,
+   "wilson95": [
+    0.61,
+    1.0
+   ]
+  }
+ },
+ "alpha_by_topic": {
+  "cloud": {
+   "correct": 9,
+   "not_correct": 0,
+   "technical": 0,
+   "n": 9,
+   "rate": 1.0,
+   "wilson95": [
+    0.701,
+    1.0
+   ]
+  }
+ },
+ "alpha_by_category_lang": {
+  "single/el": {
+   "correct": 0,
+   "not_correct": 0,
+   "technical": 0,
+   "n": 0,
+   "rate": null,
+   "wilson95": null
+  },
+  "single/en": {
+   "correct": 1,
+   "not_correct": 0,
+   "technical": 0,
+   "n": 1,
+   "rate": 1.0,
+   "wilson95": [
+    0.207,
+    1.0
+   ]
+  },
+  "two_papers_a/el": {
+   "correct": 1,
+   "not_correct": 0,
+   "technical": 0,
+   "n": 1,
+   "rate": 1.0,
+   "wilson95": [
+    0.207,
+    1.0
+   ]
+  },
+  "two_papers_a/en": {
+   "correct": 1,
+   "not_correct": 0,
+   "technical": 0,
+   "n": 1,
+   "rate": 1.0,
+   "wilson95": [
+    0.207,
+    1.0
+   ]
+  },
+  "near/el": {
+   "correct": 1,
+   "not_correct": 0,
+   "technical": 0,
+   "n": 1,
+   "rate": 1.0,
+   "wilson95": [
+    0.207,
+    1.0
+   ]
+  },
+  "near/en": {
+   "correct": 2,
+   "not_correct": 0,
+   "technical": 0,
+   "n": 2,
+   "rate": 1.0,
+   "wilson95": [
+    0.342,
+    1.0
+   ]
+  },
+  "table/el": {
+   "correct": 1,
+   "not_correct": 0,
+   "technical": 0,
+   "n": 1,
+   "rate": 1.0,
+   "wilson95": [
+    0.207,
+    1.0
+   ]
+  },
+  "table/en": {
+   "correct": 2,
+   "not_correct": 0,
+   "technical": 0,
+   "n": 2,
+   "rate": 1.0,
+   "wilson95": [
+    0.342,
+    1.0
+   ]
+  }
+ },
+ "beta_vs_alpha": {
+  "n": 2,
+  "improved": [],
+  "worsened": [],
+  "both_correct": 2,
+  "neither": 0,
+  "beta_full_text": 2
+ },
+ "closed_book": {
+  "single": {
+   "correct": 0,
+   "not_correct": 1,
+   "technical": 0,
+   "n": 1,
+   "rate": 0.0,
+   "wilson95": [
+    0.0,
+    0.793
+   ]
+  },
+  "two_papers": {
+   "correct": 1,
+   "not_correct": 1,
+   "technical": 0,
+   "n": 2,
+   "rate": 0.5,
+   "wilson95": [
+    0.095,
+    0.905
+   ]
+  },
+  "table": {
+   "correct": 0,
+   "not_correct": 3,
+   "technical": 0,
+   "n": 3,
+   "rate": 0.0,
+   "wilson95": [
+    0.0,
+    0.561
+   ]
+  }
+ },
+ "closed_book_by_topic": {
+  "cloud": {
+   "correct": 1,
+   "not_correct": 5,
+   "technical": 0,
+   "n": 6,
+   "rate": 0.167,
+   "wilson95": [
+    0.03,
+    0.564
+   ]
+  }
+ },
+ "closed_vs_alpha": {
+  "n": 6,
+  "both": 1,
+  "only_rag": 5,
+  "only_closed": 0,
+  "neither": 0
+ },
+ "false_refusals": {
+  "alpha": {
+   "count": 0,
+   "answerable": 6,
+   "ids": []
+  },
+  "beta": {
+   "count": 0,
+   "answerable": 2,
+   "ids": []
+  }
+ },
+ "routes": {
+  "alpha": {
+   "passed_gate": 9
+  },
+  "beta": {
+   "full_text": 2
+  }
+ },
+ "latency_s": {
+  "alpha": {
+   "wall": {
+    "median": 13.44,
+    "p95": 42.39,
+    "n": 9
+   },
+   "generation": {
+    "median": 3.19,
+    "p95": 5.98,
+    "n": 9
+   }
+  },
+  "beta": {
+   "wall": {
+    "median": 4.98,
+    "p95": 6.5,
+    "n": 2
+   },
+   "generation": {
+    "median": 4.83,
+    "p95": 6.25,
+    "n": 2
+   }
+  }
+ },
+ "cost_estimate_usd": {
+  "alpha": {
+   "total": 0.054,
+   "per_answer": 0.0061,
+   "prompt_tokens_median": 9922
+  },
+  "beta": {
+   "total": 0.026,
+   "per_answer": 0.0128,
+   "prompt_tokens_median": 30979.5
+  },
+  "closed": {
+   "total": 0.006,
+   "per_answer": 0.001,
+   "prompt_tokens_median": null
+  }
+ },
+ "citations": {
+  "sentences": 34,
+  "with_citation": 34,
+  "passage_found_on_cited_page": 32,
+  "found_on_other_cited_page": 0,
+  "not_found": 2,
+  "pct_with_citation": 1.0,
+  "pct_found_of_cited": 0.941,
+  "answers_with_number_missing_from_cited_page": 1
+ },
+ "evidence_pages": {
+  "alpha": {
+   "pages": 7,
+   "reached_model": 7,
+   "cited": 7
+  },
+  "beta": {
+   "pages": 4,
+   "reached_model": 4,
+   "cited": 4
+  }
+ },
+ "failure_stage_alpha_evidence_pages": {},
+ "critical_candidates": {
+  "c1": [
+   "alpha:m037",
+   "beta:m004",
+   "beta:m037"
+  ],
+  "c2": [],
+  "c3": [],
+  "c4": []
+ },
+ "review_flags": {
+  "other_paper_cited": [],
+  "non_plain_value": [],
+  "passage_check_missing": []
+ },
+ "technical_failures": [],
+ "rows": [
+  {
+   "key": "alpha:q001",
+   "arm": "alpha",
+   "id": "q001",
+   "type": "single",
+   "behaviour": "answer",
+   "lang": "en",
+   "topic": "cloud",
+   "category": "single",
+   "status": "ok",
+   "attempts": 1,
+   "correct": true,
+   "why": "",
+   "judge": {
+    "main": "correct"
+   },
+   "false_refusal": false,
+   "outcome": "passed_gate",
+   "full_text": false,
+   "second_search": false,
+   "n_pages": 8,
+   "evidence": [
+    null
+   ],
+   "n_cited": 2,
+   "other_papers_cited": [],
+   "passages_status": "done",
+   "passage_statuses": {
+    "found": 3,
+    "absence": 2
+   },
+   "numbers_missing": 0,
+   "critical": [],
+   "flags": [],
+   "wall_s": 10.12,
+   "generation_s": 3.94,
+   "prompt_tokens": 10256,
+   "completion_tokens": 193,
+   "thinking_tokens": 0,
+   "est_usd": 0.00554
+  },
+  {
+   "key": "alpha:m004",
+   "arm": "alpha",
+   "id": "m004",
+   "type": "two_papers",
+   "behaviour": "answer",
+   "lang": "en",
+   "topic": "cloud",
+   "category": "two_papers_a",
+   "status": "ok",
+   "attempts": 1,
+   "correct": true,
+   "why": "",
+   "judge": {
+    "mh": {
+     "paper_1": "correct",
+     "paper_2": "correct"
+    }
+   },
+   "false_refusal": false,
+   "outcome": "passed_gate",
+   "full_text": false,
+   "second_search": false,
+   "n_pages": 12,
+   "evidence": [
+    {
+     "file": "1702.04024.pdf",
+     "page": 3,
+     "in_candidates_first": true,
+     "in_candidates_any": true,
+     "in_final": true,
+     "cited": true
+    },
+    {
+     "file": "1812.03651.pdf",
+     "page": 3,
+     "in_candidates_first": true,
+     "in_candidates_any": true,
+     "in_final": true,
+     "cited": true
+    }
+   ],
+   "n_cited": 4,
+   "other_papers_cited": [],
+   "passages_status": "done",
+   "passage_statuses": {
+    "found": 2
+   },
+   "numbers_missing": 0,
+   "critical": [],
+   "flags": [],
+   "wall_s": 31.84,
+   "generation_s": 3.29,
+   "prompt_tokens": 18578,
+   "completion_tokens": 103,
+   "thinking_tokens": 0,
+   "est_usd": 0.00938
+  },
+  {
+   "key": "alpha:m037",
+   "arm": "alpha",
+   "id": "m037",
+   "type": "two_papers",
+   "behaviour": "answer",
+   "lang": "el",
+   "topic": "cloud",
+   "category": "two_papers_a",
+   "status": "ok",
+   "attempts": 1,
+   "correct": true,
+   "why": "",
+   "judge": {
+    "mh": {
+     "paper_1": "correct",
+     "paper_2": "correct"
+    }
+   },
+   "false_refusal": false,
+   "outcome": "passed_gate",
+   "full_text": false,
+   "second_search": false,
+   "n_pages": 11,
+   "evidence": [
+    {
+     "file": "mapreduce-osdi04.pdf",
+     "page": 4,
+     "in_candidates_first": true,
+     "in_candidates_any": true,
+     "in_final": true,
+     "cited": true
+    },
+    {
+     "file": "excamera-nsdi17.pdf",
+     "page": 12,
+     "in_candidates_first": true,
+     "in_candidates_any": true,
+     "in_final": true,
+     "cited": true
+    }
+   ],
+   "n_cited": 3,
+   "other_papers_cited": [],
+   "passages_status": "done",
+   "passage_statuses": {
+    "found": 7,
+    "not_found": 1
+   },
+   "numbers_missing": 0,
+   "critical": [
+    "c1"
+   ],
+   "flags": [],
+   "wall_s": 49.42,
+   "generation_s": 7.34,
+   "prompt_tokens": 13882,
+   "completion_tokens": 585,
+   "thinking_tokens": 0,
+   "est_usd": 0.00932
+  },
+  {
+   "key": "alpha:n002",
+   "arm": "alpha",
+   "id": "n002",
+   "type": "near",
+   "behaviour": "refuse",
+   "lang": "el",
+   "topic": "cloud",
+   "category": "near",
+   "status": "ok",
+   "attempts": 1,
+   "correct": true,
+   "why": "",
+   "judge": {
+    "near": "correct"
+   },
+   "false_refusal": false,
+   "outcome": "passed_gate",
+   "full_text": false,
+   "second_search": false,
+   "n_pages": 8,
+   "evidence": [
+    null
+   ],
+   "n_cited": 1,
+   "other_papers_cited": [
+    "1706.03178.pdf"
+   ],
+   "passages_status": "done",
+   "passage_statuses": {
+    "absence": 2
+   },
+   "numbers_missing": 0,
+   "critical": [],
+   "flags": [],
+   "wall_s": 13.44,
+   "generation_s": 2.75,
+   "prompt_tokens": 7039,
+   "completion_tokens": 102,
+   "thinking_tokens": 0,
+   "est_usd": 0.00473
+  },
+  {
+   "key": "alpha:n003",
+   "arm": "alpha",
+   "id": "n003",
+   "type": "near",
+   "behaviour": "refuse",
+   "lang": "en",
+   "topic": "cloud",
+   "category": "near",
+   "status": "ok",
+   "attempts": 1,
+   "correct": true,
+   "why": "",
+   "judge": {
+    "near": "correct"
+   },
+   "false_refusal": false,
+   "outcome": "passed_gate",
+   "full_text": false,
+   "second_search": false,
+   "n_pages": 8,
+   "evidence": [
+    null
+   ],
+   "n_cited": 2,
+   "other_papers_cited": [
+    "1902.03383v1.pdf",
+    "excamera-nsdi17.pdf"
+   ],
+   "passages_status": "done",
+   "passage_statuses": {
+    "absence": 2,
+    "found": 1
+   },
+   "numbers_missing": 0,
+   "critical": [],
+   "flags": [],
+   "wall_s": 9.17,
+   "generation_s": 3.19,
+   "prompt_tokens": 10271,
+   "completion_tokens": 90,
+   "thinking_tokens": 0,
+   "est_usd": 0.00505
+  },
+  {
+   "key": "alpha:x001",
+   "arm": "alpha",
+   "id": "x001",
+   "type": "near",
+   "behaviour": "partial",
+   "lang": "en",
+   "topic": "cloud",
+   "category": "near",
+   "status": "ok",
+   "attempts": 1,
+   "correct": true,
+   "why": "",
+   "judge": {
+    "main": "correct",
+    "near": "correct"
+   },
+   "false_refusal": false,
+   "outcome": "passed_gate",
+   "full_text": false,
+   "second_search": false,
+   "n_pages": 8,
+   "evidence": [
+    null
+   ],
+   "n_cited": 1,
+   "other_papers_cited": [],
+   "passages_status": "done",
+   "passage_statuses": {
+    "found": 4,
+    "absence": 1
+   },
+   "numbers_missing": 0,
+   "critical": [],
+   "flags": [],
+   "wall_s": 18.34,
+   "generation_s": 2.71,
+   "prompt_tokens": 8316,
+   "completion_tokens": 189,
+   "thinking_tokens": 0,
+   "est_usd": 0.00452
+  },
+  {
+   "key": "alpha:t001",
+   "arm": "alpha",
+   "id": "t001",
+   "type": "table",
+   "behaviour": "answer",
+   "lang": "en",
+   "topic": "cloud",
+   "category": "table",
+   "status": "ok",
+   "attempts": 1,
+   "correct": true,
+   "why": "",
+   "judge": {
+    "main": "correct",
+    "table": {
+     "plain_total": 2,
+     "plain_found": 2,
+     "plain_ok": true,
+     "non_plain": 0
+    }
+   },
+   "false_refusal": false,
+   "outcome": "passed_gate",
+   "full_text": false,
+   "second_search": false,
+   "n_pages": 8,
+   "evidence": [
+    {
+     "file": "1902.03383v1.pdf",
+     "page": 5,
+     "in_candidates_first": true,
+     "in_candidates_any": true,
+     "in_final": true,
+     "cited": true
+    }
+   ],
+   "n_cited": 1,
+   "other_papers_cited": [],
+   "passages_status": "done",
+   "passage_statuses": {
+    "found": 2
+   },
+   "numbers_missing": 0,
+   "critical": [],
+   "flags": [],
+   "wall_s": 9.59,
+   "generation_s": 2.63,
+   "prompt_tokens": 9017,
+   "completion_tokens": 46,
+   "thinking_tokens": 0,
+   "est_usd": 0.00427
+  },
+  {
+   "key": "alpha:t002",
+   "arm": "alpha",
+   "id": "t002",
+   "type": "table",
+   "behaviour": "answer",
+   "lang": "en",
+   "topic": "cloud",
+   "category": "table",
+   "status": "ok",
+   "attempts": 1,
+   "correct": true,
+   "why": "",
+   "judge": {
+    "main": "correct",
+    "table": {
+     "plain_total": 2,
+     "plain_found": 2,
+     "plain_ok": true,
+     "non_plain": 0
+    }
+   },
+   "false_refusal": false,
+   "outcome": "passed_gate",
+   "full_text": false,
+   "second_search": false,
+   "n_pages": 8,
+   "evidence": [
+    {
+     "file": "1902.03383v1.pdf",
+     "page": 5,
+     "in_candidates_first": true,
+     "in_candidates_any": true,
+     "in_final": true,
+     "cited": true
+    }
+   ],
+   "n_cited": 3,
+   "other_papers_cited": [],
+   "passages_status": "done",
+   "passage_statuses": {
+    "found": 2
+   },
+   "numbers_missing": 0,
+   "critical": [],
+   "flags": [],
+   "wall_s": 10.81,
+   "generation_s": 2.66,
+   "prompt_tokens": 7225,
+   "completion_tokens": 93,
+   "thinking_tokens": 0,
+   "est_usd": 0.00457
+  },
+  {
+   "key": "alpha:t001el",
+   "arm": "alpha",
+   "id": "t001el",
+   "type": "table",
+   "behaviour": "answer",
+   "lang": "el",
+   "topic": "cloud",
+   "category": "table",
+   "status": "ok",
+   "attempts": 1,
+   "correct": true,
+   "why": "",
+   "judge": {
+    "main": "correct",
+    "table": {
+     "plain_total": 2,
+     "plain_found": 2,
+     "plain_ok": true,
+     "non_plain": 0
+    }
+   },
+   "false_refusal": false,
+   "outcome": "passed_gate",
+   "full_text": false,
+   "second_search": false,
+   "n_pages": 8,
+   "evidence": [
+    {
+     "file": "1902.03383v1.pdf",
+     "page": 5,
+     "in_candidates_first": true,
+     "in_candidates_any": true,
+     "in_final": true,
+     "cited": true
+    }
+   ],
+   "n_cited": 3,
+   "other_papers_cited": [
+    "1702.04024.pdf",
+    "1812.03651.pdf"
+   ],
+   "passages_status": "done",
+   "passage_statuses": {
+    "found": 3
+   },
+   "numbers_missing": 0,
+   "critical": [],
+   "flags": [],
+   "wall_s": 21.51,
+   "generation_s": 3.63,
+   "prompt_tokens": 9922,
+   "completion_tokens": 158,
+   "thinking_tokens": 0,
+   "est_usd": 0.00709
+  },
+  {
+   "key": "beta:m004",
+   "arm": "beta",
+   "id": "m004",
+   "type": "two_papers",
+   "behaviour": "answer",
+   "lang": "en",
+   "topic": "cloud",
+   "category": "two_papers_b",
+   "status": "ok",
+   "attempts": 1,
+   "correct": true,
+   "why": "",
+   "judge": {
+    "mh": {
+     "paper_1": "correct",
+     "paper_2": "correct"
+    }
+   },
+   "false_refusal": false,
+   "outcome": "full_text",
+   "full_text": true,
+   "second_search": false,
+   "n_pages": 16,
+   "evidence": [
+    {
+     "file": "1702.04024.pdf",
+     "page": 3,
+     "in_candidates_first": null,
+     "in_candidates_any": null,
+     "in_final": true,
+     "cited": true
+    },
+    {
+     "file": "1812.03651.pdf",
+     "page": 3,
+     "in_candidates_first": null,
+     "in_candidates_any": null,
+     "in_final": true,
+     "cited": true
+    }
+   ],
+   "n_cited": 3,
+   "other_papers_cited": [],
+   "passages_status": "done",
+   "passage_statuses": {
+    "found": 2
+   },
+   "numbers_missing": 1,
+   "critical": [
+    "c1"
+   ],
+   "flags": [],
+   "wall_s": 3.3,
+   "generation_s": 3.25,
+   "prompt_tokens": 27037,
+   "completion_tokens": 100,
+   "thinking_tokens": 0,
+   "est_usd": 0.01125
+  },
+  {
+   "key": "beta:m037",
+   "arm": "beta",
+   "id": "m037",
+   "type": "two_papers",
+   "behaviour": "answer",
+   "lang": "el",
+   "topic": "cloud",
+   "category": "two_papers_b",
+   "status": "ok",
+   "attempts": 1,
+   "correct": true,
+   "why": "",
+   "judge": {
+    "mh": {
+     "paper_1": "correct",
+     "paper_2": "correct"
+    }
+   },
+   "false_refusal": false,
+   "outcome": "full_text",
+   "full_text": true,
+   "second_search": false,
+   "n_pages": 28,
+   "evidence": [
+    {
+     "file": "mapreduce-osdi04.pdf",
+     "page": 4,
+     "in_candidates_first": null,
+     "in_candidates_any": null,
+     "in_final": true,
+     "cited": true
+    },
+    {
+     "file": "excamera-nsdi17.pdf",
+     "page": 12,
+     "in_candidates_first": null,
+     "in_candidates_any": null,
+     "in_final": true,
+     "cited": true
+    }
+   ],
+   "n_cited": 3,
+   "other_papers_cited": [],
+   "passages_status": "done",
+   "passage_statuses": {
+    "found": 6,
+    "not_found": 1
+   },
+   "numbers_missing": 0,
+   "critical": [
+    "c1"
+   ],
+   "flags": [],
+   "wall_s": 6.67,
+   "generation_s": 6.41,
+   "prompt_tokens": 34922,
+   "completion_tokens": 503,
+   "thinking_tokens": 0,
+   "est_usd": 0.01428
+  },
+  {
+   "key": "closed:q001",
+   "arm": "closed",
+   "id": "q001",
+   "type": "single",
+   "behaviour": "answer",
+   "lang": "en",
+   "topic": "cloud",
+   "category": null,
+   "status": "ok",
+   "attempts": 1,
+   "correct": false,
+   "why": "judge:refused",
+   "judge": {
+    "main": "refused"
+   },
+   "false_refusal": true,
+   "outcome": "closed_book",
+   "full_text": null,
+   "second_search": null,
+   "n_pages": null,
+   "evidence": null,
+   "n_cited": 0,
+   "other_papers_cited": [],
+   "passages_status": null,
+   "passage_statuses": {},
+   "numbers_missing": 0,
+   "critical": [],
+   "flags": [],
+   "wall_s": 2.6,
+   "generation_s": null,
+   "prompt_tokens": null,
+   "completion_tokens": null,
+   "thinking_tokens": null,
+   "est_usd": 0.00102
+  },
+  {
+   "key": "closed:m004",
+   "arm": "closed",
+   "id": "m004",
+   "type": "two_papers",
+   "behaviour": "answer",
+   "lang": "en",
+   "topic": "cloud",
+   "category": null,
+   "status": "ok",
+   "attempts": 1,
+   "correct": true,
+   "why": "",
+   "judge": {
+    "mh": {
+     "paper_1": "correct",
+     "paper_2": "correct"
+    }
+   },
+   "false_refusal": false,
+   "outcome": "closed_book",
+   "full_text": null,
+   "second_search": null,
+   "n_pages": null,
+   "evidence": null,
+   "n_cited": 0,
+   "other_papers_cited": [],
+   "passages_status": null,
+   "passage_statuses": {},
+   "numbers_missing": 0,
+   "critical": [],
+   "flags": [],
+   "wall_s": 3.4,
+   "generation_s": null,
+   "prompt_tokens": null,
+   "completion_tokens": null,
+   "thinking_tokens": null,
+   "est_usd": 0.00102
+  },
+  {
+   "key": "closed:m037",
+   "arm": "closed",
+   "id": "m037",
+   "type": "two_papers",
+   "behaviour": "answer",
+   "lang": "el",
+   "topic": "cloud",
+   "category": null,
+   "status": "ok",
+   "attempts": 1,
+   "correct": false,
+   "why": "judge:correct/wrong",
+   "judge": {
+    "mh": {
+     "paper_1": "correct",
+     "paper_2": "wrong"
+    }
+   },
+   "false_refusal": false,
+   "outcome": "closed_book",
+   "full_text": null,
+   "second_search": null,
+   "n_pages": null,
+   "evidence": null,
+   "n_cited": 0,
+   "other_papers_cited": [],
+   "passages_status": null,
+   "passage_statuses": {},
+   "numbers_missing": 0,
+   "critical": [],
+   "flags": [],
+   "wall_s": 4.48,
+   "generation_s": null,
+   "prompt_tokens": null,
+   "completion_tokens": null,
+   "thinking_tokens": null,
+   "est_usd": 0.00103
+  },
+  {
+   "key": "closed:t001",
+   "arm": "closed",
+   "id": "t001",
+   "type": "table",
+   "behaviour": "answer",
+   "lang": "en",
+   "topic": "cloud",
+   "category": null,
+   "status": "ok",
+   "attempts": 1,
+   "correct": false,
+   "why": "value:1/2",
+   "judge": {
+    "main": "wrong",
+    "table": {
+     "plain_total": 2,
+     "plain_found": 1,
+     "plain_ok": false,
+     "non_plain": 0
+    }
+   },
+   "false_refusal": false,
+   "outcome": "closed_book",
+   "full_text": null,
+   "second_search": null,
+   "n_pages": null,
+   "evidence": null,
+   "n_cited": 0,
+   "other_papers_cited": [],
+   "passages_status": null,
+   "passage_statuses": {},
+   "numbers_missing": 0,
+   "critical": [],
+   "flags": [],
+   "wall_s": 2.07,
+   "generation_s": null,
+   "prompt_tokens": null,
+   "completion_tokens": null,
+   "thinking_tokens": null,
+   "est_usd": 0.00102
+  },
+  {
+   "key": "closed:t002",
+   "arm": "closed",
+   "id": "t002",
+   "type": "table",
+   "behaviour": "answer",
+   "lang": "en",
+   "topic": "cloud",
+   "category": null,
+   "status": "ok",
+   "attempts": 1,
+   "correct": false,
+   "why": "value:0/2",
+   "judge": {
+    "main": "wrong",
+    "table": {
+     "plain_total": 2,
+     "plain_found": 0,
+     "plain_ok": false,
+     "non_plain": 0
+    }
+   },
+   "false_refusal": false,
+   "outcome": "closed_book",
+   "full_text": null,
+   "second_search": null,
+   "n_pages": null,
+   "evidence": null,
+   "n_cited": 0,
+   "other_papers_cited": [],
+   "passages_status": null,
+   "passage_statuses": {},
+   "numbers_missing": 0,
+   "critical": [],
+   "flags": [],
+   "wall_s": 2.88,
+   "generation_s": null,
+   "prompt_tokens": null,
+   "completion_tokens": null,
+   "thinking_tokens": null,
+   "est_usd": 0.00102
+  },
+  {
+   "key": "closed:t001el",
+   "arm": "closed",
+   "id": "t001el",
+   "type": "table",
+   "behaviour": "answer",
+   "lang": "el",
+   "topic": "cloud",
+   "category": null,
+   "status": "ok",
+   "attempts": 1,
+   "correct": false,
+   "why": "value:1/2",
+   "judge": {
+    "main": "wrong",
+    "table": {
+     "plain_total": 2,
+     "plain_found": 1,
+     "plain_ok": false,
+     "non_plain": 0
+    }
+   },
+   "false_refusal": false,
+   "outcome": "closed_book",
+   "full_text": null,
+   "second_search": null,
+   "n_pages": null,
+   "evidence": null,
+   "n_cited": 0,
+   "other_papers_cited": [],
+   "passages_status": null,
+   "passage_statuses": {},
+   "numbers_missing": 0,
+   "critical": [],
+   "flags": [],
+   "wall_s": 2.59,
+   "generation_s": null,
+   "prompt_tokens": null,
+   "completion_tokens": null,
+   "thinking_tokens": null,
+   "est_usd": 0.00102
+  }
+ ]
+}

@@ -37,3 +37,6 @@ backend/evaluation/runs/claim_support_calls.json
 backend/evaluation/runs/source_passages_calls.json
 backend/evaluation/runs/claim_support_*_detail.csv
 backend/evaluation/runs/claim_support_blind*
+# Βήμα 7: απαντήσεις, κρίσεις και φύλλο ελέγχου του κλειστού σετ, με κείμενο άρθρων και ερωτήσεων
+backend/evaluation/runs/heldout/private/
+backend/evaluation/runs/heldout_smoke/private/
