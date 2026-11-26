@@ -263,6 +263,18 @@ def test_judge_mh_prompt_has_labels_and_formats():
                         answer="{not a placeholder}")
 
 
+def test_review_sheet_shows_passages_like_the_app():
+    a = {"passages": {"status": "done", "items": [
+        {"sentence": "Ragas has three metrics.", "status": "found", "label": "S1", "file": "a.pdf", "page": 2,
+         "quote": "three   quality aspects"},
+        {"sentence": "It uses GPT.", "status": "not_found", "label": None, "file": None, "page": None, "quote": None},
+        {"sentence": "The paper does not say X.", "status": "absence"}]}}
+    md = J.passages_md(a)
+    assert "[S1] a.pdf, σελ. 2: «three quality aspects»" in md
+    assert "δεν βρέθηκε αυτούσιο χωρίο" in md and "λέει τι λείπει" in md
+    assert "δεν ολοκληρώθηκε" in J.passages_md({"passages": {"status": "failed"}})
+
+
 def test_human_judgments_use_the_same_rules():
     tab = item(type="table", values=H.parse_table_values("900 · s · run"))
     h = J.human_judgments(tab, {"verdict": "correct", "wrong_value": "no"})

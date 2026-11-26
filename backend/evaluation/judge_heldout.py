@@ -290,8 +290,13 @@ def print_report(rep: dict) -> None:
 
 HUMAN_HELP = """# Ανθρώπινος έλεγχος — φάση 1 (χωρίς απάντηση αναφοράς)
 
-Για κάθε R: διάβασε την ερώτηση και την απάντηση, και έλεγξε στα PDF τις σελίδες που παραθέτει (ή όλο το
-άρθρο, αν η απάντηση αρνείται). ΜΗΝ ανοίξεις το phase2 πριν συμπληρώσεις το `phase1_form.csv`.
+Για κάθε R: διάβασε την ερώτηση και την απάντηση. Κάτω από κάθε απάντηση υπάρχει, για κάθε πρόταση, το χωρίο
+από το οποίο βγήκε, αντιγραμμένο αυτούσιο από τη σελίδα (το ίδιο που δείχνει το κουμπί «Source passages»).
+Αν το χωρίο σού αρκεί, δεν χρειάζεται το PDF. Άνοιξε το PDF (`backend/evaluation/test_papers/heldout/`) όταν
+κάτι δεν στέκει, όταν λείπει χωρίο, ή όταν η απάντηση λέει ότι κάτι δεν υπάρχει στο άρθρο.
+
+Προχώρα ΜΕ ΤΗ ΣΕΙΡΑ R01 → R20. Η σειρά είναι τυχαία, και όσες προλάβεις μετράνε με τον πραγματικό
+παρονομαστή. ΜΗΝ ανοίξεις το phase2 πριν συμπληρώσεις το `phase1_form.csv` για όσες έκανες.
 
 Στήλες του phase1_form.csv:
 - `verdict`: για ερωτήσεις με απάντηση: correct | partial | refused | wrong.
@@ -316,6 +321,34 @@ PHASE2_HELP = """# Ανθρώπινος έλεγχος — φάση 2 (αποκ�
   | wrong_reference (λάθος απάντηση αναφοράς/τιμή/«τι λείπει») | other
 - `notes`: ελεύθερο κείμενο.
 """
+
+
+_PASSAGE_STATUS = {
+    "found_elsewhere": "χωρίο από άλλη σελίδα της απάντησης",
+    "not_found": "δεν βρέθηκε αυτούσιο χωρίο",
+    "no_citation": "χωρίς παραπομπή",
+    "absence": "λέει τι λείπει (δεν υπάρχει χωρίο)",
+}
+
+
+def passages_md(a: dict) -> str:
+    """Το χωρίο κάθε πρότασης, όπως το δείχνει το κουμπί «Source passages» (βήμα 6) στην εφαρμογή."""
+    p = a.get("passages") or {}
+    if p.get("status") not in ("done", "no_pages") or not p.get("items"):
+        return "  - (ο έλεγχος χωρίων δεν ολοκληρώθηκε: έλεγξε στο PDF)"
+    out = []
+    for x in p["items"]:
+        sent = " ".join((x.get("sentence") or "").split())
+        if len(sent) > 220:
+            sent = sent[:217] + "…"
+        st = x.get("status")
+        if st in ("found", "found_elsewhere") and x.get("quote"):
+            extra = f" ({_PASSAGE_STATUS[st]})" if st == "found_elsewhere" else ""
+            out.append(f"  - *{sent}*\n    → [{x.get('label')}] {x.get('file')}, σελ. {x.get('page')}{extra}: "
+                       f"«{' '.join(x['quote'].split())}»")
+        else:
+            out.append(f"  - *{sent}*\n    → {_PASSAGE_STATUS.get(st, st or '—')}")
+    return "\n".join(out)
 
 
 def build_review(mode: str, items, answers, pub, titles) -> dict:
@@ -348,7 +381,7 @@ def build_review(mode: str, items, answers, pub, titles) -> dict:
                           for lab in a.get("cited") or [] if lab in srcs) or "  - (καμία)"
         p1.append(f"\n---\n## {rid} · ερώτηση {kind}\n\n**Άρθρο(α) της ερώτησης:** {arts}\n\n"
                   f"**Ερώτηση:** {it['question']}\n\n**Απάντηση του συστήματος:**\n\n{a['answer']}\n\n"
-                  f"**Παραπομπές:**\n{cited}\n")
+                  f"**Παραπομπές:**\n{cited}\n\n**Χωρία ανά πρόταση:**\n{passages_md(a)}\n")
         vals = "; ".join(f"{v['raw']} · {v['unit']} · {v['label']}" for v in it["values"])
         p2.append(f"\n---\n## {rid}\n\n**Σωστή συμπεριφορά:** {it['behaviour']}\n\n"
                   f"**Απάντηση αναφοράς:** {it['reference']}\n\n"
@@ -462,10 +495,21 @@ def main() -> int:
     ap.add_argument("--model", default="gpt-4.1")
     ap.add_argument("--max-usd", type=float, default=3.0, help="όριο κόστους του κριτή")
     ap.add_argument("--agreement", action="store_true", help="συμφωνία ανθρώπου–κριτή, μετά τα forms")
+    ap.add_argument("--review-only", action="store_true",
+                    help="ξαναφτιάχνει ΜΟΝΟ το φύλλο ελέγχου από τα σωσμένα αποτελέσματα· κανένας κριτής, το "
+                         "results.json δεν αλλάζει, τα συμπληρωμένα forms δεν αντικαθίστανται")
     args = ap.parse_args()
     mode = "smoke" if args.smoke else "heldout"
     if args.agreement:
         return agreement(mode)
+    if args.review_only:
+        items, answers, titles, _topics = load(mode)
+        with open(os.path.join(H.MODES[mode]["out"], "results.json"), encoding="utf-8") as f:
+            pub = json.load(f)["rows"]
+        rv = build_review(mode, items, answers, pub, titles)
+        print(f"Φύλλο ελέγχου ξαναφτιάχτηκε: {rv['total']} ερωτήσεις ({rv['flagged']} σημαδεμένες, "
+              f"{rv['random']} τυχαίες) · 0 κλήσεις · το results.json δεν άλλαξε")
+        return 0
 
     items, answers, titles, topics = load(mode)
     key = C2.api_key()

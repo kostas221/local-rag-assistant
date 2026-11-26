@@ -1,0 +1,14 @@
+{
+  "permissions": {
+    "deny": [
+      "Read(/.env)",
+      "Read(**/.env)",
+      "Read(/backend/evaluation/heldout_questions_draft.csv)",
+      "Read(**/heldout_questions_draft.csv)",
+      "Read(/backend/evaluation/runs/heldout/private/**)",
+      "Read(**/runs/heldout/private/**)",
+      "Read(/scenarios_H601_H660.md)",
+      "Read(**/scenarios_H601_H660.md)"
+    ]
+  }
+}
