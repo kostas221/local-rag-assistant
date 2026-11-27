@@ -10,11 +10,11 @@ Code comments, log messages, and eval output are intentionally in **Greek** — 
 
 ## Running & developing
 
-Everything runs through Docker Compose (Postgres + backend + frontend). There is no local-venv workflow; the `venv/` at repo root is incidental and not used by the app.
+Everything runs through Docker Compose (Postgres + backend + web). There is no local-venv workflow; the `venv/` at repo root is incidental and not used by the app.
 
 ```bash
 docker compose up -d --build      # first build downloads ~2.5GB of models into a volume
-# UI:  http://localhost:8502      (container listens on 8501)
+# UI:  http://localhost:8502      (nginx in the container listens on 8080; /api goes to the backend)
 # API: http://localhost:8010/docs (container listens on 8000)
 # DB:  localhost:5434             (container listens on 5432)
 ```
@@ -77,9 +77,9 @@ Per-question results land in `evaluation/runs/*.csv` (UTF-8-BOM so Greek renders
 A document therefore exists in both: a Postgres `Document` row (status tracking) and N ChromaDB chunks. Deletion must hit both ([main.py](backend/main.py) `delete_document` → `ai_core.delete_file_from_db`).
 
 ### Request flow
-`Streamlit (app_ui.py)` → HTTP → `FastAPI (main.py)` → `ai_core.py` (RAG) + Gemini. The frontend holds a JWT in `st.session_state` and sends it as a Bearer token; every protected endpoint depends on `get_current_user`.
+`React UI (web/)` → `/api` on the same origin → nginx ([web/nginx.conf](web/nginx.conf)) → `FastAPI (main.py)` → `ai_core.py` (RAG) + Gemini. The UI keeps the JWT in `sessionStorage` (survives a reload, gone when the tab closes) and sends it as a Bearer token; every protected endpoint depends on `get_current_user`. Answers stream as NDJSON; nginx runs with `proxy_buffering off` and leaves NDJSON out of gzip, so nothing holds them back. The UI shows the text word by word, because Gemini sends a few large chunks (display only). Plan, decisions and test status of the UI: [docs/FRONTEND_PLAN_2026-11-26.md](docs/FRONTEND_PLAN_2026-11-26.md).
 
-Upload is async: [main.py](backend/main.py) `/upload` streams the file to disk (50 MB cap, sanitized filename), creates the `Document` row as `processing`, and hands ingest to a `BackgroundTasks` worker (`process_document`) that flips status to `ready`/`failed`. The frontend's library is an `@st.fragment(run_every="4s")` that polls `/documents`, so `processing → ready` appears without a manual refresh.
+Upload is async: [main.py](backend/main.py) `/upload` streams the file to disk (50 MB cap, sanitized filename), creates the `Document` row as `processing`, and hands ingest to a `BackgroundTasks` worker (`process_document`) that flips status to `ready`/`failed`. The UI's library polls `/documents` every 4 s while any document is `processing`, so `processing → ready` appears without a manual refresh.
 
 ### RAG pipeline ([ai_core.py](backend/ai_core.py) `search_documents` → `ask_ai`)
 1. **Translate-then-retrieve** — `optimize_query` detects Greek (`_has_greek`) and translates the query to English for retrieval only (docs are English); the answer stays in the user's language via the system prompt. Translations are cached.

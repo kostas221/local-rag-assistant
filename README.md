@@ -97,6 +97,7 @@ docker compose exec backend python evaluation/ablation_ladder.py
 - **Per-document search for two-paper questions** — questions that name two papers are searched inside each one; no LLM call ([details](#questions-that-need-two-papers))
 - **Cross-lingual QA** — Greek questions are translated for retrieval (translate-then-retrieve, domain- and glossary-aware, cached); answers come back in the user's language
 - **Inline citations** — `[S3]` markers resolved server-side to (file, page), so the model is never asked to copy a page number — the step that used to go wrong. Each source shows the passage that matched the question, not the start of the page, and the sources the answer actually cites are listed apart from the other pages it was given
+- **Web interface (React)** — click a citation and the real PDF page opens beside the answer, with the sentence's passage highlighted when its place on the page is unique (481 of 488 development passages; every table passage), and never a guessed spot. Per-sentence source passages, an evidence view that shows *where* each passage was found (never "verified"), streaming with Stop, keyboard shortcuts, phone layout. Covered by Playwright end-to-end tests against a fake API and by axe accessibility checks (WCAG 2.1 AA)
 - **Conversational rewriting** — follow-ups are rewritten into self-contained queries; leak tests confirm an off-topic follow-up is still refused
 - **Robust PDF extraction** — PyMuPDF with Unicode NFKC normalization and de-hyphenation (`A WS` → `AWS`, ligatures, line-break hyphens)
 - **Evaluation framework** — 8 golden sets in one frozen scoreboard, two LLM judges, paired bootstrap, chance floors, per-stage tracing, determinism checks
@@ -106,9 +107,9 @@ docker compose exec backend python evaluation/ablation_ladder.py
 ## Architecture
 
 ```
-┌────────────┐  HTTP   ┌─────────────────────────────────┐
-│  Streamlit │ ──────► │            FastAPI               │
-│  frontend  │         │                                  │
+┌────────────┐  /api   ┌─────────────────────────────────┐
+│  React UI  │ ──────► │            FastAPI               │
+│  + nginx   │         │                                  │
 │   :8502    │         │  /chat ──► RAG pipeline          │
 └────────────┘         │  /upload ─► background ingest    │
                        │  /metrics ► Prometheus text      │
@@ -326,7 +327,7 @@ docker compose exec backend python evaluation/trace_query.py --id q028 --target 
 - **The retrieval gate lets some off-topic questions through on 3.8 Flash.** The pre-registered bar asked for 5/5 off-topic questions silenced *by retrieval*; 3.8 gives **3/5** (and 4/5 on the other-domain set). `q048` (GDPR) and `q050` (GPU tensor cores) are cut by the gate, then the corrective rewrite adds field words ("cloud service providers") and they pass. In all such cases the **answer** says the papers do not cover it (5/5 off-topic, 42/42 near-miss declined). Three fixes were measured — a stricter rewrite prompt, a higher threshold, a re-check against the original question — and none separates these from the vague-but-answerable questions the same rewrite rescues ([rejected](#rejected-with-numbers)). The defence is in the answer, and next in a claim-level grounding check
 - **Near-miss leaks.** On 2.5 Flash two of 42 leaked (`n024`, a synthesis of two facts no paper links; `n038`, the 2024 time limit dropped). On 3.8 both are declined, but this is one draw; a claim-level check (e.g. MiniCheck, HHEM) is the planned safeguard
 - **Other-domain off-topic: `o4` (Vesuvius).** On 2.5 the translation was "Vesuvius eruptions" (−3.46, silenced); on 3.8 it is "Vesuvius last eruption date" (−1.56), which passes the gate on a volcanology paper about Stromboli. No corpus word was added — the glossary rule held; the literal wording alone moved the score. The answer for this set was not graded
-- **Text-layer PDFs only.** A scanned PDF is flagged in the UI as *"no extractable text (scanned PDF — needs OCR)"* instead of silently showing as ready; there is no OCR or layout model. Figures were audited instead of ingested
+- **Text-layer PDFs only.** A scanned PDF is flagged in the UI as *"No extractable text (scanned PDF, needs OCR)"* instead of silently showing as ready; there is no OCR or layout model. Figures were audited instead of ingested
 - **Not measured:** questions about the whole corpus at once ("what do all seven papers say about cold starts?"), multi-step agentic retrieval, and prompt injection hidden in uploaded PDFs (uploads are private to their owner, so an injected document can only mislead its own uploader)
 - **Two-paper routing uses hand-written aliases** for the 7 papers; paraphrases ("the video-processing system") and pronouns are not caught. Automatic alias extraction at ingest is open
 - **7 papers.** The design is tuned to 418 chunks. Breaking points are measured (BM25 fails first, 6.7× slower than dense at 50k chunks), but quality at 50+ papers is not
@@ -351,7 +352,7 @@ First start downloads the embedding + reranker models (~2.5 GB, cached in a volu
 
 > Upgrading an install from before November 2026? Its vector store is Chroma 0.4; read [`docs/STABILIZATION_2026-11-01.md`](docs/STABILIZATION_2026-11-01.md) and start with `-f docker-compose.yml -f docker-compose.upgrade.yml`. A fresh clone needs neither.
 
-- UI: http://localhost:8502 — register, upload a PDF, wait for "ready", ask away
+- UI: http://localhost:8502 — register, upload a PDF, wait for "ready", ask away; click a citation to see the page it comes from
 - API docs: http://localhost:8010/docs
 - Metrics: http://localhost:8010/metrics
 
@@ -383,6 +384,8 @@ docker compose exec backend python evaluation/ablation_ladder.py
 docker compose exec backend python evaluation/trace_query.py --id q028
 docker compose exec backend python evaluation/compare_pages_rerankers.py
 docker compose exec backend python evaluation/measure_gate_margin.py
+
+cd web && npm ci && npm test && npx playwright test   # UI: unit tests, then end-to-end tests against a fake API (no backend, no cost)
 ```
 
 ## Project structure
@@ -396,6 +399,7 @@ backend/
   rate_limit.py         # cross-process rate limiting in Postgres
   metrics.py            # Prometheus text exposition, zero dependencies
   main.py               # FastAPI: auth, documents, conversations, chat streaming
+  page_view.py          # PDF page image with the passage highlighted, only where its place is unique
   evaluation/
     golden_*.jsonl               # 8 scoreboard sets + domains + dangling
     scoreboard.py                # all sets, one frozen run, per-question diff
@@ -404,11 +408,14 @@ backend/
     probe_*.py                   # one experiment each — prediction and result in the docstring
     runs/                        # every result, including the rejected ones
   tests/                # 149 tests
-frontend/
-  app_ui.py             # Streamlit chat UI
-docker-compose.yml      # postgres + backend + frontend
+web/                    # React UI: TypeScript, Vite, Tailwind, shadcn/ui
+  src/features/         # chat, library, source page viewer, sign-in
+  e2e/                  # Playwright tests against a fake API, with axe accessibility checks
+  nginx.conf            # /api proxy with streaming, 50 MB uploads, security headers
+scripts/                # backup, README charts
+docker-compose.yml      # postgres + backend + web
 ```
 
 ## Tech stack
 
-FastAPI · Streamlit · ChromaDB · PostgreSQL · sentence-transformers (bge-m3, ms-marco-MiniLM) · rank-bm25 · PyMuPDF · Gemini 3.8 Flash (REST) · Docker Compose · GPT-4.1 as the evaluation judge
+FastAPI · React (TypeScript, Vite, Tailwind, shadcn/ui) · nginx · ChromaDB · PostgreSQL · sentence-transformers (bge-m3, ms-marco-MiniLM) · rank-bm25 · PyMuPDF · Gemini 3.8 Flash (REST) · Docker Compose · GPT-4.1 as the evaluation judge

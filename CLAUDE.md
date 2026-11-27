@@ -22,6 +22,8 @@ Pydantic 2 / Chroma 1.5.9. Η βιβλιοθήκη άσκησης και δια�
     (`page_view.py`, `POST /documents/{id}/page-image` στο `main.py`, κουμπιά στο UI). Δεν αλλάζει απαντήσεις.
     Γι' αυτό το `heldout_preflight.py` αποτυγχάνει πλέον, και σωστά: το `main.py` δεν είναι ίδιο με το
     `c15a395`.
+- **UI:** React στο `web/` (nginx, `127.0.0.1:8502`)· το Streamlit αποσύρθηκε στις 27/11/2026 και μένει στο ιστορικό.
+  Πλάνο, αποφάσεις και κατάσταση: `docs/FRONTEND_PLAN_2026-11-26.md`. Αλλαγή στο `web/` θέλει `--build web`.
 - **Πεδίο:** αγγλικά επιστημονικά PDF με επιλέξιμο κείμενο· ερωτήσεις στα ελληνικά ή στα αγγλικά.
 - **Χρόνοι:** όσοι μετρήθηκαν στο laptop (5,9 GB RAM) δεν είναι αντιπροσωπευτικοί. Για το README μετριούνται στο PC.
 
@@ -34,7 +36,8 @@ Pydantic 2 / Chroma 1.5.9. Η βιβλιοθήκη άσκησης και δια�
   φορτώνει την παλιά βάση Chroma 0.4 και το `import ai_core` σταματά («Legacy Chroma database
   detected»). Η ενεργή βάση είναι το volume `chromadb_data_next`.
 - Το repo είναι δημόσιο: δεν ανεβαίνουν αντίγραφα άρθρων ή έξοδοι με αυτούσιο κείμενό τους.
-- Πριν από κάθε commit: `ruff check .` στο `backend` (ίδιος έλεγχος με το lint του CI).
+- Πριν από κάθε commit: `ruff check .` στο `backend` (ίδιος έλεγχος με το lint του CI). Όταν αλλάζει το `web/`:
+  `npm run typecheck`, `npm run lint`, `npm test` και `npx playwright test` στο `web` (όπως το job `web` του CI).
 - **Η ανάπτυξη δεν διαβάζει ποτέ το περιεχόμενο του κλειστού σετ.** Αυτό σημαίνει:
   - όχι το `heldout_questions_draft.csv`, το `runs/heldout*/private/` και το `scenarios_H601_H660.md`·
   - τα scripts του βήματος 7 τυπώνουν μόνο id και αριθμούς·

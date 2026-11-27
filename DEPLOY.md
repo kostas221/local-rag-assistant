@@ -46,7 +46,7 @@ docker compose up --build -d
 **4. Πρώτο ξεκίνημα — περίμενε**
 
 Το backend κατεβάζει και φορτώνει ~2.4GB μοντέλων (bge-m3 + cross-encoder).
-Γι' αυτό ο healthcheck έχει `start_period: 300s` και το frontend δεν ξεκινά
+Γι' αυτό ο healthcheck έχει `start_period: 300s` και το UI (`web`) δεν ξεκινά
 πριν το backend γίνει `healthy` (`condition: service_healthy`). Παρακολούθηση:
 
 ```bash
@@ -60,12 +60,19 @@ docker compose logs -f backend
 
 | Υπηρεσία | Διεύθυνση |
 |---|---|
-| UI (Streamlit) | <http://localhost:8502> |
+| UI (React + nginx) | <http://localhost:8502> — μόνο τοπικά (`127.0.0.1`) |
 | API docs | <http://127.0.0.1:8010/docs> — μόνο τοπικά |
 | Postgres | `127.0.0.1:5434` — μόνο τοπικά |
 
 Οι θύρες του host είναι μετατοπισμένες ώστε να μη συγκρούονται με την v1 αν
 τρέχει παράλληλα (v1: 8501 / 8000 / 5432).
+
+**Αναβάθμιση από το Streamlit (πριν από 27/11/2026):** το UI είναι πλέον η υπηρεσία `web`. Ξεκίνα με
+`--remove-orphans`, αλλιώς το παλιό container `v2_frontend` κρατά την 8502 και το `web` δεν ξεκινά:
+
+```bash
+docker compose -f docker-compose.yml -f docker-compose.upgrade.yml up -d --build --remove-orphans
+```
 
 **6. Έλεγχος ότι δουλεύει**
 
@@ -125,8 +132,8 @@ cloudflared tunnel --url http://localhost:8502
 
 **5. Ports & HTTPS.**
 > *Ρώτα:* «Ποια **ports** μπορώ να ανοίξω στο firewall; Υπάρχει ήδη **reverse proxy** (nginx) ή **πιστοποιητικό** σχολής, ή τα στήνω εγώ;»
-- **Γιατί:** Το UI ακούει στο **8501**, το API στο **8000**. Για πραγματικούς χρήστες θες ένα proxy (Caddy/nginx) μπροστά που δίνει `https://…` (port 443) — αλλιώς οι κωδικοί ταξιδεύουν **plaintext**.
-- **Τι αλλάζει:** Αν επιτρέπεται μόνο 443 → όλα πίσω από proxy (το repo ήδη το υποστηρίζει: `ALLOWED_ORIGINS`, frontend σε `127.0.0.1`).
+- **Γιατί:** Το UI (nginx) ακούει στο **8502** του host και στέλνει ήδη το `/api` στον backend. Για πραγματικούς χρήστες θες ένα proxy (Caddy/nginx) μπροστά που δίνει `https://…` (port 443) — αλλιώς οι κωδικοί ταξιδεύουν **plaintext**.
+- **Τι αλλάζει:** Αν επιτρέπεται μόνο 443 → όλα πίσω από proxy (το repo ήδη το υποστηρίζει: UI και API στο ίδιο origin μέσω του nginx, όλα σε `127.0.0.1`).
 
 ### 🟢 Πόροι & διάρκεια
 
@@ -148,15 +155,15 @@ cloudflared tunnel --url http://localhost:8502
 ### 💡 Έννοιες να ξέρω μπαίνοντας στη συζήτηση
 - **Inbound vs Outbound:** *inbound* = να φτάνουν οι **χρήστες σ' εμένα** (ports/firewall). *outbound* = να φτάνω **εγώ στο Gemini**. Χρειάζομαι **και τα δύο** — είναι ξεχωριστά πράγματα.
 - **«Ο server έχει GPU» ≠ «το container βλέπει GPU».** Χρειάζεται ρητό **passthrough** στο docker-compose + nvidia toolkit. Γι' αυτό ρωτάω και τα δύο.
-- **Reverse proxy / HTTPS:** ένα nginx/Caddy μπροστά που δίνει `https://…` και προωθεί εσωτερικά στο 8501. Απαραίτητο για πραγματικούς χρήστες (κρυπτογράφηση κωδικών).
+- **Reverse proxy / HTTPS:** ένα nginx/Caddy μπροστά που δίνει `https://…` και προωθεί εσωτερικά στο `127.0.0.1:8502`. Απαραίτητο για πραγματικούς χρήστες (κρυπτογράφηση κωδικών).
 
 ---
 
 ## ✅ Ολοκληρώθηκαν (code / config — στο repo)
 
 **Ασφάλεια & deploy-hardening**
-- **Πόρτες:** `db` (host 5434) & `backend` (host 8010) δεμένα σε `127.0.0.1` (όχι εκτεθειμένα στο δίκτυο)· `frontend` (host 8502) = το UI.
-- **CORS env-configurable:** `ALLOWED_ORIGINS` (comma-separated, default τοπικό Streamlit).
+- **Πόρτες:** `db` (host 5434) & `backend` (host 8010) δεμένα σε `127.0.0.1` (όχι εκτεθειμένα στο δίκτυο)· `web` (host 8502, επίσης `127.0.0.1`) = το UI, nginx χωρίς root.
+- **CORS env-configurable:** `ALLOWED_ORIGINS` (comma-separated). Με το nginx του UI το `/api` είναι στο ίδιο origin, άρα CORS δεν χρειάζεται· μετράει μόνο αν το UI σερβιριστεί από άλλο domain.
 - **Rate-limiting login** με bounded memory (όχι unbounded leak).
 - **Orphaned upload files:** το `delete_document` σβήνει πλέον και το PDF από τον δίσκο.
 - **Ingest recovery στο boot:** ορφανά «processing» → «failed» μετά από restart.
@@ -178,11 +185,15 @@ cloudflared tunnel --url http://localhost:8502
 ## ⏳ Μένουν — ΜΟΝΟ στον server (δεν γίνονται από το repo)
 
 ### 🔴 Ασφάλεια
-- **HTTPS/TLS:** reverse proxy (Caddy ή nginx + Let's Encrypt) μπροστά από το Streamlit.
+- **HTTPS/TLS:** reverse proxy (Caddy ή nginx + Let's Encrypt) μπροστά από το UI (`127.0.0.1:8502`).
   Χωρίς αυτό οι κωδικοί πάνε plaintext. (Caddy = ~5 γραμμές, auto-certs.)
 - **Τιμές secrets στο `.env` του server:** `SECRET_KEY`=`openssl rand -hex 32`,
   δυνατό `POSTGRES_PASSWORD`, **paid** `GEMINI_API_KEY`, `ALLOWED_ORIGINS`=το πραγματικό domain.
-- **Frontend πίσω από proxy:** στον server δέσε `127.0.0.1:8502:8501` και βγάλε το έξω μέσω του proxy (443).
+- **UI πίσω από proxy:** το `web` είναι ήδη δεμένο στο `127.0.0.1:8502`· ο proxy (443) προωθεί εκεί.
+- **Πραγματική IP του χρήστη για τα όρια:** πίσω από proxy ο backend βλέπει όλους με μία IP, οπότε τα όρια σύνδεσης
+  (30/λεπτό) και εγγραφής (5) ανά IP γίνονται κοινά για όλους. Λύση: `real_ip` στο `web/nginx.conf` από τον proxy
+  μπροστά (π.χ. `CF-Connecting-IP` για cloudflared, μόνο από τη διεύθυνσή του) και `TRUST_PROXY=1` στον backend.
+  Χωρίς το πρώτο, το δεύτερο δεν βοηθά.
 
 ### 🟡 Δίκτυο / δεδομένα / λειτουργία
 - **Firewall:** δημόσιο μόνο 443 (+22 SSH). Κλειστά 8010/8502/5434.
