@@ -147,9 +147,9 @@ export function SourceViewer({ state }: { state: ViewerState }) {
           size="sm"
           disabled={page <= 1}
           onClick={() => setPage(page - 1)}
-          aria-label={s.prevPage}
         >
-          <ChevronLeft /> {page > 1 ? page - 1 : ''}
+          {/* Το ορατό κείμενο (ο αριθμός) πρέπει να είναι μέσα στο όνομα του κουμπιού (WCAG 2.5.3, βρέθηκε με axe). */}
+          <ChevronLeft /> <span className="sr-only">{s.prevPage}</span> {page > 1 ? page - 1 : ''}
         </Button>
         <p className="flex min-w-0 items-center gap-1.5 text-center text-xs text-muted-foreground" aria-live="polite">
           {finding && page === citedPage && (
@@ -165,9 +165,8 @@ export function SourceViewer({ state }: { state: ViewerState }) {
           size="sm"
           disabled={pagesTotal !== null && page >= pagesTotal}
           onClick={() => setPage(page + 1)}
-          aria-label={s.nextPage}
         >
-          {pagesTotal === null || page < pagesTotal ? page + 1 : ''} <ChevronRight />
+          <span className="sr-only">{s.nextPage}</span> {pagesTotal === null || page < pagesTotal ? page + 1 : ''} <ChevronRight />
         </Button>
       </footer>
     </section>

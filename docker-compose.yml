@@ -51,6 +51,18 @@ services:
       backend:
         condition: service_healthy
 
+  web:
+    # Το νέο UI (React + nginx, docs/FRONTEND_PLAN_2026-11-26.md). Τρέχει ΔΙΠΛΑ στο Streamlit μέχρι την απόσυρσή του,
+    # που γίνεται μετά τη δοκιμή με πραγματικές ερωτήσεις. Το nginx στέλνει το /api στον backend (ίδιο origin).
+    build: ./web
+    container_name: v2_web
+    restart: always
+    ports:
+      - "127.0.0.1:8503:8080"   # host 8503 — ΟΧΙ εκτεθειμένο στο δίκτυο· στο deploy πίσω από proxy + HTTPS
+    depends_on:
+      backend:
+        condition: service_healthy
+
 volumes:
   postgres_data:
   chromadb_data:

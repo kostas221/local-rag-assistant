@@ -19,6 +19,7 @@ import { PassagesPanel } from './PassagesPanel'
 import { RefusalCard } from './RefusalCard'
 import { answerForCopy, compareCandidates, evidenceCounts, sourceNotes } from './sourceNotes'
 import { SourcesPanel } from './SourcesPanel'
+import { useSmoothText } from './useSmoothText'
 
 const s = strings.app
 
@@ -136,7 +137,19 @@ export function AssistantMessage({ content, sources, messageId, savedPassages, m
   const [evidence, setEvidence] = useState(false)
   const [confirmCompare, setConfirmCompare] = useState(false)
   const passages = usePassages(messageId === null ? null : { id: messageId, passages: savedPassages })
-  const writing = Boolean(live) && live?.phase !== 'done'
+  // Η απάντηση που γράφεται φαίνεται ομαλά, λέξη-λέξη (το Gemini στέλνει λίγα μεγάλα κομμάτια· βλ. smoothReveal).
+  const isLive = Boolean(live)
+  const streaming = live?.phase === 'searching' || live?.phase === 'composing' || live?.phase === 'writing'
+  const shownText = useSmoothText(content, isLive, !streaming)
+  const { reportReveal } = chat
+  useEffect(() => {
+    if (isLive) reportReveal(shownText.length)
+  }, [isLive, shownText.length, reportReveal])
+  useEffect(() => {
+    if (!isLive) return
+    return () => reportReveal(null)
+  }, [isLive, reportReveal])
+  const writing = isLive && (streaming || shownText.length < content.length)
   const list = sources ?? []
   const items = passages.data?.status === 'done' ? passages.data.items : undefined
   const citeKey = messageId === null ? 'live' : String(messageId)
@@ -207,7 +220,7 @@ export function AssistantMessage({ content, sources, messageId, savedPassages, m
         </>
       )}
       <Answer
-        answer={content}
+        answer={shownText}
         sources={list}
         passages={items}
         citeKey={citeKey}

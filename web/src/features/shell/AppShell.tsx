@@ -1,5 +1,5 @@
 import { LogOut, Plus, Search } from 'lucide-react'
-import { useEffect, useMemo, useState } from 'react'
+import { lazy, Suspense, useEffect, useMemo, useState } from 'react'
 import { Outlet, useNavigate } from 'react-router'
 import { ZLogo } from '@/components/brand'
 import { ThemeToggle } from '@/components/theme'
@@ -16,10 +16,12 @@ import { SourceViewer } from '@/features/viewer/SourceViewer'
 import { useViewer, ViewerProvider } from '@/features/viewer/viewer'
 import { strings } from '@/i18n/en'
 import { useMediaQuery } from '@/lib/useMediaQuery'
-import { CommandPalette } from './CommandPalette'
 import { ShellContext, useShell } from './shell'
 
 const s = strings.app
+
+// Η παλέτα (cmdk) φορτώνεται στο πρώτο άνοιγμα, όχι με την εφαρμογή.
+const CommandPalette = lazy(() => import('./CommandPalette').then((m) => ({ default: m.CommandPalette })))
 
 function Sidebar({ onNavigate }: { onNavigate?: () => void }) {
   const { username, signOut } = useAuth()
@@ -120,8 +122,19 @@ function ViewerPane() {
 
 function Layout() {
   const [menuOpen, setMenuOpen] = useState(false)
-  const [paletteOpen, setPaletteOpen] = useState(false)
-  const shell = useMemo(() => ({ openMenu: () => setMenuOpen(true), openPalette: () => setPaletteOpen(true) }), [])
+  const [paletteOpen, setPaletteOpenState] = useState(false)
+  const [paletteUsed, setPaletteUsed] = useState(false)
+  const setPaletteOpen = useMemo(
+    () => (next: boolean | ((o: boolean) => boolean)) => {
+      setPaletteUsed(true)
+      setPaletteOpenState(next)
+    },
+    [],
+  )
+  const shell = useMemo(
+    () => ({ openMenu: () => setMenuOpen(true), openPalette: () => setPaletteOpen(true) }),
+    [setPaletteOpen],
+  )
   // Ctrl+K / ⌘K από οπουδήποτε, και μέσα από το πεδίο ερώτησης (δεν είναι χαρακτήρας που θα πληκτρολογούσε κανείς).
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
@@ -132,7 +145,7 @@ function Layout() {
     }
     window.addEventListener('keydown', onKey)
     return () => window.removeEventListener('keydown', onKey)
-  }, [])
+  }, [setPaletteOpen])
   return (
     <ShellContext.Provider value={shell}>
       <div className="flex h-svh overflow-hidden bg-background">
@@ -150,7 +163,11 @@ function Layout() {
         </main>
         <ViewerPane />
       </div>
-      <CommandPalette open={paletteOpen} onOpenChange={setPaletteOpen} />
+      {paletteUsed && (
+        <Suspense fallback={null}>
+          <CommandPalette open={paletteOpen} onOpenChange={setPaletteOpen} />
+        </Suspense>
+      )}
     </ShellContext.Provider>
   )
 }

@@ -42,6 +42,11 @@ interface ChatState {
   /** `docs`: συγκεκριμένα έγγραφα για αυτή την ερώτηση (π.χ. «Compare only these»), αντί για την τρέχουσα επιλογή. */
   send: (question: string, convId: number | null, docs?: LibraryDocument[]) => void
   stop: () => void
+  /**
+   * Η απάντηση που γράφεται λέει εδώ πόσο κείμενο φαίνεται (βλ. smoothReveal)· `null` όταν φεύγει από την οθόνη. Έτσι
+   * η μετάβαση στο σωμένο μήνυμα περιμένει να τελειώσει η εμφάνιση, αντί να πετάξει απότομα το υπόλοιπο.
+   */
+  reportReveal: (shown: number | null) => void
 }
 
 const PERSONA_KEY = 'zai.persona'
@@ -72,6 +77,15 @@ export function ChatProvider({ children }: { children: ReactNode }) {
   const [persona, setPersonaState] = useState<Persona>(loadPersona)
   const abortRef = useRef<AbortController | null>(null)
   const busyRef = useRef(false)
+  const revealRef = useRef<{ mounted: boolean; shown: number }>({ mounted: false, shown: 0 })
+  const reportReveal = useCallback((shown: number | null) => {
+    revealRef.current = shown === null ? { mounted: false, shown: 0 } : { mounted: true, shown }
+  }, [])
+  /** Ως ~4 s το πολύ (π.χ. καρτέλα στο παρασκήνιο, όπου τα frames σταματούν). */
+  const waitForReveal = useCallback(async (total: number) => {
+    const start = performance.now()
+    while (revealRef.current.mounted && revealRef.current.shown < total && performance.now() - start < 4000) await sleep(50)
+  }, [])
   const selectedRef = useRef(selected)
   const personaRef = useRef(persona)
   useEffect(() => {
@@ -161,21 +175,21 @@ export function ChatProvider({ children }: { children: ReactNode }) {
           else push(finishLive(state, 'error', performance.now(), err instanceof ApiError ? err.message : strings.errors.generic))
         } finally {
           abortRef.current = null
-          if (cid !== null) await settle(cid, state)
+          if (cid !== null) await Promise.all([settle(cid, state), waitForReveal(state.text.length)])
           if (state.phase === 'error') setFailure({ convId: cid, question: state.question, error: state.error ?? '' })
           setLive(null)
           busyRef.current = false
         }
       })()
     },
-    [qc, navigate, fetchMessages, settle],
+    [qc, navigate, fetchMessages, settle, waitForReveal],
   )
 
   const stop = useCallback(() => abortRef.current?.abort(), [])
 
   const value = useMemo<ChatState>(
-    () => ({ live, busy: live !== null, running: isRunning(live), meta, failure, persona, setPersona, send, stop }),
-    [live, meta, failure, persona, setPersona, send, stop],
+    () => ({ live, busy: live !== null, running: isRunning(live), meta, failure, persona, setPersona, send, stop, reportReveal }),
+    [live, meta, failure, persona, setPersona, send, stop, reportReveal],
   )
   return <ChatContext.Provider value={value}>{children}</ChatContext.Provider>
 }
